@@ -1,0 +1,4 @@
+project_id = "ilnkeilltvkceohcjfjy"
+
+[functions.safelist-analyze]
+verify_jwt = false
