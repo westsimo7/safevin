@@ -1,164 +1,160 @@
 import { Button } from "@/components/ui/button";
 import { Check, Zap, Crown, Rocket } from "lucide-react";
-import PaisleyPattern from "./PaisleyPattern";
 
 const plans = [
   {
-    name: "Starter",
-    price: "19",
-    description: "Per chi inizia il viaggio",
+    name: "Free",
+    price: "0",
+    period: "3 giorni",
+    description: "Prova il valore, senza rischi",
     icon: Zap,
     features: [
-      "Fino a 50 annunci",
-      "Automazione base",
-      "Dashboard analytics",
-      "Supporto email",
+      "Accesso base dashboard",
+      "1 analisi account",
+      "1 utilizzo per componente",
+      "Overview rischio base",
     ],
+    limitations: [
+      "Nessun simulatore",
+      "Nessuno storico",
+    ],
+    cta: "Prova Safevin senza rischi",
     popular: false,
+    variant: "glass" as const,
   },
   {
-    name: "Pro",
-    price: "49",
-    description: "Per venditori seri",
+    name: "Plus",
+    price: "19,98",
+    period: "/mese",
+    description: "Per venditori attivi",
     icon: Crown,
     features: [
-      "Annunci illimitati",
-      "Automazione avanzata",
-      "Analytics in tempo reale",
-      "Supporto prioritario 24/7",
-      "Anti-ban protection",
-      "Ottimizzazione prezzi AI",
+      "Analisi illimitate",
+      "Storico account completo",
+      "Behavior check avanzato",
+      "Suggerimenti operativi",
+      "Alert rischio in aumento",
+      "Priorità elaborazione",
     ],
+    limitations: [],
+    cta: "Inizia con Plus",
     popular: true,
+    variant: "neon" as const,
   },
   {
-    name: "Empire",
-    price: "99",
-    description: "Per dominare il mercato",
+    name: "Venditor Expert",
+    price: "39,98",
+    period: "/mese",
+    description: "Per chi vive di Vinted",
     icon: Rocket,
     features: [
-      "Tutto di Pro",
-      "Multi-account",
-      "API access",
-      "Account manager dedicato",
-      "White-label options",
-      "Custom integrations",
+      "Tutto di Plus incluso",
+      "Simulatore rischio avanzato",
+      "Analisi profonde multi-pattern",
+      "Suggerimenti personalizzati",
+      "Monitoraggio continuo",
+      "Educazione strategica",
+      "Riduzione drastica probabilità ban",
     ],
+    limitations: [],
+    cta: "Proteggi il tuo business",
     popular: false,
+    variant: "glass" as const,
   },
 ];
 
 const PricingSection = () => {
   return (
-    <section className="relative py-32 bg-background overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 text-foreground/5">
-        <PaisleyPattern opacity={0.03} />
-      </div>
+    <section className="relative py-24 bg-card/20 overflow-hidden">
+      {/* Subtle border top */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-neon-red/10 rounded-full blur-[200px]" />
-      
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="container mx-auto px-6 max-w-6xl">
+        {/* Section header */}
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-black mb-4">
-            <span className="text-foreground">Scegli il Tuo</span>{" "}
-            <span className="text-gold">Potere</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Scegli il tuo livello di protezione
           </h2>
-          <p className="text-foreground/60 max-w-xl mx-auto">
-            Piani flessibili per ogni livello di ambizione
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            Non ti promettiamo guadagni. Ti aiutiamo a non perdere ciò che hai costruito.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {/* Pricing grid */}
+        <div className="grid md:grid-cols-3 gap-6">
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative group ${plan.popular ? "md:-mt-4 md:mb-4" : ""}`}
+              className={`relative flex flex-col p-6 rounded-2xl transition-all duration-300 ${
+                plan.popular
+                  ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
+                  : "bg-card/50 border border-border/50 hover:border-border"
+              }`}
             >
               {/* Popular badge */}
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20">
-                  <div className="px-4 py-1 rounded-full bg-gradient-to-r from-neon-red to-gold text-background text-sm font-bold shadow-lg">
-                    PIÙ POPOLARE
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                  <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                    Più scelto
                   </div>
                 </div>
               )}
               
-              {/* Card */}
-              <div
-                className={`relative h-full p-8 rounded-3xl backdrop-blur-xl overflow-hidden transition-all duration-500 ${
-                  plan.popular
-                    ? "bg-card/60 border-2 border-neon-red/50 shadow-[0_0_60px_rgba(255,0,0,0.2)]"
-                    : "bg-card/40 border border-border/50 hover:border-gold/30"
-                }`}
-              >
-                {/* Paisley pattern for Pro */}
-                {plan.popular && (
-                  <div className="absolute inset-0 text-neon-red">
-                    <PaisleyPattern opacity={0.08} />
-                  </div>
-                )}
-                
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-50" />
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
-                    plan.popular
-                      ? "bg-gradient-to-br from-neon-red to-neon-red/50 shadow-[0_0_30px_rgba(255,0,0,0.4)]"
-                      : "bg-gradient-to-br from-gold/20 to-gold/5 border border-gold/20"
-                  }`}>
-                    <plan.icon className={`w-7 h-7 ${plan.popular ? "text-white" : "text-gold"}`} />
-                  </div>
-                  
-                  {/* Plan name */}
-                  <h3 className={`text-2xl font-bold mb-2 ${plan.popular ? "text-neon-red" : "text-foreground"}`}>
-                    {plan.name}
-                  </h3>
-                  <p className="text-foreground/50 text-sm mb-6">{plan.description}</p>
-                  
-                  {/* Price */}
-                  <div className="mb-8">
-                    <span className="text-5xl font-black text-foreground">€{plan.price}</span>
-                    <span className="text-foreground/50">/mese</span>
-                  </div>
-                  
-                  {/* Features */}
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3">
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
-                          plan.popular ? "bg-neon-red/20" : "bg-gold/10"
-                        }`}>
-                          <Check className={`w-3 h-3 ${plan.popular ? "text-neon-red" : "text-gold"}`} />
-                        </div>
-                        <span className="text-foreground/70 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  {/* CTA */}
-                  <Button
-                    variant={plan.popular ? "neon" : "glass"}
-                    className="w-full"
-                    size="lg"
-                  >
-                    {plan.popular ? "Inizia Ora" : "Scegli Piano"}
-                  </Button>
+              {/* Plan header */}
+              <div className="mb-6">
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${
+                  plan.popular ? "bg-primary/20" : "bg-muted"
+                }`}>
+                  <plan.icon className={`w-5 h-5 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
                 </div>
                 
-                {/* Border glow for popular */}
-                {plan.popular && (
-                  <>
-                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-neon-red to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
-                  </>
-                )}
+                <h3 className={`text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
+                  {plan.name}
+                </h3>
+                <p className="text-sm text-muted-foreground">{plan.description}</p>
               </div>
+              
+              {/* Price */}
+              <div className="mb-6">
+                <span className="text-4xl font-bold text-foreground">€{plan.price}</span>
+                <span className="text-muted-foreground text-sm">{plan.period}</span>
+              </div>
+              
+              {/* Features */}
+              <ul className="space-y-3 mb-6 flex-grow">
+                {plan.features.map((feature, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                      plan.popular ? "bg-primary/10" : "bg-muted"
+                    }`}>
+                      <Check className={`w-3 h-3 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
+                    </div>
+                    <span className="text-foreground/80 text-sm">{feature}</span>
+                  </li>
+                ))}
+                {plan.limitations.map((limitation, i) => (
+                  <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                      <span className="text-xs text-muted-foreground">–</span>
+                    </div>
+                    <span className="text-muted-foreground text-sm line-through">{limitation}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              {/* CTA */}
+              <Button variant={plan.variant} className="w-full" size="lg">
+                {plan.cta}
+              </Button>
             </div>
           ))}
+        </div>
+        
+        {/* Trust message */}
+        <div className="mt-12 text-center">
+          <p className="text-muted-foreground text-sm">
+            Disdici quando vuoi. Nessun dark pattern. Nessuna sorpresa.
+          </p>
         </div>
       </div>
     </section>
