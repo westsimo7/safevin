@@ -1,43 +1,37 @@
-import { Zap } from "lucide-react";
-import PaisleyPattern from "./PaisleyPattern";
+import { Shield } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="relative py-16 bg-background border-t border-border/30 overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 text-neon-red/5">
-        <PaisleyPattern opacity={0.03} />
-      </div>
-      
-      <div className="relative z-10 container mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+    <footer className="py-12 bg-background border-t border-border">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-xl bg-neon-red/20 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-neon-red" />
-            </div>
-            <span className="text-2xl font-black">
-              <span className="text-foreground">SAFE</span>
-              <span className="text-neon-red">VIN</span>
+            <Shield className="w-5 h-5 text-primary" />
+            <span className="text-lg font-bold text-foreground">
+              SAFE<span className="text-primary">VIN</span>
             </span>
           </div>
           
           {/* Links */}
-          <nav className="flex flex-wrap justify-center gap-8">
-            {["Funzionalità", "Prezzi", "FAQ", "Contatti", "Privacy"].map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="text-foreground/50 hover:text-neon-red transition-colors text-sm"
-              >
-                {link}
-              </a>
-            ))}
+          <nav className="flex items-center gap-6 text-sm text-muted-foreground">
+            <a href="#" className="hover:text-foreground transition-colors">Come funziona</a>
+            <a href="#" className="hover:text-foreground transition-colors">Prezzi</a>
+            <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="hover:text-foreground transition-colors">Termini</a>
           </nav>
           
           {/* Copyright */}
-          <p className="text-foreground/30 text-sm">
-            © 2024 SafeVin. Tutti i diritti riservati.
+          <p className="text-sm text-muted-foreground">
+            © 2024 Safevin. Tutti i diritti riservati.
+          </p>
+        </div>
+        
+        {/* Disclaimer */}
+        <div className="mt-8 pt-6 border-t border-border/50">
+          <p className="text-xs text-muted-foreground/70 text-center max-w-2xl mx-auto">
+            Safevin è uno strumento indipendente di analisi del rischio. Non è affiliato con Vinted. 
+            Non garantiamo risultati specifici. Offriamo consapevolezza e strumenti per decisioni informate.
           </p>
         </div>
       </div>
