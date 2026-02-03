@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Shield } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -12,52 +13,55 @@ const HeroSection = () => {
       
       {/* Content */}
       <div className="relative z-10 container mx-auto px-6 text-center max-w-4xl">
-        {/* Trust badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-card/50 backdrop-blur-sm mb-8 animate-fade-in">
-          <Shield className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium text-muted-foreground">Sistema di prevenzione ban per Vinted</span>
+        {/* AI Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm mb-8 animate-fade-in">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium text-muted-foreground">AI Powered for Vinted</span>
         </div>
         
-        {/* Headline - Direct, no hype */}
+        {/* Headline */}
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in text-foreground">
-          Salva il tuo Vinted.
+          Trasforma i tuoi annunci Vinted
           <br />
-          <span className="text-primary">Prima che sia troppo tardi.</span>
+          <span className="text-primary">in macchine di vendita</span>
         </h1>
         
-        {/* Subheadline - Clear value proposition */}
+        {/* Subheadline */}
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-fade-in leading-relaxed" style={{ animationDelay: "0.1s" }}>
-          Safevin è un sistema che analizza i comportamenti del tuo account e ti dice cosa ti sta mettendo a rischio, <strong className="text-foreground">prima che Vinted lo faccia per te.</strong>
+          SAFEVIN analizza titolo, foto, prezzo e fiducia del tuo annuncio 
+          e ti dice <strong className="text-foreground">esattamente cosa migliorare</strong>.
         </p>
         
         {/* CTAs */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          <Button variant="neon" size="lg" className="group">
-            Analizza il tuo account
-            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Button>
+          <Link to="/dashboard">
+            <Button variant="neon" size="lg" className="group w-full sm:w-auto">
+              Analizza il tuo annuncio
+              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </Link>
           <Button variant="glass" size="lg">
-            Come funziona Safevin
+            Come funziona
           </Button>
         </div>
         
-        {/* Trust indicators - Subtle, professional */}
+        {/* Trust indicators */}
         <div className="mt-16 pt-8 border-t border-border/50 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-          <p className="text-sm text-muted-foreground mb-4">Usato da venditori che proteggono il loro business</p>
+          <p className="text-sm text-muted-foreground mb-4">Usato da venditori che vogliono vendere di più</p>
           <div className="flex items-center justify-center gap-8 text-muted-foreground/60">
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">2.500+</div>
-              <div className="text-xs">Account analizzati</div>
+              <div className="text-2xl font-bold text-foreground">10.000+</div>
+              <div className="text-xs">Annunci analizzati</div>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">87%</div>
-              <div className="text-xs">Rischi identificati</div>
+              <div className="text-2xl font-bold text-foreground">+35%</div>
+              <div className="text-xs">Visualizzazioni</div>
             </div>
             <div className="w-px h-8 bg-border" />
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">Zero</div>
-              <div className="text-xs">Promesse vuote</div>
+              <div className="text-2xl font-bold text-foreground">+22%</div>
+              <div className="text-xs">Vendite</div>
             </div>
           </div>
         </div>
