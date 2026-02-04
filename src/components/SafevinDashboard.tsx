@@ -10,25 +10,20 @@ import DashboardHeader from "./DashboardHeader";
 import ToolSelector from "./ToolSelector";
 import AnalysisLoader from "./AnalysisLoader";
 import AnalysisCard from "./AnalysisCard";
+import AnalysisSummary from "./AnalysisSummary";
 import AlreadyAnalyzedDialog from "./AlreadyAnalyzedDialog";
-
-interface AdvancedCheck {
-  label: string;
-  status: "ok" | "warning" | "error";
-  detail: string;
-}
 
 interface AnalysisSection {
   title: string;
   score: number;
   advice: string;
-  advancedChecks?: AdvancedCheck[];
   ultimateContent?: string;
 }
 
 interface AnalysisResult {
   overallScore: number;
   sections: AnalysisSection[];
+  summary?: string;
 }
 
 const SafevinDashboard = () => {
@@ -263,12 +258,16 @@ const SafevinDashboard = () => {
                       title={section.title}
                       score={section.score}
                       advice={section.advice}
-                      advancedChecks={section.advancedChecks}
                       ultimateContent={section.ultimateContent}
                       hasUltimate={false}
                     />
                   ))}
                 </div>
+
+                {/* Summary Block */}
+                {analysisResult.summary && (
+                  <AnalysisSummary summary={analysisResult.summary} />
+                )}
 
                 {/* New Analysis Button */}
                 <div className="text-center pt-8">
