@@ -27,52 +27,62 @@ Restituisci un JSON con questa struttura ESATTA:
     {
       "title": "Titolo Prodotto",
       "score": [numero da 1 a 10],
-      "advice": "[Problema concreto → Perché è un problema → Come sistemarlo subito. Max 2 frasi dirette. Se il titolo è buono, dillo e suggerisci un miglioramento minore.]"
+      "advice": "[Problema concreto → Perché è un problema → Come sistemarlo subito. Max 2 frasi dirette.]",
+      "ultimateContent": "[ANALISI ULTIMATE: Fornisci 3 versioni concrete del titolo ottimizzato: 1) Versione migliorata (equilibrata), 2) Versione alternativa (focus diverso), 3) Versione aggressiva (vendita rapida). Scrivi i titoli pronti da copiare, senza spiegazioni.]"
     },
     {
       "title": "Prime Foto",
       "score": [numero da 1 a 10],
-      "advice": "[Valuta luce, sfondo, nitidezza, ordine. Problema → Perché → Soluzione immediata]"
+      "advice": "[Valuta luce, sfondo, nitidezza, ordine. Problema → Perché → Soluzione immediata]",
+      "ultimateContent": "[ANALISI ULTIMATE: Checklist foto perfetta: 1) Ordine ideale delle foto, 2) Cosa fotografare che manca, 3) Angolazioni che vendono di più per questo tipo di prodotto. Consigli pratici immediati.]"
     },
     {
       "title": "Prezzo Strategico",
       "score": [numero da 1 a 10],
-      "advice": "[Confronto reale col mercato. Suggerisci: prezzo vendita veloce / equilibrio / margine]"
+      "advice": "[Confronto reale col mercato. Suggerisci: prezzo vendita veloce / equilibrio / margine]",
+      "ultimateContent": "[ANALISI ULTIMATE: 3 strategie prezzo: 1) Prezzo vendita veloce (entro 48h), 2) Prezzo equilibrato (1-2 settimane), 3) Prezzo margine (se puoi aspettare). Numeri concreti basati sul mercato.]"
     },
     {
       "title": "Descrizione",
       "score": [numero da 1 a 10],
-      "advice": "[Valuta chiarezza, fiducia, misure, difetti. Problema → Soluzione]"
+      "advice": "[Valuta chiarezza, fiducia, misure, difetti. Problema → Soluzione]",
+      "ultimateContent": "[ANALISI ULTIMATE: Riscrivi la descrizione completa ottimizzata, pronta da copiare. Include: hook iniziale, dettagli prodotto, misure, condizione, call to action finale.]"
     },
     {
       "title": "Tag / Categoria / Brand",
       "score": [numero da 1 a 10],
-      "advice": "[Controlla completezza campi. Cosa manca? Come sistemare?]"
+      "advice": "[Controlla completezza campi. Cosa manca? Come sistemare?]",
+      "ultimateContent": "[ANALISI ULTIMATE: Lista completa tag consigliati per massimizzare visibilità. Categoria esatta da selezionare. Parole chiave che gli acquirenti cercano per questo prodotto.]"
     },
     {
       "title": "Tempo di Risposta",
       "score": [numero da 1 a 10],
-      "advice": "[Impatto sulle vendite. Azione immediata da fare]"
+      "advice": "[Impatto sulle vendite. Azione immediata da fare]",
+      "ultimateContent": "[ANALISI ULTIMATE: Template risposte veloci: 1) Risposta standard, 2) Risposta a richiesta sconto, 3) Risposta a domanda misure. Pronte da salvare e usare.]"
     },
     {
       "title": "Attività Profilo",
       "score": [numero da 1 a 10],
-      "advice": "[Vitalità profilo. Micro-azione concreta da fare oggi]"
+      "advice": "[Vitalità profilo. Micro-azione concreta da fare oggi]",
+      "ultimateContent": "[ANALISI ULTIMATE: Piano settimanale attività: quanti annunci caricare, quando, come interagire per aumentare visibilità algoritmo Vinted.]"
     },
     {
       "title": "Ripubblicazione",
       "score": [numero da 1 a 10],
-      "advice": "[Serve un reset? Quando e come farlo?]"
+      "advice": "[Serve un reset? Quando e come farlo?]",
+      "ultimateContent": "[ANALISI ULTIMATE: Strategia ripubblicazione: 1) Quando ripubblicare questo annuncio, 2) Cosa cambiare prima di ripubblicare, 3) Tecnica bump gratuito.]"
     },
     {
       "title": "Psicologia Acquirente",
       "score": [numero da 1 a 10],
-      "advice": "[Frasi che aumentano urgenza e sicurezza. Esempio concreto]"
+      "advice": "[Frasi che aumentano urgenza e sicurezza. Esempio concreto]",
+      "ultimateContent": "[ANALISI ULTIMATE: 5 frasi pronte che aumentano conversione: frasi urgenza, frasi sicurezza, frasi valore, frasi fiducia, frasi call-to-action. Copia e incolla nella descrizione.]"
     },
     {
       "title": "Volume Annunci",
       "score": [numero da 1 a 10],
-      "advice": "[Differenza tra fortuna e sistema. Cosa fare per scalare]"
+      "advice": "[Differenza tra fortuna e sistema. Cosa fare per scalare]",
+      "ultimateContent": "[ANALISI ULTIMATE: Piano crescita: 1) Obiettivo annunci settimanale, 2) Categorie da espandere, 3) Come trasformare vendite sporadiche in sistema costante.]"
     }
   ],
   "summary": "[BLOCCO UNICO di circa 15 righe. Scrivi come un venditore esperto che guarda l'annuncio e dice la verità. Includi: problemi principali trovati, cosa blocca la vendita, cosa sistemare subito, cosa migliorare nel breve, spunti pratici su foto/titolo/prezzo/fiducia, importanza del volume e della velocità di risposta, differenza tra annuncio invisibile e vendibile, incoraggiamento concreto e realistico. Tono: umano, diretto, zero paroloni, zero emoji.]"
@@ -83,6 +93,7 @@ REGOLE CRITICHE:
 - ANALIZZA REALMENTE il contenuto, non dare risposte generiche
 - Ogni analisi deve essere UNICA e SPECIFICA per quell'annuncio
 - I punteggi devono essere VARIABILI e REALISTICI
+- ultimateContent deve contenere CONTENUTI CONCRETI, pronti da usare, non teoria
 - Il summary finale deve sembrare scritto da un essere umano esperto
 - Tono: umano, semplice, diretto, zero tecnicismi, zero emoji
 - Frasi corte. Soluzioni immediate. Niente teoria.
