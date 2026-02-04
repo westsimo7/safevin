@@ -259,7 +259,11 @@ const SafevinDashboard = () => {
                       score={section.score}
                       advice={section.advice}
                       ultimateContent={section.ultimateContent}
-                      hasUltimate={false}
+                      hasUltimate={true}
+                      isUltimateUnlocked={false}
+                      onUpgradeClick={() => {
+                        window.location.hash = "upgrade";
+                      }}
                     />
                   ))}
                 </div>
