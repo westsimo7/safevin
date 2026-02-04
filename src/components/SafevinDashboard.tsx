@@ -12,10 +12,17 @@ import AnalysisLoader from "./AnalysisLoader";
 import AnalysisCard from "./AnalysisCard";
 import AlreadyAnalyzedDialog from "./AlreadyAnalyzedDialog";
 
+interface AdvancedCheck {
+  label: string;
+  status: "ok" | "warning" | "error";
+  detail: string;
+}
+
 interface AnalysisSection {
   title: string;
   score: number;
   advice: string;
+  advancedChecks?: AdvancedCheck[];
   ultimateContent?: string;
 }
 
@@ -256,6 +263,7 @@ const SafevinDashboard = () => {
                       title={section.title}
                       score={section.score}
                       advice={section.advice}
+                      advancedChecks={section.advancedChecks}
                       ultimateContent={section.ultimateContent}
                       hasUltimate={false}
                     />
