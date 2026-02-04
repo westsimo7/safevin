@@ -1,11 +1,20 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertTriangle, XCircle, Lock } from "lucide-react";
+import { CheckCircle, AlertTriangle, XCircle, Lock, ChevronDown, ChevronUp } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
+interface AdvancedCheck {
+  label: string;
+  status: "ok" | "warning" | "error";
+  detail: string;
+}
 
 interface AnalysisCardProps {
   title: string;
   score: number;
   advice: string;
+  advancedChecks?: AdvancedCheck[];
   ultimateContent?: string;
   hasUltimate?: boolean;
 }
@@ -28,8 +37,30 @@ const getScoreBadgeClass = (score: number) => {
   return "bg-red-500/10 text-red-500 border-red-500/30";
 };
 
-const AnalysisCard = ({ title, score, advice, ultimateContent, hasUltimate = false }: AnalysisCardProps) => {
-  const color = getScoreColor(score);
+const getStatusIcon = (status: "ok" | "warning" | "error") => {
+  switch (status) {
+    case "ok":
+      return <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />;
+    case "warning":
+      return <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0" />;
+    case "error":
+      return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
+  }
+};
+
+const getStatusBg = (status: "ok" | "warning" | "error") => {
+  switch (status) {
+    case "ok":
+      return "bg-green-500/5 border-green-500/20";
+    case "warning":
+      return "bg-yellow-500/5 border-yellow-500/20";
+    case "error":
+      return "bg-red-500/5 border-red-500/20";
+  }
+};
+
+const AnalysisCard = ({ title, score, advice, advancedChecks, ultimateContent, hasUltimate = false }: AnalysisCardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Card className="border-border/50 hover:border-border transition-colors">
@@ -46,6 +77,39 @@ const AnalysisCard = ({ title, score, advice, ultimateContent, hasUltimate = fal
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground leading-relaxed">{advice}</p>
+        
+        {/* Advanced Checks Section */}
+        {advancedChecks && advancedChecks.length > 0 && (
+          <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+            <CollapsibleTrigger className="flex items-center justify-between w-full p-3 rounded-lg bg-muted/30 border border-border/50 hover:bg-muted/50 transition-colors">
+              <span className="text-sm font-medium text-foreground">Controlli Avanzati</span>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">
+                  {advancedChecks.filter(c => c.status === "ok").length}/{advancedChecks.length} ok
+                </span>
+                {isOpen ? (
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                )}
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="mt-2 space-y-2">
+              {advancedChecks.map((check, index) => (
+                <div 
+                  key={index} 
+                  className={`flex items-start gap-3 p-3 rounded-lg border ${getStatusBg(check.status)}`}
+                >
+                  {getStatusIcon(check.status)}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">{check.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{check.detail}</p>
+                  </div>
+                </div>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+        )}
         
         {/* Ultimate Section */}
         {hasUltimate && ultimateContent ? (
