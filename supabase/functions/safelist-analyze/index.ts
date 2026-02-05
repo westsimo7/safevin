@@ -176,11 +176,13 @@ serve(async (req) => {
     const body = await req.json();
     const { vintedUrl, listing, analysisType } = body;
     
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY is not configured");
+    
+    if (!OPENAI_API_KEY && !LOVABLE_API_KEY) {
+      console.error("Neither OPENAI_API_KEY nor LOVABLE_API_KEY is configured");
       return new Response(
-        JSON.stringify({ error: "AI service not configured" }),
+        JSON.stringify({ error: "AI service not configured. Please add an API key." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -217,14 +219,22 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
     console.log("Sending request to AI gateway...");
     console.log("Analysis type:", analysisType || "legacy");
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const apiUrl = OPENAI_API_KEY 
+      ? "https://api.openai.com/v1/chat/completions" 
+      : "https://ai.gateway.lovable.dev/v1/chat/completions";
+    
+    const apiHeaders = {
+      "Authorization": `Bearer ${OPENAI_API_KEY || LOVABLE_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+
+    const apiModel = OPENAI_API_KEY ? "gpt-4o" : "openai/gpt-5";
+
+    const response = await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
+      headers: apiHeaders,
       body: JSON.stringify({
-        model: "openai/gpt-5",
+        model: apiModel,
         messages: [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
