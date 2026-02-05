@@ -1,13 +1,15 @@
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, Crown } from "lucide-react";
+import { Lock, Crown, TrendingDown, Eye, Target } from "lucide-react";
 
 interface AnalysisCardProps {
   title: string;
   score: number;
   advice: string;
+  impersonation?: string;
+  scoreBreakdown?: string;
+  conversionProbability?: number;
   hasUltimate?: boolean;
   ultimateContent?: string;
   isUltimateUnlocked?: boolean;
@@ -18,6 +20,9 @@ const AnalysisCard = ({
   title,
   score,
   advice,
+  impersonation,
+  scoreBreakdown,
+  conversionProbability,
   hasUltimate = true,
   ultimateContent,
   isUltimateUnlocked = false,
@@ -33,6 +38,12 @@ const AnalysisCard = ({
     if (score >= 7) return "Buono";
     if (score >= 4) return "Da migliorare";
     return "Critico";
+  };
+
+  const getConversionColor = (prob: number) => {
+    if (prob >= 60) return "text-green-400";
+    if (prob >= 30) return "text-yellow-400";
+    return "text-red-400";
   };
 
   return (
@@ -52,11 +63,51 @@ const AnalysisCard = ({
             </span>
           </div>
         </div>
+        
+        {/* Conversion Probability */}
+        {conversionProbability !== undefined && (
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/30">
+            <Target className="w-3.5 h-3.5 text-muted-foreground" />
+            <span className="text-xs text-muted-foreground">Visual Conversion:</span>
+            <span className={`text-sm font-semibold ${getConversionColor(conversionProbability)}`}>
+              {conversionProbability}%
+            </span>
+          </div>
+        )}
       </CardHeader>
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          {advice}
-        </p>
+        {/* Impersonation - What the AI saw */}
+        {impersonation && (
+          <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
+            <div className="flex items-center gap-2 mb-2">
+              <Eye className="w-3.5 h-3.5 text-primary" />
+              <span className="text-xs font-medium text-primary">Cosa ho visto</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {impersonation}
+            </p>
+          </div>
+        )}
+
+        {/* Score Breakdown - What lowers the score */}
+        {scoreBreakdown && (
+          <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingDown className="w-3.5 h-3.5 text-red-400" />
+              <span className="text-xs font-medium text-red-400">Cosa abbassa il punteggio</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
+              {scoreBreakdown}
+            </p>
+          </div>
+        )}
+
+        {/* Advice - Problem → Why → Solution */}
+        <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+          <p className="text-sm text-foreground/90 leading-relaxed">
+            {advice}
+          </p>
+        </div>
 
         {/* Ultimate Section */}
         {hasUltimate && (
@@ -74,8 +125,8 @@ const AnalysisCard = ({
               <div className="space-y-3">
                 <div className="relative">
                   <p className="text-sm text-muted-foreground/50 blur-[2px] select-none leading-relaxed">
-                    Versione migliorata del titolo pronta da copiare, strategie prezzo concrete, 
-                    template risposte veloci e molto altro contenuto esclusivo...
+                    Versione migliorata pronta da copiare, strategie concrete, 
+                    template risposte veloci e contenuto esclusivo...
                   </p>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <Lock className="w-5 h-5 text-amber-400/60" />

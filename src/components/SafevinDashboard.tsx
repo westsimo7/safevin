@@ -17,6 +17,9 @@ interface AnalysisSection {
   title: string;
   score: number;
   advice: string;
+  impersonation?: string;
+  scoreBreakdown?: string;
+  conversionProbability?: number;
   ultimateContent?: string;
 }
 
@@ -258,6 +261,9 @@ const SafevinDashboard = () => {
                       title={section.title}
                       score={section.score}
                       advice={section.advice}
+                      impersonation={section.impersonation}
+                      scoreBreakdown={section.scoreBreakdown}
+                      conversionProbability={section.conversionProbability}
                       ultimateContent={section.ultimateContent}
                       hasUltimate={true}
                       isUltimateUnlocked={false}
