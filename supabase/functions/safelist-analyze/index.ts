@@ -229,7 +229,11 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
       "Content-Type": "application/json",
     };
 
-    const apiModel = OPENAI_API_KEY ? "o3" : "openai/gpt-5";
+    const apiModel = OPENAI_API_KEY ? "gpt-4.1" : "openai/gpt-5";
+    const isOpenAIDirect = !!OPENAI_API_KEY;
+
+    // OpenAI o3/o-series uses "developer" role, GPT models use "system"
+    const systemRole = "system";
 
     const response = await fetch(apiUrl, {
       method: "POST",
@@ -237,9 +241,10 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
       body: JSON.stringify({
         model: apiModel,
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: systemRole, content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ],
+        ...(isOpenAIDirect ? { response_format: { type: "json_object" } } : {}),
         stream: false,
       }),
     });
