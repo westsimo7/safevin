@@ -97,7 +97,20 @@ const SafevinDashboard = () => {
       }
 
       if (data?.analysis) {
-        setAnalysisResult(data.analysis);
+        const analysis = data.analysis;
+        
+        // Validate the analysis has the expected structure
+        if (typeof analysis === "object" && Array.isArray(analysis.sections)) {
+          setAnalysisResult(analysis);
+        } else {
+          console.error("Invalid analysis format:", analysis);
+          toast({
+            title: "Errore formato",
+            description: "L'analisi non ha restituito un formato valido. Riprova.",
+            variant: "destructive",
+          });
+          return;
+        }
         
         // Save analyzed URL
         const newAnalyzedUrls = new Set(analyzedUrls);
