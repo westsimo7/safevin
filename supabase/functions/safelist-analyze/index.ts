@@ -179,10 +179,10 @@ serve(async (req) => {
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
-    if (!OPENAI_API_KEY && !LOVABLE_API_KEY) {
-      console.error("Neither OPENAI_API_KEY nor LOVABLE_API_KEY is configured");
+    if (!LOVABLE_API_KEY) {
+      console.error("LOVABLE_API_KEY is not configured");
       return new Response(
-        JSON.stringify({ error: "AI service not configured. Please add an API key." }),
+        JSON.stringify({ error: "AI service not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -218,21 +218,17 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
 
     console.log("Sending request to OpenAI API...");
     console.log("Analysis type:", analysisType || "legacy");
-    console.log("Using:", OPENAI_API_KEY ? "OpenAI direct (o3)" : "Lovable Gateway fallback");
+    console.log("Using: Lovable AI Gateway (openai/gpt-5.2)");
 
-    const apiUrl = OPENAI_API_KEY 
-      ? "https://api.openai.com/v1/chat/completions" 
-      : "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
     
     const apiHeaders = {
-      "Authorization": `Bearer ${OPENAI_API_KEY || LOVABLE_API_KEY}`,
+      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       "Content-Type": "application/json",
     };
 
-    const apiModel = OPENAI_API_KEY ? "gpt-4.1" : "openai/gpt-5";
-    const isOpenAIDirect = !!OPENAI_API_KEY;
+    const apiModel = "openai/gpt-5.2";
 
-    // OpenAI o3/o-series uses "developer" role, GPT models use "system"
     const systemRole = "system";
 
     const response = await fetch(apiUrl, {
@@ -244,7 +240,7 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
           { role: systemRole, content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ],
-        ...(isOpenAIDirect ? { response_format: { type: "json_object" } } : {}),
+        stream: false,
         stream: false,
       }),
     });
