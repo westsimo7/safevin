@@ -216,8 +216,9 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
       );
     }
 
-    console.log("Sending request to AI gateway...");
+    console.log("Sending request to OpenAI API...");
     console.log("Analysis type:", analysisType || "legacy");
+    console.log("Using:", OPENAI_API_KEY ? "OpenAI direct (o3)" : "Lovable Gateway fallback");
 
     const apiUrl = OPENAI_API_KEY 
       ? "https://api.openai.com/v1/chat/completions" 
@@ -228,7 +229,7 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
       "Content-Type": "application/json",
     };
 
-    const apiModel = OPENAI_API_KEY ? "gpt-4o" : "openai/gpt-5";
+    const apiModel = OPENAI_API_KEY ? "o3" : "openai/gpt-5";
 
     const response = await fetch(apiUrl, {
       method: "POST",
