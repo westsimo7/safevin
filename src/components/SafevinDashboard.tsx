@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, ArrowLeft, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowLeft, Sparkles, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DashboardHeader from "./DashboardHeader";
@@ -11,7 +10,7 @@ import ToolSelector from "./ToolSelector";
 import AnalysisLoader from "./AnalysisLoader";
 import AnalysisCard from "./AnalysisCard";
 import AnalysisSummary from "./AnalysisSummary";
-import AlreadyAnalyzedDialog from "./AlreadyAnalyzedDialog";
+import ListingInputForm from "./ListingInputForm";
 
 interface AnalysisSection {
   title: string;
@@ -31,47 +30,28 @@ interface AnalysisResult {
 
 const SafevinDashboard = () => {
   const [selectedTool, setSelectedTool] = useState<"post" | "pre" | null>(null);
-  const [vintedUrl, setVintedUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
-  const [analyzedUrls, setAnalyzedUrls] = useState<Set<string>>(new Set());
-  const [showAlreadyAnalyzedDialog, setShowAlreadyAnalyzedDialog] = useState(false);
   const { toast } = useToast();
 
-  // Load analyzed URLs from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("safevin_analyzed_urls");
-    if (stored) {
-      setAnalyzedUrls(new Set(JSON.parse(stored)));
-    }
-  }, []);
-
-  const isValidVintedUrl = (url: string): boolean => {
-    return url.includes("vinted.") && url.includes("/items/");
-  };
-
-  const handleAnalyze = async () => {
-    if (!vintedUrl.trim()) {
+  const handleAnalyze = async (data: {
+    images: File[];
+    titolo: string;
+    descrizione: string;
+    categoria: string;
+    prezzo: string;
+    brand: string;
+    condizioni: string;
+    taglia: string;
+    colore: string;
+    tempoCaricamento: string;
+  }) => {
+    if (!data.titolo.trim() && !data.descrizione.trim() && data.images.length === 0) {
       toast({
-        title: "Link mancante",
-        description: "Inserisci il link del tuo annuncio Vinted.",
+        title: "Dati mancanti",
+        description: "Inserisci almeno un titolo, una descrizione o delle foto.",
         variant: "destructive",
       });
-      return;
-    }
-
-    if (!isValidVintedUrl(vintedUrl)) {
-      toast({
-        title: "Link non valido",
-        description: "Inserisci un link valido di un annuncio Vinted.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Check if already analyzed
-    if (analyzedUrls.has(vintedUrl)) {
-      setShowAlreadyAnalyzedDialog(true);
       return;
     }
 
@@ -79,10 +59,27 @@ const SafevinDashboard = () => {
     setAnalysisResult(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke("safelist-analyze", {
-        body: { 
-          vintedUrl,
-          analysisType: "post"
+      // Convert images to base64 data URLs
+      const imageDataUrls: string[] = [];
+      for (const file of data.images) {
+        const dataUrl = await fileToDataUrl(file);
+        imageDataUrls.push(dataUrl);
+      }
+
+      const { data: responseData, error } = await supabase.functions.invoke("safelist-analyze", {
+        body: {
+          listing: {
+            titolo: data.titolo,
+            descrizione: data.descrizione,
+            categoria: data.categoria,
+            prezzo: data.prezzo,
+            brand: data.brand,
+            condizioni: data.condizioni,
+            taglia: data.taglia,
+            colore: data.colore,
+            tempoCaricamento: data.tempoCaricamento,
+          },
+          images: imageDataUrls,
         },
       });
 
@@ -96,10 +93,8 @@ const SafevinDashboard = () => {
         return;
       }
 
-      if (data?.analysis) {
-        const analysis = data.analysis;
-        
-        // Validate the analysis has the expected structure
+      if (responseData?.analysis) {
+        const analysis = responseData.analysis;
         if (typeof analysis === "object" && Array.isArray(analysis.sections)) {
           setAnalysisResult(analysis);
         } else {
@@ -109,18 +104,11 @@ const SafevinDashboard = () => {
             description: "L'analisi non ha restituito un formato valido. Riprova.",
             variant: "destructive",
           });
-          return;
         }
-        
-        // Save analyzed URL
-        const newAnalyzedUrls = new Set(analyzedUrls);
-        newAnalyzedUrls.add(vintedUrl);
-        setAnalyzedUrls(newAnalyzedUrls);
-        localStorage.setItem("safevin_analyzed_urls", JSON.stringify([...newAnalyzedUrls]));
-      } else if (data?.error) {
+      } else if (responseData?.error) {
         toast({
           title: "Errore",
-          description: data.error,
+          description: responseData.error,
           variant: "destructive",
         });
       }
@@ -139,7 +127,6 @@ const SafevinDashboard = () => {
   const handleBack = () => {
     setSelectedTool(null);
     setAnalysisResult(null);
-    setVintedUrl("");
   };
 
   const getOverallScoreColor = (score: number) => {
@@ -153,7 +140,6 @@ const SafevinDashboard = () => {
       <DashboardHeader />
       
       <main className="container mx-auto px-6 py-12">
-        {/* Hero Section */}
         {!selectedTool && (
           <div className="text-center mb-16">
             <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
@@ -166,22 +152,15 @@ const SafevinDashboard = () => {
               <span className="text-primary">in macchine di vendita</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
-              SAFEVIN analizza titolo, foto, prezzo e fiducia del tuo annuncio 
+              SAFEVIN analizza foto, titolo, prezzo e fiducia del tuo annuncio 
               e ti dice esattamente cosa migliorare.
             </p>
-            
-            {/* Tool Selector */}
-            <ToolSelector 
-              onSelectTool={setSelectedTool} 
-              selectedTool={selectedTool}
-            />
+            <ToolSelector onSelectTool={setSelectedTool} selectedTool={selectedTool} />
           </div>
         )}
 
-        {/* SAFEVIN POST Tool */}
         {selectedTool === "post" && (
           <div className="max-w-4xl mx-auto">
-            {/* Back Button */}
             <Button 
               variant="ghost" 
               className="mb-6 text-muted-foreground hover:text-foreground"
@@ -191,54 +170,18 @@ const SafevinDashboard = () => {
               Torna alla selezione
             </Button>
 
-            {/* Input Section */}
             {!analysisResult && !isLoading && (
-              <Card className="border-border/50">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Search className="w-5 h-5 text-primary" />
-                    Analizza il tuo annuncio
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <label className="text-sm text-muted-foreground mb-2 block">
-                      Link annuncio Vinted
-                    </label>
-                    <div className="flex gap-3">
-                      <Input
-                        value={vintedUrl}
-                        onChange={(e) => setVintedUrl(e.target.value)}
-                        placeholder="Incolla qui il link del tuo annuncio Vinted"
-                        className="flex-1 bg-background border-border"
-                      />
-                      <Button 
-                        variant="neon" 
-                        onClick={handleAnalyze}
-                        disabled={isLoading}
-                      >
-                        Avvia Analisi
-                      </Button>
-                    </div>
-                    <p className="text-xs text-muted-foreground/70 mt-2">
-                      Esempio: https://www.vinted.it/items/1234567890
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+              <ListingInputForm onSubmit={handleAnalyze} isLoading={isLoading} />
             )}
 
-            {/* Loading Animation */}
             {isLoading && (
               <Card className="border-border/50">
                 <AnalysisLoader isLoading={isLoading} />
               </Card>
             )}
 
-            {/* Results */}
             {analysisResult && !isLoading && (
               <div className="space-y-8">
-                {/* Overall Score */}
                 <Card className="border-border/50 bg-gradient-to-br from-card to-card/50">
                   <CardContent className="py-8">
                     <div className="flex items-center justify-between">
@@ -266,7 +209,6 @@ const SafevinDashboard = () => {
                   </CardContent>
                 </Card>
 
-                {/* Analysis Sections */}
                 <div className="grid md:grid-cols-2 gap-4">
                   {analysisResult.sections.map((section, index) => (
                     <AnalysisCard
@@ -280,19 +222,15 @@ const SafevinDashboard = () => {
                       ultimateContent={section.ultimateContent}
                       hasUltimate={true}
                       isUltimateUnlocked={false}
-                      onUpgradeClick={() => {
-                        window.location.hash = "upgrade";
-                      }}
+                      onUpgradeClick={() => { window.location.hash = "upgrade"; }}
                     />
                   ))}
                 </div>
 
-                {/* Summary Block */}
                 {analysisResult.summary && (
                   <AnalysisSummary summary={analysisResult.summary} />
                 )}
 
-                {/* New Analysis Button */}
                 <div className="text-center pt-8">
                   <Button variant="glass" onClick={handleBack}>
                     Analizza un altro annuncio
@@ -303,19 +241,17 @@ const SafevinDashboard = () => {
           </div>
         )}
       </main>
-
-      {/* Already Analyzed Dialog */}
-      <AlreadyAnalyzedDialog
-        open={showAlreadyAnalyzedDialog}
-        onOpenChange={setShowAlreadyAnalyzedDialog}
-        onUpgrade={() => {
-          setShowAlreadyAnalyzedDialog(false);
-          // Navigate to upgrade page
-          window.location.hash = "upgrade";
-        }}
-      />
     </div>
   );
 };
+
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 export default SafevinDashboard;
