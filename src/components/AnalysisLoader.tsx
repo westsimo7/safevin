@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Progress } from "@/components/ui/progress";
 
 const analysisSteps = [
   "Connessione al server...",
+  "Analisi qualità immagini...",
+  "Valutazione illuminazione e composizione...",
+  "Controllo autenticità prodotto...",
+  "Analisi copertura fotografica...",
+  "Ottimizzazione mobile...",
   "Analisi SEO Titolo...",
-  "Analisi Prime 3 Foto...",
-  "Analisi Prezzo Mercato...",
   "Valutazione Descrizione...",
+  "Analisi Prezzo Mercato...",
   "Controllo Tag e Categoria...",
-  "Analisi Tempo di Risposta...",
-  "Valutazione Attività Profilo...",
-  "Controllo Ripubblicazione...",
   "Analisi Psicologia Compratore...",
-  "Valutazione Volume Annunci...",
-  "Calcolo Fiducia Finale...",
-  "Generazione Report...",
+  "Valutazione Fiducia e Profilo...",
+  "Calcolo probabilità vendita...",
+  "Generazione Report Finale...",
 ];
 
 interface AnalysisLoaderProps {
@@ -24,6 +24,7 @@ interface AnalysisLoaderProps {
 const AnalysisLoader = ({ isLoading }: AnalysisLoaderProps) => {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
+  const [estimatedTime] = useState(() => Math.floor(Math.random() * 12) + 15);
 
   useEffect(() => {
     if (!isLoading) {
@@ -32,21 +33,19 @@ const AnalysisLoader = ({ isLoading }: AnalysisLoaderProps) => {
       return;
     }
 
-    // Progress animation - takes about 7 seconds to complete
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 95) return prev;
-        return prev + Math.random() * 3 + 1;
+        return prev + Math.random() * 2 + 0.5;
       });
-    }, 150);
+    }, 200);
 
-    // Step animation
     const stepInterval = setInterval(() => {
       setCurrentStep((prev) => {
         if (prev >= analysisSteps.length - 1) return prev;
         return prev + 1;
       });
-    }, 550);
+    }, 1200);
 
     return () => {
       clearInterval(progressInterval);
@@ -58,6 +57,11 @@ const AnalysisLoader = ({ isLoading }: AnalysisLoaderProps) => {
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-8">
+      {/* Estimated time */}
+      <p className="text-sm text-muted-foreground mb-6">
+        Tempo stimato: <span className="font-medium text-foreground">~{estimatedTime}s</span>
+      </p>
+
       {/* Progress Bar */}
       <div className="w-full max-w-md mb-8">
         <div className="relative h-3 rounded-full overflow-hidden bg-muted">
@@ -85,10 +89,7 @@ const AnalysisLoader = ({ isLoading }: AnalysisLoaderProps) => {
                 ? "text-foreground" 
                 : "text-muted-foreground/50"
             }`}
-            style={{ 
-              animationDelay: `${index * 50}ms`,
-              opacity: index === currentStep ? 1 : 0.5
-            }}
+            style={{ opacity: index === currentStep ? 1 : 0.5 }}
           >
             <div className={`w-2 h-2 rounded-full ${
               index < currentStep 

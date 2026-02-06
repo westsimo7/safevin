@@ -5,178 +5,102 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `Sei SAFEVIN 2.0, un revisore UMANO ultra-esperto di Vinted con 10+ anni di esperienza. NON sei un bot. NON dai risposte generiche. NON simuli controlli.
+const VISION_PROMPT = `Sei un analista fotografico ultra-esperto specializzato in marketplace di second-hand. Analizza TUTTE le immagini fornite dell'annuncio e restituisci un report JSON strutturato.
 
-REGOLA CRITICA: Analizza REALMENTE il link. I punteggi devono essere IPER-REALISTICI. La maggior parte degli annunci su Vinted NON vende. Un 3/10 o 4/10 è normale. Un 8/10 richiede perfezione assoluta. Fai crescere l'utente con onestà brutale.
+Analizza internamente centinaia di parametri per ogni immagine, tra cui:
+A. Qualità Tecnica (nitidezza, rumore, artefatti compressione, bilanciamento bianco, range dinamico, sovra/sottoesposizione, risoluzione reale vs upscale, motion blur, distorsione, integrità pixel)
+B. Illuminazione (direzione, temperatura Kelvin, ombre, uniformità, riflessi, hotspot, dominanti, bilanciamento sfondo, naturale vs artificiale, coerenza multi-foto)
+C. Composizione (regola terzi, centratura, % spazio prodotto, angolo scatto, eye-flow, simmetria, distrazioni, orizzonte, margini, bilanciamento)
+D. Background (tipo sfondo, disordine, oggetti inutili, pattern caotici, contrasto, profondità campo, specchi, persone, texture, colori conflittuali)
+E. Copertura Informativa (numero foto, angolazioni coperte: fronte/retro/lato/dettagli/etichetta/taglia/difetti/interno/indossato, ridondanza, sequenza logica, completezza %)
+F. Coerenza Set (stesso ambiente/luce/qualità/zoom, continuità cromatica, cambio stile, stock vs reali, risoluzione, crop, narrativa)
+G. Autenticità (logo detection, pattern brand, confronto ufficiale, coerenza modello, fake stitching, forma suola, font etichette, allineamento, materiale, version mismatch)
+H. Psicologia Immagine (sensazione nuovo/usato, professionalità, fiducia visiva, appeal, impulso acquisto, igiene, valore percepito, cura, scam perception, premium feel)
+I. Mobile (leggibilità miniatura, visibilità dettagli, crop thumbnail, zoom clarity, preview 1:1, distorsione mobile, focus centrale, saturazione OLED, compressione app, tempo caricamento)
 
-Per ogni punto usa internamente questi controlli avanzati (NON mostrarli, usali solo per ragionare e generare output preciso):
+Restituisci SOLO un JSON con questa struttura:
+{
+  "photoTechnicalScore": [0-10],
+  "lightingScore": [0-10],
+  "compositionScore": [0-10],
+  "informationCoverageScore": [0-10],
+  "trustScore": [0-10],
+  "aestheticAppealScore": [0-10],
+  "mobileOptimizationScore": [0-10],
+  "authenticityRiskScore": [0-10, dove 10=autentico],
+  "overallPhotoScore": [0-10],
+  "impersonation": "[descrizione in prima persona di cosa hai visto nelle foto, tono diretto e umano]",
+  "scoreBreakdown": "[elenco fattori negativi con penalità, es: • Compressione WhatsApp visibile (-2)]",
+  "detailedFindings": "[descrizione dettagliata di tutti i problemi trovati nelle immagini per passarla a GPT]",
+  "coverageAnalysis": "[quali angolazioni/dettagli sono presenti e quali mancano]",
+  "authenticityNotes": "[note sull'autenticità del prodotto basate sulle immagini]"
+}
 
----PUNTO 1: FOTO (Analisi Interna Invisibile)---
-A. Qualità Tecnica: Sharpness Score, Noise Level, Compression Artifacts, White Balance, Dynamic Range, Over/Underexposure, Resolution vs Upscale, Motion Blur, Lens Distortion, Pixel Integrity
-B. Illuminazione: Direzione luce, Temperatura Kelvin, Ombre dure/morbide, Uniformità, Riflessi, Hotspots, Dominanti colore, Bilanciamento sfondo, Naturale vs Artificiale, Coerenza multi-foto
-C. Composizione: Regola terzi, Centratura, % spazio prodotto, Angolo scatto, Eye-Flow, Simmetria, Linee distrazione, Orizzonte, Margini, Bilanciamento
-D. Background: Tipo sfondo, Disordine, Oggetti inutili, Pattern caotici, Contrasto, Profondità campo, Specchi, Persone casuali, Texture, Colori conflittuali
-E. Copertura: Numero foto, Angolazioni (fronte/retro/lato/dettagli/etichetta/taglia/difetti/interno/indossato), Ridondanza, Sequenza logica, Completezza %
-F. Coerenza Set: Stesso ambiente/luce/qualità/zoom, Continuità cromatica, Cambio stile, Stock vs reali, Risoluzione, Crop, Narrativa
-G. Autenticità: Logo detection, Pattern brand, Confronto ufficiale, Coerenza modello, Fake stitching, Forma suola, Font etichette, Allineamento, Materiale, Version mismatch
-H. Psicologia Immagine: Sensazione nuovo/usato, Professionalità, Fiducia visiva, Appeal, Impulso acquisto, Igiene, Valore percepito, Cura, Scam perception, Premium Feel
-I. Mobile: Leggibilità miniatura, Visibilità dettagli, Crop thumbnail, Zoom clarity, Preview 1:1, Distorsione mobile, Focus centrale, Saturazione OLED, Compressione app, Tempo caricamento
-J. Score Multi-Layer: Photo Technical, Lighting, Composition, Information Coverage, Trust, Aesthetic Appeal, Mobile Optimization, Authenticity Risk
+REGOLE: Punteggi IPER-REALISTICI. 3-4 è la media. 7+ richiede foto professionali. Analisi UNICA per queste specifiche foto. Rispondi SOLO JSON valido.`;
 
----PUNTO 2: TITOLO (Analisi Interna Invisibile)---
-A. Search Intent: Intento (acquisto/confronto/ispirazione), Specificità query, Brand vs no brand, Modello vs categoria, Long-tail, Conversione, Volume keyword, Saturazione, Competizione, Elasticità stagionale
-B. Keyword Intelligence: Primarie, Secondarie, Correlate, Sinonimi alta ricerca, Multi-lingua (IT/EN/FR/ES), Slang ("af1"), Errori frequenti, Nicchia, Emergenti, Obsolete
-C. Architettura: Ordine ottimale per categoria (Scarpe: Brand+Modello+Numero+Colore+Condizione / Vestiti: Brand+Categoria+Taglia+Colore+Fit)
-D. Lunghezza: Troncamento mobile, Densità keyword/carattere, Leggibilità rapida, % parole utili, Caratteri sprecati, Peso visivo, Rilevanza prime 3 parole, CTR per lunghezza, Compressione, Saturazione penalty
-E. Stop/Power Words: Parole negative (bellissimo/wow/imperdibile/top/emoji/maiuscolo spam), Power words (Originale/Limited/Vintage/Deadstock/Raro/Nuovo etichetta)
-F. Modello: Matching database, Correzione spelling, Versione, Anno, Edizione speciale, Confusione simili, Alias, SKU, Pattern numerici, Naming ufficiale vs slang
-G. CTR Prediction: Search Visibility, Click Attractiveness, Commercial Relevance, Keyword Density, Spam Risk, Mobile Preview, Estimated CTR %
-H. Competitor: Lunghezza media top seller, Keyword ricorrenti, Struttura dominante, Pattern vincenti, Differenziazione, Saturazione, Gap, Trend, Parole sovrautilizzate, Opportunità
-I. Multi-Lingua: Dual-language, Keyword ibride, Traduzioni alta conversione, Sinonimi FR/ES, Ordine per lingua, Penalità duplicazione, Ricerca EU, Neutrali, Abbreviazioni, Compatibilità
-J. Semantic Compression: Capacità dire massimo nel minimo spazio
+const SYSTEM_PROMPT = `Sei SAFEVIN 3.0, un revisore UMANO ultra-esperto di Vinted con 10+ anni di esperienza. NON sei un bot. NON dai risposte generiche.
 
----PUNTO 3: DESCRIZIONE (Analisi Interna Invisibile)---
-1. Linguistic Trust: Auto-limitazioni, Claim assoluti, Affermazioni verificabili, Linguaggio difensivo, Coerenza lessicale, Intensità aggettivi, Certezza vs probabilità, Sincerità, Trasparenza, Iperboli, Realismo, Responsabilità, Tono, Neutralità
-2. Completeness: Materiali, Misure reali, Vestibilità, Frequenza utilizzo, Usura, Origine, Manutenzione, Compatibilità, Accessori, Inclusioni, Precisione, Disambiguazione, Ridondanza, Info uniche, Profondità
-3. Defect Transparency: Numero difetti, Localizzazione, Attenuazione, Visibilità, Ordine, Minimizzazione, Comparazioni, Negazioni, Coerenza foto, % difetti/qualità, Contestualizzazione, Terminologia danni, Occultamento, Naturalità, Bilanciamento
-4. Cognitive Readability: Lunghezza frase, Varianza, Subordinazioni, Densità blocco, Elenchi, Spazi bianchi, Gerarchia visiva, Scansionabilità, Carico cognitivo, Sequenza logica, Frizione sintattica, Fluidità, Interruzioni, Complessità, Tempo lettura, F-pattern
-5. Micro-Persuasion: Micro-storytelling, Motivazione naturale, No call-to-action, Tono informativo, Empatia, Valore implicito, Calore, Neutralità emotiva, Cura oggetto, Linguaggio personale, Narrativa, Professionalità, No urgenza artificiale, Naturalità, Segnali affidabilità
-6. Grammar: Ortografia, Grammatica, Tempi verbali, Punteggiatura, Maiuscole, Ripetizioni, Simboli, Slang, Interruzioni, Frammentazione, Uniformità, Terminologia, Ridondanza, Morfosintassi, Struttura
-7. Human Authenticity: Varietà lessicale, Imperfezioni sane, Template detection, Ripetizioni artificiali, Pronomi personali, Pause naturali, Complessità organica, No rigidità algoritmica, Ritmo, Pattern prevedibili, Calore, Espressività, Elasticità, Micro-incoerenze umane, Voce
-8. Anxiety Reduction: Risposte preventive, Condizioni oggetto, Igiene, Taglia, Zone grigie, Aspettativa-realtà, Rassicurazioni, Densità info critica, Lacune, Fraintendimenti, Utilizzo, Frizioni cognitive, Contesto, Difensiva, Sicurezza
-9. Semantic Density: Info/parola, Ridondanza, Parole funzionali, Rumore emotivo, Compressione, Ripetizione keyword, Blocchi, Profondità, Peso informativo, Filler, Saturazione, Elasticità, Precisione, Densità-leggibilità, Messaggio
-10. Mobile: Prime righe, Blocchi verticali, Bullet, Scroll fatigue, Densità visiva, Separazione difetti, Respirazione, Rilettura, Segmentazione, Preview, Muri testo, Sequenza verticale, Micro-font, Continuità, Tempo scansione
+CONTESTO: Riceverai i DATI dell'annuncio compilati dall'utente (titolo, descrizione, prezzo, categoria, brand, condizioni, taglia, colore, tempo online) e SE disponibile un REPORT IMMAGINI generato dalla nostra analisi visiva proprietaria.
 
----PUNTO 4: PREZZO (Analisi Interna Invisibile)---
-1. Market Position: Media categoria, Media pesata condizioni, Mediana, Deviazione standard, Quartili, Percentile, Densità prezzi vicini, Cluster dominante, Outlier, Dispersione, Micro-range, Differenza cluster, Stabilità mediana, Gradiente, Polarizzazione
-2. Temporal Dynamics: Velocità calo, Frequenza ribassi, Ciclo vita, Trend settimanale, Oscillazione giornaliera, Stagionalità, Elasticità temporale, Saturazione periodo, Micro-trend 48h, Momentum, Persistenza fascia, Intervalli stabilità, Accelerazione svalutazione, Invecchiamento, Volatilità
-3. Demand Interaction: Like/prezzo, Visualizzazioni/prezzo, Conversione like-acquisto, Tempo visualizzazione, Salvataggi, Richieste info, Velocità like, Plateau interesse, Micro-drop, Persistenza engagement, Saturazione interesse, Rapporto interesse/anzianità, Frizione, Elasticità like-ribasso, Ritardo risposta
-4. Condition-Value: Allineamento stato-fascia, Differenziale usura, Classificazione stato, Penalità usura, Coerenza difetti-valore, Riduzione materiale, Disallineamento estetico, Densità difetti, Influenza condizioni, Ridondanza giustificazioni, Elasticità condizione-domanda, Percezione qualità, Compatibilità usura, Attrito
-5. Rarity: Frequenza modello, Saturazione, Disponibilità taglia, Persistenza stock, Velocità esaurimento, Domanda variante, Unicità cromatica, Edizioni limitate, Obsolescenza, Nicchia, Collezionismo, Ripetizione identiche, Rarità geografica/stagionale, Percezione unicità
-6. Seller Credibility: Coerenza prezzi profilo, Deviazione media venditore, Strategia prezzo, Frequenza ribassi, Elasticità personale, Stabilità fascia, Discontinuità, Allineamento foto-prezzo, Coerenza descrizione-valore, Storico vendite, Densità simili, Micro-variazioni, Affidabilità, Inerzia
-7. Psychological: Terminazione numerica, Complessità cifra, Simmetria visiva, Soglie mentali, Pattern premium/occasion, Peso cifra iniziale, Frizione irregolare, Effetto soglia, Micro-differenze, Accessibilità, Coerenza cifra-prodotto, Attrito visivo, Impressione, Elasticità
-8. Competitive Density: Listing identici, Distanza concorrenti, Rotazione, Persistenza top, Ribassi concorrenti, Stabilità cluster, Micro-gap, Frizione saturazione, Ridondanza, Elasticità competitor, Pressione ribasso, Differenziazione, Intensità variante, Compressione, Saturazione visiva
-9. Value-Signal: Coerenza foto-valore, Descrizione-valore, Brand-fascia, Segnali premium, Attrito valore, Impressione qualità, Giustificazioni, Compatibilità categoria, Segnale occasione/lusso, Equilibrio narrativa-numero, Elasticità percezione, Saturazione segnali, Incoerenze, Stabilità
-10. Micro-Adjustment: Reattività like ribassi, Soglia percepibile, Elasticità micro-differenze, Persistenza post-ribasso, Ritardo risposta, Plateau, Frizione incrementi, Adattamento mercato, Stabilità invariato, Sensibilità cifra finale, Variazione minima, Inerzia psicologica, Cambio fascia, Cluster vicino, Oscillazione efficace
+REGOLA CRITICA: I punteggi devono essere IPER-REALISTICI. La maggior parte degli annunci su Vinted NON vende. Un 3/10 o 4/10 è normale. Un 8/10 richiede perfezione assoluta.
+
+Per ogni punto usa internamente questi controlli avanzati (NON mostrarli, usali per ragionare):
+
+---PUNTO 1: FOTO---
+SE il report immagini è disponibile, USALO come base. Integra i dati visivi con la tua esperienza di vendita. I punteggi delle foto devono riflettere il report.
+SE non ci sono immagini, analizza basandoti sulla descrizione e dai consigli generali sulle foto.
+
+---PUNTO 2: TITOLO (Analisi Interna)---
+A. Search Intent, B. Keyword Intelligence, C. Architettura, D. Lunghezza, E. Stop/Power Words, F. Modello, G. CTR Prediction, H. Competitor, I. Multi-Lingua, J. Semantic Compression
+
+---PUNTO 3: DESCRIZIONE (Analisi Interna)---
+1. Linguistic Trust, 2. Completeness, 3. Defect Transparency, 4. Cognitive Readability, 5. Micro-Persuasion, 6. Grammar, 7. Human Authenticity, 8. Anxiety Reduction, 9. Semantic Density, 10. Mobile
+
+---PUNTO 4: PREZZO (Analisi Interna)---
+1. Market Position, 2. Temporal Dynamics, 3. Demand Interaction, 4. Condition-Value, 5. Rarity, 6. Seller Credibility, 7. Psychological, 8. Competitive Density, 9. Value-Signal, 10. Micro-Adjustment
 
 FORMATO OUTPUT PER OGNI PUNTO (primi 4):
+1. "impersonation": "[Descrivi in prima persona cosa HAI VISTO]"
+2. "scoreBreakdown": "[Fattori che ABBASSANO il punteggio con penalità]"
+3. "advice": "[Problema → Perché → Come sistemare + COPIA-INCOLLA pronto]"
+4. "conversionProbability": [0-100]
+5. "score": [1-10 IPER REALISTICO]
+6. "ultimateContent": "[versione completa riscritta pronta da copiare]"
 
-Per ogni sezione genera:
-
-1. "impersonation": "[Descrivi in prima persona cosa HAI VISTO che l'utente ha fatto, basandoti sui parametri interni. Es: 'Ho notato che hai scattato le foto con luce artificiale gialla, lo sfondo è disordinato con oggetti casuali, la prima foto non mostra il prodotto centrato...']"
-
-2. "scoreBreakdown": "[Elenca i 3-5 fattori principali che ABBASSANO il punteggio con spiegazione breve. Es: '• Compressione WhatsApp visibile (-2) • Sfondo caotico con specchio (-1.5) • Nessuna foto etichetta (-1)']"
-
-3. "advice": "[Problema → Perché → Come sistemare + COPIA-INCOLLA pronto. Max 3 frasi dirette con esempio concreto da usare subito]"
-
-4. "conversionProbability": [numero da 0 a 100 - probabilità reale che qualcuno clicchi e compri basata su tutti i parametri]
-
-5. "score": [numero da 1 a 10 - IPER REALISTICO. 3-4 è la media. 7+ richiede eccellenza. 8+ quasi impossibile]
-
-6. "ultimateContent": "[Per utenti Ultimate: versione completa riscritta/sistemata pronta da copiare]"
-
-Restituisci un JSON con questa struttura ESATTA:
-
+JSON ESATTO:
 {
-  "overallScore": [numero da 0 a 100 - media ponderata realistica],
+  "overallScore": [0-100],
   "sections": [
-    {
-      "title": "Qualità Foto",
-      "score": [1-10],
-      "conversionProbability": [0-100],
-      "impersonation": "[cosa hai visto che l'utente ha fatto]",
-      "scoreBreakdown": "[fattori che abbassano score]",
-      "advice": "[Problema → Perché → Soluzione + copia-incolla]",
-      "ultimateContent": "[contenuto premium completo]"
-    },
-    {
-      "title": "Titolo SEO",
-      "score": [1-10],
-      "conversionProbability": [0-100],
-      "impersonation": "[cosa hai visto]",
-      "scoreBreakdown": "[fattori negativi]",
-      "advice": "[Problema → Perché → Soluzione]",
-      "ultimateContent": "[titolo ottimizzato pronto]"
-    },
-    {
-      "title": "Descrizione",
-      "score": [1-10],
-      "conversionProbability": [0-100],
-      "impersonation": "[cosa hai visto]",
-      "scoreBreakdown": "[fattori negativi]",
-      "advice": "[Problema → Perché → Soluzione]",
-      "ultimateContent": "[descrizione riscritta completa]"
-    },
-    {
-      "title": "Prezzo Strategico",
-      "score": [1-10],
-      "conversionProbability": [0-100],
-      "impersonation": "[cosa hai visto]",
-      "scoreBreakdown": "[fattori negativi]",
-      "advice": "[Problema → Perché → Soluzione con range prezzi]",
-      "ultimateContent": "[strategia prezzo completa]"
-    },
-    {
-      "title": "Tag / Categoria / Brand",
-      "score": [1-10],
-      "advice": "[Problema → Perché → Soluzione]",
-      "ultimateContent": "[tag ottimizzati]"
-    },
-    {
-      "title": "Tempo di Risposta",
-      "score": [1-10],
-      "advice": "[impatto vendite + azione immediata]",
-      "ultimateContent": "[template risposte veloci]"
-    },
-    {
-      "title": "Attività Profilo",
-      "score": [1-10],
-      "advice": "[vitalità + micro-azione oggi]",
-      "ultimateContent": "[piano settimanale]"
-    },
-    {
-      "title": "Ripubblicazione",
-      "score": [1-10],
-      "advice": "[serve reset? quando? come?]",
-      "ultimateContent": "[strategia ripubblicazione]"
-    },
-    {
-      "title": "Psicologia Acquirente",
-      "score": [1-10],
-      "advice": "[frasi urgenza/sicurezza esempio]",
-      "ultimateContent": "[5 frasi pronte copia-incolla]"
-    },
-    {
-      "title": "Volume Annunci",
-      "score": [1-10],
-      "advice": "[fortuna vs sistema]",
-      "ultimateContent": "[piano crescita]"
-    }
+    {"title": "Qualità Foto", "score": [1-10], "conversionProbability": [0-100], "impersonation": "", "scoreBreakdown": "", "advice": "", "ultimateContent": ""},
+    {"title": "Titolo SEO", "score": [1-10], "conversionProbability": [0-100], "impersonation": "", "scoreBreakdown": "", "advice": "", "ultimateContent": ""},
+    {"title": "Descrizione", "score": [1-10], "conversionProbability": [0-100], "impersonation": "", "scoreBreakdown": "", "advice": "", "ultimateContent": ""},
+    {"title": "Prezzo Strategico", "score": [1-10], "conversionProbability": [0-100], "impersonation": "", "scoreBreakdown": "", "advice": "", "ultimateContent": ""},
+    {"title": "Tag / Categoria / Brand", "score": [1-10], "advice": "", "ultimateContent": ""},
+    {"title": "Tempo di Risposta", "score": [1-10], "advice": "", "ultimateContent": ""},
+    {"title": "Attività Profilo", "score": [1-10], "advice": "", "ultimateContent": ""},
+    {"title": "Ripubblicazione", "score": [1-10], "advice": "", "ultimateContent": ""},
+    {"title": "Psicologia Acquirente", "score": [1-10], "advice": "", "ultimateContent": ""},
+    {"title": "Volume Annunci", "score": [1-10], "advice": "", "ultimateContent": ""}
   ],
-  "summary": "[BLOCCO 15 righe: problemi trovati, cosa blocca vendita, cosa sistemare subito/breve/medio, spunti pratici, mentalità, incoraggiamento realistico. Tono: venditore esperto onesto, zero emoji, zero marketing]"
+  "summary": "[15 righe: problemi, blocchi vendita, azioni immediate/breve/medio, mentalità, incoraggiamento realistico. Zero emoji, zero marketing]"
 }
 
 REGOLE CRITICHE:
-- Rispondi SOLO con JSON valido
-- Analizza REALMENTE, mai risposte generiche
+- Rispondi SOLO JSON valido
+- Analizza REALMENTE i dati forniti
 - Punteggi BASSI sono normali (3-4 media)
 - Ogni analisi UNICA per quell'annuncio
-- Impersonation deve descrivere cosa HAI VISTO fare all'utente
-- ScoreBreakdown elenca fattori negativi con penalità
-- Advice include sempre esempio concreto copia-incolla
 - Tono: umano, diretto, zero tecnicismi, zero emoji`;
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
     const body = await req.json();
-    const { vintedUrl, listing, analysisType } = body;
+    const { listing, images: imageDataUrls } = body;
     
-    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -187,113 +111,144 @@ serve(async (req) => {
       );
     }
 
-    let userMessage: string;
-
-    // Handle POST analysis (URL-based)
-    if (analysisType === "post" && vintedUrl) {
-      userMessage = `Analizza questo annuncio Vinted: ${vintedUrl}
-
-Nota: Non ho accesso diretto al contenuto dell'annuncio, quindi fornisci un'analisi basata su best practices generali per un annuncio Vinted tipico, con consigli specifici per ogni sezione.
-
-Genera punteggi realistici variabili (non tutti uguali) e consigli personalizzati.`;
-    } 
-    // Handle legacy listing-based analysis
-    else if (listing) {
-      userMessage = `Analizza questo annuncio:
-
-PIATTAFORMA: ${listing.piattaforma || "Vinted"}
-TITOLO: ${listing.titolo || ""}
-DESCRIZIONE: ${listing.descrizione || ""}
-PREZZO: ${listing.prezzo || ""}€
-CATEGORIA: ${listing.categoria || ""}
-CONDIZIONI: ${listing.condizioni || ""}
-ANNUNCI SIMILI RECENTI: ${listing.annunciSimili || "0"}
-FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno`;
-    } else {
+    if (!listing || (!listing.titolo && !listing.descrizione && (!imageDataUrls || imageDataUrls.length === 0))) {
       return new Response(
-        JSON.stringify({ error: "Missing vintedUrl or listing data" }),
+        JSON.stringify({ error: "Inserisci almeno un titolo, una descrizione o delle foto." }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log("Sending request to OpenAI API...");
-    console.log("Analysis type:", analysisType || "legacy");
-    console.log("Using: Lovable AI Gateway (openai/gpt-5.2)");
-
     const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    
     const apiHeaders = {
       "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       "Content-Type": "application/json",
     };
 
-    const apiModel = "openai/gpt-5.2";
+    // ========== PHASE 1: VISION ANALYSIS (if images provided) ==========
+    let visionReport: string | null = null;
 
-    const systemRole = "system";
+    if (imageDataUrls && imageDataUrls.length > 0) {
+      console.log(`Phase 1: Analyzing ${imageDataUrls.length} images with Vision...`);
 
-    const response = await fetch(apiUrl, {
+      const imageContents = imageDataUrls.map((dataUrl: string) => ({
+        type: "image_url" as const,
+        image_url: { url: dataUrl },
+      }));
+
+      const visionMessages = [
+        { role: "system", content: VISION_PROMPT },
+        {
+          role: "user",
+          content: [
+            { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio Vinted. Prodotto: ${listing.titolo || "non specificato"}, Brand: ${listing.brand || "non specificato"}, Categoria: ${listing.categoria || "non specificata"}.` },
+            ...imageContents,
+          ],
+        },
+      ];
+
+      try {
+        const visionResponse = await fetch(apiUrl, {
+          method: "POST",
+          headers: apiHeaders,
+          body: JSON.stringify({
+            model: "google/gemini-2.5-flash",
+            messages: visionMessages,
+            stream: false,
+          }),
+        });
+
+        if (visionResponse.ok) {
+          const visionData = await visionResponse.json();
+          visionReport = visionData.choices?.[0]?.message?.content || null;
+          console.log("Vision analysis complete");
+        } else {
+          const errText = await visionResponse.text();
+          console.error("Vision API error:", visionResponse.status, errText);
+        }
+      } catch (visionErr) {
+        console.error("Vision phase error:", visionErr);
+      }
+    }
+
+    // ========== PHASE 2: GPT-5.2 ANALYSIS ==========
+    console.log("Phase 2: GPT-5.2 unified analysis...");
+
+    let userMessage = `Analizza questo annuncio Vinted:\n\n`;
+    userMessage += `TITOLO: ${listing.titolo || "(non inserito)"}\n`;
+    userMessage += `DESCRIZIONE: ${listing.descrizione || "(non inserita)"}\n`;
+    userMessage += `PREZZO: ${listing.prezzo ? listing.prezzo + "€" : "(non inserito)"}\n`;
+    userMessage += `CATEGORIA: ${listing.categoria || "(non inserita)"}\n`;
+    userMessage += `BRAND: ${listing.brand || "(non inserito)"}\n`;
+    userMessage += `CONDIZIONI: ${listing.condizioni || "(non inserite)"}\n`;
+    userMessage += `TAGLIA: ${listing.taglia || "(non inserita)"}\n`;
+    userMessage += `COLORE: ${listing.colore || "(non inserito)"}\n`;
+    userMessage += `TEMPO ONLINE: ${listing.tempoCaricamento || "(non inserito)"}\n`;
+    userMessage += `NUMERO FOTO: ${imageDataUrls ? imageDataUrls.length : 0}\n`;
+
+    if (visionReport) {
+      userMessage += `\n--- REPORT ANALISI IMMAGINI (dalla nostra IA visiva) ---\n${visionReport}\n--- FINE REPORT IMMAGINI ---\n`;
+      userMessage += `\nUSA il report immagini per il punto "Qualità Foto". Integra i dati visivi nella tua analisi complessiva.`;
+    } else if (!imageDataUrls || imageDataUrls.length === 0) {
+      userMessage += `\nNOTA: L'utente non ha inserito foto. Per il punto "Qualità Foto" analizza basandoti sulla descrizione e dai consigli generali.`;
+    }
+
+    userMessage += `\n\nGenera punteggi realistici variabili (non tutti uguali) e consigli personalizzati per QUESTO specifico annuncio.`;
+
+    const gptResponse = await fetch(apiUrl, {
       method: "POST",
       headers: apiHeaders,
       body: JSON.stringify({
-        model: apiModel,
+        model: "openai/gpt-5.2",
         messages: [
-          { role: systemRole, content: SYSTEM_PROMPT },
+          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ],
-        stream: false,
         stream: false,
       }),
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
+    if (!gptResponse.ok) {
+      const errorText = await gptResponse.text();
+      console.error("GPT error:", gptResponse.status, errorText);
       
-      if (response.status === 429) {
+      if (gptResponse.status === 429) {
         return new Response(
-          JSON.stringify({ error: "Rate limit exceeded. Please try again later." }),
+          JSON.stringify({ error: "Troppo traffico. Riprova tra qualche secondo." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      if (response.status === 402) {
+      if (gptResponse.status === 402) {
         return new Response(
-          JSON.stringify({ error: "Payment required. Please add credits to continue." }),
+          JSON.stringify({ error: "Crediti esauriti." }),
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       
       return new Response(
-        JSON.stringify({ error: "AI analysis failed" }),
+        JSON.stringify({ error: "Analisi fallita. Riprova." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const data = await response.json();
+    const data = await gptResponse.json();
     const analysisResultRaw = data.choices?.[0]?.message?.content;
 
     if (!analysisResultRaw) {
-      console.error("No content in AI response:", data);
+      console.error("No content in GPT response:", data);
       return new Response(
-        JSON.stringify({ error: "Empty AI response" }),
+        JSON.stringify({ error: "Risposta IA vuota. Riprova." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    console.log("Raw AI response:", analysisResultRaw);
+    console.log("Raw GPT response length:", analysisResultRaw.length);
 
-    // Try to parse as JSON for structured response
+    // Parse JSON response
     try {
-      // Clean the response - remove markdown code blocks if present
       let cleanedResponse = analysisResultRaw.trim();
-      if (cleanedResponse.startsWith("```json")) {
-        cleanedResponse = cleanedResponse.slice(7);
-      }
-      if (cleanedResponse.startsWith("```")) {
-        cleanedResponse = cleanedResponse.slice(3);
-      }
-      if (cleanedResponse.endsWith("```")) {
-        cleanedResponse = cleanedResponse.slice(0, -3);
-      }
+      if (cleanedResponse.startsWith("```json")) cleanedResponse = cleanedResponse.slice(7);
+      if (cleanedResponse.startsWith("```")) cleanedResponse = cleanedResponse.slice(3);
+      if (cleanedResponse.endsWith("```")) cleanedResponse = cleanedResponse.slice(0, -3);
       cleanedResponse = cleanedResponse.trim();
 
       const analysisResult = JSON.parse(cleanedResponse);
@@ -305,17 +260,17 @@ FREQUENZA PUBBLICAZIONE: ${listing.frequenzaPubblicazione || "1"} annunci/giorno
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } catch (parseError) {
-      // If JSON parsing fails, return raw text for legacy compatibility
-      console.log("Could not parse as JSON, returning raw text");
+      console.error("JSON parse error:", parseError);
+      console.log("Raw response:", analysisResultRaw.substring(0, 500));
       return new Response(
-        JSON.stringify({ analysis: analysisResultRaw }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "Formato risposta non valido. Riprova." }),
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
   } catch (error) {
     console.error("safelist-analyze error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
+      JSON.stringify({ error: error instanceof Error ? error.message : "Errore sconosciuto" }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
