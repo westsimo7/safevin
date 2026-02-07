@@ -31,6 +31,7 @@ const SafevinDashboard = () => {
   const [selectedTool, setSelectedTool] = useState<"post" | "pre" | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
+  const [lastSubmittedData, setLastSubmittedData] = useState<any>(null);
   const { toast } = useToast();
 
   const handleAnalyze = async (data: {
@@ -96,6 +97,12 @@ const SafevinDashboard = () => {
         const analysis = responseData.analysis;
         if (typeof analysis === "object" && Array.isArray(analysis.sections)) {
           setAnalysisResult(analysis);
+          setLastSubmittedData(data);
+
+          // Save to database in background
+          saveAnalysis(data, analysis).catch((err) =>
+            console.error("Failed to save analysis:", err)
+          );
         } else {
           console.error("Invalid analysis format:", analysis);
           toast({
@@ -126,6 +133,41 @@ const SafevinDashboard = () => {
   const handleBack = () => {
     setSelectedTool(null);
     setAnalysisResult(null);
+    setLastSubmittedData(null);
+  };
+
+  const saveAnalysis = async (data: any, analysis: AnalysisResult) => {
+    let firstImageUrl: string | null = null;
+
+    // Upload first image to storage
+    if (data.images.length > 0) {
+      const file = data.images[0];
+      const fileName = `${Date.now()}-${file.name}`;
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from("analysis-images")
+        .upload(fileName, file);
+
+      if (!uploadError && uploadData) {
+        const { data: urlData } = supabase.storage
+          .from("analysis-images")
+          .getPublicUrl(uploadData.path);
+        firstImageUrl = urlData.publicUrl;
+      }
+    }
+
+    await supabase.from("analyses").insert([{
+      titolo: data.titolo,
+      descrizione: data.descrizione,
+      categoria: data.categoria,
+      prezzo: data.prezzo,
+      brand: data.brand,
+      condizioni: data.condizioni,
+      taglia: data.taglia,
+      colore: data.colore,
+      tempo_caricamento: data.tempoCaricamento,
+      first_image_url: firstImageUrl,
+      analysis_result: analysis as any,
+    }]);
   };
 
   const getOverallScoreColor = (score: number) => {
