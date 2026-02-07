@@ -87,7 +87,7 @@ const ListingInputForm = ({
           <Sparkles className="w-5 h-5 text-primary" />
           Inserisci i dati del tuo annuncio
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Sii il più preciso possibile per un analisi specifica e dettagliata</p>
+        <p className="text-sm text-muted-foreground">Per sicurezza copia e incolla direttamente dal tuo annuncio</p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Image Upload Area */}
