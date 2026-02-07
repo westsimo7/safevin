@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Lock, Crown, TrendingDown, Eye, Target } from "lucide-react";
+import { TrendingDown, Eye, Target } from "lucide-react";
 
 interface AnalysisCardProps {
   title: string;
@@ -10,10 +10,6 @@ interface AnalysisCardProps {
   impersonation?: string;
   scoreBreakdown?: string;
   conversionProbability?: number;
-  hasUltimate?: boolean;
-  ultimateContent?: string;
-  isUltimateUnlocked?: boolean;
-  onUpgradeClick?: () => void;
 }
 
 const AnalysisCard = ({
@@ -23,10 +19,6 @@ const AnalysisCard = ({
   impersonation,
   scoreBreakdown,
   conversionProbability,
-  hasUltimate = true,
-  ultimateContent,
-  isUltimateUnlocked = false,
-  onUpgradeClick,
 }: AnalysisCardProps) => {
   const getScoreColor = (score: number) => {
     if (score >= 7) return "bg-green-500/20 text-green-400 border-green-500/30";
@@ -109,42 +101,6 @@ const AnalysisCard = ({
           </p>
         </div>
 
-        {/* Ultimate Section */}
-        {hasUltimate && (
-          <div className="mt-4 p-4 rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20">
-            <div className="flex items-center gap-2 mb-3">
-              <Crown className="w-4 h-4 text-amber-400" />
-              <span className="text-sm font-semibold text-amber-400">Analisi Ultimate</span>
-            </div>
-            
-            {isUltimateUnlocked && ultimateContent ? (
-              <p className="text-sm text-foreground/90 leading-relaxed whitespace-pre-line">
-                {ultimateContent}
-              </p>
-            ) : (
-              <div className="space-y-3">
-                <div className="relative">
-                  <p className="text-sm text-muted-foreground/50 blur-[2px] select-none leading-relaxed">
-                    Versione migliorata pronta da copiare, strategie concrete, 
-                    template risposte veloci e contenuto esclusivo...
-                  </p>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <Lock className="w-5 h-5 text-amber-400/60" />
-                  </div>
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full border-amber-500/30 text-amber-400 hover:bg-amber-500/10 hover:text-amber-300"
-                  onClick={onUpgradeClick}
-                >
-                  <Crown className="w-3 h-3 mr-2" />
-                  Sblocca con Ultimate
-                </Button>
-              </div>
-            )}
-          </div>
-        )}
       </CardContent>
     </Card>
   );
