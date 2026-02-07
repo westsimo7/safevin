@@ -16,12 +16,18 @@ const DashboardHeader = () => {
 
         {/* Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <a 
-            href="#dashboard" 
+          <Link 
+            to="/dashboard" 
             className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
           >
             Dashboard
-          </a>
+          </Link>
+          <Link 
+            to="/storico" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Storico
+          </Link>
           <a 
             href="#account" 
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"

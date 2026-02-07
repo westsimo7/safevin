@@ -14,7 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      analyses: {
+        Row: {
+          analysis_result: Json
+          brand: string
+          categoria: string
+          colore: string
+          condizioni: string
+          created_at: string
+          descrizione: string
+          first_image_url: string | null
+          id: string
+          prezzo: string
+          taglia: string
+          tempo_caricamento: string
+          titolo: string
+        }
+        Insert: {
+          analysis_result: Json
+          brand?: string
+          categoria?: string
+          colore?: string
+          condizioni?: string
+          created_at?: string
+          descrizione?: string
+          first_image_url?: string | null
+          id?: string
+          prezzo?: string
+          taglia?: string
+          tempo_caricamento?: string
+          titolo?: string
+        }
+        Update: {
+          analysis_result?: Json
+          brand?: string
+          categoria?: string
+          colore?: string
+          condizioni?: string
+          created_at?: string
+          descrizione?: string
+          first_image_url?: string | null
+          id?: string
+          prezzo?: string
+          taglia?: string
+          tempo_caricamento?: string
+          titolo?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
