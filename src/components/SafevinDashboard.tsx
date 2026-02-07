@@ -19,7 +19,6 @@ interface AnalysisSection {
   impersonation?: string;
   scoreBreakdown?: string;
   conversionProbability?: number;
-  ultimateContent?: string;
 }
 
 interface AnalysisResult {
@@ -219,10 +218,6 @@ const SafevinDashboard = () => {
                       impersonation={section.impersonation}
                       scoreBreakdown={section.scoreBreakdown}
                       conversionProbability={section.conversionProbability}
-                      ultimateContent={section.ultimateContent}
-                      hasUltimate={true}
-                      isUltimateUnlocked={false}
-                      onUpgradeClick={() => { window.location.hash = "upgrade"; }}
                     />
                   ))}
                 </div>
