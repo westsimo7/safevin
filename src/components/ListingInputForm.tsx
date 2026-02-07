@@ -154,7 +154,7 @@ const ListingInputForm = ({
               <Layers className="w-3.5 h-3.5 text-primary" />
               Categoria
             </label>
-            <Input value={categoria} onChange={e => setCategoria(e.target.value)} placeholder="Es: Scarpe, Felpe, Pantaloni..." className="bg-background border-border" />
+            <Input value={categoria} onChange={e => setCategoria(e.target.value)} placeholder="copia e incolla dal tuo annuncio" className="bg-background border-border" />
           </div>
 
           {/* Prezzo */}
