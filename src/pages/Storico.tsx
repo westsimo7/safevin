@@ -180,6 +180,7 @@ const Storico = () => {
         </AlertDialogContent>
       </AlertDialog>
     </div>
+  );
 };
 
 export default Storico;
