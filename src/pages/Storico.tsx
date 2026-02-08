@@ -5,8 +5,19 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Sparkles, ArrowRight, History, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sparkles, ArrowRight, History, Trash2 } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "@/components/ui/sonner";
 
 interface AnalysisRecord {
   id: string;
@@ -19,7 +30,20 @@ interface AnalysisRecord {
 const Storico = () => {
   const [analyses, setAnalyses] = useState<AnalysisRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleDelete = async () => {
+    if (!deleteId) return;
+    const { error } = await supabase.from("analyses").delete().eq("id", deleteId);
+    if (!error) {
+      setAnalyses((prev) => prev.filter((a) => a.id !== deleteId));
+      toast.success("Analisi eliminata");
+    } else {
+      toast.error("Errore durante l'eliminazione");
+    }
+    setDeleteId(null);
+  };
 
   useEffect(() => {
     const fetchAnalyses = async () => {
@@ -82,7 +106,14 @@ const Storico = () => {
                     className="min-w-[280px] max-w-[280px] cursor-pointer border-border/50 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 transition-all duration-300 flex-shrink-0"
                     onClick={() => navigate(`/storico/${analysis.id}`)}
                   >
-                    <CardContent className="p-0">
+                    <CardContent className="p-0 relative">
+                      <button
+                        className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 text-muted-foreground hover:text-destructive hover:border-destructive/50 transition-colors"
+                        onClick={(e) => { e.stopPropagation(); setDeleteId(analysis.id); }}
+                        aria-label="Elimina analisi"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                       <div className="h-40 bg-muted/30 rounded-t-lg overflow-hidden">
                         {analysis.first_image_url ? (
                           <img
@@ -131,8 +162,24 @@ const Storico = () => {
           </div>
         )}
       </main>
+
+      <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <AlertDialogContent className="border-border bg-card">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Eliminare questa analisi?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Questa azione è irreversibile. L'analisi verrà rimossa definitivamente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Elimina
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  );
 };
 
 export default Storico;
