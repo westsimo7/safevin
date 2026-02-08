@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const DashboardHeader = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo - Link to Home */}
+        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <span className="text-2xl font-black tracking-tight">
             <span className="text-foreground">SAFE</span>
@@ -14,45 +17,41 @@ const DashboardHeader = () => {
           </span>
         </Link>
 
-        {/* Navigation */}
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link 
-            to="/dashboard" 
-            className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors"
-          >
-            Dashboard
-          </Link>
-          <Link 
-            to="/storico" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Storico
-          </Link>
-          <a 
-            href="#account" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Account
-          </a>
-          <a 
-            href="#upgrade" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Upgrade
-          </a>
+          <Link to="/dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Dashboard</Link>
+          <Link to="/storico" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Storico</Link>
+          <a href="#account" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Account</a>
+          <a href="#upgrade" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Upgrade</a>
         </nav>
 
-        {/* AI Badge + CTA */}
-        <div className="flex items-center gap-4">
+        {/* Right side */}
+        <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
             <span className="text-xs font-medium text-primary">AI Powered for Vinted</span>
           </div>
-          <Button variant="neon" size="sm">
-            Upgrade
-          </Button>
+          <Button variant="neon" size="sm" className="hidden md:inline-flex">Upgrade</Button>
+          <button
+            className="md:hidden p-2 text-foreground"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <nav className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur px-6 py-4 flex flex-col gap-4">
+          <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Dashboard</Link>
+          <Link to="/storico" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Storico</Link>
+          <a href="#account" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Account</a>
+          <a href="#upgrade" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Upgrade</a>
+          <Button variant="neon" size="sm" className="w-full mt-2">Upgrade</Button>
+        </nav>
+      )}
     </header>
   );
 };
