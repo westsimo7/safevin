@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardHeader from "@/components/DashboardHeader";
 import AnalysisCard from "@/components/AnalysisCard";
+import MobileAnalysisCard from "@/components/MobileAnalysisCard";
 import AnalysisSummary from "@/components/AnalysisSummary";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +30,7 @@ interface AnalysisRecord {
 const StoricoDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [analysis, setAnalysis] = useState<AnalysisRecord | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -179,19 +182,35 @@ const StoricoDetail = () => {
               </CardContent>
             </Card>
 
-            <div className="grid md:grid-cols-2 gap-4">
-              {result.sections?.map((section: any, index: number) => (
-                <AnalysisCard
-                  key={index}
-                  title={section.title}
-                  score={section.score}
-                  advice={section.advice}
-                  impersonation={section.impersonation}
-                  scoreBreakdown={section.scoreBreakdown}
-                  conversionProbability={section.conversionProbability}
-                />
-              ))}
-            </div>
+            {isMobile ? (
+              <div className="flex flex-col gap-3">
+                {result.sections?.map((section: any, index: number) => (
+                  <MobileAnalysisCard
+                    key={index}
+                    title={section.title}
+                    score={section.score}
+                    advice={section.advice}
+                    impersonation={section.impersonation}
+                    scoreBreakdown={section.scoreBreakdown}
+                    conversionProbability={section.conversionProbability}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 gap-4">
+                {result.sections?.map((section: any, index: number) => (
+                  <AnalysisCard
+                    key={index}
+                    title={section.title}
+                    score={section.score}
+                    advice={section.advice}
+                    impersonation={section.impersonation}
+                    scoreBreakdown={section.scoreBreakdown}
+                    conversionProbability={section.conversionProbability}
+                  />
+                ))}
+              </div>
+            )}
 
             {result.summary && <AnalysisSummary summary={result.summary} />}
 
