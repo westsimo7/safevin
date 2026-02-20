@@ -21,7 +21,7 @@ interface ListingInputFormProps {
   onSubmit: (data: ListingData) => void;
   isLoading: boolean;
 }
-const MAX_IMAGES = 50;
+const MAX_IMAGES = 15;
 const ListingInputForm = ({
   onSubmit,
   isLoading
