@@ -227,7 +227,7 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto pt-2">
+    <div className="max-w-2xl mx-auto flex-1 flex flex-col overflow-hidden">
       {step !== "generating" && step !== "output" && step !== "category" && (
         <Button
           variant="ghost"
