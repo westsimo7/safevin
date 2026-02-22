@@ -13,7 +13,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
     <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
       {/* SAFEViN Audit - Active */}
       <Card 
-        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 ${
+        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 flex flex-col ${
           selectedTool === "post" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
         }`}
         onClick={() => onSelectTool("post")}
@@ -23,7 +23,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
             Attivo
           </Badge>
         </div>
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-2 flex-1">
           <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
             <Search className="w-6 h-6 text-primary" />
           </div>
@@ -32,7 +32,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
             Analisi strutturale del tuo annuncio pubblicato. SafeScore™ su 10 categorie, problemi e soluzioni operative.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mt-auto">
           <Button variant="neon" className="w-full group">
             Avvia Audit
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -42,7 +42,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
 
       {/* SAFEViN Studio - Active */}
       <Card 
-        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 ${
+        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 flex flex-col ${
           selectedTool === "pre" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
         }`}
         onClick={() => onSelectTool("pre")}
@@ -52,7 +52,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
             Attivo
           </Badge>
         </div>
-        <CardHeader className="pb-2">
+        <CardHeader className="pb-2 flex-1">
           <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
             <PenTool className="w-6 h-6 text-primary" />
           </div>
@@ -61,7 +61,7 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
             Costruzione strategica dell'annuncio prima della pubblicazione. L'AI ti guida passo dopo passo.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="mt-auto">
           <Button variant="neon" className="w-full group">
             Avvia Studio
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

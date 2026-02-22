@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Storico from "./pages/Storico";
+import StoricoAudit from "./pages/StoricoAudit";
+import StoricoStudio from "./pages/StoricoStudio";
 import StoricoDetail from "./pages/StoricoDetail";
 import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/storico" element={<Storico />} />
+          <Route path="/storico/audit" element={<StoricoAudit />} />
+          <Route path="/storico/studio" element={<StoricoStudio />} />
           <Route path="/storico/studio/:id" element={<StudioDetailPage />} />
           <Route path="/storico/:id" element={<StoricoDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
