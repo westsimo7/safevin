@@ -41,9 +41,6 @@ const PhotoUploader = ({ categoria, onComplete }: PhotoUploaderProps) => {
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center">
-        <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-          Step 2 di 4
-        </Badge>
         <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Carica le foto del prodotto
         </h2>
