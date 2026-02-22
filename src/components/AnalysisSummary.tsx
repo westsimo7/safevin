@@ -13,7 +13,7 @@ const AnalysisSummary = ({ summary }: AnalysisSummaryProps) => {
           <div className="p-2 rounded-lg bg-primary/10">
             <FileText className="w-5 h-5 text-primary" />
           </div>
-          Analisi Completa
+          Report operativo completo
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -76,7 +76,7 @@ const StoricoDetail = () => {
           <p className="text-muted-foreground mb-4">Analisi non trovata.</p>
           <Button variant="ghost" onClick={() => navigate("/storico")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna allo storico
+            Torna allo Storico
           </Button>
         </main>
       </div>
@@ -107,7 +107,7 @@ const StoricoDetail = () => {
           onClick={() => navigate("/storico")}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo storico
+          Torna allo Storico
         </Button>
 
         {/* Original Input Data - Read Only */}
@@ -115,7 +115,7 @@ const StoricoDetail = () => {
           <CardContent className="py-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
               <ImageIcon className="w-5 h-5 text-primary" />
-              Dati dell'annuncio analizzato
+              Dati dell'annuncio sottoposto ad Audit
             </h2>
 
             {analysis.first_image_url && (
@@ -160,7 +160,7 @@ const StoricoDetail = () => {
               <CardContent className="py-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">Punteggio Globale</p>
+                    <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                     <div className="flex items-center gap-4">
                       <span className={`text-6xl font-black ${getOverallScoreColor(result.overallScore)}`}>
                         {result.overallScore}
@@ -216,7 +216,7 @@ const StoricoDetail = () => {
 
             <div className="text-center pt-8">
               <Button variant="glass" onClick={() => navigate("/storico")}>
-                Torna allo storico
+                Torna allo Storico
               </Button>
             </div>
           </div>

@@ -3,23 +3,23 @@ import { BarChart3, Eye, Shield, Zap } from "lucide-react";
 const features = [
   {
     icon: Eye,
-    title: "Monitoraggio comportamentale",
-    description: "Analizza pattern di utilizzo, frequenza azioni e segnali di rischio che l'algoritmo Vinted considera sospetti.",
+    title: "SAFEViN Audit",
+    description: "Analisi strutturale di annunci già pubblicati. 10 categorie, punteggio SafeScore™, problemi identificati e soluzioni operative immediate.",
   },
   {
     icon: BarChart3,
-    title: "Risk Score in tempo reale",
-    description: "Indicatore chiaro del livello di rischio del tuo account, con spiegazioni testuali concrete.",
+    title: "SafeScore™",
+    description: "Metrica proprietaria su 10 categorie che quantifica la qualità del tuo annuncio. Non un'opinione: un dato su cui agire.",
   },
   {
     icon: Shield,
-    title: "Suggerimenti operativi",
-    description: "Azioni correttive immediate da eseguire per ridurre il rischio di limitazioni o ban.",
+    title: "Correzioni operative",
+    description: "Ogni problema rilevato include una soluzione concreta. Sai esattamente cosa cambiare, perché e quale impatto avrà.",
   },
   {
     icon: Zap,
-    title: "Simulatore di rischio",
-    description: "Scopri l'impatto delle tue azioni prima di farle. 'Se fai X → rischio aumenta di Y'.",
+    title: "SAFEViN Studio",
+    description: "Costruzione strategica dell'annuncio prima della pubblicazione. Struttura, copy e posizionamento guidati dall'AI.",
   },
 ];
 
@@ -30,14 +30,14 @@ const SolutionSection = () => {
         {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Safevin non indovina. <span className="text-primary">Analizza.</span>
+            Non opinioni. <span className="text-primary">Dati e metodo.</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Safevin monitora e interpreta il comportamento del tuo account rispetto a pattern di rischio noti, 
-            errori frequenti e dinamiche che portano a limitazioni o ban.
+            SAFEViN è un ecosistema AI che analizza la struttura dei tuoi annunci, 
+            identifica i punti deboli e ti guida con azioni correttive precise.
           </p>
           <p className="text-foreground/80 mt-4 font-medium">
-            Non promette risultati. Promette <span className="text-primary">consapevolezza e controllo.</span>
+            Ogni annuncio ha margini di miglioramento. <span className="text-primary">SAFEViN li rende visibili.</span>
           </p>
         </div>
         
@@ -66,10 +66,10 @@ const SolutionSection = () => {
         {/* Dashboard preview hint */}
         <div className="mt-16 p-8 rounded-2xl bg-card/30 border border-border text-center">
           <p className="text-muted-foreground text-sm mb-2">
-            ⚠️ Il SaaS Safevin è accessibile solo dalla dashboard account dopo il login.
+            ⚠️ Gli strumenti SAFEViN sono accessibili dalla dashboard dopo l'accesso.
           </p>
           <p className="text-foreground/80">
-            Questo garantisce <strong>sicurezza</strong>, <strong>privacy</strong> e un'esperienza <strong>premium</strong>.
+            Un ambiente riservato per garantire <strong>precisione</strong>, <strong>privacy</strong> e <strong>risultati professionali</strong>.
           </p>
         </div>
       </div>

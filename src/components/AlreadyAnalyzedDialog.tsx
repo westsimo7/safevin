@@ -26,10 +26,10 @@ const AlreadyAnalyzedDialog = ({ open, onOpenChange, onUpgrade }: AlreadyAnalyze
           </div>
           <AlertDialogTitle className="text-center">Annuncio già analizzato</AlertDialogTitle>
           <AlertDialogDescription className="text-center">
-            Hai già analizzato questo annuncio.
+            Questo annuncio ha già un SafeScore™ attivo.
             <br />
             <span className="text-foreground font-medium">
-              Sblocca l'analisi Ultimate per un'analisi avanzata e consigli professionali.
+              Passa a Expert per sbloccare l'analisi multi-pattern avanzata e correzioni personalizzate.
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -40,7 +40,7 @@ const AlreadyAnalyzedDialog = ({ open, onOpenChange, onUpgrade }: AlreadyAnalyze
             className="sm:flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
           >
             <Crown className="w-4 h-4 mr-2" />
-            Passa a Ultimate
+            Passa a Expert
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

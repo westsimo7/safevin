@@ -68,15 +68,15 @@ const Storico = () => {
         <div className="text-center mb-16">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
             <History className="w-3 h-3 mr-1" />
-            Storico Analisi
+            Storico Audit
           </Badge>
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            Riguarda le tue analisi
+            I tuoi Audit.
             <br />
-            <span className="text-primary">e monitora i progressi</span>
+            <span className="text-primary">Tutti in un punto.</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
-            Tutte le analisi che hai effettuato, salvate e pronte per essere consultate.
+            Ogni analisi salvata, ogni SafeScore™ tracciato. Confronta, monitora, migliora.
           </p>
 
           <Button
@@ -85,7 +85,7 @@ const Storico = () => {
             className="group mb-12"
             onClick={() => navigate("/dashboard")}
           >
-            Analizza un annuncio
+            Avvia nuovo Audit
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </div>
@@ -94,7 +94,7 @@ const Storico = () => {
           <div className="text-center text-muted-foreground">Caricamento...</div>
         ) : analyses.length === 0 ? (
           <div className="text-center text-muted-foreground">
-            Nessuna analisi ancora. Inizia analizzando il tuo primo annuncio!
+            Nessun Audit ancora. Avvia il primo per ottenere il tuo SafeScore™.
           </div>
         ) : (
           <div className="relative">
@@ -166,9 +166,9 @@ const Storico = () => {
       <AlertDialog open={!!deleteId} onOpenChange={(open) => !open && setDeleteId(null)}>
         <AlertDialogContent className="border-border bg-card">
           <AlertDialogHeader>
-            <AlertDialogTitle>Eliminare questa analisi?</AlertDialogTitle>
+            <AlertDialogTitle>Eliminare questo Audit?</AlertDialogTitle>
             <AlertDialogDescription>
-              Questa azione è irreversibile. L'analisi verrà rimossa definitivamente.
+              Questa azione è irreversibile. L'Audit e il relativo SafeScore™ verranno rimossi definitivamente.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

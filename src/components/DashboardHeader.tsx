@@ -13,7 +13,7 @@ const DashboardHeader = () => {
         <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
           <span className="text-2xl font-black tracking-tight">
             <span className="text-foreground">SAFE</span>
-            <span className="text-primary">VIN</span>
+            <span className="text-primary">ViN</span>
           </span>
         </Link>
 
@@ -29,7 +29,7 @@ const DashboardHeader = () => {
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
             <Sparkles className="w-3.5 h-3.5 text-primary" />
-            <span className="text-xs font-medium text-primary">AI Powered for Vinted</span>
+            <span className="text-xs font-medium text-primary">Ecosistema AI</span>
           </div>
           <Button variant="neon" size="sm" className="hidden md:inline-flex">Upgrade</Button>
           <button
