@@ -46,8 +46,13 @@ REGOLE:
 3. NON fare domande su informazioni già disponibili dal report visivo
 4. Ogni domanda deve avere uno SCOPO chiaro per l'annuncio finale
 5. Adatta il numero e tipo di domande al prodotto specifico
-6. Massimo 6-8 domande per round, minimo 3
-7. Se hai abbastanza info, rispondi con "complete": true
+6. Se hai abbastanza info, rispondi con "complete": true
+
+REGOLE FORMATO DOMANDE:
+- Le domande a CROCETTE (type: "options") devono essere raggruppate a MASSIMO 3 per round
+- Le domande APERTE (type: "text") devono essere MASSIMO 1 per round
+- Ogni round può avere: fino a 3 domande options + 1 domanda text, OPPURE solo domande options (max 3), OPPURE solo 1 domanda text
+- NON mischiare più di 1 domanda text per round
 
 FORMATO OUTPUT (JSON):
 {
@@ -143,57 +148,92 @@ serve(async (req) => {
         );
       }
 
-      console.log(`Vision: Analyzing ${images.length} images...`);
+      console.log(`Vision: Analyzing ${images.length} images with multi-pass verification...`);
 
       const imageContents = images.map((dataUrl: string) => ({
         type: "image_url" as const,
         image_url: { url: dataUrl },
       }));
 
-      const visionMessages = [
-        { role: "system", content: VISION_PROMPT },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: `Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}.` },
-            ...imageContents,
-          ],
-        },
-      ];
+      const NUM_PASSES = 3;
+      const reports: string[] = [];
 
-      const visionResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: visionMessages,
-          stream: false,
-        }),
-      });
+      for (let pass = 0; pass < NUM_PASSES; pass++) {
+        console.log(`Vision pass ${pass + 1}/${NUM_PASSES}...`);
+        const visionMessages = [
+          { role: "system", content: VISION_PROMPT },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: `Analisi pass ${pass + 1}. Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}. Sii ESTREMAMENTE preciso su misure, numeri e testo visibile. Ricontrolla ogni dato numerico (taglie, misure, quantità).` },
+              ...imageContents,
+            ],
+          },
+        ];
 
-      if (!visionResponse.ok) {
-        const errText = await visionResponse.text();
-        console.error("Vision error:", visionResponse.status, errText);
-        if (visionResponse.status === 429) {
-          return new Response(JSON.stringify({ error: "Troppi richieste. Riprova tra qualche istante." }), {
-            status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
+        const visionResponse = await fetch(apiUrl, {
+          method: "POST",
+          headers: apiHeaders,
+          body: JSON.stringify({
+            model: "google/gemini-2.5-flash",
+            messages: visionMessages,
+            stream: false,
+          }),
+        });
+
+        if (!visionResponse.ok) {
+          const errText = await visionResponse.text();
+          console.error(`Vision pass ${pass + 1} error:`, visionResponse.status, errText);
+          if (visionResponse.status === 429) {
+            return new Response(JSON.stringify({ error: "Troppi richieste. Riprova tra qualche istante." }), {
+              status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          if (visionResponse.status === 402) {
+            return new Response(JSON.stringify({ error: "Crediti AI esauriti." }), {
+              status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          // If a pass fails, continue with what we have
+          continue;
         }
-        if (visionResponse.status === 402) {
-          return new Response(JSON.stringify({ error: "Crediti AI esauriti." }), {
-            status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
+
+        const visionData = await visionResponse.json();
+        const passReport = visionData.choices?.[0]?.message?.content || "";
+        if (passReport) reports.push(passReport);
+      }
+
+      if (reports.length === 0) {
         return new Response(JSON.stringify({ error: "Errore analisi immagini." }), {
           status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
 
-      const visionData = await visionResponse.json();
-      const report = visionData.choices?.[0]?.message?.content || null;
+      // If multiple passes, synthesize with a consensus call
+      let finalReport = reports[0];
+      if (reports.length > 1) {
+        console.log(`Synthesizing ${reports.length} vision passes...`);
+        const synthesisResponse = await fetch(apiUrl, {
+          method: "POST",
+          headers: apiHeaders,
+          body: JSON.stringify({
+            model: "google/gemini-2.5-flash",
+            messages: [
+              { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
+              { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
+            ],
+            stream: false,
+          }),
+        });
+
+        if (synthesisResponse.ok) {
+          const synthesisData = await synthesisResponse.json();
+          finalReport = synthesisData.choices?.[0]?.message?.content || finalReport;
+        }
+      }
 
       return new Response(
-        JSON.stringify({ visionReport: report }),
+        JSON.stringify({ visionReport: finalReport }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }

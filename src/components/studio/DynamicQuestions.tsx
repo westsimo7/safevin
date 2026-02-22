@@ -106,10 +106,6 @@ const DynamicQuestions = ({
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center">
-        <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-          <MessageSquare className="w-3 h-3 mr-1" />
-          Step 3 di 4
-        </Badge>
         <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Raccontami del prodotto
         </h2>
