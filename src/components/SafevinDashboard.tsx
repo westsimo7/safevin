@@ -182,6 +182,16 @@ const SafevinDashboard = () => {
       <DashboardHeader />
       
       <main className="container mx-auto px-6 pt-4 pb-12">
+        {selectedTool && (
+          <Button 
+            variant="ghost" 
+            className="mb-6 text-muted-foreground hover:text-foreground"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna alla Dashboard
+          </Button>
+        )}
         {!selectedTool && (
           <div className="text-center mb-8">
             <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
@@ -207,14 +217,6 @@ const SafevinDashboard = () => {
 
         {selectedTool === "post" && (
           <div className="max-w-4xl mx-auto">
-            <Button 
-              variant="ghost" 
-              className="mb-6 text-muted-foreground hover:text-foreground"
-              onClick={handleBack}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla Dashboard
-            </Button>
 
             {!analysisResult && !isLoading && (
               <ListingInputForm onSubmit={handleAnalyze} isLoading={isLoading} />
