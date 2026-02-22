@@ -213,7 +213,7 @@ const SafevinDashboard = () => {
               onClick={handleBack}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Torna alla selezione
+              Torna alla Dashboard
             </Button>
 
             {!analysisResult && !isLoading && (
