@@ -178,14 +178,14 @@ const SafevinDashboard = () => {
   };
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="min-h-screen bg-background">
       <DashboardHeader />
       
-      <main className="container mx-auto px-6 pt-4 pb-4 flex-1 flex flex-col overflow-hidden">
+      <main className="container mx-auto px-6 pt-4 pb-12">
         {selectedTool && (
           <Button 
             variant="ghost" 
-            className="mb-6 text-muted-foreground hover:text-foreground flex-shrink-0"
+            className="mb-6 text-muted-foreground hover:text-foreground"
             onClick={handleBack}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />

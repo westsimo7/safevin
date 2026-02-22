@@ -45,7 +45,7 @@ const CategorySelector = ({ onSelect, selected }: CategorySelectorProps) => {
   );
 
   return (
-    <div className="flex-1 flex flex-col animate-fade-in overflow-hidden">
+    <div className="h-[calc(100vh-120px)] flex flex-col animate-fade-in overflow-hidden">
       <div className="flex-shrink-0 space-y-4 pb-4">
         <h2 className="text-2xl md:text-3xl font-bold">
           Cosa stai vendendo?
