@@ -181,19 +181,19 @@ const SafevinDashboard = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader />
       
-      <main className="container mx-auto px-6 py-12">
+      <main className="container mx-auto px-6 pt-4 pb-12">
         {!selectedTool && (
-          <div className="text-center mb-16">
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
+          <div className="text-center mb-8">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
               <Sparkles className="w-3 h-3 mr-1" />
               Ecosistema AI per Marketplace
             </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
               Analisi strutturale.
               <br />
               <span className="text-primary">Risultati misurabili.</span>
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
               Scegli lo strumento, inserisci i dati del tuo annuncio 
               e ricevi il tuo SafeScore™ con le correzioni operative.
             </p>

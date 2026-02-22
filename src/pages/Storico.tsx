@@ -14,16 +14,16 @@ const Storico = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader />
 
-      <main className="container mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
+      <main className="container mx-auto px-6 pt-4 pb-12">
+        <div className="text-center mb-8">
+          <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
             <History className="w-3 h-3 mr-1" />
             I tuoi lavori
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">
             Storico completo.
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto">
             Tutti i tuoi annunci e audit in un unico punto.
           </p>
         </div>
