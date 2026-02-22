@@ -185,7 +185,7 @@ const SafevinDashboard = () => {
         {selectedTool && (
           <Button 
             variant="ghost" 
-            className="mb-6 text-muted-foreground hover:text-foreground"
+            className="mb-6 text-muted-foreground hover:text-foreground flex-shrink-0"
             onClick={handleBack}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
