@@ -48,8 +48,8 @@ const SafevinDashboard = () => {
   }) => {
     if (!data.titolo.trim() && !data.descrizione.trim() && data.images.length === 0) {
       toast({
-        title: "Dati mancanti",
-        description: "Inserisci almeno un titolo, una descrizione o delle foto.",
+        title: "Dati insufficienti",
+        description: "Inserisci almeno un titolo, una descrizione o delle foto per avviare l'analisi.",
         variant: "destructive",
       });
       return;
@@ -86,8 +86,8 @@ const SafevinDashboard = () => {
       if (error) {
         console.error("Function error:", error);
         toast({
-          title: "Errore analisi",
-          description: error.message || "Impossibile analizzare l'annuncio.",
+          title: "Errore durante l'analisi",
+          description: error.message || "Non è stato possibile completare l'analisi. Riprova.",
           variant: "destructive",
         });
         return;
@@ -106,8 +106,8 @@ const SafevinDashboard = () => {
         } else {
           console.error("Invalid analysis format:", analysis);
           toast({
-            title: "Errore formato",
-            description: "L'analisi non ha restituito un formato valido. Riprova.",
+            title: "Formato non valido",
+            description: "L'analisi non ha restituito un formato riconosciuto. Riprova.",
             variant: "destructive",
           });
         }
@@ -121,8 +121,8 @@ const SafevinDashboard = () => {
     } catch (err) {
       console.error("Unexpected error:", err);
       toast({
-        title: "Errore",
-        description: "Si è verificato un errore imprevisto.",
+        title: "Errore imprevisto",
+        description: "Qualcosa è andato storto. Riprova tra qualche istante.",
         variant: "destructive",
       });
     } finally {
@@ -185,16 +185,16 @@ const SafevinDashboard = () => {
           <div className="text-center mb-16">
             <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
               <Sparkles className="w-3 h-3 mr-1" />
-              AI-Powered Analysis
+              Ecosistema AI per Marketplace
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-              Trasforma i tuoi annunci Vinted
+              Analisi strutturale.
               <br />
-              <span className="text-primary">in macchine di vendita</span>
+              <span className="text-primary">Risultati misurabili.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12">
-              SAFEVIN analizza foto, titolo, prezzo e fiducia del tuo annuncio 
-              e ti dice esattamente cosa migliorare.
+              Scegli lo strumento, inserisci i dati del tuo annuncio 
+              e ricevi il tuo SafeScore™ con le correzioni operative.
             </p>
             <ToolSelector onSelectTool={setSelectedTool} selectedTool={selectedTool} />
           </div>
@@ -227,7 +227,7 @@ const SafevinDashboard = () => {
                   <CardContent className="py-8">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm text-muted-foreground mb-1">Punteggio Globale</p>
+                        <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                         <div className="flex items-center gap-4">
                           <span className={`text-6xl font-black ${getOverallScoreColor(analysisResult.overallScore)}`}>
                             {analysisResult.overallScore}
@@ -239,10 +239,10 @@ const SafevinDashboard = () => {
                         <TrendingUp className="w-4 h-4 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           {analysisResult.overallScore >= 70 
-                            ? "Ottimo potenziale" 
+                            ? "Qualità elevata" 
                             : analysisResult.overallScore >= 40 
-                            ? "Margine di miglioramento"
-                            : "Necessita ottimizzazione"
+                            ? "Margine di ottimizzazione"
+                            : "Intervento necessario"
                           }
                         </span>
                       </div>
@@ -270,7 +270,7 @@ const SafevinDashboard = () => {
 
                 <div className="text-center pt-8">
                   <Button variant="glass" onClick={handleBack}>
-                    Analizza un altro annuncio
+                    Avvia un nuovo Audit
                   </Button>
                 </div>
               </div>

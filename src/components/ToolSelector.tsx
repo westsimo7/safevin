@@ -11,7 +11,7 @@ interface ToolSelectorProps {
 const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
   return (
     <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-      {/* SAFEVIN POST - Active */}
+      {/* SAFEViN Audit - Active */}
       <Card 
         className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 ${
           selectedTool === "post" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
@@ -27,41 +27,41 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
           <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
             <Search className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle className="text-xl font-bold">SAFEVIN POST</CardTitle>
+          <CardTitle className="text-xl font-bold">SAFEViN Audit</CardTitle>
           <CardDescription className="text-muted-foreground">
-            Analizza un annuncio Vinted già pubblicato e scopri come aumentare visualizzazioni e vendite.
+            Analisi strutturale del tuo annuncio pubblicato. SafeScore™ su 10 categorie, problemi e soluzioni operative.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button variant="neon" className="w-full group">
-            Analizza Annuncio
+            Avvia Audit
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </CardContent>
       </Card>
 
-      {/* SAFEVIN PRE - Coming Soon */}
+      {/* SAFEViN Studio - Coming Soon */}
       <Card 
         className="relative overflow-hidden opacity-60 cursor-not-allowed border-border/30"
       >
         <div className="absolute top-4 right-4">
           <Badge variant="secondary" className="bg-muted text-muted-foreground border-border">
             <Clock className="w-3 h-3 mr-1" />
-            In sviluppo
+            In arrivo
           </Badge>
         </div>
         <CardHeader className="pb-2">
           <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4">
             <PenTool className="w-6 h-6 text-muted-foreground" />
           </div>
-          <CardTitle className="text-xl font-bold text-muted-foreground">SAFEVIN PRE</CardTitle>
+          <CardTitle className="text-xl font-bold text-muted-foreground">SAFEViN Studio</CardTitle>
           <CardDescription className="text-muted-foreground/70">
-            Crea annunci perfetti prima ancora di pubblicarli.
+            Costruzione strategica dell'annuncio prima della pubblicazione. Copy, struttura e posizionamento guidati.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <Button variant="secondary" className="w-full" disabled>
-            Presto Disponibile
+            Prossimamente
           </Button>
         </CardContent>
       </Card>

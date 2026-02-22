@@ -30,8 +30,8 @@ const MobileAnalysisCard = ({
   };
 
   const getScoreLabel = (s: number) => {
-    if (s >= 7) return "Buono";
-    if (s >= 4) return "Da migliorare";
+    if (s >= 7) return "Ottimale";
+    if (s >= 4) return "Da ottimizzare";
     return "Critico";
   };
 
@@ -61,7 +61,7 @@ const MobileAnalysisCard = ({
           {conversionProbability !== undefined && (
             <div className="flex items-center gap-2 mb-3">
               <Target className="w-3.5 h-3.5 text-muted-foreground" />
-              <span className="text-xs text-muted-foreground">Visual Conversion:</span>
+              <span className="text-xs text-muted-foreground">Probabilità conversione:</span>
               <span className={`text-sm font-semibold ${getConversionColor(conversionProbability)}`}>
                 {conversionProbability}%
               </span>
@@ -74,16 +74,14 @@ const MobileAnalysisCard = ({
             className="w-full text-xs"
             onClick={() => setOpen(true)}
           >
-            Guarda analisi
+            Dettaglio analisi
           </Button>
         </CardContent>
       </Card>
 
       {/* Full-screen overlay */}
       {open && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col bg-background/98 backdrop-blur-md animate-fade-in"
-        >
+        <div className="fixed inset-0 z-50 flex flex-col bg-background/98 backdrop-blur-md animate-fade-in">
           {/* Fixed close button */}
           <div className="sticky top-0 z-10 flex justify-end p-4 bg-background/80 backdrop-blur-sm border-b border-border/30">
             <button
@@ -112,7 +110,7 @@ const MobileAnalysisCard = ({
                 {conversionProbability !== undefined && (
                   <div className="flex items-center gap-2 mt-2">
                     <Target className="w-3.5 h-3.5 text-muted-foreground" />
-                    <span className="text-xs text-muted-foreground">Visual Conversion:</span>
+                    <span className="text-xs text-muted-foreground">Probabilità conversione:</span>
                     <span className={`text-sm font-semibold ${getConversionColor(conversionProbability)}`}>
                       {conversionProbability}%
                     </span>
@@ -125,7 +123,7 @@ const MobileAnalysisCard = ({
                 <div className="p-3 rounded-lg bg-muted/30 border border-border/30 animate-fade-in" style={{ animationDelay: "0.05s" }}>
                   <div className="flex items-center gap-2 mb-2">
                     <Eye className="w-3.5 h-3.5 text-primary" />
-                    <span className="text-xs font-medium text-primary">Cosa ho visto</span>
+                    <span className="text-xs font-medium text-primary">Osservazione</span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed">{impersonation}</p>
                 </div>
@@ -136,7 +134,7 @@ const MobileAnalysisCard = ({
                 <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20 animate-fade-in" style={{ animationDelay: "0.1s" }}>
                   <div className="flex items-center gap-2 mb-2">
                     <TrendingDown className="w-3.5 h-3.5 text-red-400" />
-                    <span className="text-xs font-medium text-red-400">Cosa abbassa il punteggio</span>
+                    <span className="text-xs font-medium text-red-400">Fattori penalizzanti</span>
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">{scoreBreakdown}</p>
                 </div>

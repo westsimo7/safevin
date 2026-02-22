@@ -3,31 +3,31 @@ import { AlertTriangle, MessageSquare, RefreshCw, Clock, Users, Smartphone, Copy
 const problems = [
   {
     icon: RefreshCw,
-    text: "Azioni ripetitive non evidenti",
+    text: "Titoli generici che non intercettano le ricerche giuste",
   },
   {
     icon: MessageSquare,
-    text: "Pattern di messaggistica sospetti",
+    text: "Descrizioni vaghe che non rispondono ai dubbi dell'acquirente",
   },
   {
     icon: Copy,
-    text: "Gestione errata di annunci simili",
+    text: "Foto che non comunicano valore né generano fiducia",
   },
   {
     icon: Clock,
-    text: "Tempi di risposta incoerenti",
+    text: "Prezzi posizionati male rispetto al mercato reale",
   },
   {
     icon: Users,
-    text: "Segnalazioni indirette da altri utenti",
+    text: "Profili che non trasmettono affidabilità e professionalità",
   },
   {
     icon: Smartphone,
-    text: "Uso scorretto di dispositivi / IP",
+    text: "Annunci non ottimizzati per la visualizzazione mobile",
   },
   {
     icon: Send,
-    text: "Comportamenti \"normali\" che non lo sono per l'algoritmo",
+    text: "Errori strutturali invisibili che riducono visibilità e conversione",
   },
 ];
 
@@ -44,7 +44,7 @@ const ProblemSection = () => {
             <AlertTriangle className="w-5 h-5 text-destructive" />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground">
-            Perché gli account Vinted vengono bloccati senza preavviso
+            Il tuo annuncio sta vendendo meno di quanto potrebbe
           </h2>
         </div>
         
@@ -66,7 +66,7 @@ const ProblemSection = () => {
         {/* Closing statement */}
         <div className="p-6 rounded-2xl bg-background border border-border">
           <p className="text-lg text-foreground font-medium text-center">
-            La maggior parte dei venditori viene bloccata <span className="text-destructive">senza sapere perché.</span>
+            Ogni dettaglio trascurato è <span className="text-destructive">una vendita persa.</span>
           </p>
         </div>
       </div>

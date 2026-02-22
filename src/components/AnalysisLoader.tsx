@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
 
 const analysisSteps = [
-  "Connessione al server...",
-  "Analisi qualità immagini...",
-  "Valutazione illuminazione e composizione...",
-  "Controllo autenticità prodotto...",
-  "Analisi copertura fotografica...",
-  "Ottimizzazione mobile...",
-  "Analisi SEO Titolo...",
-  "Valutazione Descrizione...",
-  "Analisi Prezzo Mercato...",
-  "Controllo Tag e Categoria...",
-  "Analisi Psicologia Compratore...",
-  "Valutazione Fiducia e Profilo...",
-  "Calcolo probabilità vendita...",
-  "Generazione Report Finale...",
+  "Connessione al motore di analisi...",
+  "Valutazione qualità fotografica...",
+  "Analisi illuminazione e composizione...",
+  "Verifica coerenza visiva del prodotto...",
+  "Controllo copertura angolazioni...",
+  "Ottimizzazione per visualizzazione mobile...",
+  "Analisi struttura del titolo...",
+  "Valutazione efficacia descrizione...",
+  "Confronto posizionamento prezzo...",
+  "Verifica categoria e attributi...",
+  "Analisi leve psicologiche d'acquisto...",
+  "Valutazione indicatori di fiducia...",
+  "Calcolo SafeScore™...",
+  "Generazione report operativo...",
 ];
 
 interface AnalysisLoaderProps {

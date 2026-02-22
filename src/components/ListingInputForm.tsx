@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ImagePlus, X, Camera, Tag, DollarSign, Shirt, Palette, Clock, FileText, Layers, Sparkles } from "lucide-react";
+
 interface ListingData {
   images: File[];
   titolo: string;
@@ -17,15 +18,15 @@ interface ListingData {
   colore: string;
   tempoCaricamento: string;
 }
+
 interface ListingInputFormProps {
   onSubmit: (data: ListingData) => void;
   isLoading: boolean;
 }
+
 const MAX_IMAGES = 15;
-const ListingInputForm = ({
-  onSubmit,
-  isLoading
-}: ListingInputFormProps) => {
+
+const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [titolo, setTitolo] = useState("");
@@ -39,6 +40,7 @@ const ListingInputForm = ({
   const [tempoCaricamento, setTempoCaricamento] = useState("");
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const addImages = useCallback((files: FileList | File[]) => {
     const newFiles = Array.from(files).filter(f => f.type.startsWith("image/")).slice(0, MAX_IMAGES - images.length);
     if (newFiles.length === 0) return;
@@ -51,21 +53,25 @@ const ListingInputForm = ({
       reader.readAsDataURL(file);
     });
   }, [images.length]);
+
   const removeImage = (index: number) => {
     setImages(prev => prev.filter((_, i) => i !== index));
     setPreviews(prev => prev.filter((_, i) => i !== index));
   };
+
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(e.type === "dragenter" || e.type === "dragover");
   };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files) addImages(e.dataTransfer.files);
   };
+
   const handleSubmit = () => {
     onSubmit({
       images,
@@ -77,17 +83,20 @@ const ListingInputForm = ({
       condizioni,
       taglia,
       colore,
-      tempoCaricamento
+      tempoCaricamento,
     });
   };
+
   const hasMinData = titolo.trim() || descrizione.trim() || images.length > 0;
-  return <Card className="border-border/50">
+
+  return (
+    <Card className="border-border/50">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-primary" />
-          Inserisci i dati del tuo annuncio
+          Dati dell'annuncio da analizzare
         </CardTitle>
-        <p className="text-sm text-muted-foreground">Per sicurezza copia e incolla direttamente dal tuo annuncio</p>
+        <p className="text-sm text-muted-foreground">Copia e incolla i dati esatti dal tuo annuncio per un'analisi precisa</p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Image Upload Area */}
@@ -100,32 +109,46 @@ const ListingInputForm = ({
             </Badge>
           </label>
           
-          <div className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40 hover:bg-muted/30"}`} onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop} onClick={() => fileInputRef.current?.click()}>
+          <div
+            className={`relative border-2 border-dashed rounded-xl p-6 text-center transition-all duration-300 cursor-pointer ${
+              dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40 hover:bg-muted/30"
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+            onClick={() => fileInputRef.current?.click()}
+          >
             <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <ImagePlus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">
-              Trascina le foto qui o <span className="text-primary font-medium">sfoglia</span>
+              Trascina le foto qui o <span className="text-primary font-medium">carica dal dispositivo</span>
             </p>
             <p className="text-xs text-muted-foreground/60 mt-1">
-              Max {MAX_IMAGES} immagini • Max 50MB per immagine
+              Max {MAX_IMAGES} immagini · Max 50MB per immagine
             </p>
           </div>
 
           {/* Image Previews */}
-          {previews.length > 0 && <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mt-3">
-              {previews.map((src, i) => <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50">
+          {previews.length > 0 && (
+            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mt-3">
+              {previews.map((src, i) => (
+                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50">
                   <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
-                  <button type="button" onClick={e => {
-              e.stopPropagation();
-              removeImage(i);
-            }} className="absolute top-1 right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    type="button"
+                    onClick={e => { e.stopPropagation(); removeImage(i); }}
+                    className="absolute top-1 right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  >
                     <X className="w-3 h-3" />
                   </button>
                   <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-center text-white py-0.5">
                     {i + 1}
                   </div>
-                </div>)}
-            </div>}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Listing Data Fields */}
@@ -145,7 +168,7 @@ const ListingInputForm = ({
               <FileText className="w-3.5 h-3.5 text-primary" />
               Descrizione *
             </label>
-            <Textarea value={descrizione} onChange={e => setDescrizione(e.target.value)} placeholder="Inserisci la descrizione completa del tuo annuncio..." className="bg-background border-border min-h-[120px]" />
+            <Textarea value={descrizione} onChange={e => setDescrizione(e.target.value)} placeholder="Incolla la descrizione completa del tuo annuncio..." className="bg-background border-border min-h-[120px]" />
           </div>
 
           {/* Categoria */}
@@ -154,7 +177,7 @@ const ListingInputForm = ({
               <Layers className="w-3.5 h-3.5 text-primary" />
               Categoria
             </label>
-            <Input value={categoria} onChange={e => setCategoria(e.target.value)} placeholder="copia e incolla dal tuo annuncio" className="bg-background border-border" />
+            <Input value={categoria} onChange={e => setCategoria(e.target.value)} placeholder="Copia dal tuo annuncio" className="bg-background border-border" />
           </div>
 
           {/* Prezzo */}
@@ -215,9 +238,11 @@ const ListingInputForm = ({
         {/* Submit */}
         <Button variant="neon" size="lg" className="w-full" onClick={handleSubmit} disabled={isLoading || !hasMinData}>
           <Sparkles className="w-4 h-4 mr-2" />
-          Avvia Analisi Completa
+          Avvia Audit completo
         </Button>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default ListingInputForm;

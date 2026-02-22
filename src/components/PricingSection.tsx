@@ -3,22 +3,22 @@ import { Check, Zap, Crown, Rocket } from "lucide-react";
 
 const plans = [
   {
-    name: "Free",
+    name: "Starter",
     price: "0",
     period: "3 giorni",
-    description: "Prova il valore, senza rischi",
+    description: "Scopri il metodo SAFEViN senza impegno",
     icon: Zap,
     features: [
-      "Accesso base dashboard",
-      "1 analisi account",
-      "1 utilizzo per componente",
-      "Overview rischio base",
+      "Accesso dashboard base",
+      "1 analisi Audit completa",
+      "SafeScore™ su 10 categorie",
+      "Overview qualità annuncio",
     ],
     limitations: [
-      "Nessun simulatore",
-      "Nessuno storico",
+      "Nessun accesso a Studio",
+      "Nessuno storico analisi",
     ],
-    cta: "Prova Safevin senza rischi",
+    cta: "Inizia gratuitamente",
     popular: false,
     variant: "glass" as const,
   },
@@ -26,38 +26,38 @@ const plans = [
     name: "Plus",
     price: "19,98",
     period: "/mese",
-    description: "Per venditori attivi",
+    description: "Per chi vende con metodo",
     icon: Crown,
     features: [
-      "Analisi illimitate",
-      "Storico account completo",
-      "Behavior check avanzato",
-      "Suggerimenti operativi",
-      "Alert rischio in aumento",
-      "Priorità elaborazione",
+      "Audit illimitati con SafeScore™",
+      "Storico completo analisi",
+      "Breakdown dettagliato per categoria",
+      "Correzioni operative prioritizzate",
+      "Confronto performance nel tempo",
+      "Elaborazione prioritaria",
     ],
     limitations: [],
-    cta: "Inizia con Plus",
+    cta: "Attiva Plus",
     popular: true,
     variant: "neon" as const,
   },
   {
-    name: "Venditor Expert",
+    name: "Expert",
     price: "39,98",
     period: "/mese",
-    description: "Per chi vive di Vinted",
+    description: "Per venditori professionisti",
     icon: Rocket,
     features: [
       "Tutto di Plus incluso",
-      "Simulatore rischio avanzato",
-      "Analisi profonde multi-pattern",
-      "Suggerimenti personalizzati",
-      "Monitoraggio continuo",
-      "Educazione strategica",
-      "Riduzione drastica probabilità ban",
+      "SAFEViN Studio completo",
+      "Analisi multi-pattern avanzata",
+      "Suggerimenti personalizzati AI",
+      "Monitoraggio continuo qualità",
+      "Strategia di posizionamento guidata",
+      "Massima probabilità di conversione",
     ],
     limitations: [],
-    cta: "Proteggi il tuo business",
+    cta: "Passa a Expert",
     popular: false,
     variant: "glass" as const,
   },
@@ -73,10 +73,10 @@ const PricingSection = () => {
         {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Scegli il tuo livello di protezione
+            Scegli il livello di controllo sui tuoi annunci
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Non ti promettiamo guadagni. Ti aiutiamo a non perdere ciò che hai costruito.
+            Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.
           </p>
         </div>
         
@@ -153,7 +153,7 @@ const PricingSection = () => {
         {/* Trust message */}
         <div className="mt-12 text-center">
           <p className="text-muted-foreground text-sm">
-            Disdici quando vuoi. Nessun dark pattern. Nessuna sorpresa.
+            Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
         </div>
       </div>

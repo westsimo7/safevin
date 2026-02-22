@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { TrendingDown, Eye, Target } from "lucide-react";
 
 interface AnalysisCardProps {
@@ -27,8 +26,8 @@ const AnalysisCard = ({
   };
 
   const getScoreLabel = (score: number) => {
-    if (score >= 7) return "Buono";
-    if (score >= 4) return "Da migliorare";
+    if (score >= 7) return "Ottimale";
+    if (score >= 4) return "Da ottimizzare";
     return "Critico";
   };
 
@@ -60,7 +59,7 @@ const AnalysisCard = ({
         {conversionProbability !== undefined && (
           <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/30">
             <Target className="w-3.5 h-3.5 text-muted-foreground" />
-            <span className="text-xs text-muted-foreground">Visual Conversion:</span>
+            <span className="text-xs text-muted-foreground">Probabilità conversione:</span>
             <span className={`text-sm font-semibold ${getConversionColor(conversionProbability)}`}>
               {conversionProbability}%
             </span>
@@ -68,12 +67,12 @@ const AnalysisCard = ({
         )}
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Impersonation - What the AI saw */}
+        {/* Impersonation - What the AI observed */}
         {impersonation && (
           <div className="p-3 rounded-lg bg-muted/30 border border-border/30">
             <div className="flex items-center gap-2 mb-2">
               <Eye className="w-3.5 h-3.5 text-primary" />
-              <span className="text-xs font-medium text-primary">Cosa ho visto</span>
+              <span className="text-xs font-medium text-primary">Osservazione</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {impersonation}
@@ -86,7 +85,7 @@ const AnalysisCard = ({
           <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-3.5 h-3.5 text-red-400" />
-              <span className="text-xs font-medium text-red-400">Cosa abbassa il punteggio</span>
+              <span className="text-xs font-medium text-red-400">Fattori penalizzanti</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
               {scoreBreakdown}
@@ -94,7 +93,7 @@ const AnalysisCard = ({
           </div>
         )}
 
-        {/* Advice - Problem → Why → Solution */}
+        {/* Advice - Corrective action */}
         <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
           <p className="text-sm text-foreground/90 leading-relaxed">
             {advice}
