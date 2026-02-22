@@ -229,16 +229,14 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   return (
     <div className="max-w-2xl mx-auto pt-2">
       {step !== "generating" && step !== "output" && (
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-muted-foreground hover:text-foreground px-2"
-            onClick={step === "category" ? onBack : getBackAction()}
-          >
-            <ArrowLeft className="w-4 h-4" />
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          className="mb-6 text-muted-foreground hover:text-foreground"
+          onClick={step === "category" ? onBack : getBackAction()}
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          {step === "category" ? "Torna alla Dashboard" : "Indietro"}
+        </Button>
       )}
 
       {step === "category" && (
