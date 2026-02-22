@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, PenTool, ArrowRight, Clock } from "lucide-react";
+import { Search, PenTool, ArrowRight } from "lucide-react";
 
 interface ToolSelectorProps {
   onSelectTool: (tool: "post" | "pre") => void;
@@ -40,28 +40,31 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
         </CardContent>
       </Card>
 
-      {/* SAFEViN Studio - Coming Soon */}
+      {/* SAFEViN Studio - Active */}
       <Card 
-        className="relative overflow-hidden opacity-60 cursor-not-allowed border-border/30"
+        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 ${
+          selectedTool === "pre" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
+        }`}
+        onClick={() => onSelectTool("pre")}
       >
         <div className="absolute top-4 right-4">
-          <Badge variant="secondary" className="bg-muted text-muted-foreground border-border">
-            <Clock className="w-3 h-3 mr-1" />
-            In arrivo
+          <Badge className="bg-green-500/10 text-green-500 border-green-500/30 hover:bg-green-500/20">
+            Attivo
           </Badge>
         </div>
         <CardHeader className="pb-2">
-          <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mb-4">
-            <PenTool className="w-6 h-6 text-muted-foreground" />
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+            <PenTool className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle className="text-xl font-bold text-muted-foreground">SAFEViN Studio</CardTitle>
-          <CardDescription className="text-muted-foreground/70">
-            Costruzione strategica dell'annuncio prima della pubblicazione. Copy, struttura e posizionamento guidati.
+          <CardTitle className="text-xl font-bold">SAFEViN Studio</CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Costruzione strategica dell'annuncio prima della pubblicazione. L'AI ti guida passo dopo passo.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="secondary" className="w-full" disabled>
-            Prossimamente
+          <Button variant="neon" className="w-full group">
+            Avvia Studio
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
         </CardContent>
       </Card>

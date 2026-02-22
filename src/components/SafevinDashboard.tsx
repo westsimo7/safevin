@@ -11,6 +11,7 @@ import AnalysisLoader from "./AnalysisLoader";
 import AnalysisCard from "./AnalysisCard";
 import AnalysisSummary from "./AnalysisSummary";
 import ListingInputForm from "./ListingInputForm";
+import StudioFlow from "./studio/StudioFlow";
 
 interface AnalysisSection {
   title: string;
@@ -198,6 +199,10 @@ const SafevinDashboard = () => {
             </p>
             <ToolSelector onSelectTool={setSelectedTool} selectedTool={selectedTool} />
           </div>
+        )}
+
+        {selectedTool === "pre" && (
+          <StudioFlow onBack={handleBack} />
         )}
 
         {selectedTool === "post" && (

@@ -2,3 +2,6 @@ project_id = "ilnkeilltvkceohcjfjy"
 
 [functions.safelist-analyze]
 verify_jwt = false
+
+[functions.safelist-studio]
+verify_jwt = false

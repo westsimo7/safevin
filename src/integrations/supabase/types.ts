@@ -62,6 +62,42 @@ export type Database = {
         }
         Relationships: []
       }
+      studio_creations: {
+        Row: {
+          categoria: string
+          created_at: string
+          first_image_url: string | null
+          id: string
+          images: Json
+          output: Json | null
+          questions_answers: Json
+          titolo_generato: string | null
+          vision_report: string | null
+        }
+        Insert: {
+          categoria?: string
+          created_at?: string
+          first_image_url?: string | null
+          id?: string
+          images?: Json
+          output?: Json | null
+          questions_answers?: Json
+          titolo_generato?: string | null
+          vision_report?: string | null
+        }
+        Update: {
+          categoria?: string
+          created_at?: string
+          first_image_url?: string | null
+          id?: string
+          images?: Json
+          output?: Json | null
+          questions_answers?: Json
+          titolo_generato?: string | null
+          vision_report?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
