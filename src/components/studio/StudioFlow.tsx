@@ -227,9 +227,9 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto pt-2">
       {step !== "generating" && step !== "output" && (
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-6">
           <Button
             variant="ghost"
             size="sm"
