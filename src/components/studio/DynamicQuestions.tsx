@@ -10,8 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface Question {
   id: string;
   question: string;
-  type: "text" | "options";
-  options?: string[];
+  type: "text";
 }
 
 interface QuestionAnswer {
