@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Check, PenTool, Tag, DollarSign, Lightbulb } from "lucide-react";
+import { ArrowLeft, Copy, Check, PenTool, Tag, Euro, Lightbulb } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrustConversionSection from "@/components/studio/TrustConversionSection";
 
