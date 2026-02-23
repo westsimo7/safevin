@@ -151,11 +151,11 @@ const StudioDetail = () => {
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                       <List className="w-4 h-4 text-primary" />
                     </div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
+                    <h3 className="text-base font-bold tracking-tight">Dettagli tecnici</h3>
                   </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
