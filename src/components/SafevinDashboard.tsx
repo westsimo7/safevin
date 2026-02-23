@@ -236,8 +236,8 @@ const SafevinDashboard = () => {
                       <div>
                         <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                         <div className="flex items-center gap-4">
-                          <span className={`text-6xl font-black ${getOverallScoreColor(analysisResult.overallScore)}`}>
-                            {analysisResult.overallScore}
+                          <span className={`text-6xl font-black ${getOverallScoreColor(analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore)}`}>
+                            {analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore}
                           </span>
                           <span className="text-2xl text-muted-foreground">/100</span>
                         </div>
