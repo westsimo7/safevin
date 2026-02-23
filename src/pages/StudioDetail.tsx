@@ -85,10 +85,12 @@ const StudioDetail = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader />
       <main className="container mx-auto px-6 py-12 max-w-2xl">
-        <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo Storico
-        </Button>
+        {!isMobile && (
+          <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna allo Storico
+          </Button>
+        )}
 
         {/* Images */}
         {record.first_image_url && (
