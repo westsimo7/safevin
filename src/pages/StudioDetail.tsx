@@ -149,21 +149,12 @@ const StudioDetail = () => {
             </Card>
           )}
 
-          {/* Hashtags */}
-          {output.hashtags?.length > 0 && (
-            <Card className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Tag className="w-4 h-4 text-primary" />
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Hashtag</p>
-                  </div>
-                  <CopyBtn text={output.hashtags.join(" ")} />
-                </div>
-                <p className="text-sm text-primary">{output.hashtags.join(" ")}</p>
-              </CardContent>
-            </Card>
-          )}
+          {/* Keyword Intelligence — replaces old hashtag card */}
+          {output.keywordIntelligence ? (
+            <KeywordIntelligence data={output.keywordIntelligence} legacyHashtags={output.hashtags} />
+          ) : output.hashtags?.length > 0 ? (
+            <KeywordIntelligence data={{}} legacyHashtags={output.hashtags} />
+          ) : null}
 
           {/* Price */}
           {output.suggestedPrice && (
