@@ -32,7 +32,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `Sei un copywriter esperto di marketplace second-hand. Ti vengono date una categoria e delle keyword. Scrivi un micro-testo di 2-3 righe (35-55 parole max) che descriva il prodotto integrando TUTTE le keyword fornite. Testo fluido, naturale, pronto da copiare/incollare. NON usare hashtag, emoji o elenchi puntati. Scrivi SOLO il testo.`,
+            content: `Sei un copywriter esperto di marketplace second-hand. Ti vengono date una categoria e delle keyword. Scrivi un micro-testo di 2-3 righe (35-55 parole max) che descriva il prodotto integrando TUTTE le keyword fornite. Testo fluido, naturale, pronto da copiare/incollare. NON usare hashtag, emoji, elenchi puntati o asterischi. Non formattare in grassetto o corsivo. Scrivi SOLO il testo piano.`,
           },
           {
             role: "user",
