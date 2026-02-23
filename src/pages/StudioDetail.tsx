@@ -37,6 +37,7 @@ const CopyBtn = ({ text }: { text: string }) => {
 const StudioDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [record, setRecord] = useState<StudioRecord | null>(null);
   const [loading, setLoading] = useState(true);
 
