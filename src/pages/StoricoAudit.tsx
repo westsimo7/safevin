@@ -111,18 +111,18 @@ const StoricoAudit = () => {
                       <p className="text-xs text-muted-foreground">
                         {new Date(analysis.created_at).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}
                       </p>
-                      {analysis.analysis_result?.overallScore !== undefined && (
+                      {analysis.analysis_result?.sections && (
                         <Badge
                           variant="outline"
                           className={`mt-2 text-xs ${
-                            analysis.analysis_result.overallScore >= 70
+                            (analysis.analysis_result.sections as any[]).reduce((sum: number, s: any) => sum + (s.score || 0), 0) >= 70
                               ? "bg-green-500/10 text-green-400 border-green-500/30"
-                              : analysis.analysis_result.overallScore >= 40
+                              : (analysis.analysis_result.sections as any[]).reduce((sum: number, s: any) => sum + (s.score || 0), 0) >= 40
                               ? "bg-yellow-500/10 text-yellow-400 border-yellow-500/30"
                               : "bg-red-500/10 text-red-400 border-red-500/30"
                           }`}
                         >
-                          SafeScore™ {analysis.analysis_result.overallScore}/100
+                          SafeScore™ {(analysis.analysis_result.sections as any[]).reduce((sum: number, s: any) => sum + (s.score || 0), 0)}/100
                         </Badge>
                       )}
                     </div>

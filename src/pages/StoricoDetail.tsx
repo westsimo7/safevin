@@ -162,8 +162,8 @@ const StoricoDetail = () => {
                   <div>
                     <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                     <div className="flex items-center gap-4">
-                      <span className={`text-6xl font-black ${getOverallScoreColor(result.overallScore)}`}>
-                        {result.overallScore}
+                      <span className={`text-6xl font-black ${getOverallScoreColor(result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore)}`}>
+                        {result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore}
                       </span>
                       <span className="text-2xl text-muted-foreground">/100</span>
                     </div>
@@ -171,9 +171,9 @@ const StoricoDetail = () => {
                   <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
                     <TrendingUp className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-primary">
-                      {result.overallScore >= 70
+                      {(result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore) >= 70
                         ? "Ottimo potenziale"
-                        : result.overallScore >= 40
+                        : (result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore) >= 40
                         ? "Margine di miglioramento"
                         : "Necessita ottimizzazione"}
                     </span>

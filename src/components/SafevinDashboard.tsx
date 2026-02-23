@@ -236,8 +236,8 @@ const SafevinDashboard = () => {
                       <div>
                         <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                         <div className="flex items-center gap-4">
-                          <span className={`text-6xl font-black ${getOverallScoreColor(analysisResult.overallScore)}`}>
-                            {analysisResult.overallScore}
+                          <span className={`text-6xl font-black ${getOverallScoreColor(analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore)}`}>
+                            {analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore}
                           </span>
                           <span className="text-2xl text-muted-foreground">/100</span>
                         </div>
@@ -245,9 +245,9 @@ const SafevinDashboard = () => {
                       <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
                         <TrendingUp className="w-4 h-4 text-primary" />
                         <span className="text-sm font-medium text-primary">
-                          {analysisResult.overallScore >= 70 
+                          {(analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore) >= 70 
                             ? "Qualità elevata" 
-                            : analysisResult.overallScore >= 40 
+                            : (analysisResult.sections?.reduce((sum, s) => sum + (s.score || 0), 0) ?? analysisResult.overallScore) >= 40 
                             ? "Margine di ottimizzazione"
                             : "Intervento necessario"
                           }
