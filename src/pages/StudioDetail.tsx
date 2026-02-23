@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Copy, Check, PenTool, Tag, Shield, DollarSign, Lightbulb } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StudioRecord {
   id: string;

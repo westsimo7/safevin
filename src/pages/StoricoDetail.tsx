@@ -101,14 +101,16 @@ const StoricoDetail = () => {
       <DashboardHeader />
 
       <main className="container mx-auto px-6 py-12 max-w-4xl">
-        <Button
-          variant="ghost"
-          className="mb-6 text-muted-foreground hover:text-foreground"
-          onClick={() => navigate("/storico")}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo Storico
-        </Button>
+        {!isMobile && (
+          <Button
+            variant="ghost"
+            className="mb-6 text-muted-foreground hover:text-foreground"
+            onClick={() => navigate("/storico")}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna allo Storico
+          </Button>
+        )}
 
         {/* Original Input Data - Read Only */}
         <Card className="border-border/50 mb-8">
