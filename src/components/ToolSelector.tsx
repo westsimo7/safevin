@@ -11,28 +11,29 @@ interface ToolSelectorProps {
 const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
   return (
     <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-      {/* SAFEViN Audit - Active */}
+      {/* SAFEViN Audit */}
       <Card 
-        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 flex flex-col ${
-          selectedTool === "post" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
+        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] flex flex-col ${
+          selectedTool === "post" ? "border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)]" : "border-border/50"
         }`}
         onClick={() => onSelectTool("post")}
       >
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-green-500/10 text-green-500 border-green-500/30 hover:bg-green-500/20">
-            Attivo
-          </Badge>
-        </div>
-        <CardHeader className="pb-2 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-            <Search className="w-6 h-6 text-primary" />
+        <CardHeader className="pb-3">
+          {/* Top row: icon + title + badge inline */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <Search className="w-5 h-5 text-primary" />
+            </div>
+            <CardTitle className="text-lg font-bold flex-1">SAFEViN Audit</CardTitle>
+            <Badge className="bg-green-500/10 text-green-500 border-green-500/30 hover:bg-green-500/20 text-[10px] px-2 py-0.5">
+              Attivo
+            </Badge>
           </div>
-          <CardTitle className="text-xl font-bold">SAFEViN Audit</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-sm mt-3 leading-relaxed">
             Analisi strutturale del tuo annuncio pubblicato. SafeScore™ su 10 categorie, problemi e soluzioni operative.
           </CardDescription>
         </CardHeader>
-        <CardContent className="mt-auto">
+        <CardContent className="mt-auto pt-0">
           <Button variant="neon" className="w-full group">
             Avvia Audit
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -40,28 +41,28 @@ const ToolSelector = ({ onSelectTool, selectedTool }: ToolSelectorProps) => {
         </CardContent>
       </Card>
 
-      {/* SAFEViN Studio - Active */}
+      {/* SAFEViN Studio */}
       <Card 
-        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 flex flex-col ${
-          selectedTool === "pre" ? "border-primary shadow-lg shadow-primary/20" : "border-border/50"
+        className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:border-primary/50 hover:shadow-[0_0_20px_hsl(var(--primary)/0.15)] flex flex-col ${
+          selectedTool === "pre" ? "border-primary shadow-[0_0_20px_hsl(var(--primary)/0.2)]" : "border-border/50"
         }`}
         onClick={() => onSelectTool("pre")}
       >
-        <div className="absolute top-4 right-4">
-          <Badge className="bg-green-500/10 text-green-500 border-green-500/30 hover:bg-green-500/20">
-            Attivo
-          </Badge>
-        </div>
-        <CardHeader className="pb-2 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-            <PenTool className="w-6 h-6 text-primary" />
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+              <PenTool className="w-5 h-5 text-primary" />
+            </div>
+            <CardTitle className="text-lg font-bold flex-1">SAFEViN Studio</CardTitle>
+            <Badge className="bg-green-500/10 text-green-500 border-green-500/30 hover:bg-green-500/20 text-[10px] px-2 py-0.5">
+              Attivo
+            </Badge>
           </div>
-          <CardTitle className="text-xl font-bold">SAFEViN Studio</CardTitle>
-          <CardDescription className="text-muted-foreground">
+          <CardDescription className="text-muted-foreground text-sm mt-3 leading-relaxed">
             Costruzione strategica dell'annuncio prima della pubblicazione. L'AI ti guida passo dopo passo.
           </CardDescription>
         </CardHeader>
-        <CardContent className="mt-auto">
+        <CardContent className="mt-auto pt-0">
           <Button variant="neon" className="w-full group">
             Avvia Studio
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
