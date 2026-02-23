@@ -98,14 +98,26 @@ FORMATO OUTPUT (JSON):
       "Domanda che l'acquirente si pone guardando QUESTO specifico annuncio (max 3)"
     ],
     "actionChecklist": [
-      "Azione concreta e specifica per aumentare la fiducia su QUESTO annuncio (max 4)"
+      "Azione concreta e specifica per aumentare la fiducia su QUESTO annuncio (max 5)"
     ],
     "strategicScripts": [
       {
-        "label": "Contesto della risposta (es: Richiesta sconto, Autenticità, Foto extra)",
+        "label": "Contesto della risposta",
         "script": "Risposta professionale pronta da copiare (max 220 caratteri)"
       }
     ]
+  },
+  "keywordIntelligence": {
+    "inspirationalText": "Paragrafo ispirazionale (150-250 parole) che integra keyword ad alta ricerca in modo naturale. Parla di occasioni, momenti, eventi, stagioni, abbinamenti, mood. Deve essere elegante, non sembrare SEO spam. Le keyword strategiche devono essere inserite nel flusso del testo.",
+    "highlightedKeywords": ["keyword1", "keyword2", "keyword3"],
+    "mentalFilters": {
+      "occasioni": ["matrimonio invitato", "aperitivo estivo", "outfit ufficio", "serata elegante"],
+      "stagione": ["look estivo leggero", "outfit primaverile", "mezza stagione"],
+      "outfitAbbinamenti": ["abbinabile con blazer", "perfetto con jeans chiari", "look minimal chic"],
+      "sinonimiItaliani": ["borsa elegante donna", "scarpe pelle nere", "giacca sartoriale uomo"],
+      "intentoAcquisto": ["pronto per spedizione", "nuovo con scatola", "occasione imperdibile", "pezzo unico"]
+    },
+    "strategicHashtags": ["#outfitcerimonia", "#lookprimaverile", "#borsaelegantedonna"]
   },
   "suggestedPrice": {
     "min": 0,
@@ -118,18 +130,30 @@ FORMATO OUTPUT (JSON):
   "tips": ["Consiglio extra 1 per migliorare l'annuncio"]
 }
 
+REGOLE KEYWORD INTELLIGENCE:
+- inspirationalText: Paragrafo elegante che integra keyword naturalmente. Parla di occasioni reali (cerimonia, aperitivo, cena, lavoro, università), stagione, abbinamenti outfit, mood. NON deve sembrare SEO spam. Deve essere ispirazionale e contestualizzato al prodotto specifico.
+- highlightedKeywords: Array con TUTTE le keyword strategiche presenti nel testo ispirazionale (10-20 keyword). Queste verranno evidenziate visivamente nell'UI.
+- mentalFilters: 5 categorie di keyword contestualizzate al prodotto:
+  * occasioni: 5-8 keyword relative a eventi/occasioni d'uso reali per questo prodotto
+  * stagione: 4-6 keyword stagionali pertinenti
+  * outfitAbbinamenti: 5-7 keyword su outfit e abbinamenti con questo prodotto
+  * sinonimiItaliani: 5-8 varianti semantiche reali che gli utenti cercano SENZA hashtag
+  * intentoAcquisto: 4-5 keyword con intento d'acquisto forte
+- strategicHashtags: 15-25 hashtag NON BANALI. Evitare #fashion #style #look. Preferire long tail, occasion-based, seasonal, intent-based. Mix tra diretti, long tail, occasion, seasonal, intent.
+
 REGOLE TRUST SECTION:
-- buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto. Basate su categoria, prezzo, condizione, difetti, brand. Sintetiche e dirette.
-- actionChecklist: ESATTAMENTE 4 azioni concrete e specifiche per questo annuncio. Devono essere attivabili (checkbox). Adattate al prodotto reale.
-- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati alla categoria. Uno per richiesta sconto, uno per autenticità/condizione, uno per info extra. Max 220 caratteri ciascuno. Tono sicuro, professionale, non aggressivo.
+- buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto.
+- actionChecklist: ESATTAMENTE 4-5 azioni concrete basate sull'annuncio creato che possano realmente aumentare la fiducia. Se le foto sono deboli, spingi su migliorarle. Sii specifico e pratico.
+- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati. Tono sicuro, professionale.
 
 REGOLE GENERALI:
 - Rispondi SOLO JSON valido
 - Descrizione: 150-300 parole, strutturata con paragrafi
 - Bullet points: 4-8 punti
-- Hashtags: 5-10 pertinenti
+- hashtags: campo legacy, metti gli stessi di strategicHashtags (primi 10)
 - Prezzo: range realistico basato su mercato Vinted
-- NON includere "trustElements" nel JSON, usa SOLO "trustSection"`;
+- NON includere "trustElements" nel JSON, usa SOLO "trustSection"
+- L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo (premium vs accessibile), mood, target`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
