@@ -101,7 +101,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
 
       {/* Titolo */}
       <SectionBlock icon={<Type className="w-4 h-4 text-primary" />} label="Titolo" copyText={data.titolo}>
-        <p className="text-lg font-bold leading-snug">{data.titolo}</p>
+        <p className="text-lg font-normal leading-snug">{data.titolo}</p>
       </SectionBlock>
 
       {/* Descrizione */}
