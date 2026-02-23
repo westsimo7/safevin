@@ -118,12 +118,12 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <Type className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Titolo</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Titolo</p>
                 </div>
                 <CopyBtn text={output.titolo || ""} />
               </div>
               <div className="border-t border-primary/10 pt-3">
-                <p className="text-lg font-bold leading-snug">{output.titolo}</p>
+                <p className="text-lg font-normal leading-snug">{output.titolo}</p>
               </div>
             </CardContent>
           </Card>
