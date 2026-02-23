@@ -155,7 +155,7 @@ const StudioDetail = () => {
                     <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                       <List className="w-4 h-4 text-primary" />
                     </div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
                   </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
