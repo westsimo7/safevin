@@ -152,6 +152,22 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
         </Card>
       )}
 
+      {/* Trust & Conversion Section — before tips */}
+      {data.trustSection && (
+        <TrustConversionSection data={data.trustSection} />
+      )}
+
+      {/* Legacy fallback for old data without trustSection */}
+      {!data.trustSection && data.trustElements && data.trustElements.length > 0 && (
+        <TrustConversionSection
+          data={{
+            buyerQuestions: [],
+            actionChecklist: data.trustElements,
+            strategicScripts: [],
+          }}
+        />
+      )}
+
       {/* Tips */}
       {data.tips?.length > 0 && (
         <Card className="border-primary/20 bg-primary/5">
@@ -167,22 +183,6 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
             </ul>
           </CardContent>
         </Card>
-      )}
-
-      {/* Trust & Conversion Section */}
-      {data.trustSection && (
-        <TrustConversionSection data={data.trustSection} />
-      )}
-
-      {/* Legacy fallback for old data without trustSection */}
-      {!data.trustSection && data.trustElements && data.trustElements.length > 0 && (
-        <TrustConversionSection
-          data={{
-            buyerQuestions: [],
-            actionChecklist: data.trustElements,
-            strategicScripts: [],
-          }}
-        />
       )}
 
       {/* Actions */}
