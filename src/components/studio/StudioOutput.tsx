@@ -104,24 +104,32 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
         <p className="text-lg font-normal leading-snug">{data.titolo}</p>
       </SectionBlock>
 
-      {/* Descrizione */}
-      <SectionBlock icon={<FileText className="w-4 h-4 text-primary" />} label="Descrizione" copyText={data.descrizione}>
+      {/* Descrizione + Dettagli tecnici (blocco unico) */}
+      <SectionBlock
+        icon={<FileText className="w-4 h-4 text-primary" />}
+        label="Descrizione"
+        copyText={
+          data.bulletPoints?.length > 0
+            ? `${data.descrizione}\n\n${data.bulletPoints.map(bp => `• ${bp.replace(/^•\s*/, "")}`).join("\n")}`
+            : data.descrizione
+        }
+      >
         <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{data.descrizione}</p>
+        {data.bulletPoints?.length > 0 && (
+          <>
+            <div className="border-t border-primary/10 my-3" />
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Dettagli tecnici</p>
+            <ul className="space-y-1.5">
+              {data.bulletPoints.map((bp, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                  <span className="text-primary/60 mt-0.5">•</span>
+                  <span>{bp.replace(/^•\s*/, "")}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </SectionBlock>
-
-      {/* Dettagli tecnici */}
-      {data.bulletPoints?.length > 0 && (
-        <SectionBlock icon={<List className="w-4 h-4 text-primary" />} label="Dettagli tecnici" copyText={data.bulletPoints.join("\n")}>
-          <ul className="space-y-1.5">
-            {data.bulletPoints.map((bp, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
-                <span className="text-primary/60 mt-0.5">•</span>
-                <span>{bp.replace(/^•\s*/, "")}</span>
-              </li>
-            ))}
-          </ul>
-        </SectionBlock>
-      )}
 
       {/* Prezzo suggerito */}
       {data.suggestedPrice && (
