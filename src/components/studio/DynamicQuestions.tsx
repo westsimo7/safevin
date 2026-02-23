@@ -70,12 +70,8 @@ const DynamicQuestions = ({
     }
   };
 
-  const handleOptionSelect = (questionId: string, option: string) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: prev[questionId] === option ? "" : option,
-    }));
-  };
+
+
 
   const handleSubmit = () => {
     const newAnswers: QuestionAnswer[] = questions
