@@ -181,7 +181,7 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <Euro className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-3xl font-bold tracking-tight">
