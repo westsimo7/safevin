@@ -68,7 +68,7 @@ const SectionBlock = ({
   copyText?: string;
   children: React.ReactNode;
 }) => (
-  <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+  <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
     <CardContent className="p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
@@ -79,7 +79,9 @@ const SectionBlock = ({
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
-      {children}
+      <div className="border-t border-primary/10 pt-3">
+        {children}
+      </div>
     </CardContent>
   </Card>
 );
@@ -131,10 +133,12 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
               </div>
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
             </div>
+            <div className="border-t border-primary/10 pt-3">
             <p className="text-3xl font-bold tracking-tight">
               €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
             </p>
             <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{data.suggestedPrice.reasoning}</p>
+            </div>
           </CardContent>
         </Card>
       )}
