@@ -175,23 +175,13 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           </div>
         </div>
 
-        {/* 1. Inspirational Keywords Text */}
-        {data.inspirationalText && (
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Storytelling</p>
-              </div>
-              <CopyBtn text={data.inspirationalText} />
-            </div>
-            <div className="rounded-lg border border-border/30 bg-muted/20 p-3">
-              <HighlightedText text={data.inspirationalText} keywords={data.highlightedKeywords || []} />
-              <p className="text-[10px] text-muted-foreground/60 mt-2 italic">
-                Le keyword evidenziate in rosso non vengono copiate con la formattazione.
-              </p>
-            </div>
-          </div>
+        {/* 1. Keyword Storytelling */}
+        {data.highlightedKeywords && data.highlightedKeywords.length > 0 && (
+          <FilterBlock
+            icon={<Sparkles className="w-3.5 h-3.5 text-primary/70" />}
+            title="Keyword Storytelling"
+            keywords={data.highlightedKeywords}
+          />
         )}
 
         {/* 2. Mental Filters */}
