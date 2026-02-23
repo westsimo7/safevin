@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { X, Target, Eye, TrendingDown } from "lucide-react";
+import { X, Target, Eye, TrendingDown, ChevronRight } from "lucide-react";
 
 interface MobileAnalysisCardProps {
   title: string;
