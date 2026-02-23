@@ -2,16 +2,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Sparkles, MessageSquare } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Question {
   id: string;
   question: string;
-  type: "text" | "options";
-  options?: string[];
+  type: "text";
 }
 
 interface QuestionAnswer {
@@ -72,12 +70,8 @@ const DynamicQuestions = ({
     }
   };
 
-  const handleOptionSelect = (questionId: string, option: string) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: prev[questionId] === option ? "" : option,
-    }));
-  };
+
+
 
   const handleSubmit = () => {
     const newAnswers: QuestionAnswer[] = questions
@@ -125,32 +119,14 @@ const DynamicQuestions = ({
             <CardContent className="p-4 space-y-3">
               <p className="font-medium text-sm">{q.question}</p>
 
-              {q.type === "options" && q.options ? (
-                <div className="flex flex-wrap gap-2">
-                  {q.options.map((opt) => (
-                    <button
-                      key={opt}
-                      className={`px-3 py-1.5 rounded-full text-sm border transition-all active:scale-95 ${
-                        answers[q.id] === opt
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-card border-border/50 text-foreground hover:border-primary/50"
-                      }`}
-                      onClick={() => handleOptionSelect(q.id, opt)}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <Textarea
-                  placeholder="Scrivi qui la tua risposta..."
-                  value={answers[q.id] || ""}
-                  onChange={(e) =>
-                    setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
-                  }
-                  className="min-h-[80px] resize-none"
-                />
-              )}
+              <Textarea
+                placeholder="Scrivi qui la tua risposta..."
+                value={answers[q.id] || ""}
+                onChange={(e) =>
+                  setAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))
+                }
+                className="min-h-[80px] resize-none"
+              />
             </CardContent>
           </Card>
         ))}
