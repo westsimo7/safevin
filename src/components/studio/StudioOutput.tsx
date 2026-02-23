@@ -75,7 +75,7 @@ const SectionBlock = ({
           <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
             {icon}
           </div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
@@ -101,7 +101,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
 
       {/* Titolo */}
       <SectionBlock icon={<Type className="w-4 h-4 text-primary" />} label="Titolo" copyText={data.titolo}>
-        <p className="text-lg font-bold leading-snug">{data.titolo}</p>
+        <p className="text-lg font-normal leading-snug">{data.titolo}</p>
       </SectionBlock>
 
       {/* Descrizione */}
@@ -131,7 +131,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
               <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                 <Euro className="w-4 h-4 text-primary" />
               </div>
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
             </div>
             <div className="border-t border-primary/10 pt-3">
             <p className="text-3xl font-bold tracking-tight">

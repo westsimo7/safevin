@@ -118,12 +118,12 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <Type className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Titolo</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Titolo</p>
                 </div>
                 <CopyBtn text={output.titolo || ""} />
               </div>
               <div className="border-t border-primary/10 pt-3">
-                <p className="text-lg font-bold leading-snug">{output.titolo}</p>
+                <p className="text-lg font-normal leading-snug">{output.titolo}</p>
               </div>
             </CardContent>
           </Card>
@@ -136,7 +136,7 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <FileText className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descrizione</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Descrizione</p>
                 </div>
                 <CopyBtn text={output.descrizione || ""} />
               </div>
@@ -155,7 +155,7 @@ const StudioDetail = () => {
                     <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                       <List className="w-4 h-4 text-primary" />
                     </div>
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
                   </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
@@ -181,7 +181,7 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <Euro className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-3xl font-bold tracking-tight">
@@ -201,7 +201,7 @@ const StudioDetail = () => {
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
                     <FolderOpen className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Categoria consigliata</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria consigliata</p>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-sm font-medium">
