@@ -162,8 +162,8 @@ const StoricoDetail = () => {
                   <div>
                     <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                     <div className="flex items-center gap-4">
-                      <span className={`text-6xl font-black ${getOverallScoreColor(result.overallScore)}`}>
-                        {result.overallScore}
+                      <span className={`text-6xl font-black ${getOverallScoreColor(result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore)}`}>
+                        {result.sections?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? result.overallScore}
                       </span>
                       <span className="text-2xl text-muted-foreground">/100</span>
                     </div>
