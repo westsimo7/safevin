@@ -177,11 +177,11 @@ const StudioDetail = () => {
           {output.suggestedPrice && (
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Euro className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+                  <h3 className="text-base font-bold tracking-tight">Prezzo suggerito</h3>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-3xl font-bold tracking-tight">
