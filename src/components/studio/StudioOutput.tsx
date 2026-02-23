@@ -138,6 +138,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
               €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
             </p>
             <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{data.suggestedPrice.reasoning}</p>
+            </div>
           </CardContent>
         </Card>
       )}
