@@ -128,13 +128,13 @@ const StoricoDetail = () => {
               </div>
             )}
 
-            <div className="grid sm:grid-cols-2 gap-3">
+            <div className="flex flex-wrap gap-3">
               {fields.map(
                 (field) =>
                   field.value && (
-                    <div key={field.label} className="p-3 rounded-lg bg-muted/30 border border-border/30">
+                    <div key={field.label} className="p-3 rounded-lg bg-muted/30 border border-border/30 w-fit max-w-full">
                       <p className="text-xs text-muted-foreground mb-1">{field.label}</p>
-                      <p className="text-sm text-foreground whitespace-pre-line">{field.value}</p>
+                      <p className="text-sm text-foreground whitespace-pre-line break-words">{field.value}</p>
                     </div>
                   )
               )}
