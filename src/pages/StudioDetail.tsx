@@ -169,7 +169,7 @@ const StudioDetail = () => {
             <Card className="border-border/50">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <DollarSign className="w-4 h-4 text-primary" />
+                  <Euro className="w-4 h-4 text-primary" />
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
                 </div>
                 <p className="text-2xl font-bold">€{output.suggestedPrice.min} – €{output.suggestedPrice.max}</p>
