@@ -65,6 +65,8 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const isGenerated = !!generatedText;
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -86,7 +88,7 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
       </p>
       <div className="flex flex-wrap gap-1.5">
         {keywords.map((kw, i) => (
-          <Badge key={i} variant="outline" className="text-xs font-normal bg-muted/40 border-border/50 text-foreground/80">
+          <Badge key={i} variant="outline" className={`text-xs font-normal transition-colors ${isGenerated ? "border-destructive/40 bg-destructive/10 text-destructive font-medium" : "bg-muted/40 border-border/50 text-foreground/80"}`}>
             {kw}
           </Badge>
         ))}
@@ -178,8 +180,8 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Ispirazionali</p>
+              <Sparkles className="w-4 h-4 text-primary" />
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Storytelling</p>
               </div>
               <CopyBtn text={data.inspirationalText} />
             </div>
@@ -197,7 +199,7 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           <>
             <div className="border-t border-border/30" />
             <div className="space-y-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Filtri Mentali</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Ispirazionali</p>
 
               {filters!.occasioni && filters!.occasioni.length > 0 && (
                 <FilterBlock
@@ -261,23 +263,15 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           </>
         )}
 
-        {/* 4. Keyword Summary */}
+        {/* 4. Keyword Main */}
         {data.highlightedKeywords && data.highlightedKeywords.length > 0 && (
           <>
             <div className="border-t border-border/30" />
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Chiave Rilevate</p>
-                <CopyBtn text={data.highlightedKeywords.join(", ")} />
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {data.highlightedKeywords.map((kw, i) => (
-                  <Badge key={i} variant="outline" className="text-xs font-normal border-destructive/30 text-destructive bg-destructive/5">
-                    {kw}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+            <FilterBlock
+              icon={<Sparkles className="w-3.5 h-3.5 text-destructive/70" />}
+              title="Keyword Main"
+              keywords={data.highlightedKeywords}
+            />
           </>
         )}
       </CardContent>
