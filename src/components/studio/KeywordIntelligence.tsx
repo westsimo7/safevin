@@ -199,7 +199,7 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           <>
             <div className="border-t border-border/30" />
             <div className="space-y-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Filtri Mentali</p>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Ispirazionali</p>
 
               {filters!.occasioni && filters!.occasioni.length > 0 && (
                 <FilterBlock
