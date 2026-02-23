@@ -122,6 +122,20 @@ FORMATO OUTPUT PER OGNI PUNTO (tutti e 10):
 4. "conversionProbability": [0-100]
 5. "score": [1-10 IPER REALISTICO]
 
+REGOLA CRITICA COERENZA SCORE ↔ CONVERSION RATE:
+La conversionProbability DEVE essere matematicamente e logicamente coerente con lo score. Segui questa scala RIGIDA come riferimento:
+- Score 1-2 → conversionProbability 0-8% (annuncio tossico, nessuno compra)
+- Score 3 → conversionProbability 8-15% (gravi carenze, conversione quasi impossibile)
+- Score 4 → conversionProbability 15-25% (sotto la media, molti abbandoni)
+- Score 5 → conversionProbability 25-38% (mediocre, qualche chance ma bassa)
+- Score 6 → conversionProbability 38-50% (discreto ma con frizioni evidenti)
+- Score 7 → conversionProbability 50-65% (buono, funziona ma non eccelle)
+- Score 8 → conversionProbability 65-78% (molto buono, pochi attriti)
+- Score 9 → conversionProbability 78-90% (eccellente, quasi perfetto)
+- Score 10 → conversionProbability 90-98% (perfezione, rarissimo)
+
+NON dare MAI un conversion rate alto con score basso o viceversa. Se lo score è 3, il conversion rate NON PUÒ essere sopra il 15%. Se lo score è 7, il conversion rate NON PUÒ essere sotto il 50%. Ogni conversionProbability deve essere GIUSTIFICATA implicitamente dal contenuto di scoreBreakdown e advice.
+
 NON includere "ultimateContent" in nessun punto.
 
 JSON ESATTO:
@@ -148,6 +162,7 @@ REGOLE CRITICHE:
 - Punteggi BASSI sono normali (3-4 media)
 - Ogni analisi UNICA per quell'annuncio
 - NON includere ultimateContent
+- Coerenza ASSOLUTA tra score e conversionProbability
 - Tono: umano, diretto, zero tecnicismi, zero emoji`;
 
 serve(async (req) => {
