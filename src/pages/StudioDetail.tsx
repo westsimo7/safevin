@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Check, PenTool, Euro, Lightbulb } from "lucide-react";
+import { ArrowLeft, Copy, Check, PenTool, Euro, Lightbulb, Type, FileText, List, FolderOpen, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrustConversionSection from "@/components/studio/TrustConversionSection";
 import KeywordIntelligence from "@/components/studio/KeywordIntelligence";
@@ -101,7 +101,7 @@ const StudioDetail = () => {
           </div>
         )}
 
-        <div className="space-y-4">
+        <div className="space-y-5">
           <div className="flex items-center gap-2 mb-2">
             <PenTool className="w-5 h-5 text-primary" />
             <p className="text-xs text-muted-foreground">
@@ -111,92 +111,132 @@ const StudioDetail = () => {
           </div>
 
           {/* Titolo */}
-          <Card className="border-border/50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Titolo</p>
+          <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                    <Type className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Titolo</p>
+                </div>
                 <CopyBtn text={output.titolo || ""} />
               </div>
-              <p className="text-lg font-bold">{output.titolo}</p>
+              <p className="text-lg font-bold leading-snug">{output.titolo}</p>
             </CardContent>
           </Card>
 
           {/* Descrizione */}
-          <Card className="border-border/50">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descrizione</p>
+          <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                    <FileText className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descrizione</p>
+                </div>
                 <CopyBtn text={output.descrizione || ""} />
               </div>
-              <p className="text-sm whitespace-pre-line leading-relaxed">{output.descrizione}</p>
+              <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{output.descrizione}</p>
             </CardContent>
           </Card>
 
-          {/* Bullet points */}
+          {/* Dettagli tecnici */}
           {output.bulletPoints?.length > 0 && (
-            <Card className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dettagli</p>
+            <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                      <List className="w-4 h-4 text-primary" />
+                    </div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
+                  </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
                 <ul className="space-y-1.5">
                   {output.bulletPoints.map((bp: string, i: number) => (
-                    <li key={i} className="text-sm">{bp}</li>
+                    <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                      <span className="text-primary/60 mt-0.5">•</span>
+                      <span>{bp.replace(/^•\s*/, "")}</span>
+                    </li>
                   ))}
                 </ul>
               </CardContent>
             </Card>
           )}
 
-          {/* Keyword Intelligence — replaces old hashtag card */}
+          {/* Prezzo suggerito */}
+          {output.suggestedPrice && (
+            <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                    <Euro className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+                </div>
+                <p className="text-3xl font-bold tracking-tight">
+                  €{output.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{output.suggestedPrice.max}
+                </p>
+                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{output.suggestedPrice.reasoning}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Categoria consigliata */}
+          {(output.category_suggestion || output.subcategory_suggestion) && (
+            <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                    <FolderOpen className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Categoria consigliata</p>
+                </div>
+                <p className="text-sm font-medium">
+                  {output.category_suggestion}
+                  {output.subcategory_suggestion && <span className="text-muted-foreground"> → </span>}
+                  {output.subcategory_suggestion}
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Keyword Intelligence */}
           {output.keywordIntelligence ? (
             <KeywordIntelligence data={output.keywordIntelligence} legacyHashtags={output.hashtags} />
           ) : output.hashtags?.length > 0 ? (
             <KeywordIntelligence data={{}} legacyHashtags={output.hashtags} />
           ) : null}
 
-          {/* Price */}
-          {output.suggestedPrice && (
-            <Card className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Euro className="w-4 h-4 text-primary" />
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
-                </div>
-                <p className="text-2xl font-bold">€{output.suggestedPrice.min} – €{output.suggestedPrice.max}</p>
-                <p className="text-xs text-muted-foreground mt-1">{output.suggestedPrice.reasoning}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Trust & Conversion Section — before tips */}
+          {/* Trust & Conversion */}
           {output.trustSection && (
             <TrustConversionSection data={output.trustSection} />
           )}
-
-          {/* Legacy fallback */}
           {!output.trustSection && output.trustElements?.length > 0 && (
             <TrustConversionSection
-              data={{
-                buyerQuestions: [],
-                actionChecklist: output.trustElements,
-                strategicScripts: [],
-              }}
+              data={{ buyerQuestions: [], actionChecklist: output.trustElements, strategicScripts: [] }}
             />
           )}
 
-          {/* Tips */}
+          {/* Consigli */}
           {output.tips?.length > 0 && (
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Lightbulb className="w-4 h-4 text-primary" />
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wider">Consigli</p>
+            <Card className="border-primary/20 bg-primary/5 overflow-hidden">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                    <Lightbulb className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-xs font-semibold text-primary uppercase tracking-wider">Consigli extra</p>
                 </div>
                 <ul className="space-y-2">
                   {output.tips.map((tip: string, i: number) => (
-                    <li key={i} className="text-sm">→ {tip}</li>
+                    <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                      <span className="text-primary mt-0.5">→</span>
+                      <span>{tip}</span>
+                    </li>
                   ))}
                 </ul>
               </CardContent>
@@ -206,6 +246,7 @@ const StudioDetail = () => {
           {/* Actions */}
           <div className="flex flex-col gap-3 pt-4">
             <Button variant="neon" size="lg" className="w-full" onClick={() => navigate("/dashboard")}>
+              <Sparkles className="w-4 h-4 mr-2" />
               Crea nuovo annuncio
             </Button>
             <Button variant="glass" className="w-full" onClick={() => navigate("/storico")}>

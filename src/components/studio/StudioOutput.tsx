@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Sparkles, Euro, Lightbulb } from "lucide-react";
+import {
+  Copy, Check, Sparkles, Euro, Lightbulb, Type, FileText, List, FolderOpen,
+} from "lucide-react";
 import TrustConversionSection from "./TrustConversionSection";
 import KeywordIntelligence from "./KeywordIntelligence";
 
@@ -43,146 +45,148 @@ interface StudioOutputProps {
 
 const CopyButton = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
-
   const handleCopy = async () => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
   return (
-    <button
-      onClick={handleCopy}
-      className="p-1.5 rounded-lg hover:bg-muted transition-colors active:scale-95"
-      aria-label="Copia"
-    >
-      {copied ? (
-        <Check className="w-4 h-4 text-green-500" />
-      ) : (
-        <Copy className="w-4 h-4 text-muted-foreground" />
-      )}
+    <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-muted transition-colors active:scale-95" aria-label="Copia">
+      {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
     </button>
   );
 };
 
+const SectionBlock = ({
+  icon,
+  label,
+  copyText,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  copyText?: string;
+  children: React.ReactNode;
+}) => (
+  <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+    <CardContent className="p-5">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+            {icon}
+          </div>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+        </div>
+        {copyText && <CopyButton text={copyText} />}
+      </div>
+      {children}
+    </CardContent>
+  </Card>
+);
+
 const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="text-center">
+    <div className="space-y-5 animate-fade-in">
+      {/* Header */}
+      <div className="text-center pb-2">
         <Badge className="bg-green-500/10 text-green-500 border-green-500/30 mb-4">
           <Sparkles className="w-3 h-3 mr-1" />
           Annuncio pronto
         </Badge>
-        <h2 className="text-2xl md:text-3xl font-bold mb-2">
-          Il tuo annuncio è pronto.
-        </h2>
-        <p className="text-muted-foreground">
-          Copia ogni sezione e incollala direttamente su Vinted.
-        </p>
+        <h2 className="text-2xl md:text-3xl font-bold mb-2">Il tuo annuncio è pronto.</h2>
+        <p className="text-sm text-muted-foreground">Copia ogni sezione e incollala direttamente su Vinted.</p>
       </div>
 
       {/* Titolo */}
-      <Card className="border-border/50">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Titolo</p>
-            <CopyButton text={data.titolo} />
-          </div>
-          <p className="text-lg font-bold">{data.titolo}</p>
-        </CardContent>
-      </Card>
+      <SectionBlock icon={<Type className="w-4 h-4 text-primary" />} label="Titolo" copyText={data.titolo}>
+        <p className="text-lg font-bold leading-snug">{data.titolo}</p>
+      </SectionBlock>
 
       {/* Descrizione */}
-      <Card className="border-border/50">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descrizione</p>
-            <CopyButton text={data.descrizione} />
-          </div>
-          <p className="text-sm whitespace-pre-line leading-relaxed">{data.descrizione}</p>
-        </CardContent>
-      </Card>
+      <SectionBlock icon={<FileText className="w-4 h-4 text-primary" />} label="Descrizione" copyText={data.descrizione}>
+        <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{data.descrizione}</p>
+      </SectionBlock>
 
-      {/* Bullet Points */}
+      {/* Dettagli tecnici */}
       {data.bulletPoints?.length > 0 && (
-        <Card className="border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
-              <CopyButton text={data.bulletPoints.join("\n")} />
+        <SectionBlock icon={<List className="w-4 h-4 text-primary" />} label="Dettagli tecnici" copyText={data.bulletPoints.join("\n")}>
+          <ul className="space-y-1.5">
+            {data.bulletPoints.map((bp, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                <span className="text-primary/60 mt-0.5">•</span>
+                <span>{bp.replace(/^•\s*/, "")}</span>
+              </li>
+            ))}
+          </ul>
+        </SectionBlock>
+      )}
+
+      {/* Prezzo suggerito */}
+      {data.suggestedPrice && (
+        <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <Euro className="w-4 h-4 text-primary" />
+              </div>
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
             </div>
-            <ul className="space-y-1.5">
-              {data.bulletPoints.map((bp, i) => (
-                <li key={i} className="text-sm">{bp}</li>
-              ))}
-            </ul>
+            <p className="text-3xl font-bold tracking-tight">
+              €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
+            </p>
+            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{data.suggestedPrice.reasoning}</p>
           </CardContent>
         </Card>
       )}
 
-      {/* Keyword Intelligence — replaces old hashtag card */}
+      {/* Categoria consigliata */}
+      {(data.category_suggestion || data.subcategory_suggestion) && (
+        <SectionBlock icon={<FolderOpen className="w-4 h-4 text-primary" />} label="Categoria consigliata">
+          <p className="text-sm font-medium">
+            {data.category_suggestion}
+            {data.subcategory_suggestion && (
+              <span className="text-muted-foreground"> → </span>
+            )}
+            {data.subcategory_suggestion && (
+              <span>{data.subcategory_suggestion}</span>
+            )}
+          </p>
+        </SectionBlock>
+      )}
+
+      {/* Keyword Intelligence */}
       {data.keywordIntelligence ? (
         <KeywordIntelligence data={data.keywordIntelligence} legacyHashtags={data.hashtags} />
       ) : data.hashtags?.length > 0 ? (
         <KeywordIntelligence data={{}} legacyHashtags={data.hashtags} />
       ) : null}
 
-      {/* Price Suggestion */}
-      {data.suggestedPrice && (
-        <Card className="border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Euro className="w-4 h-4 text-primary" />
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
-            </div>
-            <p className="text-2xl font-bold">
-              €{data.suggestedPrice.min} – €{data.suggestedPrice.max}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">{data.suggestedPrice.reasoning}</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Category */}
-      {(data.category_suggestion || data.subcategory_suggestion) && (
-        <Card className="border-border/50">
-          <CardContent className="p-4">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Categoria consigliata</p>
-            <p className="text-sm font-medium">
-              {data.category_suggestion}
-              {data.subcategory_suggestion && ` → ${data.subcategory_suggestion}`}
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Trust & Conversion Section — before tips */}
+      {/* Trust & Conversion */}
       {data.trustSection && (
         <TrustConversionSection data={data.trustSection} />
       )}
-
-      {/* Legacy fallback for old data without trustSection */}
       {!data.trustSection && data.trustElements && data.trustElements.length > 0 && (
         <TrustConversionSection
-          data={{
-            buyerQuestions: [],
-            actionChecklist: data.trustElements,
-            strategicScripts: [],
-          }}
+          data={{ buyerQuestions: [], actionChecklist: data.trustElements, strategicScripts: [] }}
         />
       )}
 
-      {/* Tips */}
+      {/* Consigli extra */}
       {data.tips?.length > 0 && (
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Lightbulb className="w-4 h-4 text-primary" />
+        <Card className="border-primary/20 bg-primary/5 overflow-hidden">
+          <CardContent className="p-5">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <Lightbulb className="w-4 h-4 text-primary" />
+              </div>
               <p className="text-xs font-semibold text-primary uppercase tracking-wider">Consigli extra</p>
             </div>
             <ul className="space-y-2">
               {data.tips.map((tip, i) => (
-                <li key={i} className="text-sm text-foreground">→ {tip}</li>
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                  <span className="text-primary mt-0.5">→</span>
+                  <span>{tip}</span>
+                </li>
               ))}
             </ul>
           </CardContent>
