@@ -71,11 +71,11 @@ const SectionBlock = ({
   <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
     <CardContent className="p-5">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
             {icon}
           </div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
+          <h3 className="text-base font-bold tracking-tight">{label}</h3>
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
@@ -127,11 +127,11 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
       {data.suggestedPrice && (
         <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
           <CardContent className="p-5">
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Euro className="w-4 h-4 text-primary" />
               </div>
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+              <h3 className="text-base font-bold tracking-tight">Prezzo suggerito</h3>
             </div>
             <div className="border-t border-primary/10 pt-3">
             <p className="text-3xl font-bold tracking-tight">
@@ -179,11 +179,11 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
       {data.tips?.length > 0 && (
         <Card className="border-primary/20 bg-primary/5 overflow-hidden">
           <CardContent className="p-5">
-            <div className="flex items-center gap-2.5 mb-3">
-              <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                 <Lightbulb className="w-4 h-4 text-primary" />
               </div>
-              <p className="text-xs font-semibold text-primary uppercase tracking-wider">Consigli extra</p>
+              <h3 className="text-base font-bold tracking-tight text-primary">Consigli extra</h3>
             </div>
             <ul className="space-y-2">
               {data.tips.map((tip, i) => (

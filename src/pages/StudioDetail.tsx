@@ -114,11 +114,11 @@ const StudioDetail = () => {
           <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Type className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Titolo</p>
+                  <h3 className="text-base font-bold tracking-tight">Titolo</h3>
                 </div>
                 <CopyBtn text={output.titolo || ""} />
               </div>
@@ -132,11 +132,11 @@ const StudioDetail = () => {
           <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <FileText className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Descrizione</p>
+                  <h3 className="text-base font-bold tracking-tight">Descrizione</h3>
                 </div>
                 <CopyBtn text={output.descrizione || ""} />
               </div>
@@ -151,11 +151,11 @@ const StudioDetail = () => {
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                       <List className="w-4 h-4 text-primary" />
                     </div>
-                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Dettagli tecnici</p>
+                    <h3 className="text-base font-bold tracking-tight">Dettagli tecnici</h3>
                   </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
@@ -177,11 +177,11 @@ const StudioDetail = () => {
           {output.suggestedPrice && (
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Euro className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
+                  <h3 className="text-base font-bold tracking-tight">Prezzo suggerito</h3>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-3xl font-bold tracking-tight">
@@ -197,11 +197,11 @@ const StudioDetail = () => {
           {(output.category_suggestion || output.subcategory_suggestion) && (
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <FolderOpen className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Categoria consigliata</p>
+                  <h3 className="text-base font-bold tracking-tight">Categoria consigliata</h3>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
                   <p className="text-sm font-medium">
@@ -235,11 +235,11 @@ const StudioDetail = () => {
           {output.tips?.length > 0 && (
             <Card className="border-primary/20 bg-primary/5 overflow-hidden">
               <CardContent className="p-5">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                     <Lightbulb className="w-4 h-4 text-primary" />
                   </div>
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wider">Consigli extra</p>
+                  <h3 className="text-base font-bold tracking-tight text-primary">Consigli extra</h3>
                 </div>
                 <ul className="space-y-2">
                   {output.tips.map((tip: string, i: number) => (
