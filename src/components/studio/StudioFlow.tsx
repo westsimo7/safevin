@@ -20,7 +20,12 @@ interface StudioOutputData {
   titolo: string;
   descrizione: string;
   bulletPoints: string[];
-  trustElements: string[];
+  trustElements?: string[];
+  trustSection?: {
+    buyerQuestions: string[];
+    actionChecklist: string[];
+    strategicScripts: { label: string; script: string }[];
+  };
   suggestedPrice: { min: number; max: number; reasoning: string };
   hashtags: string[];
   category_suggestion: string;

@@ -5,8 +5,9 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Check, PenTool, Tag, Shield, DollarSign, Lightbulb } from "lucide-react";
+import { ArrowLeft, Copy, Check, PenTool, Tag, DollarSign, Lightbulb } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import TrustConversionSection from "@/components/studio/TrustConversionSection";
 
 interface StudioRecord {
   id: string;
@@ -147,23 +148,6 @@ const StudioDetail = () => {
             </Card>
           )}
 
-          {/* Trust */}
-          {output.trustElements?.length > 0 && (
-            <Card className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <Shield className="w-4 h-4 text-primary" />
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Fiducia</p>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {output.trustElements.map((el: string, i: number) => (
-                    <Badge key={i} variant="outline" className="text-xs">{el}</Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
           {/* Hashtags */}
           {output.hashtags?.length > 0 && (
             <Card className="border-border/50">
@@ -209,6 +193,22 @@ const StudioDetail = () => {
                 </ul>
               </CardContent>
             </Card>
+          )}
+
+          {/* Trust & Conversion Section */}
+          {output.trustSection && (
+            <TrustConversionSection data={output.trustSection} />
+          )}
+
+          {/* Legacy fallback */}
+          {!output.trustSection && output.trustElements?.length > 0 && (
+            <TrustConversionSection
+              data={{
+                buyerQuestions: [],
+                actionChecklist: output.trustElements,
+                strategicScripts: [],
+              }}
+            />
           )}
 
           {/* Actions */}
