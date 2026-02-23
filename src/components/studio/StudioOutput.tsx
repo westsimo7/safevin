@@ -68,7 +68,7 @@ const SectionBlock = ({
   copyText?: string;
   children: React.ReactNode;
 }) => (
-  <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+  <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
     <CardContent className="p-5">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2.5">
@@ -79,7 +79,9 @@ const SectionBlock = ({
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
-      {children}
+      <div className="border-t border-primary/10 pt-3">
+        {children}
+      </div>
     </CardContent>
   </Card>
 );
