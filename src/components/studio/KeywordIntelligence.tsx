@@ -65,6 +65,8 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const isGenerated = !!generatedText;
+
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
@@ -86,7 +88,7 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
       </p>
       <div className="flex flex-wrap gap-1.5">
         {keywords.map((kw, i) => (
-          <Badge key={i} variant="outline" className="text-xs font-normal bg-muted/40 border-border/50 text-foreground/80">
+          <Badge key={i} variant="outline" className={`text-xs font-normal transition-colors ${isGenerated ? "border-destructive/40 bg-destructive/10 text-destructive font-medium" : "bg-muted/40 border-border/50 text-foreground/80"}`}>
             {kw}
           </Badge>
         ))}
