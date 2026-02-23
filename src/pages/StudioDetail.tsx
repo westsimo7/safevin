@@ -111,7 +111,7 @@ const StudioDetail = () => {
           </div>
 
           {/* Titolo */}
-          <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+          <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -122,12 +122,14 @@ const StudioDetail = () => {
                 </div>
                 <CopyBtn text={output.titolo || ""} />
               </div>
-              <p className="text-lg font-bold leading-snug">{output.titolo}</p>
+              <div className="border-t border-primary/10 pt-3">
+                <p className="text-lg font-bold leading-snug">{output.titolo}</p>
+              </div>
             </CardContent>
           </Card>
 
           {/* Descrizione */}
-          <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+          <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
@@ -138,13 +140,15 @@ const StudioDetail = () => {
                 </div>
                 <CopyBtn text={output.descrizione || ""} />
               </div>
-              <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{output.descrizione}</p>
+              <div className="border-t border-primary/10 pt-3">
+                <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{output.descrizione}</p>
+              </div>
             </CardContent>
           </Card>
 
           {/* Dettagli tecnici */}
           {output.bulletPoints?.length > 0 && (
-            <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2.5">
@@ -155,14 +159,16 @@ const StudioDetail = () => {
                   </div>
                   <CopyBtn text={output.bulletPoints.join("\n")} />
                 </div>
-                <ul className="space-y-1.5">
-                  {output.bulletPoints.map((bp: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
-                      <span className="text-primary/60 mt-0.5">•</span>
-                      <span>{bp.replace(/^•\s*/, "")}</span>
-                    </li>
-                  ))}
-                </ul>
+                <div className="border-t border-primary/10 pt-3">
+                  <ul className="space-y-1.5">
+                    {output.bulletPoints.map((bp: string, i: number) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                        <span className="text-primary/60 mt-0.5">•</span>
+                        <span>{bp.replace(/^•\s*/, "")}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </CardContent>
             </Card>
           )}
@@ -177,17 +183,19 @@ const StudioDetail = () => {
                   </div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
                 </div>
-                <p className="text-3xl font-bold tracking-tight">
-                  €{output.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{output.suggestedPrice.max}
-                </p>
-                <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{output.suggestedPrice.reasoning}</p>
+                <div className="border-t border-primary/10 pt-3">
+                  <p className="text-3xl font-bold tracking-tight">
+                    €{output.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{output.suggestedPrice.max}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{output.suggestedPrice.reasoning}</p>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {/* Categoria consigliata */}
           {(output.category_suggestion || output.subcategory_suggestion) && (
-            <Card className="border-border/40 bg-card/80 backdrop-blur-sm overflow-hidden">
+            <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2.5 mb-3">
                   <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
@@ -195,11 +203,13 @@ const StudioDetail = () => {
                   </div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Categoria consigliata</p>
                 </div>
-                <p className="text-sm font-medium">
-                  {output.category_suggestion}
-                  {output.subcategory_suggestion && <span className="text-muted-foreground"> → </span>}
-                  {output.subcategory_suggestion}
-                </p>
+                <div className="border-t border-primary/10 pt-3">
+                  <p className="text-sm font-medium">
+                    {output.category_suggestion}
+                    {output.subcategory_suggestion && <span className="text-muted-foreground"> → </span>}
+                    {output.subcategory_suggestion}
+                  </p>
+                </div>
               </CardContent>
             </Card>
           )}
