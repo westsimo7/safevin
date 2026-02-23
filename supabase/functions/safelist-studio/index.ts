@@ -93,10 +93,20 @@ FORMATO OUTPUT (JSON):
     "• Punto tecnico/informativo 1",
     "• Punto tecnico/informativo 2"
   ],
-  "trustElements": [
-    "Elemento fiducia 1 (es: spedizione rapida, foto reali, etc.)",
-    "Elemento fiducia 2"
-  ],
+  "trustSection": {
+    "buyerQuestions": [
+      "Domanda che l'acquirente si pone guardando QUESTO specifico annuncio (max 3)"
+    ],
+    "actionChecklist": [
+      "Azione concreta e specifica per aumentare la fiducia su QUESTO annuncio (max 4)"
+    ],
+    "strategicScripts": [
+      {
+        "label": "Contesto della risposta (es: Richiesta sconto, Autenticità, Foto extra)",
+        "script": "Risposta professionale pronta da copiare (max 220 caratteri)"
+      }
+    ]
+  },
   "suggestedPrice": {
     "min": 0,
     "max": 0,
@@ -108,13 +118,18 @@ FORMATO OUTPUT (JSON):
   "tips": ["Consiglio extra 1 per migliorare l'annuncio"]
 }
 
-REGOLE:
+REGOLE TRUST SECTION:
+- buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto. Basate su categoria, prezzo, condizione, difetti, brand. Sintetiche e dirette.
+- actionChecklist: ESATTAMENTE 4 azioni concrete e specifiche per questo annuncio. Devono essere attivabili (checkbox). Adattate al prodotto reale.
+- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati alla categoria. Uno per richiesta sconto, uno per autenticità/condizione, uno per info extra. Max 220 caratteri ciascuno. Tono sicuro, professionale, non aggressivo.
+
+REGOLE GENERALI:
 - Rispondi SOLO JSON valido
 - Descrizione: 150-300 parole, strutturata con paragrafi
 - Bullet points: 4-8 punti
-- Trust elements: 3-5 elementi
 - Hashtags: 5-10 pertinenti
-- Prezzo: range realistico basato su mercato Vinted`;
+- Prezzo: range realistico basato su mercato Vinted
+- NON includere "trustElements" nel JSON, usa SOLO "trustSection"`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
