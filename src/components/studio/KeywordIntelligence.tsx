@@ -253,17 +253,6 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           </>
         )}
 
-        {/* 4. Keyword Main */}
-        {data.highlightedKeywords && data.highlightedKeywords.length > 0 && (
-          <>
-            <div className="border-t border-border/30" />
-            <FilterBlock
-              icon={<Sparkles className="w-3.5 h-3.5 text-destructive/70" />}
-              title="Keyword Main"
-              keywords={data.highlightedKeywords}
-            />
-          </>
-        )}
       </CardContent>
     </Card>
   );
