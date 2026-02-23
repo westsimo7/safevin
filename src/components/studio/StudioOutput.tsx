@@ -133,6 +133,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
               </div>
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
             </div>
+            <div className="border-t border-primary/10 pt-3">
             <p className="text-3xl font-bold tracking-tight">
               €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
             </p>
