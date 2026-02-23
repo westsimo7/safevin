@@ -108,28 +108,19 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
         </Card>
       )}
 
-      {/* Hashtags */}
-      {data.hashtags?.length > 0 && (
-        <Card className="border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center gap-2">
-                <Tag className="w-4 h-4 text-primary" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Hashtag</p>
-              </div>
-              <CopyButton text={data.hashtags.join(" ")} />
-            </div>
-            <p className="text-sm text-primary">{data.hashtags.join(" ")}</p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Keyword Intelligence — replaces old hashtag card */}
+      {data.keywordIntelligence ? (
+        <KeywordIntelligence data={data.keywordIntelligence} legacyHashtags={data.hashtags} />
+      ) : data.hashtags?.length > 0 ? (
+        <KeywordIntelligence data={{}} legacyHashtags={data.hashtags} />
+      ) : null}
 
       {/* Price Suggestion */}
       {data.suggestedPrice && (
         <Card className="border-border/50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 mb-3">
-              <DollarSign className="w-4 h-4 text-primary" />
+              <Euro className="w-4 h-4 text-primary" />
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Prezzo suggerito</p>
             </div>
             <p className="text-2xl font-bold">
