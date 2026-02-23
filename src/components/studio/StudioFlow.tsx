@@ -26,6 +26,18 @@ interface StudioOutputData {
     actionChecklist: string[];
     strategicScripts: { label: string; script: string }[];
   };
+  keywordIntelligence?: {
+    inspirationalText?: string;
+    highlightedKeywords?: string[];
+    mentalFilters?: {
+      occasioni?: string[];
+      stagione?: string[];
+      outfitAbbinamenti?: string[];
+      sinonimiItaliani?: string[];
+      intentoAcquisto?: string[];
+    };
+    strategicHashtags?: string[];
+  };
   suggestedPrice: { min: number; max: number; reasoning: string };
   hashtags: string[];
   category_suggestion: string;
