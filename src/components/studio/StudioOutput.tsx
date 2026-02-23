@@ -75,7 +75,7 @@ const SectionBlock = ({
           <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
             {icon}
           </div>
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
+          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
