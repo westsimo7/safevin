@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Copy, Check, PenTool, Tag, Shield, DollarSign, Lightbulb } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface StudioRecord {
   id: string;
@@ -36,6 +37,7 @@ const CopyBtn = ({ text }: { text: string }) => {
 const StudioDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [record, setRecord] = useState<StudioRecord | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -83,10 +85,12 @@ const StudioDetail = () => {
     <div className="min-h-screen bg-background">
       <DashboardHeader />
       <main className="container mx-auto px-6 py-12 max-w-2xl">
-        <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo Storico
-        </Button>
+        {!isMobile && (
+          <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Torna allo Storico
+          </Button>
+        )}
 
         {/* Images */}
         {record.first_image_url && (
