@@ -180,8 +180,8 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           <div>
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Ispirazionali</p>
+              <Sparkles className="w-4 h-4 text-primary" />
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Storytelling</p>
               </div>
               <CopyBtn text={data.inspirationalText} />
             </div>
