@@ -71,11 +71,11 @@ const SectionBlock = ({
   <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
     <CardContent className="p-5">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-md bg-primary/10 flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
             {icon}
           </div>
-          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">{label}</p>
+          <h3 className="text-base font-bold tracking-tight">{label}</h3>
         </div>
         {copyText && <CopyButton text={copyText} />}
       </div>
