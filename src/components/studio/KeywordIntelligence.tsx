@@ -263,23 +263,15 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
           </>
         )}
 
-        {/* 4. Keyword Summary */}
+        {/* 4. Keyword Main */}
         {data.highlightedKeywords && data.highlightedKeywords.length > 0 && (
           <>
             <div className="border-t border-border/30" />
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Chiave Rilevate</p>
-                <CopyBtn text={data.highlightedKeywords.join(", ")} />
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {data.highlightedKeywords.map((kw, i) => (
-                  <Badge key={i} variant="outline" className="text-xs font-normal border-destructive/30 text-destructive bg-destructive/5">
-                    {kw}
-                  </Badge>
-                ))}
-              </div>
-            </div>
+            <FilterBlock
+              icon={<Sparkles className="w-3.5 h-3.5 text-destructive/70" />}
+              title="Keyword Main"
+              keywords={data.highlightedKeywords}
+            />
           </>
         )}
       </CardContent>
