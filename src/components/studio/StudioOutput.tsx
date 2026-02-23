@@ -2,13 +2,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Sparkles, ArrowRight, Tag, Shield, DollarSign, Lightbulb } from "lucide-react";
+import { Copy, Check, Sparkles, Tag, DollarSign, Lightbulb } from "lucide-react";
+import TrustConversionSection from "./TrustConversionSection";
 
 interface StudioOutputData {
   titolo: string;
   descrizione: string;
   bulletPoints: string[];
-  trustElements: string[];
+  trustElements?: string[];
+  trustSection?: {
+    buyerQuestions: string[];
+    actionChecklist: string[];
+    strategicScripts: { label: string; script: string }[];
+  };
   suggestedPrice: { min: number; max: number; reasoning: string };
   hashtags: string[];
   category_suggestion: string;
@@ -101,25 +107,6 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
         </Card>
       )}
 
-      {/* Trust Elements */}
-      {data.trustElements?.length > 0 && (
-        <Card className="border-border/50">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Shield className="w-4 h-4 text-primary" />
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Elementi fiducia</p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {data.trustElements.map((el, i) => (
-                <Badge key={i} variant="outline" className="text-xs">
-                  {el}
-                </Badge>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* Hashtags */}
       {data.hashtags?.length > 0 && (
         <Card className="border-border/50">
@@ -180,6 +167,22 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
             </ul>
           </CardContent>
         </Card>
+      )}
+
+      {/* Trust & Conversion Section */}
+      {data.trustSection && (
+        <TrustConversionSection data={data.trustSection} />
+      )}
+
+      {/* Legacy fallback for old data without trustSection */}
+      {!data.trustSection && data.trustElements && data.trustElements.length > 0 && (
+        <TrustConversionSection
+          data={{
+            buyerQuestions: [],
+            actionChecklist: data.trustElements,
+            strategicScripts: [],
+          }}
+        />
       )}
 
       {/* Actions */}
