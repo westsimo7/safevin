@@ -88,7 +88,7 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
       </p>
       <div className="flex flex-wrap gap-1.5">
         {keywords.map((kw, i) => (
-          <Badge key={i} variant="outline" className={`text-xs font-normal transition-colors ${isGenerated ? "border-destructive/40 bg-destructive/10 text-destructive font-medium" : "bg-muted/40 border-border/50 text-foreground/80"}`}>
+          <Badge key={i} variant="outline" className={`text-xs font-normal transition-colors ${isGenerated ? "border-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)] bg-transparent text-foreground/80" : "bg-muted/40 border-border/50 text-foreground/80"}`}>
             {kw}
           </Badge>
         ))}
