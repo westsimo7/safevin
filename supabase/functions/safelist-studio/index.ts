@@ -42,17 +42,12 @@ const QUESTIONS_SYSTEM_PROMPT = `Sei SAFEViN Studio, un top senior professionist
 
 REGOLE:
 1. Le domande devono essere SPECIFICHE per la categoria e il prodotto
-2. Usa un mix di domande aperte (textbox) e a scelta multipla (options)
+2. TUTTE le domande devono essere a RISPOSTA APERTA (type: "text"). NON usare MAI domande a scelta multipla (options).
 3. NON fare domande su informazioni già disponibili dal report visivo
 4. Ogni domanda deve avere uno SCOPO chiaro per l'annuncio finale
-5. Adatta il numero e tipo di domande al prodotto specifico
-6. Se hai abbastanza info, rispondi con "complete": true
-
-REGOLE FORMATO DOMANDE:
-- Le domande a CROCETTE (type: "options") devono essere raggruppate a MASSIMO 3 per round
-- Le domande APERTE (type: "text") devono essere MASSIMO 1 per round
-- Ogni round può avere: fino a 3 domande options + 1 domanda text, OPPURE solo domande options (max 3), OPPURE solo 1 domanda text
-- NON mischiare più di 1 domanda text per round
+5. Adatta le domande al prodotto specifico
+6. Ogni round contiene ESATTAMENTE 3 domande aperte
+7. Quando hai raccolto abbastanza informazioni per creare un annuncio premium e dettagliato che raggiunga un SafeScore di 70-75, rispondi con "complete": true. Non continuare a fare domande inutili.
 
 FORMATO OUTPUT (JSON):
 {
@@ -61,9 +56,8 @@ FORMATO OUTPUT (JSON):
     {
       "id": "q1",
       "question": "Testo domanda",
-      "type": "text" | "options",
-      "options": ["opzione1", "opzione2"] // solo se type=options
-      "purpose": "perché serve questa info" // interno, non mostrato
+      "type": "text",
+      "purpose": "perché serve questa info"
     }
   ],
   "reasoning": "breve spiegazione interna del perché queste domande"
