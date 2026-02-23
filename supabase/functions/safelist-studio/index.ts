@@ -144,7 +144,7 @@ REGOLE GENERALI:
 - Rispondi SOLO JSON valido
 - Descrizione: 150-300 parole, strutturata con paragrafi
 - Bullet points: 4-8 punti
-- hashtags: campo legacy, metti gli stessi di strategicHashtags (primi 10)
+- hashtags: campo legacy, metti gli stessi di strategicHashtags
 - Prezzo: range realistico basato su mercato Vinted
 - NON includere "trustElements" nel JSON, usa SOLO "trustSection"
 - L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo (premium vs accessibile), mood, target`;
