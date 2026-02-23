@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Sparkles, Tag, DollarSign, Lightbulb } from "lucide-react";
+import { Copy, Check, Sparkles, Euro, Lightbulb } from "lucide-react";
 import TrustConversionSection from "./TrustConversionSection";
+import KeywordIntelligence from "./KeywordIntelligence";
 
 interface StudioOutputData {
   titolo: string;
