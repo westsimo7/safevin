@@ -133,7 +133,7 @@ REGOLE KEYWORD INTELLIGENCE:
   * outfitAbbinamenti: 5-7 keyword su outfit e abbinamenti con questo prodotto
   * sinonimiItaliani: 5-8 varianti semantiche reali che gli utenti cercano SENZA hashtag
   * intentoAcquisto: 4-5 keyword con intento d'acquisto forte
-- strategicHashtags: 15-25 hashtag NON BANALI. Evitare #fashion #style #look. Preferire long tail, occasion-based, seasonal, intent-based. Mix tra diretti, long tail, occasion, seasonal, intent.
+- strategicHashtags: MASSIMO 10 hashtag ULTRA-PREMIUM e iper-strategici. Ogni hashtag deve essere scelto con precisione chirurgica in base a TUTTO il resoconto dell'annuncio (categoria, brand, condizioni, target, stagione, prezzo). Evitare hashtag generici (#fashion #style #look #vinted). Solo long tail specifici, occasion-based e intent-based altamente mirati.
 
 REGOLE TRUST SECTION:
 - buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto.
