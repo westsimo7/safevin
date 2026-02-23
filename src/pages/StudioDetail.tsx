@@ -128,7 +128,7 @@ const StudioDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Descrizione */}
+          {/* Descrizione + Dettagli tecnici (blocco unico) */}
           <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
@@ -138,40 +138,31 @@ const StudioDetail = () => {
                   </div>
                   <h3 className="text-base font-bold tracking-tight">Descrizione</h3>
                 </div>
-                <CopyBtn text={output.descrizione || ""} />
+                <CopyBtn text={
+                  output.bulletPoints?.length > 0
+                    ? `${output.descrizione || ""}\n\n${output.bulletPoints.map((bp: string) => `• ${bp.replace(/^•\s*/, "")}`).join("\n")}`
+                    : (output.descrizione || "")
+                } />
               </div>
               <div className="border-t border-primary/10 pt-3">
                 <p className="text-sm whitespace-pre-line leading-relaxed text-foreground/90">{output.descrizione}</p>
+                {output.bulletPoints?.length > 0 && (
+                  <>
+                    <div className="border-t border-primary/10 my-3" />
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Dettagli tecnici</p>
+                    <ul className="space-y-1.5">
+                      {output.bulletPoints.map((bp: string, i: number) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
+                          <span className="text-primary/60 mt-0.5">•</span>
+                          <span>{bp.replace(/^•\s*/, "")}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
-
-          {/* Dettagli tecnici */}
-          {output.bulletPoints?.length > 0 && (
-            <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
-              <CardContent className="p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <List className="w-4 h-4 text-primary" />
-                    </div>
-                    <h3 className="text-base font-bold tracking-tight">Dettagli tecnici</h3>
-                  </div>
-                  <CopyBtn text={output.bulletPoints.join("\n")} />
-                </div>
-                <div className="border-t border-primary/10 pt-3">
-                  <ul className="space-y-1.5">
-                    {output.bulletPoints.map((bp: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-foreground/90">
-                        <span className="text-primary/60 mt-0.5">•</span>
-                        <span>{bp.replace(/^•\s*/, "")}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          )}
 
           {/* Prezzo suggerito */}
           {output.suggestedPrice && (

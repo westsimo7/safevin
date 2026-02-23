@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Search, Calendar, Shirt, Languages, ShoppingCart, Sparkles, Hash } from "lucide-react";
+import { Copy, Check, Search, Calendar, Shirt, Languages, ShoppingCart, Sparkles, Hash, Wand2, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface KeywordIntelligenceData {
   inspirationalText?: string;
@@ -24,7 +25,6 @@ interface KeywordIntelligenceProps {
 const CopyBtn = ({ text, label = "Copia" }: { text: string; label?: string }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
-    // Strip any HTML-like formatting, copy plain text
     const plain = text.replace(/<[^>]*>/g, "");
     await navigator.clipboard.writeText(plain);
     setCopied(true);
@@ -38,9 +38,29 @@ const CopyBtn = ({ text, label = "Copia" }: { text: string; label?: string }) =>
 };
 
 const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: string; keywords: string[] }) => {
+  const [generatedText, setGeneratedText] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const handleGenerate = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-filter-text", {
+        body: { category: title, keywords },
+      });
+      if (!error && data?.text) {
+        setGeneratedText(data.text);
+      }
+    } catch (e) {
+      console.error("Generate filter text error:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(keywords.join(", "));
+    if (!generatedText) return;
+    await navigator.clipboard.writeText(generatedText);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -52,10 +72,18 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
           {icon}
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
         </div>
-        <button onClick={handleCopy} className="p-1 rounded-md hover:bg-muted transition-colors active:scale-95" aria-label="Copia">
-          {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
+        <button
+          onClick={handleGenerate}
+          disabled={loading}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium transition-colors active:scale-95 disabled:opacity-50"
+        >
+          {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
+          Genera
         </button>
       </div>
+      <p className="text-[10px] text-muted-foreground/60 leading-snug">
+        Genera un micro-testo che integra queste keyword per arricchire il tuo annuncio.
+      </p>
       <div className="flex flex-wrap gap-1.5">
         {keywords.map((kw, i) => (
           <Badge key={i} variant="outline" className="text-xs font-normal bg-muted/40 border-border/50 text-foreground/80">
@@ -63,6 +91,16 @@ const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: 
           </Badge>
         ))}
       </div>
+      {generatedText && (
+        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 mt-2">
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-sm leading-relaxed text-foreground/90">{generatedText}</p>
+            <button onClick={handleCopy} className="p-1 rounded-md hover:bg-muted transition-colors active:scale-95 shrink-0" aria-label="Copia">
+              {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
