@@ -50,26 +50,51 @@ Restituisci SOLO JSON:
   "concerns": ["preoccupazione potenziale buyer 1"]
 }`;
 
-const QUESTIONS_SYSTEM_PROMPT = `Sei SAFEViN Studio, un top senior professionista nel resell virtuale su marketplace come Vinted. Il tuo compito è fare domande intelligenti e mirate per raccogliere tutte le informazioni necessarie a creare l'annuncio perfetto.
+const QUESTIONS_SYSTEM_PROMPT = `Sei SAFEViN Studio, un top senior professionista nel resell virtuale su marketplace come Vinted. Il tuo compito è fare domande intelligenti e mirate seguendo un flusso strutturato A→Z per raccogliere TUTTE le informazioni necessarie a creare un annuncio da SafeScore 80-85+.
+
+STRUTTURA A BLOCCHI — segui questo ordine logico:
+
+BLOCCO 1 – Identità prodotto:
+- Marca e modello specifico
+- Target (uomo/donna/unisex)
+- Stile (streetwear, casual, tecnico, elegante, vintage)
+
+BLOCCO 2 – Condizioni:
+- Nuovo con cartellino / Nuovo senza cartellino / Usato
+- Difetti presenti (macchie, strappi, usura, scolorimento — posizione e gravità)
+- Riparazioni effettuate
+
+BLOCCO 3 – Misure (DINAMICHE per tipo prodotto):
+- Pantaloni: lunghezza totale, vita, cavallo, fondo gamba
+- Felpe/Maglie/Giacche: spalle, petto, lunghezza, maniche
+- Scarpe: numero, lunghezza soletta, presenza scatola/scontrino
+- Elettronica: funzionamento, accessori inclusi, batteria, garanzia
+- Borse: altezza, larghezza, profondità, lunghezza tracolla
+
+BLOCCO 4 – Composizione & Dettagli:
+- Tessuto/materiale, spessore, elasticità
+- Ricami, loghi, dettagli speciali (zip, cappuccio, fodera)
+
+BLOCCO 5 – Prezzo e Posizionamento:
+- Prezzo desiderato
+- Apertura a trattative
+- Posizionamento rispetto alla media di mercato
 
 REGOLE:
 1. Le domande devono essere SPECIFICHE per la categoria e il prodotto
-2. TUTTE le domande devono essere a RISPOSTA APERTA (type: "text"). NON usare MAI domande a scelta multipla (options).
-3. NON fare domande su informazioni già disponibili dal report visivo
-4. Ogni domanda deve avere uno SCOPO chiaro per l'annuncio finale
-5. Adatta le domande al prodotto specifico
-6. Ogni round contiene ESATTAMENTE 3 domande aperte
-7. Quando hai raccolto abbastanza informazioni per creare un annuncio premium e dettagliato che raggiunga un SafeScore di 70-75, rispondi con "complete": true. Non continuare a fare domande inutili.
-8. INCLUDI domande mirate per determinare la CATEGORIA VINTED corretta, ad esempio:
-   - Il capo è pensato principalmente per uomo, donna o unisex?
-   - È considerabile streetwear, casual, elegante o sportivo?
-   - È parte di una categoria tecnica (sport, outdoor)?
-   - È oversize per design o per vestibilità?
-   Queste domande vanno integrate naturalmente nel flusso, non tutte insieme.
+2. TUTTE le domande devono essere a RISPOSTA APERTA (type: "text"). MAI scelta multipla.
+3. NON fare domande su informazioni già disponibili dal report visivo o dalle risposte precedenti
+4. Ogni round contiene ESATTAMENTE 3 domande dello STESSO blocco logico
+5. Passa al blocco successivo solo quando hai abbastanza info dal blocco corrente
+6. Adatta le domande al tipo di prodotto identificato da Vision
+7. Target: raccogliere dati sufficienti per SafeScore 80-85+ (non accontentarti di 70)
+8. Quando hai abbastanza info per generare un annuncio da 80-85+, rispondi con "complete": true
+9. Includi il campo "currentBlock" per indicare in quale blocco sei
 
 FORMATO OUTPUT (JSON):
 {
   "complete": false,
+  "currentBlock": "identità",
   "questions": [
     {
       "id": "q1",
@@ -78,14 +103,15 @@ FORMATO OUTPUT (JSON):
       "purpose": "perché serve questa info"
     }
   ],
-  "reasoning": "breve spiegazione interna del perché queste domande"
+  "reasoning": "breve spiegazione",
+  "missingForTarget": "cosa manca ancora per raggiungere 80-85"
 }
 
-Se ritieni di avere abbastanza informazioni:
+Se hai abbastanza informazioni:
 {
   "complete": true,
   "questions": [],
-  "reasoning": "Ho abbastanza informazioni per generare l'annuncio"
+  "reasoning": "Ho abbastanza informazioni per generare un annuncio da SafeScore 80-85+"
 }`;
 
 const OUTPUT_SYSTEM_PROMPT = `Sei SAFEViN Studio, il miglior sistema AI per la creazione di annunci marketplace. Genera un annuncio Vinted PERFETTO basato su tutte le informazioni raccolte.
@@ -132,7 +158,8 @@ FORMATO OUTPUT (JSON):
   "category_suggestion": "Categoria Vinted consigliata (es. Uomo > Maglioni e cardigan > Maglioni girocollo)",
   "subcategory_suggestion": "",
   "category_reasoning": "Motivazione dettagliata: perché questa categoria è stata scelta in base a analisi immagine, vestibilità, target dichiarato, tipologia tessuto, stile",
-  "tips": ["Consiglio extra 1 per migliorare l'annuncio"]
+  "tips": ["Consiglio extra 1 per migliorare l'annuncio"],
+  "score_estimate": 82
 }
 
 REGOLE DESCRIZIONE:
@@ -163,7 +190,9 @@ REGOLE GENERALI:
 - Prezzo: range realistico basato su mercato Vinted
 - NON includere "trustElements" nel JSON, usa SOLO "trustSection"
 - L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo, mood, target
-- NON usare asterischi, grassetti, corsivi o markdown nella descrizione o nel keywordBlock`;
+- NON usare asterischi, grassetti, corsivi o markdown nella descrizione o nel keywordBlock
+- score_estimate: stima REALISTICA del SafeScore (0-100) basata su completezza dati, qualità titolo/descrizione/keyword, misure presenti, leve persuasive, fiducia. Sii onesto: un annuncio senza misure precise non può superare 65.
+- Target score_estimate: 80-85+. Se non riesci a raggiungerlo con le info disponibili, indica il punteggio reale.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -406,7 +435,43 @@ serve(async (req) => {
       content = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       
       try {
-        const parsed = JSON.parse(content);
+        let parsed = JSON.parse(content);
+
+        // Auto-refinement: if score_estimate < 75, refine once
+        if (parsed.score_estimate && parsed.score_estimate < 75) {
+          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining...`);
+          try {
+            const refineResponse = await fetch(apiUrl, {
+              method: "POST",
+              headers: apiHeaders,
+              body: JSON.stringify({
+                model: "openai/gpt-5.2",
+                messages: [
+                  { role: "system", content: OUTPUT_SYSTEM_PROMPT },
+                  { role: "user", content: contextMessage },
+                  { role: "assistant", content: content },
+                  { role: "user", content: "Il SafeScore stimato è troppo basso. Raffina l'annuncio: aggiungi micro CTA, migliora leve persuasive, riduci genericità, migliora struttura frasi, inserisci parole ad alta intenzione d'acquisto, migliora chiarezza misure. Target: 80-85+. Restituisci lo stesso formato JSON completo." },
+                ],
+                stream: false,
+              }),
+            });
+
+            if (refineResponse.ok) {
+              const refineData = await refineResponse.json();
+              let refinedContent = refineData.choices?.[0]?.message?.content || "";
+              refinedContent = refinedContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+              try {
+                parsed = JSON.parse(refinedContent);
+                console.log(`Refined score_estimate: ${parsed.score_estimate}`);
+              } catch {
+                console.log("Refinement parse failed, using original output");
+              }
+            }
+          } catch (refErr) {
+            console.error("Refinement error:", refErr);
+          }
+        }
+
         return new Response(
           JSON.stringify({ output: parsed }),
           { headers: { ...corsHeaders, "Content-Type": "application/json" } }
@@ -465,7 +530,7 @@ serve(async (req) => {
     if (action === "improve") {
       console.log("Generating improved listing from audit data...");
 
-      const { auditSections, listingData: ld } = body;
+      const { auditSections, listingData: ld, gapAnswers } = body;
 
       let contextMessage = `Sei SAFEViN Studio. Un utente ha appena ricevuto un Audit del suo annuncio. Devi generare una VERSIONE MIGLIORATA dell'annuncio risolvendo TUTTI i problemi trovati.\n\n`;
       contextMessage += `DATI ORIGINALI DELL'ANNUNCIO:\n`;
@@ -488,7 +553,14 @@ serve(async (req) => {
         }
       }
 
-      contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. L'annuncio deve essere pronto per il copia-incolla su Vinted.`;
+      if (gapAnswers && Array.isArray(gapAnswers) && gapAnswers.length > 0) {
+        contextMessage += `\n\nINFORMAZIONI AGGIUNTIVE FORNITE DALL'UTENTE:\n`;
+        for (const qa of gapAnswers) {
+          contextMessage += `${qa.question}: ${qa.answer}\n`;
+        }
+      }
+
+      contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
       const generateResponse = await fetch(apiUrl, {
         method: "POST",
@@ -520,6 +592,71 @@ serve(async (req) => {
         return new Response(JSON.stringify({ output: parsed }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch {
         console.error("Failed to parse improve JSON:", content);
+        return new Response(JSON.stringify({ error: "Errore formato risposta AI." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
+
+    // ========== ACTION: GAP_QUESTIONS (Audit → Studio bridge) ==========
+    if (action === "gap_questions") {
+      console.log("Generating gap-based questions from audit...");
+
+      const { auditSections: auditSecs, listingData: ld2 } = body;
+
+      let ctxMsg = `Sei SAFEViN Studio. Hai ricevuto un report Audit di un annuncio esistente. Devi generare domande MIRATE solo sulle informazioni MANCANTI per portare l'annuncio a un SafeScore di 80-85+.\n\n`;
+      ctxMsg += `DATI ESISTENTI:\n`;
+      ctxMsg += `Titolo: ${ld2?.titolo || "(vuoto)"}\nDescrizione: ${ld2?.descrizione || "(vuota)"}\nCategoria: ${ld2?.categoria || "(vuota)"}\n`;
+      ctxMsg += `Prezzo: ${ld2?.prezzo || "(vuoto)"}€\nBrand: ${ld2?.brand || "(vuoto)"}\nCondizioni: ${ld2?.condizioni || "(vuote)"}\n`;
+      ctxMsg += `Taglia: ${ld2?.taglia || "(vuota)"}\nColore: ${ld2?.colore || "(vuoto)"}\n\n`;
+
+      ctxMsg += `PROBLEMI IDENTIFICATI DALL'AUDIT:\n`;
+      if (auditSecs && Array.isArray(auditSecs)) {
+        for (const s of auditSecs) {
+          if (s.score < 7) {
+            ctxMsg += `- ${s.title} (${s.score}/10): ${s.advice}\n`;
+            if (s.scoreBreakdown) ctxMsg += `  Fattori: ${s.scoreBreakdown}\n`;
+          }
+        }
+      }
+
+      ctxMsg += `\nGenera 3-5 domande SOLO sulle informazioni mancanti che impediscono di raggiungere un SafeScore 80-85+. Non chiedere informazioni già presenti nei dati.`;
+
+      if (conversationHistory && conversationHistory.length > 0) {
+        ctxMsg += `\n\nRisposte già fornite:\n`;
+        for (const qa of conversationHistory) {
+          ctxMsg += `D: ${qa.question}\nR: ${qa.answer}\n`;
+        }
+        ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
+      }
+
+      const gapResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "google/gemini-3-flash-preview",
+          messages: [
+            { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
+            { role: "user", content: ctxMsg },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!gapResponse.ok) {
+        const errText = await gapResponse.text();
+        console.error("Gap questions error:", gapResponse.status, errText);
+        return new Response(JSON.stringify({ error: "Errore generazione domande gap." }), {
+          status: gapResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const gapData = await gapResponse.json();
+      let gapContent = gapData.choices?.[0]?.message?.content || "";
+      gapContent = gapContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+      try {
+        const gapParsed = JSON.parse(gapContent);
+        return new Response(JSON.stringify(gapParsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch {
         return new Response(JSON.stringify({ error: "Errore formato risposta AI." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
     }

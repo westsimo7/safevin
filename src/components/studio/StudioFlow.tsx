@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,9 +7,17 @@ import CategorySelector from "./CategorySelector";
 import PhotoUploader from "./PhotoUploader";
 import DynamicQuestions from "./DynamicQuestions";
 import StudioOutput from "./StudioOutput";
-import StudioLoader from "./StudioLoader";
+import SmartLoader from "@/components/SmartLoader";
+import VisionConfirmation from "./VisionConfirmation";
 
-export type StudioStep = "category" | "photos" | "questions" | "generating" | "output";
+export type StudioStep =
+  | "category"
+  | "photos"
+  | "vision-loading"
+  | "vision-confirm"
+  | "questions"
+  | "generating"
+  | "output";
 
 interface QuestionAnswer {
   question: string;
@@ -61,27 +69,43 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   const [visionReport, setVisionReport] = useState<string | null>(null);
   const [conversationHistory, setConversationHistory] = useState<QuestionAnswer[]>([]);
   const [outputData, setOutputData] = useState<StudioOutputData | null>(null);
-  const [loaderMessage, setLoaderMessage] = useState("");
+  const [missingAngles, setMissingAngles] = useState<string[]>([]);
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  /* ── helpers ── */
+
+  const parseMissingAngles = (report: string): string[] => {
+    try {
+      const jsonMatch = report.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        return parsed.missingAngles || [];
+      }
+    } catch {}
+    return [];
+  };
+
+  /* ── step handlers ── */
 
   const handleCategorySelect = (cat: string) => {
     setCategoria(cat);
     setStep("photos");
   };
 
-  const handlePhotosComplete = useCallback(async (files: File[]) => {
-    setImages(files);
-    let report: string | null = null;
-    
-    if (files.length > 0) {
-      setStep("generating");
-      setLoaderMessage("Analisi visiva in corso...");
+  const handlePhotosComplete = useCallback(
+    async (files: File[]) => {
+      setImages(files);
+
+      if (files.length === 0) {
+        setStep("questions");
+        return;
+      }
+
+      setStep("vision-loading");
 
       try {
-        const imageDataUrls: string[] = [];
-        for (const file of files) {
-          imageDataUrls.push(await fileToDataUrl(file));
-        }
+        const imageDataUrls = await Promise.all(files.map((f) => fileToDataUrl(f)));
 
         const { data, error } = await supabase.functions.invoke("safelist-studio", {
           body: { action: "vision", categoria, images: imageDataUrls },
@@ -90,24 +114,66 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
         if (error) throw error;
         if (data?.error) throw new Error(data.error);
 
-        report = data?.visionReport || null;
+        const report = data?.visionReport || null;
         setVisionReport(report);
+
+        if (report) {
+          setMissingAngles(parseMissingAngles(report));
+          setStep("vision-confirm");
+        } else {
+          setStep("questions");
+        }
       } catch (err: any) {
         console.error("Vision error:", err);
         toast({
           title: "Analisi foto",
           description: "Procedo senza analisi visiva. Le domande saranno basate sulla categoria.",
         });
+        setStep("questions");
       }
+    },
+    [categoria],
+  );
+
+  const handleVisionConfirm = () => {
+    setStep("questions");
+  };
+
+  /* ── mid-flow photo addition ── */
+
+  const handleAddPhotos = () => photoInputRef.current?.click();
+
+  const handleNewPhotosAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newFiles = e.target.files;
+    if (!newFiles || newFiles.length === 0) return;
+
+    const allImages = [...images, ...Array.from(newFiles)].slice(0, 15);
+    setImages(allImages);
+    setStep("vision-loading");
+
+    try {
+      const imageDataUrls = await Promise.all(allImages.map((f) => fileToDataUrl(f)));
+      const { data, error } = await supabase.functions.invoke("safelist-studio", {
+        body: { action: "vision", categoria, images: imageDataUrls },
+      });
+      if (!error && data?.visionReport) {
+        setVisionReport(data.visionReport);
+        setMissingAngles(parseMissingAngles(data.visionReport));
+      }
+    } catch (err: any) {
+      console.error("Re-vision error:", err);
     }
 
-    // Move to questions - pass report directly to avoid stale state
-    setStep("generating");
-    setLoaderMessage("Preparo le domande per il tuo annuncio...");
-    await fetchQuestions([], report);
-  }, [categoria]);
+    setStep("questions");
+    if (photoInputRef.current) photoInputRef.current.value = "";
+  };
 
-  const fetchQuestions = async (history: QuestionAnswer[], reportOverride?: string | null) => {
+  /* ── questions & generation ── */
+
+  const fetchQuestions = async (
+    history: QuestionAnswer[],
+    reportOverride?: string | null,
+  ) => {
     const report = reportOverride !== undefined ? reportOverride : visionReport;
     try {
       const { data, error } = await supabase.functions.invoke("safelist-studio", {
@@ -127,10 +193,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       } else {
         setConversationHistory(history);
         setStep("questions");
-        // Questions are stored in the DynamicQuestions component via the data
         return data;
       }
-
       return data;
     } catch (err: any) {
       console.error("Questions error:", err);
@@ -147,21 +211,16 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   const handleQuestionsSubmit = async (newAnswers: QuestionAnswer[]) => {
     const updatedHistory = [...conversationHistory, ...newAnswers];
     setStep("generating");
-    setLoaderMessage("Analizzo le tue risposte...");
-
-    const data = await fetchQuestions(updatedHistory);
-    // If complete was returned, generateOutput was already called
+    await fetchQuestions(updatedHistory);
   };
 
   const handleRequestGenerate = async () => {
     setStep("generating");
-    setLoaderMessage("Creo il tuo annuncio perfetto...");
     await generateOutput(conversationHistory);
   };
 
   const generateOutput = async (allAnswers: QuestionAnswer[]) => {
     setStep("generating");
-    setLoaderMessage("Costruzione strategica dell'annuncio...");
 
     try {
       const { data, error } = await supabase.functions.invoke("safelist-studio", {
@@ -180,10 +239,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
         setOutputData(data.output);
         setConversationHistory(allAnswers);
         setStep("output");
-
-        // Save to DB in background
-        saveCreation(data.output, allAnswers).catch(err =>
-          console.error("Failed to save creation:", err)
+        saveCreation(data.output, allAnswers).catch((err) =>
+          console.error("Failed to save creation:", err),
         );
       }
     } catch (err: any) {
@@ -215,15 +272,17 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       }
     }
 
-    await supabase.from("studio_creations").insert([{
-      categoria,
-      images: images.map(f => f.name),
-      vision_report: visionReport,
-      questions_answers: answers as any,
-      output: output as any,
-      first_image_url: firstImageUrl,
-      titolo_generato: output.titolo,
-    }]);
+    await supabase.from("studio_creations").insert([
+      {
+        categoria,
+        images: images.map((f) => f.name),
+        vision_report: visionReport,
+        questions_answers: answers as any,
+        output: output as any,
+        first_image_url: firstImageUrl,
+        titolo_generato: output.titolo,
+      },
+    ]);
   };
 
   const handleNewCreation = () => {
@@ -233,19 +292,36 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
     setVisionReport(null);
     setConversationHistory([]);
     setOutputData(null);
+    setMissingAngles([]);
   };
 
   const getBackAction = () => {
     switch (step) {
-      case "photos": return () => setStep("category");
-      case "questions": return () => setStep("photos");
-      default: return onBack;
+      case "photos":
+        return () => setStep("category");
+      case "vision-confirm":
+        return () => setStep("photos");
+      case "questions":
+        return () => setStep("photos");
+      default:
+        return onBack;
     }
   };
 
+  /* ── render ── */
+
   return (
     <div className="max-w-2xl mx-auto pt-2">
-      {step !== "generating" && step !== "output" && step !== "category" && (
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        multiple
+        className="hidden"
+        onChange={handleNewPhotosAdded}
+      />
+
+      {!["vision-loading", "generating", "output", "category"].includes(step) && (
         <Button
           variant="ghost"
           className="mb-6 text-muted-foreground hover:text-foreground"
@@ -261,14 +337,23 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       )}
 
       {step === "photos" && (
-        <PhotoUploader
-          categoria={categoria}
-          onComplete={handlePhotosComplete}
+        <PhotoUploader categoria={categoria} onComplete={handlePhotosComplete} />
+      )}
+
+      {step === "vision-loading" && (
+        <SmartLoader
+          title="Analisi visiva in corso..."
+          messages={[
+            "Ispeziono qualità e dettagli delle foto…",
+            "Identifico prodotto, brand e materiali…",
+            "Verifico angolazioni e copertura…",
+            "Sintetizzo il report visivo…",
+          ]}
         />
       )}
 
-      {step === "generating" && (
-        <StudioLoader message={loaderMessage} />
+      {step === "vision-confirm" && visionReport && (
+        <VisionConfirmation visionReport={visionReport} onConfirm={handleVisionConfirm} />
       )}
 
       {step === "questions" && (
@@ -278,15 +363,15 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
           conversationHistory={conversationHistory}
           onSubmit={handleQuestionsSubmit}
           onSkipToGenerate={handleRequestGenerate}
+          missingAngles={missingAngles}
+          onAddPhotos={handleAddPhotos}
         />
       )}
 
+      {step === "generating" && <SmartLoader title="Creo il tuo annuncio perfetto…" />}
+
       {step === "output" && outputData && (
-        <StudioOutput
-          data={outputData}
-          onNew={handleNewCreation}
-          onBack={onBack}
-        />
+        <StudioOutput data={outputData} onNew={handleNewCreation} onBack={onBack} />
       )}
     </div>
   );

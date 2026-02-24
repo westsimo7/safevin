@@ -8,7 +8,7 @@ import { ArrowLeft, TrendingUp, Sparkles, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import ListingInputForm from "@/components/ListingInputForm";
-import AnalysisLoader from "@/components/AnalysisLoader";
+import SmartLoader from "@/components/SmartLoader";
 import EngineAnalysisCard from "@/components/EngineAnalysisCard";
 import AnalysisSummary from "@/components/AnalysisSummary";
 
@@ -141,9 +141,18 @@ const EngineAudit = () => {
         )}
 
         {isLoading && (
-          <Card className="border-border/50">
-            <AnalysisLoader isLoading={isLoading} />
-          </Card>
+          <SmartLoader
+            title="Analisi in corso..."
+            messages={[
+              "Connessione al motore di analisi…",
+              "Valutazione qualità fotografica…",
+              "Analisi struttura del titolo…",
+              "Confronto posizionamento prezzo…",
+              "Analisi leve psicologiche d'acquisto…",
+              "Calcolo SafeScore™…",
+              "Generazione report operativo…",
+            ]}
+          />
         )}
 
         {analysisResult && !isLoading && (
