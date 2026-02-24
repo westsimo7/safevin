@@ -240,6 +240,52 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       if (data?.error) throw new Error(data.error);
 
       if (data?.output) {
+        // Run internal audit validation
+        setStep("validating");
+        
+        try {
+          const { data: auditResult, error: auditError } = await supabase.functions.invoke("safelist-studio", {
+            body: {
+              action: "audit_internal",
+              categoria,
+              visionReport,
+              generatedOutput: data.output,
+            },
+          });
+
+          if (!auditError && auditResult && !auditResult.passed) {
+            // Score < 65/80 — ask for missing data
+            console.log(`Internal audit failed: ${auditResult.totalScore}/80`);
+            const fields = auditResult.missingFields || [];
+            
+            if (fields.length > 0) {
+              setOutputData(data.output);
+              setMissingFields(fields);
+              setMissingAnswers({});
+              setConversationHistory(allAnswers);
+              setStep("missing-data");
+              return;
+            } else {
+              // No specific fields to ask — auto-refine
+              console.log("No missing fields, auto-refining...");
+              const extraAnswers = auditResult.categories
+                ?.filter((c: any) => c.score < 7 && c.issues?.length > 0)
+                ?.map((c: any) => ({
+                  question: `Migliora: ${c.name}`,
+                  answer: c.issues.join(". "),
+                })) || [];
+              
+              if (extraAnswers.length > 0) {
+                await generateOutput([...allAnswers, ...extraAnswers]);
+                return;
+              }
+            }
+          }
+        } catch (auditErr) {
+          console.error("Internal audit error (non-blocking):", auditErr);
+        }
+
+        // Audit passed or non-blocking error
         setOutputData(data.output);
         setConversationHistory(allAnswers);
         setStep("output");
@@ -256,6 +302,23 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       });
       setStep("questions");
     }
+  };
+
+  const handleMissingDataSubmit = async () => {
+    const newAnswers: QuestionAnswer[] = missingFields
+      .filter((f) => missingAnswers[f.field]?.trim())
+      .map((f) => ({
+        question: f.question,
+        answer: missingAnswers[f.field],
+      }));
+
+    if (newAnswers.length === 0) {
+      toast({ title: "Inserisci almeno un dato", variant: "destructive" });
+      return;
+    }
+
+    const updatedHistory = [...conversationHistory, ...newAnswers];
+    await generateOutput(updatedHistory);
   };
 
   const saveCreation = async (output: StudioOutputData, answers: QuestionAnswer[]) => {
