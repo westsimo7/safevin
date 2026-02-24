@@ -131,7 +131,7 @@ const StoricoAudit = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
       <main className="container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
         {!isMobile && (
           <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>

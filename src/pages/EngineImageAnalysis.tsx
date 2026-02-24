@@ -118,7 +118,7 @@ const EngineImageAnalysis = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-6 pt-8 pb-12 max-w-3xl">
         <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine/analyze")}>

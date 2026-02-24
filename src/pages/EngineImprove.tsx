@@ -145,7 +145,7 @@ const EngineImprove = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-6 pt-8 pb-12 max-w-2xl">
         {phase !== "generating" && phase !== "output" && (
