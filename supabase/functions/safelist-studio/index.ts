@@ -308,7 +308,7 @@ serve(async (req) => {
           },
         ];
 
-        const visionResponse = await callAI("gpt-4o", visionMessages);
+        const visionResponse = await callAI("gpt-5", visionMessages);
 
         if (!visionResponse.ok) {
           const errText = await visionResponse.text();
