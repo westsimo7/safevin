@@ -529,7 +529,7 @@ serve(async (req) => {
 
     // ========== ACTION: IMPROVE (Audit → Studio bridge) ==========
     if (action === "improve") {
-      console.log("Generating improved listing from audit data (gpt-4o)...");
+      console.log("Generating improved listing from audit data (gpt-5)...");
 
       const { auditSections, listingData: ld, gapAnswers } = body;
 
@@ -563,7 +563,7 @@ serve(async (req) => {
 
       contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
-      const generateResponse = await callAI("gpt-4o", [
+      const generateResponse = await callAI("gpt-5", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
