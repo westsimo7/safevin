@@ -38,6 +38,7 @@ const App = () => (
           <Route path="/storico" element={<Storico />} />
           <Route path="/storico/studio/:id" element={<StudioDetailPage />} />
           <Route path="/storico/:id" element={<StoricoDetail />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <CoachWidget />
