@@ -1,167 +1,80 @@
-import { useState, useMemo } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, Search, Calendar, Shirt, Languages, ShoppingCart, Sparkles, Hash, Wand2, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Copy, Check, Search, Hash, Wand2, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface KeywordIntelligenceData {
+  keywordBlock?: string;
+  strategicHashtags?: string[];
+  // legacy fields
   inspirationalText?: string;
   highlightedKeywords?: string[];
-  mentalFilters?: {
-    occasioni?: string[];
-    stagione?: string[];
-    outfitAbbinamenti?: string[];
-    sinonimiItaliani?: string[];
-    intentoAcquisto?: string[];
-  };
-  strategicHashtags?: string[];
+  mentalFilters?: any;
 }
 
 interface KeywordIntelligenceProps {
   data: KeywordIntelligenceData;
   legacyHashtags?: string[];
+  outputContext?: string;
 }
 
-const CopyBtn = ({ text, label = "Copia" }: { text: string; label?: string }) => {
+const CopyBtn = ({ text }: { text: string }) => {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
-    const plain = text.replace(/<[^>]*>/g, "");
-    await navigator.clipboard.writeText(plain);
+    await navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
   return (
-    <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-muted transition-colors active:scale-95" aria-label={label}>
+    <button onClick={handleCopy} className="p-1.5 rounded-lg hover:bg-muted transition-colors active:scale-95" aria-label="Copia">
       {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4 text-muted-foreground" />}
     </button>
   );
 };
 
-const FilterBlock = ({ icon, title, keywords }: { icon: React.ReactNode; title: string; keywords: string[] }) => {
-  const [generatedText, setGeneratedText] = useState<string | null>(null);
+const KeywordIntelligence = ({ data, legacyHashtags, outputContext }: KeywordIntelligenceProps) => {
+  const hashtags = data.strategicHashtags || legacyHashtags || [];
+  const initialBlock = data.keywordBlock || "";
+
+  const [variants, setVariants] = useState<string[]>(initialBlock ? [initialBlock] : []);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const canGenerate = variants.length < 4;
 
   const handleGenerate = async () => {
+    if (!canGenerate) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("generate-filter-text", {
-        body: { category: title, keywords },
+      const { data: result, error } = await supabase.functions.invoke("safelist-studio", {
+        body: {
+          action: "generate_keyword_text",
+          keywordBlock: variants.length > 0 ? variants[variants.length - 1] : "",
+          outputContext: outputContext || "",
+        },
       });
-      if (!error && data?.text) {
-        setGeneratedText(data.text);
+      if (!error && result?.text) {
+        const newVariants = [...variants, result.text];
+        setVariants(newVariants);
+        setActiveIndex(newVariants.length - 1);
       }
     } catch (e) {
-      console.error("Generate filter text error:", e);
+      console.error("Generate keyword text error:", e);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCopy = async () => {
-    if (!generatedText) return;
-    await navigator.clipboard.writeText(generatedText);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const goTo = (idx: number) => {
+    if (idx >= 0 && idx < variants.length) setActiveIndex(idx);
   };
-
-  const isGenerated = !!generatedText;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          {icon}
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
-        </div>
-        <button
-          onClick={handleGenerate}
-          disabled={loading}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium transition-colors active:scale-95 disabled:opacity-50"
-        >
-          {loading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
-          Genera
-        </button>
-      </div>
-      <p className="text-[10px] text-muted-foreground/60 leading-snug">
-        Genera un micro-testo che integra queste keyword per arricchire il tuo annuncio.
-      </p>
-      <div className="flex flex-wrap gap-1.5">
-        {keywords.map((kw, i) => (
-          <Badge key={i} variant="outline" className={`text-xs font-normal transition-colors ${isGenerated ? "border-red-500 shadow-[0_0_6px_rgba(239,68,68,0.5)] bg-transparent text-foreground/80" : "bg-muted/40 border-border/50 text-foreground/80"}`}>
-            {kw}
-          </Badge>
-        ))}
-      </div>
-      {generatedText && (
-        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 mt-2">
-          <div className="flex items-start justify-between gap-2">
-            <p className="text-sm leading-relaxed text-foreground/90">{generatedText}</p>
-            <button onClick={handleCopy} className="p-1 rounded-md hover:bg-muted transition-colors active:scale-95 shrink-0" aria-label="Copia">
-              {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5 text-muted-foreground" />}
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const HighlightedText = ({ text, keywords }: { text: string; keywords: string[] }) => {
-  const parts = useMemo(() => {
-    if (!keywords || keywords.length === 0) return [{ text, highlight: false }];
-
-    // Sort keywords by length descending so longer matches take priority
-    const sorted = [...keywords].sort((a, b) => b.length - a.length);
-    const escaped = sorted.map(k => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-    const regex = new RegExp(`(${escaped.join("|")})`, "gi");
-
-    const result: { text: string; highlight: boolean }[] = [];
-    let lastIndex = 0;
-    let match: RegExpExecArray | null;
-
-    while ((match = regex.exec(text)) !== null) {
-      if (match.index > lastIndex) {
-        result.push({ text: text.slice(lastIndex, match.index), highlight: false });
-      }
-      result.push({ text: match[0], highlight: true });
-      lastIndex = regex.lastIndex;
-    }
-    if (lastIndex < text.length) {
-      result.push({ text: text.slice(lastIndex), highlight: false });
-    }
-    return result;
-  }, [text, keywords]);
-
-  return (
-    <p className="text-sm leading-relaxed">
-      {parts.map((part, i) =>
-        part.highlight ? (
-          <span key={i} className="border border-destructive/40 bg-destructive/10 rounded px-0.5 text-foreground font-medium">
-            {part.text}
-          </span>
-        ) : (
-          <span key={i}>{part.text}</span>
-        )
-      )}
-    </p>
-  );
-};
-
-const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps) => {
-  const hashtags = data.strategicHashtags || legacyHashtags || [];
-  const filters = data.mentalFilters;
-  const hasFilters = filters && (
-    (filters.occasioni?.length ?? 0) > 0 ||
-    (filters.stagione?.length ?? 0) > 0 ||
-    (filters.outfitAbbinamenti?.length ?? 0) > 0 ||
-    (filters.sinonimiItaliani?.length ?? 0) > 0 ||
-    (filters.intentoAcquisto?.length ?? 0) > 0
-  );
 
   return (
     <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
-      <CardContent className="p-5 space-y-5">
+      <CardContent className="p-5 space-y-4">
         {/* Header */}
         <div>
           <div className="flex items-center gap-3 mb-1">
@@ -170,67 +83,86 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
             </div>
             <div>
               <h3 className="text-base font-bold tracking-tight">Hashtag & Keyword Intelligence</h3>
-              <p className="text-xs text-muted-foreground">Intercetta ricerche dirette, emozionali e per occasione.</p>
+              <p className="text-xs text-muted-foreground">Intercetta ricerche dirette, emozionali e per occasione in un unico blocco strategico.</p>
             </div>
           </div>
         </div>
 
-        {/* 1. Keyword Storytelling */}
-        {data.highlightedKeywords && data.highlightedKeywords.length > 0 && (
-          <FilterBlock
-            icon={<Sparkles className="w-3.5 h-3.5 text-primary/70" />}
-            title="Keyword Storytelling"
-            keywords={data.highlightedKeywords}
-          />
-        )}
-
-        {/* 2. Mental Filters */}
-        {hasFilters && (
-          <>
-            <div className="border-t border-border/30" />
-            <div className="space-y-4">
-              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Keyword Ispirazionali</p>
-
-              {filters!.occasioni && filters!.occasioni.length > 0 && (
-                <FilterBlock
-                  icon={<Calendar className="w-3.5 h-3.5 text-primary/70" />}
-                  title="Occasioni"
-                  keywords={filters!.occasioni}
-                />
-              )}
-              {filters!.stagione && filters!.stagione.length > 0 && (
-                <FilterBlock
-                  icon={<Calendar className="w-3.5 h-3.5 text-primary/70" />}
-                  title="Stagione"
-                  keywords={filters!.stagione}
-                />
-              )}
-              {filters!.outfitAbbinamenti && filters!.outfitAbbinamenti.length > 0 && (
-                <FilterBlock
-                  icon={<Shirt className="w-3.5 h-3.5 text-primary/70" />}
-                  title="Outfit & Abbinamenti"
-                  keywords={filters!.outfitAbbinamenti}
-                />
-              )}
-              {filters!.sinonimiItaliani && filters!.sinonimiItaliani.length > 0 && (
-                <FilterBlock
-                  icon={<Languages className="w-3.5 h-3.5 text-primary/70" />}
-                  title="Sinonimi Italiani"
-                  keywords={filters!.sinonimiItaliani}
-                />
-              )}
-              {filters!.intentoAcquisto && filters!.intentoAcquisto.length > 0 && (
-                <FilterBlock
-                  icon={<ShoppingCart className="w-3.5 h-3.5 text-primary/70" />}
-                  title="Intento d'Acquisto"
-                  keywords={filters!.intentoAcquisto}
-                />
-              )}
+        <div className="border-t border-primary/10 pt-3">
+          {/* Keyword block with generation carousel */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Consigliato alla fine dell'annuncio per intercettare ricerche dirette e correlate senza appesantire la parte narrativa iniziale.
+              </p>
             </div>
-          </>
-        )}
 
-        {/* 3. Strategic Hashtags */}
+            {/* Generated variants carousel */}
+            {variants.length > 0 && (
+              <div className="relative">
+                {/* Navigation arrows */}
+                {variants.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => goTo(activeIndex - 1)}
+                      disabled={activeIndex === 0}
+                      className="absolute -left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-background border border-border/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => goTo(activeIndex + 1)}
+                      disabled={activeIndex === variants.length - 1}
+                      className="absolute -right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-background border border-border/50 flex items-center justify-center hover:bg-muted transition-colors disabled:opacity-30"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </>
+                )}
+
+                <div ref={scrollRef} className="overflow-hidden rounded-lg border border-primary/20 bg-primary/5 p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm leading-relaxed text-foreground/90">{variants[activeIndex]}</p>
+                    <CopyBtn text={variants[activeIndex]} />
+                  </div>
+                </div>
+
+                {/* Dots indicator */}
+                {variants.length > 1 && (
+                  <div className="flex items-center justify-center gap-1.5 mt-2">
+                    {variants.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => goTo(i)}
+                        className={`w-2 h-2 rounded-full transition-colors ${i === activeIndex ? "bg-primary" : "bg-border"}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Generate button */}
+            {canGenerate && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleGenerate}
+                disabled={loading}
+                className="w-full border-primary/20 hover:bg-primary/10 text-primary"
+              >
+                {loading ? (
+                  <Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />
+                ) : (
+                  <Wand2 className="w-3.5 h-3.5 mr-2" />
+                )}
+                {variants.length === 0 ? "Genera testo keyword" : `Genera variante (${variants.length}/4)`}
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Strategic Hashtags */}
         {hashtags.length > 0 && (
           <>
             <div className="border-t border-border/30" />
@@ -252,7 +184,6 @@ const KeywordIntelligence = ({ data, legacyHashtags }: KeywordIntelligenceProps)
             </div>
           </>
         )}
-
       </CardContent>
     </Card>
   );

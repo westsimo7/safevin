@@ -19,6 +19,11 @@ H. Stile/Estetica (streetwear, elegante, casual, sportivo, vintage)
 I. Difetti specifici (macchie, strappi, usura, scolorimento - posizione e gravità)
 J. Elementi premium (packaging, dust bag, cartellini, certificati)
 K. Coerenza set fotografico (qualità, angolazioni coperte, mancanti)
+L. Genere percepito (uomo, donna, unisex)
+M. Categoria Vinted suggerita (es. Maglioni girocollo, Felpe con cappuccio, Giacche di pelle)
+N. Presenza zip/cappuccio/colletto/fodera
+O. Stagionalità percepita (primavera/estate, autunno/inverno, mezza stagione)
+P. Vestibilità percepita (slim, regular, oversize)
 
 Restituisci SOLO JSON:
 {
@@ -31,6 +36,13 @@ Restituisci SOLO JSON:
   "distinctiveDetails": ["dettaglio1", "dettaglio2"],
   "sizeVisible": "taglia se leggibile",
   "styleCategory": "categoria stile",
+  "genderGuess": "uomo/donna/unisex",
+  "vintedCategoryGuess": "Categoria > Sottocategoria suggerita",
+  "hasZip": true/false,
+  "hasHood": true/false,
+  "hasCollar": true/false,
+  "seasonality": "stagionalità percepita",
+  "fitGuess": "vestibilità percepita",
   "premiumElements": ["elemento1"],
   "missingAngles": ["angolazione mancante"],
   "overallQuality": "valutazione qualità foto",
@@ -48,6 +60,12 @@ REGOLE:
 5. Adatta le domande al prodotto specifico
 6. Ogni round contiene ESATTAMENTE 3 domande aperte
 7. Quando hai raccolto abbastanza informazioni per creare un annuncio premium e dettagliato che raggiunga un SafeScore di 70-75, rispondi con "complete": true. Non continuare a fare domande inutili.
+8. INCLUDI domande mirate per determinare la CATEGORIA VINTED corretta, ad esempio:
+   - Il capo è pensato principalmente per uomo, donna o unisex?
+   - È considerabile streetwear, casual, elegante o sportivo?
+   - È parte di una categoria tecnica (sport, outdoor)?
+   - È oversize per design o per vestibilità?
+   Queste domande vanno integrate naturalmente nel flusso, non tutte insieme.
 
 FORMATO OUTPUT (JSON):
 {
@@ -82,7 +100,7 @@ L'annuncio deve:
 FORMATO OUTPUT (JSON):
 {
   "titolo": "Titolo ottimizzato (max 80 char, keywords strategiche)",
-  "descrizione": "Descrizione strutturata completa con sezioni logiche, emoji minimali, tono professionale ma accessibile",
+  "descrizione": "STRUTTURA OBBLIGATORIA della descrizione:\\n\\n1) MINI STORYTELLING (prime 2-3 righe, max 55 parole): Testo diretto, evocativo, zero frasi lunghe, zero riempitivi. Deve trasmettere atmosfera + utilizzo reale del prodotto. Orientato a scena/contesto/uso reale (es. 'Un capo che richiama l'autunno in città, tra università e aperitivi serali. Palette calda e vibe retrò autentica anni 80/90. Perfetto per chi vuole distinguersi senza esagerare.'). NON usare mai la parola 'storytelling' nel testo.\\n\\n2) DESCRIZIONE TECNICA (subito dopo): Vestibilità, misure, materiale, condizioni, dettagli specifici del prodotto. Tono professionale ma accessibile.",
   "bulletPoints": [
     "• Punto tecnico/informativo 1",
     "• Punto tecnico/informativo 2"
@@ -102,16 +120,8 @@ FORMATO OUTPUT (JSON):
     ]
   },
   "keywordIntelligence": {
-    "inspirationalText": "Paragrafo ispirazionale (150-250 parole) che integra keyword ad alta ricerca in modo naturale. Parla di occasioni, momenti, eventi, stagioni, abbinamenti, mood. Deve essere elegante, non sembrare SEO spam. Le keyword strategiche devono essere inserite nel flusso del testo.",
-    "highlightedKeywords": ["keyword1", "keyword2", "keyword3"],
-    "mentalFilters": {
-      "occasioni": ["matrimonio invitato", "aperitivo estivo", "outfit ufficio", "serata elegante"],
-      "stagione": ["look estivo leggero", "outfit primaverile", "mezza stagione"],
-      "outfitAbbinamenti": ["abbinabile con blazer", "perfetto con jeans chiari", "look minimal chic"],
-      "sinonimiItaliani": ["borsa elegante donna", "scarpe pelle nere", "giacca sartoriale uomo"],
-      "intentoAcquisto": ["pronto per spedizione", "nuovo con scatola", "occasione imperdibile", "pezzo unico"]
-    },
-    "strategicHashtags": ["#outfitcerimonia", "#lookprimaverile", "#borsaelegantedonna"]
+    "keywordBlock": "Testo unico fluido di MASSIMO 55 parole che integra: ricerche dirette, ricerche emozionali, ricerche per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON in formato hashtag. Testo fluido ottimizzato SEO marketplace. Pensato per essere inserito ALLA FINE dell'annuncio per intercettare ricerche dirette e correlate senza appesantire la parte narrativa iniziale.",
+    "strategicHashtags": ["#hashtag1", "#hashtag2"]
   },
   "suggestedPrice": {
     "min": 0,
@@ -119,26 +129,31 @@ FORMATO OUTPUT (JSON):
     "reasoning": "Motivazione range prezzo"
   },
   "hashtags": ["#tag1", "#tag2"],
-  "category_suggestion": "Categoria Vinted consigliata",
-  "subcategory_suggestion": "Sottocategoria consigliata",
+  "category_suggestion": "Categoria Vinted consigliata (es. Uomo > Maglioni e cardigan > Maglioni girocollo)",
+  "subcategory_suggestion": "",
+  "category_reasoning": "Motivazione dettagliata: perché questa categoria è stata scelta in base a analisi immagine, vestibilità, target dichiarato, tipologia tessuto, stile",
   "tips": ["Consiglio extra 1 per migliorare l'annuncio"]
 }
 
+REGOLE DESCRIZIONE:
+- La descrizione DEVE iniziare con un mini storytelling (2-3 righe, max 55 parole): diretto, evocativo, zero riempitivi.
+- Dopo il mini storytelling, prosegui con la descrizione tecnica classica (vestibilità, misure, materiale, condizioni).
+- Il mini storytelling deve trasmettere atmosfera e utilizzo reale. NON usare la parola "storytelling".
+
 REGOLE KEYWORD INTELLIGENCE:
-- inspirationalText: Paragrafo elegante che integra keyword naturalmente. Parla di occasioni reali (cerimonia, aperitivo, cena, lavoro, università), stagione, abbinamenti outfit, mood. NON deve sembrare SEO spam. Deve essere ispirazionale e contestualizzato al prodotto specifico.
-- highlightedKeywords: Array con TUTTE le keyword strategiche presenti nel testo ispirazionale (10-20 keyword). Queste verranno evidenziate visivamente nell'UI.
-- mentalFilters: 5 categorie di keyword contestualizzate al prodotto:
-  * occasioni: 5-8 keyword relative a eventi/occasioni d'uso reali per questo prodotto
-  * stagione: 4-6 keyword stagionali pertinenti
-  * outfitAbbinamenti: 5-7 keyword su outfit e abbinamenti con questo prodotto
-  * sinonimiItaliani: 5-8 varianti semantiche reali che gli utenti cercano SENZA hashtag
-  * intentoAcquisto: 4-5 keyword con intento d'acquisto forte
-- strategicHashtags: MASSIMO 10 hashtag ULTRA-PREMIUM e iper-strategici. Ogni hashtag deve essere scelto con precisione chirurgica in base a TUTTO il resoconto dell'annuncio (categoria, brand, condizioni, target, stagione, prezzo). Evitare hashtag generici (#fashion #style #look #vinted). Solo long tail specifici, occasion-based e intent-based altamente mirati.
+- keywordBlock: UN UNICO blocco testo fluido (max 55 parole) che integra TUTTE le tipologie di ricerca: dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON usare hashtag nel testo. Deve essere fluido e naturale, ottimizzato SEO marketplace. Questo testo è pensato per essere inserito alla fine dell'annuncio.
+- strategicHashtags: MASSIMO 10 hashtag ULTRA-PREMIUM e iper-strategici. Ogni hashtag deve essere scelto con precisione chirurgica in base a TUTTO il resoconto dell'annuncio. Evitare hashtag generici (#fashion #style #look #vinted). Solo long tail specifici.
+- NON includere: inspirationalText, highlightedKeywords, mentalFilters. Questi campi sono ELIMINATI.
+
+REGOLE CATEGORIA CONSIGLIATA:
+- category_suggestion: Deve essere un percorso completo Vinted (es. "Uomo > Maglioni e cardigan > Maglioni girocollo")
+- subcategory_suggestion: Lasciare vuoto (il percorso è già in category_suggestion)
+- category_reasoning: Spiegazione dettagliata del PERCHÉ questa categoria è stata scelta, basata su: analisi immagine, vestibilità, target dichiarato, tipologia tessuto, stile. Non solo la categoria, ma anche PERCHÉ.
 
 REGOLE TRUST SECTION:
 - buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto.
-- actionChecklist: ESATTAMENTE 4-5 azioni concrete basate sull'annuncio creato che possano realmente aumentare la fiducia. Se le foto sono deboli, spingi su migliorarle. Sii specifico e pratico.
-- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati. Tono sicuro, professionale.
+- actionChecklist: ESATTAMENTE 4-5 azioni concrete basate sull'annuncio creato.
+- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati.
 
 REGOLE GENERALI:
 - Rispondi SOLO JSON valido
@@ -147,7 +162,8 @@ REGOLE GENERALI:
 - hashtags: campo legacy, metti gli stessi di strategicHashtags
 - Prezzo: range realistico basato su mercato Vinted
 - NON includere "trustElements" nel JSON, usa SOLO "trustSection"
-- L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo (premium vs accessibile), mood, target`;
+- L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo, mood, target
+- NON usare asterischi, grassetti, corsivi o markdown nella descrizione o nel keywordBlock`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -198,7 +214,7 @@ serve(async (req) => {
           {
             role: "user",
             content: [
-              { type: "text", text: `Analisi pass ${pass + 1}. Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}. Sii ESTREMAMENTE preciso su misure, numeri e testo visibile. Ricontrolla ogni dato numerico (taglie, misure, quantità).` },
+              { type: "text", text: `Analisi pass ${pass + 1}. Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}. Sii ESTREMAMENTE preciso su misure, numeri e testo visibile. Ricontrolla ogni dato numerico (taglie, misure, quantità). Presta MASSIMA attenzione a: genere (uomo/donna/unisex), tipo di capo, presenza zip/cappuccio, stagionalità, vestibilità.` },
               ...imageContents,
             ],
           },
@@ -227,7 +243,6 @@ serve(async (req) => {
               status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
           }
-          // If a pass fails, continue with what we have
           continue;
         }
 
@@ -242,7 +257,6 @@ serve(async (req) => {
         });
       }
 
-      // If multiple passes, synthesize with a consensus call
       let finalReport = reports[0];
       if (reports.length > 1) {
         console.log(`Synthesizing ${reports.length} vision passes...`);
@@ -286,9 +300,9 @@ serve(async (req) => {
         for (const qa of conversationHistory) {
           contextMessage += `D: ${qa.question}\nR: ${qa.answer}\n`;
         }
-        contextMessage += `\nBasandoti sulle risposte ricevute, decidi se servono altre domande o se hai abbastanza informazioni. Se servono altre domande, fai SOLO domande di approfondimento su aspetti non ancora coperti.`;
+        contextMessage += `\nBasandoti sulle risposte ricevute, decidi se servono altre domande o se hai abbastanza informazioni. Se servono altre domande, fai SOLO domande di approfondimento su aspetti non ancora coperti. Assicurati di aver raccolto abbastanza info per determinare la CATEGORIA VINTED corretta (genere, tipo capo, stile).`;
       } else {
-        contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto.`;
+        contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
       const questionsResponse = await fetch(apiUrl, {
@@ -320,7 +334,6 @@ serve(async (req) => {
       const questionsData = await questionsResponse.json();
       let content = questionsData.choices?.[0]?.message?.content || "";
       
-      // Clean markdown wrapping
       content = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
       
       try {
@@ -407,8 +420,49 @@ serve(async (req) => {
       }
     }
 
+    // ========== ACTION: GENERATE_KEYWORD_TEXT ==========
+    if (action === "generate_keyword_text") {
+      console.log("Generating keyword text variant...");
+
+      const { keywordBlock, outputContext } = body;
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-lite",
+          messages: [
+            {
+              role: "system",
+              content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
+            },
+            {
+              role: "user",
+              content: `Contesto annuncio: ${outputContext || "non disponibile"}\n\nTesto precedente da variare (genera qualcosa di diverso): ${keywordBlock || "nessuno"}\n\nGenera il nuovo testo.`,
+            },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error("Keyword text error:", response.status, errText);
+        return new Response(JSON.stringify({ error: "Errore generazione testo keyword." }), {
+          status: response.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content?.trim() || "";
+
+      return new Response(JSON.stringify({ text }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     return new Response(
-      JSON.stringify({ error: "Azione non valida. Usa: vision, questions, generate." }),
+      JSON.stringify({ error: "Azione non valida. Usa: vision, questions, generate, generate_keyword_text." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 

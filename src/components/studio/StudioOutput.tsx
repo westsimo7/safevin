@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Copy, Check, Sparkles, Euro, Lightbulb, Type, FileText, List, FolderOpen,
+  Copy, Check, Sparkles, Euro, Lightbulb, Type, FileText, FolderOpen,
 } from "lucide-react";
 import TrustConversionSection from "./TrustConversionSection";
 import KeywordIntelligence from "./KeywordIntelligence";
@@ -19,21 +19,18 @@ interface StudioOutputData {
     strategicScripts: { label: string; script: string }[];
   };
   keywordIntelligence?: {
+    keywordBlock?: string;
+    strategicHashtags?: string[];
+    // legacy
     inspirationalText?: string;
     highlightedKeywords?: string[];
-    mentalFilters?: {
-      occasioni?: string[];
-      stagione?: string[];
-      outfitAbbinamenti?: string[];
-      sinonimiItaliani?: string[];
-      intentoAcquisto?: string[];
-    };
-    strategicHashtags?: string[];
+    mentalFilters?: any;
   };
   suggestedPrice: { min: number; max: number; reasoning: string };
   hashtags: string[];
   category_suggestion: string;
   subcategory_suggestion: string;
+  category_reasoning?: string;
   tips: string[];
 }
 
@@ -87,6 +84,9 @@ const SectionBlock = ({
 );
 
 const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
+  // Build context string for keyword generation
+  const outputContext = `Titolo: ${data.titolo}. Categoria: ${data.category_suggestion}. Descrizione breve: ${data.descrizione?.slice(0, 200)}`;
+
   return (
     <div className="space-y-5 animate-fade-in">
       {/* Header */}
@@ -104,7 +104,7 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
         <p className="text-lg font-normal leading-snug">{data.titolo}</p>
       </SectionBlock>
 
-      {/* Descrizione + Dettagli tecnici (blocco unico) */}
+      {/* Descrizione + Dettagli tecnici */}
       <SectionBlock
         icon={<FileText className="w-4 h-4 text-primary" />}
         label="Descrizione"
@@ -142,35 +142,38 @@ const StudioOutput = ({ data, onNew, onBack }: StudioOutputProps) => {
               <h3 className="text-base font-bold tracking-tight">Prezzo suggerito</h3>
             </div>
             <div className="border-t border-primary/10 pt-3">
-            <p className="text-3xl font-bold tracking-tight">
-              €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
-            </p>
-            <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{data.suggestedPrice.reasoning}</p>
+              <p className="text-3xl font-bold tracking-tight">
+                €{data.suggestedPrice.min} <span className="text-muted-foreground font-normal text-lg">–</span> €{data.suggestedPrice.max}
+              </p>
+              <p className="text-xs text-muted-foreground mt-2 leading-relaxed">{data.suggestedPrice.reasoning}</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* Categoria consigliata */}
-      {(data.category_suggestion || data.subcategory_suggestion) && (
+      {/* Categoria consigliata intelligente */}
+      {data.category_suggestion && (
         <SectionBlock icon={<FolderOpen className="w-4 h-4 text-primary" />} label="Categoria consigliata">
-          <p className="text-sm font-medium">
+          <p className="text-sm font-semibold mb-1">
             {data.category_suggestion}
-            {data.subcategory_suggestion && (
-              <span className="text-muted-foreground"> → </span>
-            )}
-            {data.subcategory_suggestion && (
-              <span>{data.subcategory_suggestion}</span>
-            )}
           </p>
+          {data.category_reasoning && (
+            <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+              {data.category_reasoning}
+            </p>
+          )}
         </SectionBlock>
       )}
 
-      {/* Keyword Intelligence */}
+      {/* Keyword Intelligence - blocco unico */}
       {data.keywordIntelligence ? (
-        <KeywordIntelligence data={data.keywordIntelligence} legacyHashtags={data.hashtags} />
+        <KeywordIntelligence
+          data={data.keywordIntelligence}
+          legacyHashtags={data.hashtags}
+          outputContext={outputContext}
+        />
       ) : data.hashtags?.length > 0 ? (
-        <KeywordIntelligence data={{}} legacyHashtags={data.hashtags} />
+        <KeywordIntelligence data={{}} legacyHashtags={data.hashtags} outputContext={outputContext} />
       ) : null}
 
       {/* Trust & Conversion */}
