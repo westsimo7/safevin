@@ -591,7 +591,7 @@ serve(async (req) => {
 
     // ========== ACTION: GAP_QUESTIONS (Audit → Studio bridge) ==========
     if (action === "gap_questions") {
-      console.log("Generating gap-based questions from audit (gpt-4o-mini)...");
+      console.log("Generating gap-based questions from audit (gpt-5)...");
 
       const { auditSections: auditSecs, listingData: ld2 } = body;
 
@@ -621,7 +621,7 @@ serve(async (req) => {
         ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
       }
 
-      const gapResponse = await callAI("gpt-4o-mini", [
+      const gapResponse = await callAI("gpt-5", [
             { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
             { role: "user", content: ctxMsg },
           ]);
