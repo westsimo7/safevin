@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -118,7 +118,7 @@ const EngineImageAnalysis = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-6 pt-8 pb-12 max-w-3xl">
         <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine/analyze")}>

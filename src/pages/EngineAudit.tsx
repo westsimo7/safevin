@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -128,7 +128,7 @@ const EngineAudit = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-6 pt-8 pb-12 max-w-4xl">
         <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine/analyze")}>
@@ -210,6 +210,36 @@ const EngineAudit = () => {
           </div>
         )}
       </main>
+
+      {/* Sticky CTA - always visible when result exists */}
+      {analysisResult && !isLoading && (
+        <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
+          <Button
+            variant="neon"
+            size="lg"
+            className="group shadow-lg shadow-primary/20"
+            onClick={handleImprove}
+          >
+            <Wand2 className="w-4 h-4 mr-2" />
+            Migliora con Studio
+          </Button>
+        </div>
+      )}
+
+      {/* Mobile sticky bottom bar */}
+      {analysisResult && !isLoading && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 sm:hidden p-3 bg-background/95 backdrop-blur border-t border-border/50">
+          <Button
+            variant="neon"
+            size="lg"
+            className="w-full group"
+            onClick={handleImprove}
+          >
+            <Wand2 className="w-4 h-4 mr-2" />
+            Migliora con SafeViN Studio
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

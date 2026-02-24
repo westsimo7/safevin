@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -60,7 +60,7 @@ const StudioDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardHeader />
+        <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center text-muted-foreground">Caricamento...</main>
       </div>
     );
@@ -69,7 +69,7 @@ const StudioDetail = () => {
   if (!record || !record.output) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardHeader />
+        <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground mb-4">Annuncio non trovato.</p>
           <Button variant="ghost" onClick={() => navigate("/storico")}>
@@ -86,7 +86,7 @@ const StudioDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
       <main className="container mx-auto px-6 py-12 max-w-2xl">
         {!isMobile && (
           <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>

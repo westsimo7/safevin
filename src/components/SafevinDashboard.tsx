@@ -1,15 +1,15 @@
+import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Zap, ArrowRight, Search, PenTool } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "./DashboardHeader";
 
 const SafevinDashboard = () => {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-6 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
         <div className="text-center max-w-3xl mx-auto -mt-16">

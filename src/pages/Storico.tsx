@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,6 +46,12 @@ const formatDate = (dateStr: string) => {
 const getScore = (a: AnalysisRecord) =>
   (a.analysis_result?.sections as any[] | undefined)?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? 0;
 
+const getImageScore = (a: AnalysisRecord) => {
+  const match = a.titolo?.match(/(\d+)/);
+  const numImages = match ? parseInt(match[1]) : 1;
+  return Math.min(numImages * 10, 100);
+};
+
 const getScoreColor = (score: number) => {
   if (score >= 70) return "text-green-400";
   if (score >= 40) return "text-yellow-400";
@@ -66,7 +72,6 @@ const Storico = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; type: "analysis" | "creation" } | null>(null);
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const fetchAll = async () => {
@@ -118,7 +123,7 @@ const Storico = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
 
       <main className="container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
         <div className="text-center mb-6">
@@ -148,12 +153,7 @@ const Storico = () => {
         {/* Search */}
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Cerca..."
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            className="pl-9 h-9 text-sm bg-card border-border/50"
-          />
+          <Input placeholder="Cerca..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-9 h-9 text-sm bg-card border-border/50" />
           {searchQuery && (
             <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2">
               <X className="w-3.5 h-3.5 text-muted-foreground" />
@@ -178,7 +178,7 @@ const Storico = () => {
 
             {/* Analysis items */}
             {isAnalysisTab && filteredAnalyses.map(item => {
-              const score = tab === "full" ? getScore(item) : null;
+              const score = tab === "full" ? getScore(item) : getImageScore(item);
               return (
                 <div
                   key={item.id}
@@ -198,12 +198,10 @@ const Storico = () => {
                     <h3 className="text-sm font-semibold truncate">{item.titolo || "Senza titolo"}</h3>
                     <p className="text-[11px] text-muted-foreground">{formatDate(item.created_at)}</p>
                   </div>
-                  {score !== null && (
-                    <div className={`px-2.5 py-1 rounded-lg border text-center flex-shrink-0 ${getScoreBg(score)}`}>
-                      <span className={`text-base font-bold ${getScoreColor(score)}`}>{score}</span>
-                      <span className="text-[10px] text-muted-foreground">/100</span>
-                    </div>
-                  )}
+                  <div className={`px-2.5 py-1 rounded-lg border text-center flex-shrink-0 ${getScoreBg(score)}`}>
+                    <span className={`text-base font-bold ${getScoreColor(score)}`}>{score}</span>
+                    <span className="text-[10px] text-muted-foreground">/100</span>
+                  </div>
                   <button
                     className="p-1.5 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
                     onClick={e => { e.stopPropagation(); setDeleteTarget({ id: item.id, type: "analysis" }); }}
