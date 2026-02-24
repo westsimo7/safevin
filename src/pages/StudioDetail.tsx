@@ -69,7 +69,7 @@ const StudioDetail = () => {
   if (!record || !record.output) {
     return (
       <div className="min-h-screen bg-background">
-        <DashboardHeader />
+        <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground mb-4">Annuncio non trovato.</p>
           <Button variant="ghost" onClick={() => navigate("/storico")}>
