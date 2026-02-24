@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Play } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-background">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-primary/5 rounded-full blur-[120px]" />
 
@@ -26,16 +26,16 @@ const HeroSection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.2s" }}>
+          <Button variant="neon" size="lg" className="group w-full sm:w-auto cursor-not-allowed opacity-70" disabled>
+            Inizia gratis (3 giorni)
+            <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          </Button>
           <Link to="/dashboard">
-            <Button variant="neon" size="lg" className="group w-full sm:w-auto">
-              Inizia gratis (3 giorni)
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <Button variant="glass" size="lg" className="w-full sm:w-auto">
+              <LayoutDashboard className="mr-2 w-4 h-4" />
+              Dashboard
             </Button>
           </Link>
-          <Button variant="glass" size="lg">
-            <Play className="mr-2 w-4 h-4" />
-            Guarda come funziona
-          </Button>
         </div>
 
         {/* Mini demo card */}
@@ -59,26 +59,6 @@ const HeroSection = () => {
                 <span className="text-muted-foreground">Foto</span>
                 <span className="text-red-500 font-medium">4/10</span>
               </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 pt-8 border-t border-border/50 animate-fade-in" style={{ animationDelay: "0.4s" }}>
-          <p className="text-sm text-muted-foreground mb-4">Performance verificate su annunci reali</p>
-          <div className="flex items-center justify-center gap-8 text-muted-foreground/60">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">10.000+</div>
-              <div className="text-xs">Annunci ottimizzati</div>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">+35%</div>
-              <div className="text-xs">Visibilità media</div>
-            </div>
-            <div className="w-px h-8 bg-border" />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">10</div>
-              <div className="text-xs">Categorie SafeScore™</div>
             </div>
           </div>
         </div>

@@ -1,21 +1,20 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { User, ChevronDown } from "lucide-react";
+import { User } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const LandingNavbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        {/* Logo */}
+      <div className="container mx-auto h-16 flex items-center justify-between px-10">
+        {/* Logo - fully left */}
         <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span className="text-2xl font-black tracking-tight">
+          <span className="text-3xl font-black tracking-tight">
             <span className="text-foreground">SAFE</span>
             <span className="text-primary">ViN</span>
           </span>
         </a>
 
-        {/* Right side */}
+        {/* Right side - fully right */}
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" disabled className="text-muted-foreground/50 cursor-not-allowed">
             Login

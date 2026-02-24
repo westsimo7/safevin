@@ -3,10 +3,11 @@ import { Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const DEFAULT_MESSAGES = [
-  "L'IA sta analizzando ogni dettaglio…",
-  "Sto ottimizzando struttura e conversione…",
-  "Sto migliorando chiarezza e leve persuasive…",
-  "Sto finalizzando una versione più vendibile possibile…",
+  "Analizzando qualità visiva…",
+  "Rilevando dettagli critici…",
+  "Incrociando dati di sicurezza…",
+  "Calcolando punteggio reale…",
+  "Ottimizzando suggerimenti…",
 ];
 
 const DEEP_MESSAGE =
@@ -24,7 +25,7 @@ const SmartLoader = ({ title, messages = DEFAULT_MESSAGES }: SmartLoaderProps) =
   useEffect(() => {
     const interval = setInterval(() => {
       setMsgIndex((prev) => (prev + 1) % messages.length);
-    }, 4000);
+    }, 3000);
     const timeout = setTimeout(() => setDeep(true), 25000);
     return () => {
       clearInterval(interval);
