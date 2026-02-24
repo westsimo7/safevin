@@ -335,7 +335,7 @@ REGOLE:
     const gptResponse = await callAI("gpt-5", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
-        ]);
+        ], { max_tokens: 16384 });
 
     if (!gptResponse.ok) {
       const errorText = await gptResponse.text();
@@ -367,15 +367,45 @@ REGOLE:
 
     console.log("Raw GPT response length:", analysisResultRaw.length);
 
-    // Parse JSON response
+    // Parse JSON response with robust extraction
     try {
       let cleanedResponse = analysisResultRaw.trim();
-      if (cleanedResponse.startsWith("```json")) cleanedResponse = cleanedResponse.slice(7);
-      if (cleanedResponse.startsWith("```")) cleanedResponse = cleanedResponse.slice(3);
-      if (cleanedResponse.endsWith("```")) cleanedResponse = cleanedResponse.slice(0, -3);
-      cleanedResponse = cleanedResponse.trim();
-
-      const analysisResult = JSON.parse(cleanedResponse);
+      
+      // Remove markdown code blocks
+      cleanedResponse = cleanedResponse.replace(/```json\s*/gi, "").replace(/```\s*/g, "").trim();
+      
+      // Find the JSON object boundaries
+      const jsonStart = cleanedResponse.indexOf("{");
+      const jsonEnd = cleanedResponse.lastIndexOf("}");
+      
+      if (jsonStart === -1 || jsonEnd === -1 || jsonEnd <= jsonStart) {
+        console.error("No JSON object found in response. First 500 chars:", cleanedResponse.substring(0, 500));
+        return new Response(
+          JSON.stringify({ error: "Formato risposta non valido. Riprova." }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      
+      cleanedResponse = cleanedResponse.substring(jsonStart, jsonEnd + 1);
+      
+      // Try parsing, with fallback cleanup
+      let analysisResult;
+      try {
+        analysisResult = JSON.parse(cleanedResponse);
+      } catch {
+        // Fix common JSON issues: trailing commas, control chars
+        cleanedResponse = cleanedResponse
+          .replace(/,\s*}/g, "}")
+          .replace(/,\s*]/g, "]")
+          .replace(/[\x00-\x1F\x7F]/g, " ");
+        analysisResult = JSON.parse(cleanedResponse);
+      }
+      
+      // Check for finish_reason truncation
+      const finishReason = data.choices?.[0]?.finish_reason;
+      if (finishReason === "length") {
+        console.warn("GPT output was truncated (finish_reason: length)");
+      }
       
       console.log("Analysis complete, returning structured result");
       
@@ -385,7 +415,8 @@ REGOLE:
       );
     } catch (parseError) {
       console.error("JSON parse error:", parseError);
-      console.log("Raw response:", analysisResultRaw.substring(0, 500));
+      console.log("Raw response first 1000 chars:", analysisResultRaw.substring(0, 1000));
+      console.log("Raw response last 500 chars:", analysisResultRaw.substring(analysisResultRaw.length - 500));
       return new Response(
         JSON.stringify({ error: "Formato risposta non valido. Riprova." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
