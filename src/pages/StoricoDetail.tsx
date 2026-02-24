@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppNavbar from "@/components/AppNavbar";
-import AnalysisCard from "@/components/AnalysisCard";
-import MobileAnalysisCard from "@/components/MobileAnalysisCard";
+import EngineAnalysisCard from "@/components/EngineAnalysisCard";
 import AnalysisSummary from "@/components/AnalysisSummary";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, TrendingUp, Image as ImageIcon, Camera, Sparkles, CheckCircle, AlertTriangle, Wand2 } from "lucide-react";
@@ -35,7 +33,7 @@ interface AnalysisRecord {
 const StoricoDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  
   const [analysis, setAnalysis] = useState<AnalysisRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -325,19 +323,11 @@ const StoricoDetail = () => {
               </CardContent>
             </Card>
 
-            {isMobile ? (
-              <div className="flex flex-col gap-3">
-                {result.sections?.map((section: any, index: number) => (
-                  <MobileAnalysisCard key={index} title={section.title} score={section.score} advice={section.advice} impersonation={section.impersonation} scoreBreakdown={section.scoreBreakdown} conversionProbability={section.conversionProbability} />
-                ))}
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 gap-4">
-                {result.sections?.map((section: any, index: number) => (
-                  <AnalysisCard key={index} title={section.title} score={section.score} advice={section.advice} impersonation={section.impersonation} scoreBreakdown={section.scoreBreakdown} conversionProbability={section.conversionProbability} />
-                ))}
-              </div>
-            )}
+            <div className="grid md:grid-cols-2 gap-4">
+              {result.sections?.map((section: any, index: number) => (
+                <EngineAnalysisCard key={index} section={section} />
+              ))}
+            </div>
 
             {result.summary && <AnalysisSummary summary={result.summary} />}
 

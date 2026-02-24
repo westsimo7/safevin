@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +18,8 @@ export type StudioStep =
   | "vision-confirm"
   | "questions"
   | "generating"
+  | "validating"
+  | "missing-data"
   | "output";
 
 interface QuestionAnswer {
@@ -70,6 +73,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   const [conversationHistory, setConversationHistory] = useState<QuestionAnswer[]>([]);
   const [outputData, setOutputData] = useState<StudioOutputData | null>(null);
   const [missingAngles, setMissingAngles] = useState<string[]>([]);
+  const [missingFields, setMissingFields] = useState<{ field: string; reason: string; question: string }[]>([]);
+  const [missingAnswers, setMissingAnswers] = useState<Record<string, string>>({});
   const photoInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -236,6 +241,52 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       if (data?.error) throw new Error(data.error);
 
       if (data?.output) {
+        // Run internal audit validation
+        setStep("validating");
+        
+        try {
+          const { data: auditResult, error: auditError } = await supabase.functions.invoke("safelist-studio", {
+            body: {
+              action: "audit_internal",
+              categoria,
+              visionReport,
+              generatedOutput: data.output,
+            },
+          });
+
+          if (!auditError && auditResult && !auditResult.passed) {
+            // Score < 65/80 — ask for missing data
+            console.log(`Internal audit failed: ${auditResult.totalScore}/80`);
+            const fields = auditResult.missingFields || [];
+            
+            if (fields.length > 0) {
+              setOutputData(data.output);
+              setMissingFields(fields);
+              setMissingAnswers({});
+              setConversationHistory(allAnswers);
+              setStep("missing-data");
+              return;
+            } else {
+              // No specific fields to ask — auto-refine
+              console.log("No missing fields, auto-refining...");
+              const extraAnswers = auditResult.categories
+                ?.filter((c: any) => c.score < 7 && c.issues?.length > 0)
+                ?.map((c: any) => ({
+                  question: `Migliora: ${c.name}`,
+                  answer: c.issues.join(". "),
+                })) || [];
+              
+              if (extraAnswers.length > 0) {
+                await generateOutput([...allAnswers, ...extraAnswers]);
+                return;
+              }
+            }
+          }
+        } catch (auditErr) {
+          console.error("Internal audit error (non-blocking):", auditErr);
+        }
+
+        // Audit passed or non-blocking error
         setOutputData(data.output);
         setConversationHistory(allAnswers);
         setStep("output");
@@ -252,6 +303,23 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       });
       setStep("questions");
     }
+  };
+
+  const handleMissingDataSubmit = async () => {
+    const newAnswers: QuestionAnswer[] = missingFields
+      .filter((f) => missingAnswers[f.field]?.trim())
+      .map((f) => ({
+        question: f.question,
+        answer: missingAnswers[f.field],
+      }));
+
+    if (newAnswers.length === 0) {
+      toast({ title: "Inserisci almeno un dato", variant: "destructive" });
+      return;
+    }
+
+    const updatedHistory = [...conversationHistory, ...newAnswers];
+    await generateOutput(updatedHistory);
   };
 
   const saveCreation = async (output: StudioOutputData, answers: QuestionAnswer[]) => {
@@ -293,6 +361,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
     setConversationHistory([]);
     setOutputData(null);
     setMissingAngles([]);
+    setMissingFields([]);
+    setMissingAnswers({});
   };
 
   const getBackAction = () => {
@@ -321,7 +391,7 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
         onChange={handleNewPhotosAdded}
       />
 
-      {!["vision-loading", "generating", "output", "category"].includes(step) && (
+      {!["vision-loading", "generating", "validating", "output", "category", "missing-data"].includes(step) && (
         <Button
           variant="ghost"
           className="mb-6 text-muted-foreground hover:text-foreground"
@@ -370,8 +440,72 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
 
       {step === "generating" && <SmartLoader title="Creo il tuo annuncio perfetto…" />}
 
+      {step === "validating" && (
+        <SmartLoader
+          title="Validazione qualità in corso…"
+          messages={[
+            "Verifico struttura titolo e SEO…",
+            "Analisi keyword e tag…",
+            "Controllo psicologia acquirente…",
+            "Valutazione completezza dati…",
+            "Calcolo punteggio interno…",
+          ]}
+        />
+      )}
+
+      {step === "missing-data" && missingFields.length > 0 && (
+        <div className="space-y-6 animate-fade-in">
+          <div className="text-center">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">⚠️</span>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Informazioni critiche mancanti</h2>
+            <p className="text-sm text-muted-foreground">
+              L'annuncio non è ancora pubblicabile. Mancano alcuni dettagli fondamentali per raggiungere la qualità minima richiesta.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {missingFields.map((field, i) => (
+              <Card key={i} className="border-border/50 bg-card/50">
+                <CardContent className="p-4 space-y-2">
+                  <p className="text-sm font-semibold">{field.question}</p>
+                  <p className="text-xs text-muted-foreground">{field.reason}</p>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 rounded-lg border border-border/50 bg-background text-sm focus:outline-none focus:border-primary/50"
+                    placeholder="Inserisci qui..."
+                    value={missingAnswers[field.field] || ""}
+                    onChange={(e) => setMissingAnswers((prev) => ({ ...prev, [field.field]: e.target.value }))}
+                  />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Button
+            variant="neon"
+            size="lg"
+            className="w-full"
+            onClick={handleMissingDataSubmit}
+            disabled={Object.values(missingAnswers).every((v) => !v?.trim())}
+          >
+            Rigenera annuncio con i nuovi dati
+          </Button>
+        </div>
+      )}
+
       {step === "output" && outputData && (
-        <StudioOutput data={outputData} onNew={handleNewCreation} onBack={onBack} />
+        <div className="space-y-5 animate-fade-in">
+          <div className="text-center pb-2">
+            <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">✅</span>
+            </div>
+            <h2 className="text-xl font-bold mb-1">Annuncio di valore generato correttamente.</h2>
+            <p className="text-sm text-muted-foreground">Qualità validata dal motore interno SafeViN.</p>
+          </div>
+          <StudioOutput data={outputData} onNew={handleNewCreation} onBack={onBack} />
+        </div>
       )}
     </div>
   );

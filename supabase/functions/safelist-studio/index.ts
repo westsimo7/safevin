@@ -122,11 +122,12 @@ L'annuncio deve:
 - Usare keywords strategiche naturali
 - Creare fiducia e urgenza controllata
 - Essere pronto per il copia-incolla
+- Includere PSICOLOGIA ACQUIRENTE: momento d'uso, tipo di persona, contesto, perché lo compri, come ti fa sentire
 
 FORMATO OUTPUT (JSON):
 {
   "titolo": "Titolo ottimizzato (max 80 char, keywords strategiche)",
-  "descrizione": "STRUTTURA OBBLIGATORIA della descrizione:\\n\\n1) MINI STORYTELLING (prime 2-3 righe, max 55 parole): Testo diretto, evocativo, zero frasi lunghe, zero riempitivi. Deve trasmettere atmosfera + utilizzo reale del prodotto. Orientato a scena/contesto/uso reale (es. 'Un capo che richiama l'autunno in città, tra università e aperitivi serali. Palette calda e vibe retrò autentica anni 80/90. Perfetto per chi vuole distinguersi senza esagerare.'). NON usare mai la parola 'storytelling' nel testo.\\n\\n2) DESCRIZIONE TECNICA (subito dopo): Vestibilità, misure, materiale, condizioni, dettagli specifici del prodotto. Tono professionale ma accessibile.",
+  "descrizione": "STRUTTURA OBBLIGATORIA della descrizione:\\n\\n1) MINI STORYTELLING (prime 2-3 righe, max 55 parole): Testo diretto, evocativo, zero frasi lunghe, zero riempitivi. Deve trasmettere atmosfera + utilizzo reale + PSICOLOGIA: momento d'uso, tipo persona, come ti fa sentire.\\n\\n2) DESCRIZIONE TECNICA (subito dopo): Vestibilità, misure, materiale, condizioni, dettagli specifici del prodotto. Tono professionale ma accessibile.",
   "bulletPoints": [
     "• Punto tecnico/informativo 1",
     "• Punto tecnico/informativo 2"
@@ -146,7 +147,7 @@ FORMATO OUTPUT (JSON):
     ]
   },
   "keywordIntelligence": {
-    "keywordBlock": "Testo unico fluido di MASSIMO 55 parole che integra: ricerche dirette, ricerche emozionali, ricerche per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON in formato hashtag. Testo fluido ottimizzato SEO marketplace. Pensato per essere inserito ALLA FINE dell'annuncio per intercettare ricerche dirette e correlate senza appesantire la parte narrativa iniziale.",
+    "keywordBlock": "Testo unico fluido di MASSIMO 55 parole che integra: ricerche dirette, ricerche emozionali, ricerche per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON in formato hashtag. Testo fluido ottimizzato SEO marketplace.",
     "strategicHashtags": ["#hashtag1", "#hashtag2"]
   },
   "suggestedPrice": {
@@ -157,42 +158,91 @@ FORMATO OUTPUT (JSON):
   "hashtags": ["#tag1", "#tag2"],
   "category_suggestion": "Categoria Vinted consigliata (es. Uomo > Maglioni e cardigan > Maglioni girocollo)",
   "subcategory_suggestion": "",
-  "category_reasoning": "Motivazione dettagliata: perché questa categoria è stata scelta in base a analisi immagine, vestibilità, target dichiarato, tipologia tessuto, stile",
+  "category_reasoning": "Motivazione dettagliata",
   "tips": ["Consiglio extra 1 per migliorare l'annuncio"],
   "score_estimate": 82
 }
 
+REGOLE KEYWORD & TAG (STRUTTURA DEFINITIVA):
+- strategicHashtags: ESATTAMENTE 10-12 hashtag ULTRA-MIRATI suddivisi così:
+  * 3-4 KEYWORD CORE (acquisto immediato, IT + EN): es. #GiaccaPelleUomo #LeatherJacketMen #ChiudoNero #BikerJacketBlack
+  * 3 KEYWORD STAGIONALI: es. #OutfitAutunno #LookInverno #FallOutfit
+  * 2 KEYWORD OCCASIONE: es. #Aperitivo #EventoSerale
+  * 2 KEYWORD EMOZIONALI: es. #StileDeciso #VibeStreet
+- VIETATI hashtag generici (#fashion #style #look #vinted #trendy)
+- Ogni hashtag deve avere ALTA INTENZIONE D'ACQUISTO
+- hashtags (campo legacy): stessi di strategicHashtags
+
+REGOLE PSICOLOGIA ACQUIRENTE (OBBLIGATORIE):
+- La descrizione DEVE contenere: momento d'uso, tipo di persona target, contesto d'uso, perché comprarlo, come fa sentire
+- Se mancano questi elementi, l'annuncio è INCOMPLETO
+
 REGOLE DESCRIZIONE:
 - La descrizione DEVE iniziare con un mini storytelling (2-3 righe, max 55 parole): diretto, evocativo, zero riempitivi.
-- Dopo il mini storytelling, prosegui con la descrizione tecnica classica (vestibilità, misure, materiale, condizioni).
-- Il mini storytelling deve trasmettere atmosfera e utilizzo reale. NON usare la parola "storytelling".
-
-REGOLE KEYWORD INTELLIGENCE:
-- keywordBlock: UN UNICO blocco testo fluido (max 55 parole) che integra TUTTE le tipologie di ricerca: dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON usare hashtag nel testo. Deve essere fluido e naturale, ottimizzato SEO marketplace. Questo testo è pensato per essere inserito alla fine dell'annuncio.
-- strategicHashtags: MASSIMO 10 hashtag ULTRA-PREMIUM e iper-strategici. Ogni hashtag deve essere scelto con precisione chirurgica in base a TUTTO il resoconto dell'annuncio. Evitare hashtag generici (#fashion #style #look #vinted). Solo long tail specifici.
-- NON includere: inspirationalText, highlightedKeywords, mentalFilters. Questi campi sono ELIMINATI.
+- Dopo il mini storytelling, prosegui con la descrizione tecnica classica.
+- NON usare la parola "storytelling".
 
 REGOLE CATEGORIA CONSIGLIATA:
 - category_suggestion: Deve essere un percorso completo Vinted (es. "Uomo > Maglioni e cardigan > Maglioni girocollo")
-- subcategory_suggestion: Lasciare vuoto (il percorso è già in category_suggestion)
-- category_reasoning: Spiegazione dettagliata del PERCHÉ questa categoria è stata scelta, basata su: analisi immagine, vestibilità, target dichiarato, tipologia tessuto, stile. Non solo la categoria, ma anche PERCHÉ.
+- category_reasoning: Spiegazione dettagliata del PERCHÉ questa categoria è stata scelta
 
 REGOLE TRUST SECTION:
-- buyerQuestions: ESATTAMENTE 3 domande che l'acquirente si fa guardando questo specifico prodotto.
-- actionChecklist: ESATTAMENTE 4-5 azioni concrete basate sull'annuncio creato.
-- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati.
+- buyerQuestions: ESATTAMENTE 3 domande
+- actionChecklist: ESATTAMENTE 4-5 azioni concrete
+- strategicScripts: ESATTAMENTE 3 micro-script contestualizzati
 
 REGOLE GENERALI:
 - Rispondi SOLO JSON valido
 - Descrizione: 150-300 parole, strutturata con paragrafi
 - Bullet points: 4-8 punti
-- hashtags: campo legacy, metti gli stessi di strategicHashtags
 - Prezzo: range realistico basato su mercato Vinted
 - NON includere "trustElements" nel JSON, usa SOLO "trustSection"
-- L'output DEVE adattarsi dinamicamente a: categoria, brand, stagione, prezzo, mood, target
-- NON usare asterischi, grassetti, corsivi o markdown nella descrizione o nel keywordBlock
-- score_estimate: stima REALISTICA del SafeScore (0-100) basata su completezza dati, qualità titolo/descrizione/keyword, misure presenti, leve persuasive, fiducia. Sii onesto: un annuncio senza misure precise non può superare 65.
-- Target score_estimate: 80-85+. Se non riesci a raggiungerlo con le info disponibili, indica il punteggio reale.`;
+- NON usare asterischi, grassetti, corsivi o markdown
+- score_estimate: stima REALISTICA del SafeScore. Un annuncio senza misure precise non può superare 65.
+- Target score_estimate: 80-85+.`;
+
+const AUDIT_INTERNAL_PROMPT = `Sei il motore di validazione interno di SAFEViN. Devi valutare un annuncio generato da Studio PRIMA della pubblicazione.
+
+Valuta SOLO queste 8 categorie (ESCLUDI qualità foto e vita annuncio):
+
+1. Titolo / SEO (max 10 punti)
+2. Descrizione (max 10 punti)
+3. Prezzo strategico (max 10 punti)
+4. Categoria + Brand (max 10 punti)
+5. Tag + Keyword (max 10 punti)
+6. Condizione prodotto (max 10 punti)
+7. Materiale / Colore (max 10 punti)
+8. Psicologia acquirente (max 10 punti)
+
+PUNTEGGIO MASSIMO: 80
+SOGLIA MINIMA: 65/80
+TARGET: 70-75+
+ECCELLENZA: 75-80
+
+Per ogni categoria assegna un punteggio 0-10 e identifica le carenze.
+
+REGOLA KEYWORD: se l'annuncio ha keyword strutturate (core IT+EN, stagionali, occasione, emozionali), il punteggio keyword DEVE essere MINIMO 7/10.
+
+Rispondi SOLO JSON:
+{
+  "totalScore": numero (0-80),
+  "passed": boolean (true se >= 65),
+  "categories": [
+    {
+      "name": "nome categoria",
+      "score": numero (0-10),
+      "issues": ["problema 1"],
+      "missingData": ["dato mancante 1"]
+    }
+  ],
+  "missingFields": [
+    {
+      "field": "nome campo mancante",
+      "reason": "perché serve",
+      "question": "domanda da fare all'utente"
+    }
+  ]
+}`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -658,6 +708,82 @@ serve(async (req) => {
         return new Response(JSON.stringify(gapParsed), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
       } catch {
         return new Response(JSON.stringify({ error: "Errore formato risposta AI." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
+
+    // ========== ACTION: AUDIT_INTERNAL (Studio → Audit validation) ==========
+    if (action === "audit_internal") {
+      console.log("Running internal audit on generated ad...");
+
+      const { generatedOutput } = body;
+
+      if (!generatedOutput) {
+        return new Response(JSON.stringify({ error: "Nessun annuncio da validare." }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const auditContext = `Valida questo annuncio generato da SAFEViN Studio:
+
+TITOLO: ${generatedOutput.titolo || "(vuoto)"}
+
+DESCRIZIONE: ${generatedOutput.descrizione || "(vuota)"}
+
+BULLET POINTS: ${(generatedOutput.bulletPoints || []).join("; ")}
+
+PREZZO SUGGERITO: €${generatedOutput.suggestedPrice?.min || "?"} - €${generatedOutput.suggestedPrice?.max || "?"}
+Motivazione: ${generatedOutput.suggestedPrice?.reasoning || "(nessuna)"}
+
+CATEGORIA: ${generatedOutput.category_suggestion || "(vuota)"}
+
+HASHTAG/KEYWORD: ${(generatedOutput.hashtags || []).join(", ")}
+Keyword Block: ${generatedOutput.keywordIntelligence?.keywordBlock || "(vuoto)"}
+Strategic Hashtags: ${(generatedOutput.keywordIntelligence?.strategicHashtags || []).join(", ")}
+
+TRUST SECTION: ${generatedOutput.trustSection ? "presente" : "assente"}
+
+TIPS: ${(generatedOutput.tips || []).join("; ")}
+
+Categoria prodotto: ${categoria || "non specificata"}
+Vision report disponibile: ${visionReport ? "sì" : "no"}`;
+
+      const auditResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: AUDIT_INTERNAL_PROMPT },
+            { role: "user", content: auditContext },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!auditResponse.ok) {
+        const errText = await auditResponse.text();
+        console.error("Internal audit error:", auditResponse.status, errText);
+        return new Response(JSON.stringify({ error: "Errore audit interno." }), {
+          status: auditResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const auditData = await auditResponse.json();
+      let auditContent = auditData.choices?.[0]?.message?.content || "";
+      auditContent = auditContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+      try {
+        const auditParsed = JSON.parse(auditContent);
+        console.log(`Internal audit score: ${auditParsed.totalScore}/80, passed: ${auditParsed.passed}`);
+        return new Response(JSON.stringify(auditParsed), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      } catch {
+        console.error("Failed to parse audit JSON:", auditContent);
+        // If parse fails, assume passed to not block user
+        return new Response(JSON.stringify({ totalScore: 70, passed: true, categories: [], missingFields: [] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
     }
 
