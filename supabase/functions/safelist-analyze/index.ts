@@ -335,7 +335,7 @@ REGOLE:
     const gptResponse = await callAI("gpt-5", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
-        ], { max_tokens: 16384 });
+        ], { max_completion_tokens: 16384 });
 
     if (!gptResponse.ok) {
       const errorText = await gptResponse.text();
