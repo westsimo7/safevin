@@ -309,15 +309,7 @@ REGOLE:
       ];
 
       try {
-        const visionResponse = await fetch(apiUrl, {
-          method: "POST",
-          headers: apiHeaders,
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages: visionMessages,
-            stream: false,
-          }),
-        });
+        const visionResponse = await callAI("google/gemini-2.5-flash", visionMessages);
 
         if (visionResponse.ok) {
           const visionData = await visionResponse.json();
