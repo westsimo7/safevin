@@ -648,7 +648,7 @@ serve(async (req) => {
 
     // ========== ACTION: AUDIT_INTERNAL (Studio → Audit validation) ==========
     if (action === "audit_internal") {
-      console.log("Running internal audit (gpt-4o)...");
+      console.log("Running internal audit (gpt-5)...");
 
       const { generatedOutput } = body;
 
@@ -682,7 +682,7 @@ TIPS: ${(generatedOutput.tips || []).join("; ")}
 Categoria prodotto: ${categoria || "non specificata"}
 Vision report disponibile: ${visionReport ? "sì" : "no"}`;
 
-      const auditResponse = await callAI("gpt-4o", [
+      const auditResponse = await callAI("gpt-5", [
             { role: "system", content: AUDIT_INTERNAL_PROMPT },
             { role: "user", content: auditContext },
           ]);

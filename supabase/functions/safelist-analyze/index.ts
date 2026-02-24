@@ -332,7 +332,7 @@ REGOLE:
 
     userMessage += `\n\nGenera punteggi realistici variabili (non tutti uguali) e consigli personalizzati per QUESTO specifico annuncio.`;
 
-    const gptResponse = await callAI("gpt-4o", [
+    const gptResponse = await callAI("gpt-5", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ]);
