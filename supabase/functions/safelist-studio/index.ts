@@ -412,7 +412,7 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE ==========
     if (action === "generate") {
-      console.log("Generating final output (gpt-4o)...");
+      console.log("Generating final output (gpt-5)...");
 
       let contextMessage = `Genera l'annuncio Vinted perfetto basandoti su queste informazioni:\n\n`;
       contextMessage += `Categoria: ${categoria || "non specificata"}\n`;
@@ -428,7 +428,7 @@ serve(async (req) => {
         }
       }
 
-      const generateResponse = await callAI("gpt-4o", [
+      const generateResponse = await callAI("gpt-5", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
