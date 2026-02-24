@@ -334,8 +334,8 @@ serve(async (req) => {
 
       let finalReport = reports[0];
       if (reports.length > 1) {
-        console.log(`Synthesizing ${reports.length} vision passes (gpt-4o)...`);
-        const synthesisResponse = await callAI("gpt-4o", [
+        console.log(`Synthesizing ${reports.length} vision passes (gpt-5)...`);
+        const synthesisResponse = await callAI("gpt-5", [
               { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
               { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
             ]);
