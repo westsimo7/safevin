@@ -201,7 +201,7 @@ REGOLE GENERALI:
 - score_estimate: stima REALISTICA del SafeScore. Un annuncio senza misure precise non può superare 65.
 - Target score_estimate: 80-85+.`;
 
-const AUDIT_INTERNAL_PROMPT = \`Sei il motore di validazione interno di SAFEViN. Devi valutare un annuncio generato da Studio PRIMA della pubblicazione.
+const AUDIT_INTERNAL_PROMPT = `Sei il motore di validazione interno di SAFEViN. Devi valutare un annuncio generato da Studio PRIMA della pubblicazione.
 
 Valuta SOLO queste 8 categorie (ESCLUDI qualità foto e vita annuncio):
 
@@ -221,7 +221,7 @@ ECCELLENZA: 75-80
 
 Per ogni categoria assegna un punteggio 0-10 e identifica le carenze.
 
-REGOLA KEYWORD: se l'annuncio è creato da Studio con keyword strutturate (core IT+EN, stagionali, occasione, emozionali), il punteggio keyword DEVE essere MINIMO 7/10.
+REGOLA KEYWORD: se l'annuncio ha keyword strutturate (core IT+EN, stagionali, occasione, emozionali), il punteggio keyword DEVE essere MINIMO 7/10.
 
 Rispondi SOLO JSON:
 {
@@ -242,7 +242,7 @@ Rispondi SOLO JSON:
       "question": "domanda da fare all'utente"
     }
   ]
-}\`;
+}`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
