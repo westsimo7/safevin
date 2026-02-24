@@ -647,18 +647,10 @@ serve(async (req) => {
         ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
       }
 
-      const gapResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
+      const gapResponse = await callAI("google/gemini-3-flash-preview", [
             { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
             { role: "user", content: ctxMsg },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!gapResponse.ok) {
         const errText = await gapResponse.text();
