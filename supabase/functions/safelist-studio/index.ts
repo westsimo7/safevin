@@ -254,17 +254,42 @@ serve(async (req) => {
     const { action, categoria, images, visionReport, questionsAnswers, conversationHistory } = body;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    
+    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
       return new Response(
         JSON.stringify({ error: "AI service not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const apiHeaders = {
+    // Lovable AI gateway for Google models
+    const lovableApiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const lovableHeaders = {
       "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       "Content-Type": "application/json",
+    };
+
+    // Direct OpenAI API for GPT models
+    const openaiApiUrl = "https://api.openai.com/v1/chat/completions";
+    const openaiHeaders = {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+
+    // Helper: route request to correct API based on model
+    const callAI = async (model: string, messages: any[], extraParams: any = {}) => {
+      const isOpenAI = model.startsWith("openai/") && OPENAI_API_KEY;
+      const url = isOpenAI ? openaiApiUrl : lovableApiUrl;
+      const headers = isOpenAI ? openaiHeaders : lovableHeaders;
+      // Strip prefix for direct OpenAI calls
+      const actualModel = isOpenAI ? model.replace("openai/", "") : model;
+      
+      return fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ model: actualModel, messages, stream: false, ...extraParams }),
+      });
     };
 
     // ========== ACTION: VISION ==========
@@ -299,15 +324,7 @@ serve(async (req) => {
           },
         ];
 
-        const visionResponse = await fetch(apiUrl, {
-          method: "POST",
-          headers: apiHeaders,
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages: visionMessages,
-            stream: false,
-          }),
-        });
+        const visionResponse = await callAI("google/gemini-2.5-flash", visionMessages);
 
         if (!visionResponse.ok) {
           const errText = await visionResponse.text();
@@ -339,18 +356,10 @@ serve(async (req) => {
       let finalReport = reports[0];
       if (reports.length > 1) {
         console.log(`Synthesizing ${reports.length} vision passes...`);
-        const synthesisResponse = await fetch(apiUrl, {
-          method: "POST",
-          headers: apiHeaders,
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages: [
+        const synthesisResponse = await callAI("google/gemini-2.5-flash", [
               { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
               { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
-            ],
-            stream: false,
-          }),
-        });
+            ]);
 
         if (synthesisResponse.ok) {
           const synthesisData = await synthesisResponse.json();
@@ -384,18 +393,10 @@ serve(async (req) => {
         contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
-      const questionsResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
+      const questionsResponse = await callAI("google/gemini-3-flash-preview", [
             { role: "system", content: QUESTIONS_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!questionsResponse.ok) {
         const errText = await questionsResponse.text();
@@ -448,18 +449,10 @@ serve(async (req) => {
         }
       }
 
-      const generateResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "openai/gpt-5.2",
-          messages: [
+      const generateResponse = await callAI("openai/gpt-5.2", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!generateResponse.ok) {
         const errText = await generateResponse.text();
@@ -491,20 +484,12 @@ serve(async (req) => {
         if (parsed.score_estimate && parsed.score_estimate < 75) {
           console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining...`);
           try {
-            const refineResponse = await fetch(apiUrl, {
-              method: "POST",
-              headers: apiHeaders,
-              body: JSON.stringify({
-                model: "openai/gpt-5.2",
-                messages: [
+            const refineResponse = await callAI("openai/gpt-5.2", [
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
                   { role: "user", content: "Il SafeScore stimato è troppo basso. Raffina l'annuncio: aggiungi micro CTA, migliora leve persuasive, riduci genericità, migliora struttura frasi, inserisci parole ad alta intenzione d'acquisto, migliora chiarezza misure. Target: 80-85+. Restituisci lo stesso formato JSON completo." },
-                ],
-                stream: false,
-              }),
-            });
+                ]);
 
             if (refineResponse.ok) {
               const refineData = await refineResponse.json();
@@ -541,12 +526,7 @@ serve(async (req) => {
 
       const { keywordBlock, outputContext } = body;
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
-          messages: [
+      const response = await callAI("google/gemini-2.5-flash-lite", [
             {
               role: "system",
               content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
@@ -555,10 +535,7 @@ serve(async (req) => {
               role: "user",
               content: `Contesto annuncio: ${outputContext || "non disponibile"}\n\nTesto precedente da variare (genera qualcosa di diverso): ${keywordBlock || "nessuno"}\n\nGenera il nuovo testo.`,
             },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!response.ok) {
         const errText = await response.text();
@@ -612,18 +589,10 @@ serve(async (req) => {
 
       contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
-      const generateResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "openai/gpt-5.2",
-          messages: [
+      const generateResponse = await callAI("openai/gpt-5.2", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!generateResponse.ok) {
         const errText = await generateResponse.text();
@@ -678,18 +647,10 @@ serve(async (req) => {
         ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
       }
 
-      const gapResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
+      const gapResponse = await callAI("google/gemini-3-flash-preview", [
             { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
             { role: "user", content: ctxMsg },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!gapResponse.ok) {
         const errText = await gapResponse.text();
@@ -747,18 +708,10 @@ TIPS: ${(generatedOutput.tips || []).join("; ")}
 Categoria prodotto: ${categoria || "non specificata"}
 Vision report disponibile: ${visionReport ? "sì" : "no"}`;
 
-      const auditResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
+      const auditResponse = await callAI("google/gemini-2.5-flash", [
             { role: "system", content: AUDIT_INTERNAL_PROMPT },
             { role: "user", content: auditContext },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!auditResponse.ok) {
         const errText = await auditResponse.text();

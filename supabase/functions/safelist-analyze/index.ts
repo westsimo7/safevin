@@ -175,19 +175,41 @@ serve(async (req) => {
     const { listing, images: imageDataUrls, imageOnly } = body;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY is not configured");
+    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
+      console.error("No AI API key configured");
       return new Response(
         JSON.stringify({ error: "AI service not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const apiHeaders = {
+    // Lovable AI gateway for Google models
+    const lovableApiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const lovableHeaders = {
       "Authorization": `Bearer ${LOVABLE_API_KEY}`,
       "Content-Type": "application/json",
+    };
+
+    // Direct OpenAI API for GPT models  
+    const openaiApiUrl = "https://api.openai.com/v1/chat/completions";
+    const openaiHeaders = {
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+
+    const callAI = async (model: string, messages: any[], extraParams: any = {}) => {
+      const isOpenAI = model.startsWith("openai/") && OPENAI_API_KEY;
+      const url = isOpenAI ? openaiApiUrl : lovableApiUrl;
+      const headers = isOpenAI ? openaiHeaders : lovableHeaders;
+      const actualModel = isOpenAI ? model.replace("openai/", "") : model;
+      
+      return fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ model: actualModel, messages, stream: false, ...extraParams }),
+      });
     };
 
     // ========== IMAGE-ONLY MODE ==========
@@ -227,21 +249,13 @@ REGOLE:
 - Max 4 problemi e 4 soluzioni per foto
 - Rispondi SOLO JSON valido`;
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
+      const response = await callAI("google/gemini-2.5-flash", [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
               { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio marketplace. Report individuale per ogni foto.` },
               ...imageContents,
             ]},
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!response.ok) {
         const errText = await response.text();
@@ -295,15 +309,7 @@ REGOLE:
       ];
 
       try {
-        const visionResponse = await fetch(apiUrl, {
-          method: "POST",
-          headers: apiHeaders,
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages: visionMessages,
-            stream: false,
-          }),
-        });
+        const visionResponse = await callAI("google/gemini-2.5-flash", visionMessages);
 
         if (visionResponse.ok) {
           const visionData = await visionResponse.json();
@@ -342,18 +348,10 @@ REGOLE:
 
     userMessage += `\n\nGenera punteggi realistici variabili (non tutti uguali) e consigli personalizzati per QUESTO specifico annuncio.`;
 
-    const gptResponse = await fetch(apiUrl, {
-      method: "POST",
-      headers: apiHeaders,
-      body: JSON.stringify({
-        model: "openai/gpt-5.2",
-        messages: [
+    const gptResponse = await callAI("openai/gpt-5.2", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
-        ],
-        stream: false,
-      }),
-    });
+        ]);
 
     if (!gptResponse.ok) {
       const errorText = await gptResponse.text();
