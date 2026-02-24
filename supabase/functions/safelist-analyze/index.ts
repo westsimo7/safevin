@@ -6,8 +6,9 @@ const corsHeaders = {
 };
 
 const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-const PRIMARY_MODEL = "gpt-5";
-const FALLBACK_MODEL = "gpt-5-mini";
+const IMAGE_MODEL = "gpt-5";
+const AUDIT_PRIMARY_MODEL = "gpt-5-mini";
+const AUDIT_FALLBACK_MODEL = "gpt-5";
 const MAX_IMAGES = 6;
 
 const IMAGE_ONLY_PROMPT = `Sei un analista fotografico esperto marketplace. Valuta OGNI foto singolarmente.
@@ -186,6 +187,8 @@ async function callOpenAI(params: {
 
 async function callOpenAIWithFallback(params: {
   apiKey: string;
+  primaryModel: string;
+  fallbackModel: string;
   messages: Array<{ role: "system" | "user"; content: string | Array<{ type: "text" | "image_url"; text?: string; image_url?: { url: string } }> }>;
   maxCompletionTokens: number;
   primaryTimeoutMs: number;
@@ -194,7 +197,7 @@ async function callOpenAIWithFallback(params: {
   try {
     return await callOpenAI({
       apiKey: params.apiKey,
-      model: PRIMARY_MODEL,
+      model: params.primaryModel,
       messages: params.messages,
       maxCompletionTokens: params.maxCompletionTokens,
       timeoutMs: params.primaryTimeoutMs,
@@ -205,10 +208,10 @@ async function callOpenAIWithFallback(params: {
 
     if (!retryable) throw err;
 
-    console.warn(`Primary model failed (${PRIMARY_MODEL}), retrying with ${FALLBACK_MODEL}`);
+    console.warn(`Primary model failed (${params.primaryModel}), retrying with ${params.fallbackModel}`);
     return callOpenAI({
       apiKey: params.apiKey,
-      model: FALLBACK_MODEL,
+      model: params.fallbackModel,
       messages: params.messages,
       maxCompletionTokens: params.maxCompletionTokens,
       timeoutMs: params.fallbackTimeoutMs,
@@ -392,6 +395,8 @@ serve(async (req) => {
       try {
         const aiRaw = await callOpenAIWithFallback({
           apiKey: OPENAI_API_KEY,
+          primaryModel: IMAGE_MODEL,
+          fallbackModel: AUDIT_PRIMARY_MODEL,
           messages,
           maxCompletionTokens: 2200,
           primaryTimeoutMs: 40000,
@@ -442,10 +447,12 @@ serve(async (req) => {
     try {
       const aiRaw = await callOpenAIWithFallback({
         apiKey: OPENAI_API_KEY,
+        primaryModel: AUDIT_PRIMARY_MODEL,
+        fallbackModel: AUDIT_FALLBACK_MODEL,
         messages,
         maxCompletionTokens: 4200,
-        primaryTimeoutMs: 55000,
-        fallbackTimeoutMs: 35000,
+        primaryTimeoutMs: 45000,
+        fallbackTimeoutMs: 50000,
       });
       analysis = normalizeAudit(aiRaw);
     } catch (error) {
