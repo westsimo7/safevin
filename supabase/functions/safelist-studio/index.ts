@@ -496,11 +496,11 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE_KEYWORD_TEXT ==========
     if (action === "generate_keyword_text") {
-      console.log("Generating keyword text variant (gpt-4o-mini)...");
+      console.log("Generating keyword text variant (gpt-5)...");
 
       const { keywordBlock, outputContext } = body;
 
-      const response = await callAI("gpt-4o-mini", [
+      const response = await callAI("gpt-5", [
             {
               role: "system",
               content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
