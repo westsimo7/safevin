@@ -36,6 +36,44 @@ function fileToDataUrl(file: File): Promise<string> {
   });
 }
 
+async function compressImageToDataUrl(file: File): Promise<string> {
+  if (!file.type.startsWith("image/")) return fileToDataUrl(file);
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const maxSide = 1400;
+        const ratio = Math.min(1, maxSide / Math.max(img.width, img.height));
+        const targetWidth = Math.max(1, Math.round(img.width * ratio));
+        const targetHeight = Math.max(1, Math.round(img.height * ratio));
+
+        const canvas = document.createElement("canvas");
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(fileToDataUrl(file));
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+        const compressed = canvas.toDataURL("image/jpeg", 0.78);
+        resolve(compressed);
+      };
+
+      img.onerror = () => resolve(fileToDataUrl(file));
+      img.src = reader.result as string;
+    };
+
+    reader.onerror = () => reject(new Error("Errore durante la lettura immagine"));
+    reader.readAsDataURL(file);
+  });
+}
+
 const EngineAudit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -53,13 +91,19 @@ const EngineAudit = () => {
     setAnalysisResult(null);
 
     try {
-      const imageDataUrls: string[] = [];
-      for (const file of data.images) {
-        imageDataUrls.push(await fileToDataUrl(file));
+      const maxImages = 6;
+      const selectedImages = data.images.slice(0, maxImages);
+
+      if (data.images.length > maxImages) {
+        toast({
+          title: "Foto limitate",
+          description: `Userò solo le prime ${maxImages} foto per garantire un'analisi stabile e veloce.`,
+        });
       }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+      const imageDataUrls = await Promise.all(
+        selectedImages.map((file: File) => compressImageToDataUrl(file))
+      );
 
       const { data: responseData, error } = await supabase.functions.invoke("safelist-analyze", {
         body: {
@@ -71,8 +115,6 @@ const EngineAudit = () => {
           images: imageDataUrls,
         },
       });
-
-      clearTimeout(timeoutId);
 
       if (error) throw error;
 
@@ -107,7 +149,18 @@ const EngineAudit = () => {
       }
     } catch (err: any) {
       console.error("Audit error:", err);
-      toast({ title: "Errore", description: err.message || "Riprova.", variant: "destructive" });
+
+      const rawMessage = String(err?.message || "");
+      const isConnectionError =
+        rawMessage.includes("Failed to send a request") ||
+        rawMessage.includes("Load failed") ||
+        rawMessage.includes("Failed to fetch");
+
+      const description = isConnectionError
+        ? "Connessione interrotta durante l'analisi. Riprova con meno foto o immagini più leggere."
+        : rawMessage || "Riprova.";
+
+      toast({ title: "Errore", description, variant: "destructive" });
     } finally {
       setIsLoading(false);
     }
