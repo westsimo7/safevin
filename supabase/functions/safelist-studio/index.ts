@@ -393,18 +393,10 @@ serve(async (req) => {
         contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
-      const questionsResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
+      const questionsResponse = await callAI("google/gemini-3-flash-preview", [
             { role: "system", content: QUESTIONS_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!questionsResponse.ok) {
         const errText = await questionsResponse.text();
