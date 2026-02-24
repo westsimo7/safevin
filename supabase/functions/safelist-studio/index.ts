@@ -456,9 +456,9 @@ serve(async (req) => {
 
         // Auto-refinement: if score_estimate < 75, refine once
         if (parsed.score_estimate && parsed.score_estimate < 75) {
-          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining (gpt-4o)...`);
+          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining (gpt-5)...`);
           try {
-            const refineResponse = await callAI("gpt-4o", [
+            const refineResponse = await callAI("gpt-5", [
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
