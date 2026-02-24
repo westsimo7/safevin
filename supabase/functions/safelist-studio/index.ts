@@ -484,20 +484,12 @@ serve(async (req) => {
         if (parsed.score_estimate && parsed.score_estimate < 75) {
           console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining...`);
           try {
-            const refineResponse = await fetch(apiUrl, {
-              method: "POST",
-              headers: apiHeaders,
-              body: JSON.stringify({
-                model: "openai/gpt-5.2",
-                messages: [
+            const refineResponse = await callAI("openai/gpt-5.2", [
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
                   { role: "user", content: "Il SafeScore stimato è troppo basso. Raffina l'annuncio: aggiungi micro CTA, migliora leve persuasive, riduci genericità, migliora struttura frasi, inserisci parole ad alta intenzione d'acquisto, migliora chiarezza misure. Target: 80-85+. Restituisci lo stesso formato JSON completo." },
-                ],
-                stream: false,
-              }),
-            });
+                ]);
 
             if (refineResponse.ok) {
               const refineData = await refineResponse.json();
