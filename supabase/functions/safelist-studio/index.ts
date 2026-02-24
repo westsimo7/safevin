@@ -708,18 +708,10 @@ TIPS: ${(generatedOutput.tips || []).join("; ")}
 Categoria prodotto: ${categoria || "non specificata"}
 Vision report disponibile: ${visionReport ? "sì" : "no"}`;
 
-      const auditResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
+      const auditResponse = await callAI("google/gemini-2.5-flash", [
             { role: "system", content: AUDIT_INTERNAL_PROMPT },
             { role: "user", content: auditContext },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!auditResponse.ok) {
         const errText = await auditResponse.text();

@@ -348,18 +348,10 @@ REGOLE:
 
     userMessage += `\n\nGenera punteggi realistici variabili (non tutti uguali) e consigli personalizzati per QUESTO specifico annuncio.`;
 
-    const gptResponse = await fetch(apiUrl, {
-      method: "POST",
-      headers: apiHeaders,
-      body: JSON.stringify({
-        model: "openai/gpt-5.2",
-        messages: [
+    const gptResponse = await callAI("openai/gpt-5.2", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
-        ],
-        stream: false,
-      }),
-    });
+        ]);
 
     if (!gptResponse.ok) {
       const errorText = await gptResponse.text();
