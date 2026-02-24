@@ -390,7 +390,7 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
         onChange={handleNewPhotosAdded}
       />
 
-      {!["vision-loading", "generating", "output", "category"].includes(step) && (
+      {!["vision-loading", "generating", "validating", "output", "category", "missing-data"].includes(step) && (
         <Button
           variant="ghost"
           className="mb-6 text-muted-foreground hover:text-foreground"
