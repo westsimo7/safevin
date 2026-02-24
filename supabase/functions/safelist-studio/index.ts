@@ -354,7 +354,7 @@ serve(async (req) => {
 
     // ========== ACTION: QUESTIONS ==========
     if (action === "questions") {
-      console.log("Generating dynamic questions (gpt-4o-mini)...");
+      console.log("Generating dynamic questions (gpt-5)...");
 
       let contextMessage = `Categoria: ${categoria || "non specificata"}\n`;
       
@@ -372,7 +372,7 @@ serve(async (req) => {
         contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
-      const questionsResponse = await callAI("gpt-4o-mini", [
+      const questionsResponse = await callAI("gpt-5", [
             { role: "system", content: QUESTIONS_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
