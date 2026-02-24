@@ -204,7 +204,7 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Nessuna immagine fornita." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      console.log(`Image-only analysis: ${imageDataUrls.length} images (OpenAI Vision)`);
+      console.log(`Image-only analysis: ${imageDataUrls.length} images (gpt-5)`);
 
       const imageContents = imageDataUrls.map((dataUrl: string) => ({
         type: "image_url" as const,
@@ -235,7 +235,7 @@ REGOLE:
 - Max 4 problemi e 4 soluzioni per foto
 - Rispondi SOLO JSON valido`;
 
-      const response = await callAI("gpt-4o", [
+      const response = await callAI("gpt-5", [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
               { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio marketplace. Report individuale per ogni foto.` },
