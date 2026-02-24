@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import StudioFlow from "@/components/studio/StudioFlow";
