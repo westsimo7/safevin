@@ -449,18 +449,10 @@ serve(async (req) => {
         }
       }
 
-      const generateResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "openai/gpt-5.2",
-          messages: [
+      const generateResponse = await callAI("openai/gpt-5.2", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!generateResponse.ok) {
         const errText = await generateResponse.text();
