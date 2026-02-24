@@ -356,18 +356,10 @@ serve(async (req) => {
       let finalReport = reports[0];
       if (reports.length > 1) {
         console.log(`Synthesizing ${reports.length} vision passes...`);
-        const synthesisResponse = await fetch(apiUrl, {
-          method: "POST",
-          headers: apiHeaders,
-          body: JSON.stringify({
-            model: "google/gemini-2.5-flash",
-            messages: [
+        const synthesisResponse = await callAI("google/gemini-2.5-flash", [
               { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
               { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
-            ],
-            stream: false,
-          }),
-        });
+            ]);
 
         if (synthesisResponse.ok) {
           const synthesisData = await synthesisResponse.json();
