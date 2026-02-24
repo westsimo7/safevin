@@ -5,7 +5,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Copy, Check, PenTool, Euro, Lightbulb, Type, FileText, List, FolderOpen, Sparkles } from "lucide-react";
+import { ArrowLeft, Copy, Check, PenTool, Euro, Lightbulb, Type, FileText, FolderOpen, Sparkles } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import TrustConversionSection from "@/components/studio/TrustConversionSection";
 import KeywordIntelligence from "@/components/studio/KeywordIntelligence";
@@ -82,6 +82,7 @@ const StudioDetail = () => {
   }
 
   const output = record.output;
+  const outputContext = `Titolo: ${output.titolo || ""}. Categoria: ${output.category_suggestion || record.categoria}. Descrizione: ${(output.descrizione || "").slice(0, 200)}`;
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,7 +129,7 @@ const StudioDetail = () => {
             </CardContent>
           </Card>
 
-          {/* Descrizione + Dettagli tecnici (blocco unico) */}
+          {/* Descrizione + Dettagli tecnici */}
           <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-3">
@@ -184,8 +185,8 @@ const StudioDetail = () => {
             </Card>
           )}
 
-          {/* Categoria consigliata */}
-          {(output.category_suggestion || output.subcategory_suggestion) && (
+          {/* Categoria consigliata intelligente */}
+          {output.category_suggestion && (
             <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
               <CardContent className="p-5">
                 <div className="flex items-center gap-3 mb-3">
@@ -195,11 +196,14 @@ const StudioDetail = () => {
                   <h3 className="text-base font-bold tracking-tight">Categoria consigliata</h3>
                 </div>
                 <div className="border-t border-primary/10 pt-3">
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-semibold mb-1">
                     {output.category_suggestion}
-                    {output.subcategory_suggestion && <span className="text-muted-foreground"> → </span>}
-                    {output.subcategory_suggestion}
                   </p>
+                  {output.category_reasoning && (
+                    <p className="text-xs text-muted-foreground leading-relaxed mt-2">
+                      {output.category_reasoning}
+                    </p>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -207,9 +211,9 @@ const StudioDetail = () => {
 
           {/* Keyword Intelligence */}
           {output.keywordIntelligence ? (
-            <KeywordIntelligence data={output.keywordIntelligence} legacyHashtags={output.hashtags} />
+            <KeywordIntelligence data={output.keywordIntelligence} legacyHashtags={output.hashtags} outputContext={outputContext} />
           ) : output.hashtags?.length > 0 ? (
-            <KeywordIntelligence data={{}} legacyHashtags={output.hashtags} />
+            <KeywordIntelligence data={{}} legacyHashtags={output.hashtags} outputContext={outputContext} />
           ) : null}
 
           {/* Trust & Conversion */}
