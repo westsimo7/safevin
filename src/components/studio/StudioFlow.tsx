@@ -72,6 +72,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
   const [conversationHistory, setConversationHistory] = useState<QuestionAnswer[]>([]);
   const [outputData, setOutputData] = useState<StudioOutputData | null>(null);
   const [missingAngles, setMissingAngles] = useState<string[]>([]);
+  const [missingFields, setMissingFields] = useState<{ field: string; reason: string; question: string }[]>([]);
+  const [missingAnswers, setMissingAnswers] = useState<Record<string, string>>({});
   const photoInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
