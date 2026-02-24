@@ -296,7 +296,7 @@ serve(async (req) => {
       const reports: string[] = [];
 
       for (let pass = 0; pass < NUM_PASSES; pass++) {
-        console.log(`Vision pass ${pass + 1}/${NUM_PASSES} (gpt-4o)...`);
+        console.log(`Vision pass ${pass + 1}/${NUM_PASSES} (gpt-5)...`);
         const visionMessages = [
           { role: "system", content: VISION_PROMPT },
           {
