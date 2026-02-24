@@ -360,6 +360,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
     setConversationHistory([]);
     setOutputData(null);
     setMissingAngles([]);
+    setMissingFields([]);
+    setMissingAnswers({});
   };
 
   const getBackAction = () => {
