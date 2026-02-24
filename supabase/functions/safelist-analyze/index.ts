@@ -138,7 +138,6 @@ async function callOpenAI(params: {
         model: params.model,
         messages: params.messages,
         stream: false,
-        response_format: { type: "json_object" },
         max_completion_tokens: params.maxCompletionTokens,
       }),
     });
@@ -149,9 +148,28 @@ async function callOpenAI(params: {
     }
 
     const data = await response.json();
-    const content = data?.choices?.[0]?.message?.content;
-    if (!content) {
-      throw new AIRequestError("AI returned empty content", { status: 500 });
+    const message = data?.choices?.[0]?.message;
+    const rawContent = message?.content;
+
+    const content = Array.isArray(rawContent)
+      ? rawContent
+          .map((part: unknown) => {
+            if (typeof part === "string") return part;
+            if (part && typeof part === "object" && "text" in part) {
+              return String((part as { text?: unknown }).text ?? "");
+            }
+            return "";
+          })
+          .join("")
+      : rawContent;
+
+    if (!content || (typeof content === "string" && !content.trim())) {
+      const refusal = typeof message?.refusal === "string" ? message.refusal : "";
+      const finishReason = data?.choices?.[0]?.finish_reason;
+      throw new AIRequestError("AI returned empty content", {
+        status: 500,
+        body: JSON.stringify({ refusal, finishReason }).slice(0, 1000),
+      });
     }
 
     return parseJsonFromContent(content);
@@ -281,6 +299,39 @@ const normalizeAudit = (raw: unknown) => {
   };
 };
 
+const buildFallbackPhotoReports = (count: number) =>
+  Array.from({ length: Math.max(1, count) }, (_, idx) => ({
+    photoIndex: idx + 1,
+    score: 4,
+    problems: ["Analisi automatica non completata in tempo utile."],
+    solutions: ["Riprova con foto più nitide e luce naturale uniforme."],
+  }));
+
+const buildFallbackAudit = (listing: Record<string, unknown>, imageCount: number) => {
+  const hasTitle = toString(listing.titolo).length > 0;
+  const hasDescription = toString(listing.descrizione).length > 0;
+
+  const baseScore = clamp((hasTitle ? 2 : 0) + (hasDescription ? 2 : 0) + (imageCount > 0 ? 2 : 0), 2, 7);
+  const sections = SECTION_TITLES.map((title, index) => ({
+    title,
+    score: clamp(baseScore + (index % 2 === 0 ? 0 : 1), 1, 8),
+    conversionProbability: clamp((baseScore + (index % 2 === 0 ? 0 : 1)) * 10, 5, 75),
+    impersonation: "Ho rilevato dati sufficienti per un audit preliminare, ma il calcolo avanzato non si è completato.",
+    scoreBreakdown: "• Analisi AI incompleta: risultato sintetico di continuità per evitare blocchi operativi.",
+    advice: imageCount === 0
+      ? "Aggiungi foto chiare (fronte, retro, dettagli, etichette) per ottenere un audit completo e più preciso."
+      : "Mantieni dati titolo/descrizione coerenti e ripeti audit per ottenere punteggi completi e consigli dettagliati.",
+  }));
+
+  const overallScore = Math.round((sections.reduce((sum, s) => sum + s.score, 0) / (SECTION_TITLES.length * 10)) * 100);
+
+  return {
+    overallScore,
+    sections,
+    summary: "Analisi avanzata non disponibile in questo tentativo: ti mostro un report di continuità per non interrompere il flusso. Riprova tra pochi secondi per il report completo GPT-5.",
+  };
+};
+
 const buildListingText = (listing: Record<string, unknown>, imageCount: number) => {
   return [
     `TITOLO: ${toString(listing.titolo, "(non inserito)")}`,
@@ -337,16 +388,26 @@ serve(async (req) => {
         },
       ];
 
-      const aiRaw = await callOpenAIWithFallback({
-        apiKey: OPENAI_API_KEY,
-        messages,
-        maxCompletionTokens: 1400,
-        primaryTimeoutMs: 35000,
-        fallbackTimeoutMs: 25000,
-      });
+      let photoReports;
+      try {
+        const aiRaw = await callOpenAIWithFallback({
+          apiKey: OPENAI_API_KEY,
+          messages,
+          maxCompletionTokens: 2200,
+          primaryTimeoutMs: 40000,
+          fallbackTimeoutMs: 28000,
+        });
+        photoReports = normalizePhotoReports(aiRaw, imageDataUrls.length);
+      } catch (error) {
+        if (error instanceof AIRequestError && (error.status === 429 || error.status === 402 || error.status === 400)) {
+          throw error;
+        }
+        console.error("Image analysis fallback activated:", error);
+        photoReports = buildFallbackPhotoReports(imageDataUrls.length);
+      }
 
       return new Response(
-        JSON.stringify({ photoReports: normalizePhotoReports(aiRaw, imageDataUrls.length) }),
+        JSON.stringify({ photoReports }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
@@ -377,15 +438,23 @@ serve(async (req) => {
       { role: "user" as const, content: userContent },
     ];
 
-    const aiRaw = await callOpenAIWithFallback({
-      apiKey: OPENAI_API_KEY,
-      messages,
-      maxCompletionTokens: 2200,
-      primaryTimeoutMs: 50000,
-      fallbackTimeoutMs: 30000,
-    });
-
-    const analysis = normalizeAudit(aiRaw);
+    let analysis;
+    try {
+      const aiRaw = await callOpenAIWithFallback({
+        apiKey: OPENAI_API_KEY,
+        messages,
+        maxCompletionTokens: 4200,
+        primaryTimeoutMs: 55000,
+        fallbackTimeoutMs: 35000,
+      });
+      analysis = normalizeAudit(aiRaw);
+    } catch (error) {
+      if (error instanceof AIRequestError && (error.status === 429 || error.status === 402 || error.status === 400)) {
+        throw error;
+      }
+      console.error("Full audit fallback activated:", error);
+      analysis = buildFallbackAudit(listing, imageDataUrls.length);
+    }
 
     return new Response(JSON.stringify({ analysis }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
