@@ -174,25 +174,16 @@ serve(async (req) => {
     const body = await req.json();
     const { listing, images: imageDataUrls, imageOnly } = body;
     
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
-    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
-      console.error("No AI API key configured");
+    if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY not configured");
       return new Response(
-        JSON.stringify({ error: "AI service not configured." }),
+        JSON.stringify({ error: "OpenAI API key not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Lovable AI gateway for Google models
-    const lovableApiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const lovableHeaders = {
-      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-      "Content-Type": "application/json",
-    };
-
-    // Direct OpenAI API for GPT models  
     const openaiApiUrl = "https://api.openai.com/v1/chat/completions";
     const openaiHeaders = {
       "Authorization": `Bearer ${OPENAI_API_KEY}`,
@@ -200,15 +191,10 @@ serve(async (req) => {
     };
 
     const callAI = async (model: string, messages: any[], extraParams: any = {}) => {
-      const isOpenAI = model.startsWith("openai/") && OPENAI_API_KEY;
-      const url = isOpenAI ? openaiApiUrl : lovableApiUrl;
-      const headers = isOpenAI ? openaiHeaders : lovableHeaders;
-      const actualModel = isOpenAI ? model.replace("openai/", "") : model;
-      
-      return fetch(url, {
+      return fetch(openaiApiUrl, {
         method: "POST",
-        headers,
-        body: JSON.stringify({ model: actualModel, messages, stream: false, ...extraParams }),
+        headers: openaiHeaders,
+        body: JSON.stringify({ model, messages, stream: false, ...extraParams }),
       });
     };
 
@@ -218,7 +204,7 @@ serve(async (req) => {
         return new Response(JSON.stringify({ error: "Nessuna immagine fornita." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
 
-      console.log(`Image-only analysis: ${imageDataUrls.length} images`);
+      console.log(`Image-only analysis: ${imageDataUrls.length} images (OpenAI Vision)`);
 
       const imageContents = imageDataUrls.map((dataUrl: string) => ({
         type: "image_url" as const,
@@ -249,7 +235,7 @@ REGOLE:
 - Max 4 problemi e 4 soluzioni per foto
 - Rispondi SOLO JSON valido`;
 
-      const response = await callAI("google/gemini-2.5-flash", [
+      const response = await callAI("gpt-4o", [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
               { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio marketplace. Report individuale per ogni foto.` },
@@ -284,13 +270,11 @@ REGOLE:
       );
     }
 
-    // apiUrl and apiHeaders already declared above
-
-    // ========== PHASE 1: VISION ANALYSIS (if images provided) ==========
+    // ========== PHASE 1: VISION ANALYSIS with OpenAI Vision ==========
     let visionReport: string | null = null;
 
     if (imageDataUrls && imageDataUrls.length > 0) {
-      console.log(`Phase 1: Analyzing ${imageDataUrls.length} images with Vision...`);
+      console.log(`Phase 1: Analyzing ${imageDataUrls.length} images with OpenAI Vision (gpt-4o)...`);
 
       const imageContents = imageDataUrls.map((dataUrl: string) => ({
         type: "image_url" as const,
@@ -309,12 +293,12 @@ REGOLE:
       ];
 
       try {
-        const visionResponse = await callAI("google/gemini-2.5-flash", visionMessages);
+        const visionResponse = await callAI("gpt-4o", visionMessages);
 
         if (visionResponse.ok) {
           const visionData = await visionResponse.json();
           visionReport = visionData.choices?.[0]?.message?.content || null;
-          console.log("Vision analysis complete");
+          console.log("Vision analysis complete (OpenAI)");
         } else {
           const errText = await visionResponse.text();
           console.error("Vision API error:", visionResponse.status, errText);
@@ -324,8 +308,8 @@ REGOLE:
       }
     }
 
-    // ========== PHASE 2: GPT-5.2 ANALYSIS ==========
-    console.log("Phase 2: GPT-5.2 unified analysis...");
+    // ========== PHASE 2: GPT ANALYSIS ==========
+    console.log("Phase 2: GPT analysis...");
 
     let userMessage = `Analizza questo annuncio Vinted:\n\n`;
     userMessage += `TITOLO: ${listing.titolo || "(non inserito)"}\n`;
@@ -348,7 +332,7 @@ REGOLE:
 
     userMessage += `\n\nGenera punteggi realistici variabili (non tutti uguali) e consigli personalizzati per QUESTO specifico annuncio.`;
 
-    const gptResponse = await callAI("openai/gpt-5.2", [
+    const gptResponse = await callAI("gpt-4o", [
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userMessage },
         ]);
@@ -361,12 +345,6 @@ REGOLE:
         return new Response(
           JSON.stringify({ error: "Troppo traffico. Riprova tra qualche secondo." }),
           { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
-      }
-      if (gptResponse.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "Crediti esauriti." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
       

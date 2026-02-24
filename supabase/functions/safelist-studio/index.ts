@@ -253,42 +253,26 @@ serve(async (req) => {
     const body = await req.json();
     const { action, categoria, images, visionReport, questionsAnswers, conversationHistory } = body;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
     
-    if (!LOVABLE_API_KEY && !OPENAI_API_KEY) {
+    if (!OPENAI_API_KEY) {
       return new Response(
-        JSON.stringify({ error: "AI service not configured." }),
+        JSON.stringify({ error: "OpenAI API key not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Lovable AI gateway for Google models
-    const lovableApiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const lovableHeaders = {
-      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-      "Content-Type": "application/json",
-    };
-
-    // Direct OpenAI API for GPT models
     const openaiApiUrl = "https://api.openai.com/v1/chat/completions";
     const openaiHeaders = {
       "Authorization": `Bearer ${OPENAI_API_KEY}`,
       "Content-Type": "application/json",
     };
 
-    // Helper: route request to correct API based on model
     const callAI = async (model: string, messages: any[], extraParams: any = {}) => {
-      const isOpenAI = model.startsWith("openai/") && OPENAI_API_KEY;
-      const url = isOpenAI ? openaiApiUrl : lovableApiUrl;
-      const headers = isOpenAI ? openaiHeaders : lovableHeaders;
-      // Strip prefix for direct OpenAI calls
-      const actualModel = isOpenAI ? model.replace("openai/", "") : model;
-      
-      return fetch(url, {
+      return fetch(openaiApiUrl, {
         method: "POST",
-        headers,
-        body: JSON.stringify({ model: actualModel, messages, stream: false, ...extraParams }),
+        headers: openaiHeaders,
+        body: JSON.stringify({ model, messages, stream: false, ...extraParams }),
       });
     };
 
@@ -301,7 +285,7 @@ serve(async (req) => {
         );
       }
 
-      console.log(`Vision: Analyzing ${images.length} images with multi-pass verification...`);
+      console.log(`Vision: Analyzing ${images.length} images with OpenAI Vision (multi-pass)...`);
 
       const imageContents = images.map((dataUrl: string) => ({
         type: "image_url" as const,
@@ -312,7 +296,7 @@ serve(async (req) => {
       const reports: string[] = [];
 
       for (let pass = 0; pass < NUM_PASSES; pass++) {
-        console.log(`Vision pass ${pass + 1}/${NUM_PASSES}...`);
+        console.log(`Vision pass ${pass + 1}/${NUM_PASSES} (gpt-4o)...`);
         const visionMessages = [
           { role: "system", content: VISION_PROMPT },
           {
@@ -324,7 +308,7 @@ serve(async (req) => {
           },
         ];
 
-        const visionResponse = await callAI("google/gemini-2.5-flash", visionMessages);
+        const visionResponse = await callAI("gpt-4o", visionMessages);
 
         if (!visionResponse.ok) {
           const errText = await visionResponse.text();
@@ -332,11 +316,6 @@ serve(async (req) => {
           if (visionResponse.status === 429) {
             return new Response(JSON.stringify({ error: "Troppi richieste. Riprova tra qualche istante." }), {
               status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-            });
-          }
-          if (visionResponse.status === 402) {
-            return new Response(JSON.stringify({ error: "Crediti AI esauriti." }), {
-              status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
           }
           continue;
@@ -355,8 +334,8 @@ serve(async (req) => {
 
       let finalReport = reports[0];
       if (reports.length > 1) {
-        console.log(`Synthesizing ${reports.length} vision passes...`);
-        const synthesisResponse = await callAI("google/gemini-2.5-flash", [
+        console.log(`Synthesizing ${reports.length} vision passes (gpt-4o)...`);
+        const synthesisResponse = await callAI("gpt-4o", [
               { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
               { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
             ]);
@@ -375,7 +354,7 @@ serve(async (req) => {
 
     // ========== ACTION: QUESTIONS ==========
     if (action === "questions") {
-      console.log("Generating dynamic questions...");
+      console.log("Generating dynamic questions (gpt-4o-mini)...");
 
       let contextMessage = `Categoria: ${categoria || "non specificata"}\n`;
       
@@ -393,7 +372,7 @@ serve(async (req) => {
         contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
-      const questionsResponse = await callAI("google/gemini-3-flash-preview", [
+      const questionsResponse = await callAI("gpt-4o-mini", [
             { role: "system", content: QUESTIONS_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -433,7 +412,7 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE ==========
     if (action === "generate") {
-      console.log("Generating final output...");
+      console.log("Generating final output (gpt-4o)...");
 
       let contextMessage = `Genera l'annuncio Vinted perfetto basandoti su queste informazioni:\n\n`;
       contextMessage += `Categoria: ${categoria || "non specificata"}\n`;
@@ -449,7 +428,7 @@ serve(async (req) => {
         }
       }
 
-      const generateResponse = await callAI("openai/gpt-5.2", [
+      const generateResponse = await callAI("gpt-4o", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -460,11 +439,6 @@ serve(async (req) => {
         if (generateResponse.status === 429) {
           return new Response(JSON.stringify({ error: "Troppi richieste. Riprova tra qualche istante." }), {
             status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
-          });
-        }
-        if (generateResponse.status === 402) {
-          return new Response(JSON.stringify({ error: "Crediti AI esauriti." }), {
-            status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
         }
         return new Response(JSON.stringify({ error: "Errore generazione annuncio." }), {
@@ -482,9 +456,9 @@ serve(async (req) => {
 
         // Auto-refinement: if score_estimate < 75, refine once
         if (parsed.score_estimate && parsed.score_estimate < 75) {
-          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining...`);
+          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining (gpt-4o)...`);
           try {
-            const refineResponse = await callAI("openai/gpt-5.2", [
+            const refineResponse = await callAI("gpt-4o", [
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
@@ -522,11 +496,11 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE_KEYWORD_TEXT ==========
     if (action === "generate_keyword_text") {
-      console.log("Generating keyword text variant...");
+      console.log("Generating keyword text variant (gpt-4o-mini)...");
 
       const { keywordBlock, outputContext } = body;
 
-      const response = await callAI("google/gemini-2.5-flash-lite", [
+      const response = await callAI("gpt-4o-mini", [
             {
               role: "system",
               content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
@@ -555,7 +529,7 @@ serve(async (req) => {
 
     // ========== ACTION: IMPROVE (Audit → Studio bridge) ==========
     if (action === "improve") {
-      console.log("Generating improved listing from audit data...");
+      console.log("Generating improved listing from audit data (gpt-4o)...");
 
       const { auditSections, listingData: ld, gapAnswers } = body;
 
@@ -589,7 +563,7 @@ serve(async (req) => {
 
       contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
-      const generateResponse = await callAI("openai/gpt-5.2", [
+      const generateResponse = await callAI("gpt-4o", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -617,7 +591,7 @@ serve(async (req) => {
 
     // ========== ACTION: GAP_QUESTIONS (Audit → Studio bridge) ==========
     if (action === "gap_questions") {
-      console.log("Generating gap-based questions from audit...");
+      console.log("Generating gap-based questions from audit (gpt-4o-mini)...");
 
       const { auditSections: auditSecs, listingData: ld2 } = body;
 
@@ -647,7 +621,7 @@ serve(async (req) => {
         ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
       }
 
-      const gapResponse = await callAI("google/gemini-3-flash-preview", [
+      const gapResponse = await callAI("gpt-4o-mini", [
             { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
             { role: "user", content: ctxMsg },
           ]);
@@ -674,7 +648,7 @@ serve(async (req) => {
 
     // ========== ACTION: AUDIT_INTERNAL (Studio → Audit validation) ==========
     if (action === "audit_internal") {
-      console.log("Running internal audit on generated ad...");
+      console.log("Running internal audit (gpt-4o)...");
 
       const { generatedOutput } = body;
 
@@ -708,7 +682,7 @@ TIPS: ${(generatedOutput.tips || []).join("; ")}
 Categoria prodotto: ${categoria || "non specificata"}
 Vision report disponibile: ${visionReport ? "sì" : "no"}`;
 
-      const auditResponse = await callAI("google/gemini-2.5-flash", [
+      const auditResponse = await callAI("gpt-4o", [
             { role: "system", content: AUDIT_INTERNAL_PROMPT },
             { role: "user", content: auditContext },
           ]);
@@ -733,7 +707,6 @@ Vision report disponibile: ${visionReport ? "sì" : "no"}`;
         });
       } catch {
         console.error("Failed to parse audit JSON:", auditContent);
-        // If parse fails, assume passed to not block user
         return new Response(JSON.stringify({ totalScore: 70, passed: true, categories: [], missingFields: [] }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
