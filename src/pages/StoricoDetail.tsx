@@ -8,15 +8,13 @@ import AnalysisSummary from "@/components/AnalysisSummary";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, TrendingUp, Image as ImageIcon, Camera, Sparkles, CheckCircle, AlertTriangle, Wand2 } from "lucide-react";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-  Dialog, DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
+// AnalysisRecord interface
 interface AnalysisRecord {
   id: string;
   titolo: string;
@@ -59,9 +57,10 @@ const StoricoDetail = () => {
     fetchAnalysis();
   }, [id]);
 
-  const getOverallScoreColor = (score: number) => {
-    if (score >= 70) return "text-green-500";
-    if (score >= 40) return "text-yellow-500";
+  const getScoreColor = (score: number, max: number) => {
+    const pct = max > 0 ? (score / max) * 100 : 0;
+    if (pct >= 70) return "text-green-500";
+    if (pct >= 40) return "text-yellow-500";
     return "text-red-500";
   };
 
@@ -100,17 +99,20 @@ const StoricoDetail = () => {
   const result = analysis.analysis_result;
   const isImageOnly = (analysis.analysis_type || "full") === "image_only";
 
-  // Image analysis: score = number of images (from title) * 10
-  const getImageScore = () => {
-    const match = analysis.titolo?.match(/(\d+)/);
-    const numImages = match ? parseInt(match[1]) : 1;
-    return Math.min(numImages * 10, 100);
+  // Dynamic SafeScore for image analysis: sum of scores / (numImages * 10)
+  const getImageSafeScore = () => {
+    const photoReports = result?.photoReports || [];
+    const numImages = photoReports.length || 1;
+    const totalScore = photoReports.reduce((sum: number, r: any) => sum + (r.score || 0), 0);
+    const maxScore = numImages * 10;
+    return { score: totalScore, max: maxScore };
   };
 
   // ─── IMAGE ONLY DETAIL ───
   if (isImageOnly) {
     const photoReports = result?.photoReports || [];
-    const imageScore = getImageScore();
+    const { score: imageScore, max: imageMax } = getImageSafeScore();
+    const pct = imageMax > 0 ? Math.round((imageScore / imageMax) * 100) : 0;
 
     return (
       <div className="min-h-screen bg-background">
@@ -140,9 +142,10 @@ const StoricoDetail = () => {
                 <div className="text-center">
                   <p className="text-xs text-muted-foreground mb-1">SafeViN Score</p>
                   <div className="flex items-center gap-2">
-                    <span className={`text-4xl font-black ${getOverallScoreColor(imageScore)}`}>{imageScore}</span>
-                    <span className="text-lg text-muted-foreground">/100</span>
+                    <span className={`text-4xl font-black ${getScoreColor(imageScore, imageMax)}`}>{imageScore}</span>
+                    <span className="text-lg text-muted-foreground">/ {imageMax}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground">{pct}% del potenziale</p>
                 </div>
               </div>
             </CardContent>
@@ -157,14 +160,12 @@ const StoricoDetail = () => {
                   Immagini analizzate
                 </h2>
                 <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                  {analysis.first_image_url && (
-                    <div
-                      className="aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer hover:border-primary/50 transition-colors"
-                      onClick={() => setPreviewImage(analysis.first_image_url)}
-                    >
-                      <img src={analysis.first_image_url} alt="Foto 1" className="w-full h-full object-cover" />
-                    </div>
-                  )}
+                  <div
+                    className="aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer hover:border-primary/50 transition-colors"
+                    onClick={() => setPreviewImage(analysis.first_image_url)}
+                  >
+                    <img src={analysis.first_image_url} alt="Foto 1" className="w-full h-full object-cover" />
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -234,7 +235,6 @@ const StoricoDetail = () => {
             Torna allo Storico
           </Button>
 
-          {/* Image preview dialog */}
           <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
             <DialogContent className="max-w-2xl p-2 bg-card border-border">
               {previewImage && <img src={previewImage} alt="Preview" className="w-full rounded-lg" />}
@@ -270,7 +270,6 @@ const StoricoDetail = () => {
           Torna allo Storico
         </Button>
 
-        {/* Original Input Data */}
         <Card className="border-border/50 mb-8">
           <CardContent className="py-6">
             <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
@@ -304,7 +303,6 @@ const StoricoDetail = () => {
           </CardContent>
         </Card>
 
-        {/* Analysis Results */}
         {result && (
           <div className="space-y-8">
             <Card className="border-border/50 bg-gradient-to-br from-card to-card/50">
@@ -313,7 +311,7 @@ const StoricoDetail = () => {
                   <div>
                     <p className="text-sm text-muted-foreground mb-1">SafeScore™ Globale</p>
                     <div className="flex items-center gap-4">
-                      <span className={`text-6xl font-black ${getOverallScoreColor(totalScore)}`}>{totalScore}</span>
+                      <span className={`text-6xl font-black ${getScoreColor(totalScore, 100)}`}>{totalScore}</span>
                       <span className="text-2xl text-muted-foreground">/100</span>
                     </div>
                   </div>
@@ -343,7 +341,6 @@ const StoricoDetail = () => {
 
             {result.summary && <AnalysisSummary summary={result.summary} />}
 
-            {/* CTA Migliora con Studio */}
             <Button
               variant="neon"
               size="lg"

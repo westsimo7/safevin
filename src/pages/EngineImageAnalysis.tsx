@@ -1,18 +1,15 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
+import SmartLoader from "@/components/SmartLoader";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Camera, ImagePlus, X, Sparkles, CheckCircle, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import AnalysisLoader from "@/components/AnalysisLoader";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
+  Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
 
 const MAX_IMAGES = 15;
@@ -60,6 +57,13 @@ const EngineImageAnalysis = () => {
     setPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Dynamic SafeScore
+  const getImageSafeScore = (reports: PhotoReport[]) => {
+    const totalScore = reports.reduce((sum, r) => sum + r.score, 0);
+    const maxScore = reports.length * 10;
+    return { score: totalScore, max: maxScore };
+  };
+
   const handleAnalyze = async () => {
     if (images.length === 0) {
       toast({ title: "Nessuna foto", description: "Carica almeno un'immagine.", variant: "destructive" });
@@ -85,7 +89,6 @@ const EngineImageAnalysis = () => {
       if (data?.photoReports) {
         setReport(data.photoReports);
 
-        // Save to DB
         let firstImageUrl: string | null = null;
         const file = images[0];
         const fileName = `img-${Date.now()}-${file.name}`;
@@ -114,6 +117,13 @@ const EngineImageAnalysis = () => {
     if (score >= 7) return <CheckCircle className="w-4 h-4 text-green-500" />;
     if (score >= 4) return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
     return <AlertTriangle className="w-4 h-4 text-red-500" />;
+  };
+
+  const getScoreColor = (score: number, max: number) => {
+    const pct = (score / max) * 100;
+    if (pct >= 70) return "text-green-500";
+    if (pct >= 40) return "text-yellow-500";
+    return "text-red-500";
   };
 
   return (
@@ -191,81 +201,108 @@ const EngineImageAnalysis = () => {
         )}
 
         {isLoading && (
-          <Card className="border-border/50">
-            <AnalysisLoader isLoading={isLoading} />
-          </Card>
+          <SmartLoader
+            title="Analisi immagini in corso..."
+            messages={[
+              "Analizzando qualità visiva…",
+              "Rilevando dettagli critici…",
+              "Valutazione illuminazione e composizione…",
+              "Verifica coerenza visiva del prodotto…",
+              "Ottimizzando suggerimenti…",
+            ]}
+          />
         )}
 
-        {report && !isLoading && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="text-center mb-6">
-              <Badge className="bg-green-500/10 text-green-500 border-green-500/30 mb-3">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Analisi completata
-              </Badge>
-              <h2 className="text-2xl font-bold">Report fotografico</h2>
-              <p className="text-sm text-muted-foreground">{report.length} foto analizzate</p>
-            </div>
+        {report && !isLoading && (() => {
+          const { score, max } = getImageSafeScore(report);
+          const pct = Math.round((score / max) * 100);
+          return (
+            <div className="space-y-6 animate-fade-in">
+              <div className="text-center mb-6">
+                <Badge className="bg-green-500/10 text-green-500 border-green-500/30 mb-3">
+                  <Sparkles className="w-3 h-3 mr-1" />
+                  Analisi completata
+                </Badge>
+                <h2 className="text-2xl font-bold">Report fotografico</h2>
+                <p className="text-sm text-muted-foreground">{report.length} foto analizzate</p>
+              </div>
 
-            <Accordion type="multiple" defaultValue={report.map((_, i) => `photo-${i}`)} className="space-y-3">
-              {report.map((photo, i) => (
-                <AccordionItem key={i} value={`photo-${i}`} className="border border-border/50 rounded-xl overflow-hidden bg-card/50">
-                  <AccordionTrigger className="px-5 py-4 hover:no-underline">
-                    <div className="flex items-center gap-3 text-left">
-                      {previews[i] && (
-                        <img src={previews[i]} alt="" className="w-10 h-10 rounded-lg object-cover" />
-                      )}
-                      <div className="flex-1">
-                        <span className="font-semibold text-sm">Foto {photo.photoIndex}</span>
+              {/* Dynamic SafeScore */}
+              <Card className="border-border/50 bg-gradient-to-br from-card to-card/50">
+                <CardContent className="py-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">SafeViN Score</p>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-4xl font-black ${getScoreColor(score, max)}`}>{score}</span>
+                        <span className="text-lg text-muted-foreground">/ {max}</span>
                       </div>
-                      {getScoreIcon(photo.score)}
-                      <span className="text-sm font-bold">{photo.score}/10</span>
+                      <p className="text-xs text-muted-foreground mt-1">{pct}% del potenziale</p>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-5 pb-5">
-                    <div className="space-y-4">
-                      {photo.problems.length > 0 && (
-                        <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
-                          <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-2">Problemi</p>
-                          <ul className="space-y-1.5">
-                            {photo.problems.map((p, j) => (
-                              <li key={j} className="flex items-start gap-2 text-sm text-foreground/80">
-                                <span className="text-red-400 mt-0.5">•</span>
-                                <span>{p}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      {photo.solutions.length > 0 && (
-                        <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
-                          <p className="text-xs font-semibold text-green-500 uppercase tracking-wider mb-2">Come risolvere</p>
-                          <ul className="space-y-1.5">
-                            {photo.solutions.map((s, j) => (
-                              <li key={j} className="flex items-start gap-2 text-sm text-foreground/80">
-                                <span className="text-green-500 mt-0.5">✓</span>
-                                <span>{s}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+                  </div>
+                </CardContent>
+              </Card>
 
-            <div className="flex flex-col gap-3 pt-4">
-              <Button variant="neon" size="lg" className="w-full" onClick={() => { setReport(null); setImages([]); setPreviews([]); }}>
-                Nuova analisi immagini
-              </Button>
-              <Button variant="glass" className="w-full" onClick={() => navigate("/engine")}>
-                Torna a Engine
-              </Button>
+              <Accordion type="multiple" defaultValue={report.map((_, i) => `photo-${i}`)} className="space-y-3">
+                {report.map((photo, i) => (
+                  <AccordionItem key={i} value={`photo-${i}`} className="border border-border/50 rounded-xl overflow-hidden bg-card/50">
+                    <AccordionTrigger className="px-5 py-4 hover:no-underline">
+                      <div className="flex items-center gap-3 text-left">
+                        {previews[i] && (
+                          <img src={previews[i]} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                        )}
+                        <div className="flex-1">
+                          <span className="font-semibold text-sm">Foto {photo.photoIndex}</span>
+                        </div>
+                        {getScoreIcon(photo.score)}
+                        <span className="text-sm font-bold">{photo.score}/10</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-5 pb-5">
+                      <div className="space-y-4">
+                        {photo.problems.length > 0 && (
+                          <div className="p-3 rounded-lg bg-red-500/5 border border-red-500/20">
+                            <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-2">Problemi</p>
+                            <ul className="space-y-1.5">
+                              {photo.problems.map((p, j) => (
+                                <li key={j} className="flex items-start gap-2 text-sm text-foreground/80">
+                                  <span className="text-red-400 mt-0.5">•</span>
+                                  <span>{p}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                        {photo.solutions.length > 0 && (
+                          <div className="p-3 rounded-lg bg-green-500/5 border border-green-500/20">
+                            <p className="text-xs font-semibold text-green-500 uppercase tracking-wider mb-2">Come risolvere</p>
+                            <ul className="space-y-1.5">
+                              {photo.solutions.map((s, j) => (
+                                <li key={j} className="flex items-start gap-2 text-sm text-foreground/80">
+                                  <span className="text-green-500 mt-0.5">✓</span>
+                                  <span>{s}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+
+              <div className="flex flex-col gap-3 pt-4">
+                <Button variant="neon" size="lg" className="w-full" onClick={() => { setReport(null); setImages([]); setPreviews([]); }}>
+                  Nuova analisi immagini
+                </Button>
+                <Button variant="glass" className="w-full" onClick={() => navigate("/engine")}>
+                  Torna a Engine
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </main>
     </div>
   );
