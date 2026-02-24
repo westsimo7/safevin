@@ -323,19 +323,11 @@ const StoricoDetail = () => {
               </CardContent>
             </Card>
 
-            {isMobile ? (
-              <div className="flex flex-col gap-3">
-                {result.sections?.map((section: any, index: number) => (
-                  <MobileAnalysisCard key={index} title={section.title} score={section.score} advice={section.advice} impersonation={section.impersonation} scoreBreakdown={section.scoreBreakdown} conversionProbability={section.conversionProbability} />
-                ))}
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 gap-4">
-                {result.sections?.map((section: any, index: number) => (
-                  <AnalysisCard key={index} title={section.title} score={section.score} advice={section.advice} impersonation={section.impersonation} scoreBreakdown={section.scoreBreakdown} conversionProbability={section.conversionProbability} />
-                ))}
-              </div>
-            )}
+            <div className="grid md:grid-cols-2 gap-4">
+              {result.sections?.map((section: any, index: number) => (
+                <EngineAnalysisCard key={index} section={section} />
+              ))}
+            </div>
 
             {result.summary && <AnalysisSummary summary={result.summary} />}
 
