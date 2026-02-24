@@ -17,6 +17,8 @@ export type StudioStep =
   | "vision-confirm"
   | "questions"
   | "generating"
+  | "validating"
+  | "missing-data"
   | "output";
 
 interface QuestionAnswer {
