@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, Camera } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Question {
@@ -23,6 +22,8 @@ interface DynamicQuestionsProps {
   conversationHistory: QuestionAnswer[];
   onSubmit: (answers: QuestionAnswer[]) => void;
   onSkipToGenerate: () => void;
+  missingAngles?: string[];
+  onAddPhotos?: () => void;
 }
 
 const DynamicQuestions = ({
@@ -31,6 +32,8 @@ const DynamicQuestions = ({
   conversationHistory,
   onSubmit,
   onSkipToGenerate,
+  missingAngles,
+  onAddPhotos,
 }: DynamicQuestionsProps) => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -70,9 +73,6 @@ const DynamicQuestions = ({
     }
   };
 
-
-
-
   const handleSubmit = () => {
     const newAnswers: QuestionAnswer[] = questions
       .filter((q) => answers[q.id]?.trim())
@@ -85,7 +85,6 @@ const DynamicQuestions = ({
     onSubmit(newAnswers);
   };
 
-  const allAnswered = questions.every((q) => answers[q.id]?.trim());
   const someAnswered = questions.some((q) => answers[q.id]?.trim());
 
   if (loading) {
@@ -113,12 +112,36 @@ const DynamicQuestions = ({
         )}
       </div>
 
+      {/* ── Photo suggestion banner ── */}
+      {missingAngles && missingAngles.length > 0 && onAddPhotos && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="p-4">
+            <p className="text-sm font-medium mb-2">
+              📸 Per migliorare la qualità dell'annuncio, consiglierei di aggiungere:
+            </p>
+            <ul className="text-xs text-muted-foreground space-y-1 mb-3">
+              {missingAngles.map((angle, i) => (
+                <li key={i}>• Foto {angle}</li>
+              ))}
+            </ul>
+            <Button variant="outline" size="sm" onClick={onAddPhotos}>
+              <Camera className="w-3 h-3 mr-2" />
+              Aggiungi altre foto
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* ── Questions ── */}
       <div className="space-y-4">
         {questions.map((q, index) => (
-          <Card key={q.id} className="border-border/50 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+          <Card
+            key={q.id}
+            className="border-border/50 animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
             <CardContent className="p-4 space-y-3">
               <p className="font-medium text-sm">{q.question}</p>
-
               <Textarea
                 placeholder="Scrivi qui la tua risposta..."
                 value={answers[q.id] || ""}
@@ -132,6 +155,7 @@ const DynamicQuestions = ({
         ))}
       </div>
 
+      {/* ── Actions ── */}
       <div className="flex flex-col gap-3 pt-2">
         <Button
           variant="neon"
@@ -145,11 +169,7 @@ const DynamicQuestions = ({
         </Button>
 
         {conversationHistory.length > 0 && (
-          <Button
-            variant="glass"
-            className="w-full"
-            onClick={onSkipToGenerate}
-          >
+          <Button variant="glass" className="w-full" onClick={onSkipToGenerate}>
             <Sparkles className="w-4 h-4 mr-2" />
             Genera annuncio con le info raccolte
           </Button>
