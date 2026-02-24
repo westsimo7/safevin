@@ -270,11 +270,7 @@ REGOLE:
       );
     }
 
-    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
-    const apiHeaders = {
-      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
-      "Content-Type": "application/json",
-    };
+    // apiUrl and apiHeaders already declared above
 
     // ========== PHASE 1: VISION ANALYSIS (if images provided) ==========
     let visionReport: string | null = null;
