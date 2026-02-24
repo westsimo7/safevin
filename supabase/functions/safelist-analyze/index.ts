@@ -274,7 +274,7 @@ REGOLE:
     let visionReport: string | null = null;
 
     if (imageDataUrls && imageDataUrls.length > 0) {
-      console.log(`Phase 1: Analyzing ${imageDataUrls.length} images with OpenAI Vision (gpt-4o)...`);
+      console.log(`Phase 1: Analyzing ${imageDataUrls.length} images with gpt-5...`);
 
       const imageContents = imageDataUrls.map((dataUrl: string) => ({
         type: "image_url" as const,
@@ -293,7 +293,7 @@ REGOLE:
       ];
 
       try {
-        const visionResponse = await callAI("gpt-4o", visionMessages);
+        const visionResponse = await callAI("gpt-5", visionMessages);
 
         if (visionResponse.ok) {
           const visionData = await visionResponse.json();
