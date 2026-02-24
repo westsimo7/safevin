@@ -5,3 +5,9 @@ verify_jwt = false
 
 [functions.safelist-studio]
 verify_jwt = false
+
+[functions.safevin-coach]
+verify_jwt = false
+
+[functions.generate-filter-text]
+verify_jwt = false

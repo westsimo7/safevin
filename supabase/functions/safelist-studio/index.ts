@@ -296,7 +296,7 @@ serve(async (req) => {
       const reports: string[] = [];
 
       for (let pass = 0; pass < NUM_PASSES; pass++) {
-        console.log(`Vision pass ${pass + 1}/${NUM_PASSES} (gpt-4o)...`);
+        console.log(`Vision pass ${pass + 1}/${NUM_PASSES} (gpt-5)...`);
         const visionMessages = [
           { role: "system", content: VISION_PROMPT },
           {
@@ -308,7 +308,7 @@ serve(async (req) => {
           },
         ];
 
-        const visionResponse = await callAI("gpt-4o", visionMessages);
+        const visionResponse = await callAI("gpt-5", visionMessages);
 
         if (!visionResponse.ok) {
           const errText = await visionResponse.text();
@@ -334,8 +334,8 @@ serve(async (req) => {
 
       let finalReport = reports[0];
       if (reports.length > 1) {
-        console.log(`Synthesizing ${reports.length} vision passes (gpt-4o)...`);
-        const synthesisResponse = await callAI("gpt-4o", [
+        console.log(`Synthesizing ${reports.length} vision passes (gpt-5)...`);
+        const synthesisResponse = await callAI("gpt-5", [
               { role: "system", content: "Sei un analista visivo. Ti vengono forniti più report indipendenti della stessa immagine. Sintetizza UN UNICO report JSON definitivo. Quando i report discordano su valori numerici (taglie, misure, cm), scegli il valore che appare PIÙ FREQUENTEMENTE. Se tutti discordano, indica l'incertezza. Restituisci SOLO il JSON finale nello stesso formato dei report individuali." },
               { role: "user", content: `Ecco ${reports.length} analisi indipendenti delle stesse foto:\n\n${reports.map((r, i) => `--- ANALISI ${i + 1} ---\n${r}`).join("\n\n")}\n\nSintetizza in un unico report definitivo.` },
             ]);
@@ -354,7 +354,7 @@ serve(async (req) => {
 
     // ========== ACTION: QUESTIONS ==========
     if (action === "questions") {
-      console.log("Generating dynamic questions (gpt-4o-mini)...");
+      console.log("Generating dynamic questions (gpt-5)...");
 
       let contextMessage = `Categoria: ${categoria || "non specificata"}\n`;
       
@@ -372,7 +372,7 @@ serve(async (req) => {
         contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
       }
 
-      const questionsResponse = await callAI("gpt-4o-mini", [
+      const questionsResponse = await callAI("gpt-5", [
             { role: "system", content: QUESTIONS_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -412,7 +412,7 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE ==========
     if (action === "generate") {
-      console.log("Generating final output (gpt-4o)...");
+      console.log("Generating final output (gpt-5)...");
 
       let contextMessage = `Genera l'annuncio Vinted perfetto basandoti su queste informazioni:\n\n`;
       contextMessage += `Categoria: ${categoria || "non specificata"}\n`;
@@ -428,7 +428,7 @@ serve(async (req) => {
         }
       }
 
-      const generateResponse = await callAI("gpt-4o", [
+      const generateResponse = await callAI("gpt-5", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -456,9 +456,9 @@ serve(async (req) => {
 
         // Auto-refinement: if score_estimate < 75, refine once
         if (parsed.score_estimate && parsed.score_estimate < 75) {
-          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining (gpt-4o)...`);
+          console.log(`Score estimate ${parsed.score_estimate} < 75, auto-refining (gpt-5)...`);
           try {
-            const refineResponse = await callAI("gpt-4o", [
+            const refineResponse = await callAI("gpt-5", [
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
@@ -496,11 +496,11 @@ serve(async (req) => {
 
     // ========== ACTION: GENERATE_KEYWORD_TEXT ==========
     if (action === "generate_keyword_text") {
-      console.log("Generating keyword text variant (gpt-4o-mini)...");
+      console.log("Generating keyword text variant (gpt-5)...");
 
       const { keywordBlock, outputContext } = body;
 
-      const response = await callAI("gpt-4o-mini", [
+      const response = await callAI("gpt-5", [
             {
               role: "system",
               content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
@@ -529,7 +529,7 @@ serve(async (req) => {
 
     // ========== ACTION: IMPROVE (Audit → Studio bridge) ==========
     if (action === "improve") {
-      console.log("Generating improved listing from audit data (gpt-4o)...");
+      console.log("Generating improved listing from audit data (gpt-5)...");
 
       const { auditSections, listingData: ld, gapAnswers } = body;
 
@@ -563,7 +563,7 @@ serve(async (req) => {
 
       contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
-      const generateResponse = await callAI("gpt-4o", [
+      const generateResponse = await callAI("gpt-5", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
           ]);
@@ -591,7 +591,7 @@ serve(async (req) => {
 
     // ========== ACTION: GAP_QUESTIONS (Audit → Studio bridge) ==========
     if (action === "gap_questions") {
-      console.log("Generating gap-based questions from audit (gpt-4o-mini)...");
+      console.log("Generating gap-based questions from audit (gpt-5)...");
 
       const { auditSections: auditSecs, listingData: ld2 } = body;
 
@@ -621,7 +621,7 @@ serve(async (req) => {
         ctxMsg += `\nSe hai abbastanza info, rispondi con "complete": true.`;
       }
 
-      const gapResponse = await callAI("gpt-4o-mini", [
+      const gapResponse = await callAI("gpt-5", [
             { role: "system", content: `Genera domande mirate per colmare i gap informativi di un annuncio marketplace. Ogni domanda DEVE essere a risposta aperta (type: "text"). Rispondi SOLO JSON valido: { "complete": boolean, "questions": [{ "id": "q1", "question": "...", "type": "text" }] }` },
             { role: "user", content: ctxMsg },
           ]);
@@ -648,7 +648,7 @@ serve(async (req) => {
 
     // ========== ACTION: AUDIT_INTERNAL (Studio → Audit validation) ==========
     if (action === "audit_internal") {
-      console.log("Running internal audit (gpt-4o)...");
+      console.log("Running internal audit (gpt-5)...");
 
       const { generatedOutput } = body;
 
@@ -682,7 +682,7 @@ TIPS: ${(generatedOutput.tips || []).join("; ")}
 Categoria prodotto: ${categoria || "non specificata"}
 Vision report disponibile: ${visionReport ? "sì" : "no"}`;
 
-      const auditResponse = await callAI("gpt-4o", [
+      const auditResponse = await callAI("gpt-5", [
             { role: "system", content: AUDIT_INTERNAL_PROMPT },
             { role: "user", content: auditContext },
           ]);
