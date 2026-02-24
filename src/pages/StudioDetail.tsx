@@ -86,7 +86,7 @@ const StudioDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <DashboardHeader />
+      <AppNavbar />
       <main className="container mx-auto px-6 py-12 max-w-2xl">
         {!isMobile && (
           <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/storico")}>
