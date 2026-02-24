@@ -58,6 +58,9 @@ const EngineAudit = () => {
         imageDataUrls.push(await fileToDataUrl(file));
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+
       const { data: responseData, error } = await supabase.functions.invoke("safelist-analyze", {
         body: {
           listing: {
@@ -68,6 +71,8 @@ const EngineAudit = () => {
           images: imageDataUrls,
         },
       });
+
+      clearTimeout(timeoutId);
 
       if (error) throw error;
 
