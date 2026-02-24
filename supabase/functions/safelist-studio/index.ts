@@ -589,18 +589,10 @@ serve(async (req) => {
 
       contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. Integra le informazioni aggiuntive se presenti. L'annuncio deve essere pronto per il copia-incolla su Vinted. Target SafeScore: 80-85+.`;
 
-      const generateResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "openai/gpt-5.2",
-          messages: [
+      const generateResponse = await callAI("openai/gpt-5.2", [
             { role: "system", content: OUTPUT_SYSTEM_PROMPT },
             { role: "user", content: contextMessage },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!generateResponse.ok) {
         const errText = await generateResponse.text();
