@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import DashboardHeader from "@/components/DashboardHeader";
+import AppNavbar from "@/components/AppNavbar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, PenTool, ArrowLeft, Zap } from "lucide-react";
