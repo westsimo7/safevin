@@ -461,8 +461,71 @@ serve(async (req) => {
       });
     }
 
+    // ========== ACTION: IMPROVE (Audit → Studio bridge) ==========
+    if (action === "improve") {
+      console.log("Generating improved listing from audit data...");
+
+      const { auditSections, listingData: ld } = body;
+
+      let contextMessage = `Sei SAFEViN Studio. Un utente ha appena ricevuto un Audit del suo annuncio. Devi generare una VERSIONE MIGLIORATA dell'annuncio risolvendo TUTTI i problemi trovati.\n\n`;
+      contextMessage += `DATI ORIGINALI DELL'ANNUNCIO:\n`;
+      contextMessage += `Titolo: ${ld?.titolo || "(vuoto)"}\n`;
+      contextMessage += `Descrizione: ${ld?.descrizione || "(vuota)"}\n`;
+      contextMessage += `Categoria: ${ld?.categoria || "(vuota)"}\n`;
+      contextMessage += `Prezzo: ${ld?.prezzo || "(vuoto)"}€\n`;
+      contextMessage += `Brand: ${ld?.brand || "(vuoto)"}\n`;
+      contextMessage += `Condizioni: ${ld?.condizioni || "(vuote)"}\n`;
+      contextMessage += `Taglia: ${ld?.taglia || "(vuota)"}\n`;
+      contextMessage += `Colore: ${ld?.colore || "(vuoto)"}\n\n`;
+
+      contextMessage += `REPORT AUDIT COMPLETO (incluse osservazioni e fattori penalizzanti):\n`;
+      if (auditSections && Array.isArray(auditSections)) {
+        for (const s of auditSections) {
+          contextMessage += `\n--- ${s.title} (Score: ${s.score}/10) ---\n`;
+          if (s.impersonation) contextMessage += `Osservazione: ${s.impersonation}\n`;
+          if (s.scoreBreakdown) contextMessage += `Fattori penalizzanti: ${s.scoreBreakdown}\n`;
+          if (s.advice) contextMessage += `Consiglio: ${s.advice}\n`;
+        }
+      }
+
+      contextMessage += `\n\nGenera l'annuncio MIGLIORATO risolvendo TUTTI i problemi identificati dall'Audit. L'annuncio deve essere pronto per il copia-incolla su Vinted.`;
+
+      const generateResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "openai/gpt-5.2",
+          messages: [
+            { role: "system", content: OUTPUT_SYSTEM_PROMPT },
+            { role: "user", content: contextMessage },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!generateResponse.ok) {
+        const errText = await generateResponse.text();
+        console.error("Improve error:", generateResponse.status, errText);
+        return new Response(JSON.stringify({ error: "Errore generazione miglioramento." }), {
+          status: generateResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const generateData = await generateResponse.json();
+      let content = generateData.choices?.[0]?.message?.content || "";
+      content = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+      try {
+        const parsed = JSON.parse(content);
+        return new Response(JSON.stringify({ output: parsed }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch {
+        console.error("Failed to parse improve JSON:", content);
+        return new Response(JSON.stringify({ error: "Errore formato risposta AI." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
+
     return new Response(
-      JSON.stringify({ error: "Azione non valida. Usa: vision, questions, generate, generate_keyword_text." }),
+      JSON.stringify({ error: "Azione non valida." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
 

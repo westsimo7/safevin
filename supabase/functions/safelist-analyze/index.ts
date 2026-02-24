@@ -172,7 +172,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { listing, images: imageDataUrls } = body;
+    const { listing, images: imageDataUrls, imageOnly } = body;
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
@@ -184,6 +184,85 @@ serve(async (req) => {
       );
     }
 
+    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const apiHeaders = {
+      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "Content-Type": "application/json",
+    };
+
+    // ========== IMAGE-ONLY MODE ==========
+    if (imageOnly) {
+      if (!imageDataUrls || imageDataUrls.length === 0) {
+        return new Response(JSON.stringify({ error: "Nessuna immagine fornita." }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      console.log(`Image-only analysis: ${imageDataUrls.length} images`);
+
+      const imageContents = imageDataUrls.map((dataUrl: string) => ({
+        type: "image_url" as const,
+        image_url: { url: dataUrl },
+      }));
+
+      const photoAnalysisPrompt = `Sei un esperto fotografo e analista di marketplace. Analizza OGNI foto individualmente e restituisci un report per ciascuna.
+
+Per OGNI foto analizza: luce, sfondo, angolazione, nitidezza, dettagli mancanti, composizione, fiducia visiva (etichette, difetti visibili), ottimizzazione mobile.
+
+Restituisci SOLO un JSON valido con questa struttura:
+{
+  "photoReports": [
+    {
+      "photoIndex": 1,
+      "score": [1-10],
+      "problems": ["problema specifico 1", "problema specifico 2"],
+      "solutions": ["soluzione pratica 1", "soluzione pratica 2"]
+    }
+  ]
+}
+
+REGOLE:
+- Un oggetto per OGNI foto (${imageDataUrls.length} foto totali)
+- Problemi: specifici, pratici, no genericità
+- Soluzioni: azioni concrete e immediate
+- Score realistico: 3-4 è la media, 7+ richiede foto professionali
+- Max 4 problemi e 4 soluzioni per foto
+- Rispondi SOLO JSON valido`;
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: photoAnalysisPrompt },
+            { role: "user", content: [
+              { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio marketplace. Report individuale per ogni foto.` },
+              ...imageContents,
+            ]},
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error("Image-only error:", response.status, errText);
+        return new Response(JSON.stringify({ error: "Errore analisi immagini." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+
+      const data = await response.json();
+      let content = data.choices?.[0]?.message?.content || "";
+      content = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+      try {
+        const parsed = JSON.parse(content);
+        return new Response(JSON.stringify({ photoReports: parsed.photoReports }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      } catch {
+        console.error("Failed to parse image-only JSON:", content);
+        return new Response(JSON.stringify({ error: "Errore formato risposta." }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+    }
+
+    // ========== FULL AUDIT MODE ==========
     if (!listing || (!listing.titolo && !listing.descrizione && (!imageDataUrls || imageDataUrls.length === 0))) {
       return new Response(
         JSON.stringify({ error: "Inserisci almeno un titolo, una descrizione o delle foto." }),

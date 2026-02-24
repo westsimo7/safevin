@@ -17,6 +17,7 @@ export type Database = {
       analyses: {
         Row: {
           analysis_result: Json
+          analysis_type: string
           brand: string
           categoria: string
           colore: string
@@ -32,6 +33,7 @@ export type Database = {
         }
         Insert: {
           analysis_result: Json
+          analysis_type?: string
           brand?: string
           categoria?: string
           colore?: string
@@ -47,6 +49,7 @@ export type Database = {
         }
         Update: {
           analysis_result?: Json
+          analysis_type?: string
           brand?: string
           categoria?: string
           colore?: string
