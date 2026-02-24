@@ -249,21 +249,13 @@ REGOLE:
 - Max 4 problemi e 4 soluzioni per foto
 - Rispondi SOLO JSON valido`;
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [
+      const response = await callAI("google/gemini-2.5-flash", [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
               { type: "text", text: `Analizza queste ${imageDataUrls.length} foto di un annuncio marketplace. Report individuale per ogni foto.` },
               ...imageContents,
             ]},
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!response.ok) {
         const errText = await response.text();
