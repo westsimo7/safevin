@@ -15,6 +15,7 @@ import Storico from "./pages/Storico";
 import StoricoDetail from "./pages/StoricoDetail";
 import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
+import Settings from "./pages/Settings";
 import CoachWidget from "./components/CoachWidget";
 
 const queryClient = new QueryClient();
