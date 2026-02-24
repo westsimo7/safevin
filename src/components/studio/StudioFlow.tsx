@@ -439,8 +439,72 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
 
       {step === "generating" && <SmartLoader title="Creo il tuo annuncio perfetto…" />}
 
+      {step === "validating" && (
+        <SmartLoader
+          title="Validazione qualità in corso…"
+          messages={[
+            "Verifico struttura titolo e SEO…",
+            "Analisi keyword e tag…",
+            "Controllo psicologia acquirente…",
+            "Valutazione completezza dati…",
+            "Calcolo punteggio interno…",
+          ]}
+        />
+      )}
+
+      {step === "missing-data" && missingFields.length > 0 && (
+        <div className="space-y-6 animate-fade-in">
+          <div className="text-center">
+            <div className="w-14 h-14 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">⚠️</span>
+            </div>
+            <h2 className="text-xl font-bold mb-2">Informazioni critiche mancanti</h2>
+            <p className="text-sm text-muted-foreground">
+              L'annuncio non è ancora pubblicabile. Mancano alcuni dettagli fondamentali per raggiungere la qualità minima richiesta.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {missingFields.map((field, i) => (
+              <Card key={i} className="border-border/50 bg-card/50">
+                <CardContent className="p-4 space-y-2">
+                  <p className="text-sm font-semibold">{field.question}</p>
+                  <p className="text-xs text-muted-foreground">{field.reason}</p>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 rounded-lg border border-border/50 bg-background text-sm focus:outline-none focus:border-primary/50"
+                    placeholder="Inserisci qui..."
+                    value={missingAnswers[field.field] || ""}
+                    onChange={(e) => setMissingAnswers((prev) => ({ ...prev, [field.field]: e.target.value }))}
+                  />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Button
+            variant="neon"
+            size="lg"
+            className="w-full"
+            onClick={handleMissingDataSubmit}
+            disabled={Object.values(missingAnswers).every((v) => !v?.trim())}
+          >
+            Rigenera annuncio con i nuovi dati
+          </Button>
+        </div>
+      )}
+
       {step === "output" && outputData && (
-        <StudioOutput data={outputData} onNew={handleNewCreation} onBack={onBack} />
+        <div className="space-y-5 animate-fade-in">
+          <div className="text-center pb-2">
+            <div className="w-14 h-14 rounded-2xl bg-green-500/10 flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">✅</span>
+            </div>
+            <h2 className="text-xl font-bold mb-1">Annuncio di valore generato correttamente.</h2>
+            <p className="text-sm text-muted-foreground">Qualità validata dal motore interno SafeViN.</p>
+          </div>
+          <StudioOutput data={outputData} onNew={handleNewCreation} onBack={onBack} />
+        </div>
       )}
     </div>
   );
