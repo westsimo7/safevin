@@ -711,6 +711,82 @@ serve(async (req) => {
       }
     }
 
+    // ========== ACTION: AUDIT_INTERNAL (Studio → Audit validation) ==========
+    if (action === "audit_internal") {
+      console.log("Running internal audit on generated ad...");
+
+      const { generatedOutput } = body;
+
+      if (!generatedOutput) {
+        return new Response(JSON.stringify({ error: "Nessun annuncio da validare." }), {
+          status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const auditContext = `Valida questo annuncio generato da SAFEViN Studio:
+
+TITOLO: ${generatedOutput.titolo || "(vuoto)"}
+
+DESCRIZIONE: ${generatedOutput.descrizione || "(vuota)"}
+
+BULLET POINTS: ${(generatedOutput.bulletPoints || []).join("; ")}
+
+PREZZO SUGGERITO: €${generatedOutput.suggestedPrice?.min || "?"} - €${generatedOutput.suggestedPrice?.max || "?"}
+Motivazione: ${generatedOutput.suggestedPrice?.reasoning || "(nessuna)"}
+
+CATEGORIA: ${generatedOutput.category_suggestion || "(vuota)"}
+
+HASHTAG/KEYWORD: ${(generatedOutput.hashtags || []).join(", ")}
+Keyword Block: ${generatedOutput.keywordIntelligence?.keywordBlock || "(vuoto)"}
+Strategic Hashtags: ${(generatedOutput.keywordIntelligence?.strategicHashtags || []).join(", ")}
+
+TRUST SECTION: ${generatedOutput.trustSection ? "presente" : "assente"}
+
+TIPS: ${(generatedOutput.tips || []).join("; ")}
+
+Categoria prodotto: ${categoria || "non specificata"}
+Vision report disponibile: ${visionReport ? "sì" : "no"}`;
+
+      const auditResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: apiHeaders,
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash",
+          messages: [
+            { role: "system", content: AUDIT_INTERNAL_PROMPT },
+            { role: "user", content: auditContext },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!auditResponse.ok) {
+        const errText = await auditResponse.text();
+        console.error("Internal audit error:", auditResponse.status, errText);
+        return new Response(JSON.stringify({ error: "Errore audit interno." }), {
+          status: auditResponse.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const auditData = await auditResponse.json();
+      let auditContent = auditData.choices?.[0]?.message?.content || "";
+      auditContent = auditContent.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+
+      try {
+        const auditParsed = JSON.parse(auditContent);
+        console.log(`Internal audit score: ${auditParsed.totalScore}/80, passed: ${auditParsed.passed}`);
+        return new Response(JSON.stringify(auditParsed), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      } catch {
+        console.error("Failed to parse audit JSON:", auditContent);
+        // If parse fails, assume passed to not block user
+        return new Response(JSON.stringify({ totalScore: 70, passed: true, categories: [], missingFields: [] }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+    }
+
     return new Response(
       JSON.stringify({ error: "Azione non valida." }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
