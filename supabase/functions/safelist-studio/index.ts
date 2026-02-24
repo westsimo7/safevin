@@ -526,12 +526,7 @@ serve(async (req) => {
 
       const { keywordBlock, outputContext } = body;
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: apiHeaders,
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
-          messages: [
+      const response = await callAI("google/gemini-2.5-flash-lite", [
             {
               role: "system",
               content: `Sei un copywriter esperto di marketplace second-hand. Genera un testo fluido di MASSIMO 55 parole che integra ricerche dirette, emozionali, per occasione, sinonimi italiani, intento d'acquisto, outfit e stagione. NON usare hashtag, emoji, asterischi, grassetti, corsivi, elenchi puntati. Solo testo piano fluido ottimizzato per SEO marketplace. Deve essere DIVERSO dal testo precedente se fornito, ma coprire le stesse aree semantiche con parole e angolazioni diverse.`,
@@ -540,10 +535,7 @@ serve(async (req) => {
               role: "user",
               content: `Contesto annuncio: ${outputContext || "non disponibile"}\n\nTesto precedente da variare (genera qualcosa di diverso): ${keywordBlock || "nessuno"}\n\nGenera il nuovo testo.`,
             },
-          ],
-          stream: false,
-        }),
-      });
+          ]);
 
       if (!response.ok) {
         const errText = await response.text();
