@@ -6,54 +6,55 @@ const plans = [
     name: "Starter",
     price: "0",
     period: "3 giorni",
-    description: "Scopri il metodo SAFEViN senza impegno",
+    description: "Scopri il metodo SafeViN senza impegno",
     icon: Zap,
     features: [
-      "Accesso dashboard base",
-      "1 analisi Audit completa",
+      "2 Audit Annuncio",
+      "2 Audit Immagini",
+      "1 Studio export",
+      "Storico ultime 3 sessioni",
       "SafeScore™ su 10 categorie",
-      "Overview qualità annuncio",
     ],
     limitations: [
-      "Nessun accesso a Studio",
-      "Nessuno storico analisi",
+      "Nessun accesso avanzato",
     ],
     cta: "Inizia gratuitamente",
     popular: false,
     variant: "glass" as const,
   },
   {
-    name: "Plus",
-    price: "19,98",
+    name: "Class",
+    price: "12,76",
     period: "/mese",
     description: "Per chi vende con metodo",
     icon: Crown,
     features: [
-      "Audit illimitati con SafeScore™",
-      "Storico completo analisi",
-      "Breakdown dettagliato per categoria",
-      "Correzioni operative prioritizzate",
-      "Confronto performance nel tempo",
-      "Elaborazione prioritaria",
+      "30 Audit Annuncio / mese",
+      "30 Audit Immagini / mese",
+      "30 Studio / mese",
+      "Storico completo mensile",
+      "Export testi ottimizzati",
+      "Breakdown per categoria",
+      "Correzioni prioritizzate",
     ],
     limitations: [],
-    cta: "Attiva Plus",
+    cta: "Attiva Class",
     popular: true,
     variant: "neon" as const,
   },
   {
     name: "Expert",
-    price: "39,98",
+    price: "32,76",
     period: "/mese",
     description: "Per venditori professionisti",
     icon: Rocket,
     features: [
-      "Tutto di Plus incluso",
-      "SAFEViN Studio completo",
-      "Analisi multi-pattern avanzata",
-      "Suggerimenti personalizzati AI",
-      "Monitoraggio continuo qualità",
-      "Strategia di posizionamento guidata",
+      "Audit Annuncio illimitati",
+      "Audit Immagini illimitati",
+      "Studio illimitato",
+      "Storico illimitato",
+      "Preset avanzati / template premium",
+      "Priorità supporto",
       "Massima probabilità di conversione",
     ],
     limitations: [],
@@ -65,22 +66,19 @@ const plans = [
 
 const PricingSection = () => {
   return (
-    <section className="relative py-24 bg-card/20 overflow-hidden">
-      {/* Subtle border top */}
+    <section className="relative py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
-      
+
       <div className="container mx-auto px-6 max-w-6xl">
-        {/* Section header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            Scegli il livello di controllo sui tuoi annunci
+            Scegli il tuo piano
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.
           </p>
         </div>
-        
-        {/* Pricing grid */}
+
         <div className="grid md:grid-cols-3 gap-6">
           {plans.map((plan, index) => (
             <div
@@ -91,36 +89,31 @@ const PricingSection = () => {
                   : "bg-card/50 border border-border/50 hover:border-border"
               }`}
             >
-              {/* Popular badge */}
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                   <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                    Più scelto
+                    Consigliato
                   </div>
                 </div>
               )}
-              
-              {/* Plan header */}
+
               <div className="mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${
                   plan.popular ? "bg-primary/20" : "bg-muted"
                 }`}>
                   <plan.icon className={`w-5 h-5 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
                 </div>
-                
                 <h3 className={`text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
                   {plan.name}
                 </h3>
                 <p className="text-sm text-muted-foreground">{plan.description}</p>
               </div>
-              
-              {/* Price */}
+
               <div className="mb-6">
-                <span className="text-4xl font-bold text-foreground">€{plan.price}</span>
+                <span className="text-4xl font-bold text-foreground">${plan.price}</span>
                 <span className="text-muted-foreground text-sm">{plan.period}</span>
               </div>
-              
-              {/* Features */}
+
               <ul className="space-y-3 mb-6 flex-grow">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2">
@@ -141,16 +134,14 @@ const PricingSection = () => {
                   </li>
                 ))}
               </ul>
-              
-              {/* CTA */}
-              <Button variant={plan.variant} className="w-full" size="lg">
+
+              <Button variant={plan.variant} className="w-full" size="lg" disabled>
                 {plan.cta}
               </Button>
             </div>
           ))}
         </div>
-        
-        {/* Trust message */}
+
         <div className="mt-12 text-center">
           <p className="text-muted-foreground text-sm">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
