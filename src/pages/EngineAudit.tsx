@@ -66,6 +66,7 @@ const EngineAudit = () => {
             taglia: data.taglia, colore: data.colore, tempoCaricamento: data.tempoCaricamento,
           },
           images: imageDataUrls,
+          origin: data.origin || "external",
         },
       });
 
@@ -95,6 +96,7 @@ const EngineAudit = () => {
             taglia: data.taglia, colore: data.colore, tempo_caricamento: data.tempoCaricamento,
             first_image_url: firstImageUrl, analysis_result: analysis as any,
             analysis_type: "full",
+            origin: data.origin || "external",
           }]);
         }
       } else if (responseData?.error) {
