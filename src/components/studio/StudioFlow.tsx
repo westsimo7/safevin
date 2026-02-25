@@ -322,6 +322,17 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
     await generateOutput(updatedHistory);
   };
 
+  const computeSemanticFingerprint = (output: StudioOutputData): string => {
+    const content = `${output.titolo}|${output.descrizione}|${(output.bulletPoints || []).join("|")}`;
+    let hash = 0;
+    for (let i = 0; i < content.length; i++) {
+      const char = content.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash |= 0;
+    }
+    return `sf_${Math.abs(hash).toString(36)}`;
+  };
+
   const saveCreation = async (output: StudioOutputData, answers: QuestionAnswer[]) => {
     let firstImageUrl: string | null = null;
 
@@ -340,6 +351,20 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
       }
     }
 
+    // Build Studio Signature Layer metadata
+    const integratedKeywords = (output as any).integratedKeywords || [];
+    const allHashtags = output.hashtags || [];
+    const semanticFingerprint = computeSemanticFingerprint(output);
+
+    const structuralBlocks = {
+      intro: !!output.descrizione,
+      technical_block: (output.bulletPoints || []).length > 0,
+      measurements: answers.some(a => a.question.toLowerCase().includes("misur")),
+      defects: answers.some(a => a.question.toLowerCase().includes("difett")),
+      keyword_block: !!(output as any).keywordIntelligence?.keywordBlock,
+      trust_lines: !!output.trustSection,
+    };
+
     await supabase.from("studio_creations").insert([
       {
         categoria,
@@ -349,6 +374,11 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
         output: output as any,
         first_image_url: firstImageUrl,
         titolo_generato: output.titolo,
+        origin: "studio",
+        studio_version: "v4",
+        keyword_list: [...integratedKeywords, ...allHashtags] as any,
+        structural_blocks: structuralBlocks as any,
+        semantic_fingerprint: semanticFingerprint,
       },
     ]);
   };
