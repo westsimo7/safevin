@@ -24,6 +24,7 @@ M. Categoria Vinted suggerita (es. Maglioni girocollo, Felpe con cappuccio, Giac
 N. Presenza zip/cappuccio/colletto/fodera
 O. Stagionalità percepita (primavera/estate, autunno/inverno, mezza stagione)
 P. Vestibilità percepita (slim, regular, oversize)
+Q. NICCHIA TARGET: identifica il micro-posizionamento (vintage, sportivo, premium, casual economico, hype, minimal, streetwear urbano)
 
 Restituisci SOLO JSON:
 {
@@ -43,6 +44,7 @@ Restituisci SOLO JSON:
   "hasCollar": true/false,
   "seasonality": "stagionalità percepita",
   "fitGuess": "vestibilità percepita",
+  "nicheTarget": "micro-posizionamento identificato",
   "premiumElements": ["elemento1"],
   "missingAngles": ["angolazione mancante"],
   "overallQuality": "valutazione qualità foto",
@@ -52,12 +54,15 @@ Restituisci SOLO JSON:
 
 const QUESTIONS_SYSTEM_PROMPT = `Sei SAFEViN Studio, un top senior professionista nel resell virtuale su marketplace come Vinted. Il tuo compito è fare domande intelligenti e mirate seguendo un flusso strutturato A→Z per raccogliere TUTTE le informazioni necessarie a creare un annuncio da SafeScore 80-85+.
 
+OBIETTIVO AGGIUNTIVO: Comprendere la NICCHIA TARGET del prodotto per generare keyword iper-contestualizzate.
+
 STRUTTURA A BLOCCHI — segui questo ordine logico:
 
 BLOCCO 1 – Identità prodotto:
 - Marca e modello specifico
 - Target (uomo/donna/unisex)
 - Stile (streetwear, casual, tecnico, elegante, vintage)
+- Micro-posizionamento: è un pezzo hype, basic, minimal, premium, vintage, sportivo tecnico?
 
 BLOCCO 2 – Condizioni:
 - Nuovo con cartellino / Nuovo senza cartellino / Usato
@@ -79,6 +84,11 @@ BLOCCO 5 – Prezzo e Posizionamento:
 - Prezzo desiderato
 - Apertura a trattative
 - Posizionamento rispetto alla media di mercato
+
+BLOCCO 6 – Contesto d'uso e Psicologia:
+- Per quali occasioni è pensato (università, lavoro, uscita serale, palestra, viaggio)?
+- A che tipo di persona si rivolge?
+- In quale stagione si usa principalmente?
 
 REGOLE:
 1. Le domande devono essere SPECIFICHE per la categoria e il prodotto
@@ -124,14 +134,27 @@ L'annuncio deve:
 - Essere pronto per il copia-incolla
 - Includere PSICOLOGIA ACQUIRENTE: momento d'uso, tipo di persona, contesto, perché lo compri, come ti fa sentire
 
+REGOLA CRITICA – KEYWORD INTEGRATE NEL TESTO:
+La descrizione DEVE contenere MINIMO 6 e MASSIMO 10 keyword fondamentali inserite IN MODO NATURALE nel testo (NON in blocco artificiale).
+Le keyword devono essere:
+- Ricerca diretta (es: "felpa The North Face uomo L")
+- Variante semantica (es: "hoodie uomo blu elettrico")  
+- Occasione (es: "università", "streetwear", "travel")
+- Stagione (es: "mezza stagione", "autunno inverno")
+- Fit/vestibilità (es: "regular fit", "oversize")
+- Materiale (es: "cotone pesante", "pile interno")
+
+Le keyword devono essere CONTESTUALIZZATE alla nicchia specifica del prodotto. Studio deve capire il micro-posizionamento (vintage, sportivo, premium, casual economico, hype, minimal) e generare keyword coerenti.
+
 FORMATO OUTPUT (JSON):
 {
   "titolo": "Titolo ottimizzato (max 80 char, keywords strategiche)",
-  "descrizione": "STRUTTURA OBBLIGATORIA della descrizione:\\n\\n1) MINI STORYTELLING (prime 2-3 righe, max 55 parole): Testo diretto, evocativo, zero frasi lunghe, zero riempitivi. Deve trasmettere atmosfera + utilizzo reale + PSICOLOGIA: momento d'uso, tipo persona, come ti fa sentire.\\n\\n2) DESCRIZIONE TECNICA (subito dopo): Vestibilità, misure, materiale, condizioni, dettagli specifici del prodotto. Tono professionale ma accessibile.",
+  "descrizione": "STRUTTURA OBBLIGATORIA della descrizione:\\n\\n1) MINI STORYTELLING (prime 2-3 righe, max 55 parole): Testo diretto, evocativo, zero frasi lunghe, zero riempitivi. Deve trasmettere atmosfera + utilizzo reale + PSICOLOGIA: momento d'uso, tipo persona, come ti fa sentire.\\n\\n2) DESCRIZIONE TECNICA con KEYWORD INTEGRATE (subito dopo): Vestibilità, misure, materiale, condizioni, dettagli specifici. Le 6-10 keyword fondamentali DEVONO essere disseminate naturalmente nel testo tecnico.\\n\\n3) PSICOLOGIA: momento d'uso, tipo persona target, contesto, perché comprarlo, come fa sentire.",
   "bulletPoints": [
     "• Punto tecnico/informativo 1",
     "• Punto tecnico/informativo 2"
   ],
+  "integratedKeywords": ["keyword1 usata nel testo", "keyword2 usata nel testo"],
   "trustSection": {
     "buyerQuestions": [
       "Domanda che l'acquirente si pone guardando QUESTO specifico annuncio (max 3)"
@@ -147,7 +170,7 @@ FORMATO OUTPUT (JSON):
     ]
   },
   "keywordIntelligence": {
-    "keywordBlock": "Testo unico fluido di MASSIMO 55 parole che integra: ricerche dirette, ricerche emozionali, ricerche per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON in formato hashtag. Testo fluido ottimizzato SEO marketplace.",
+    "keywordBlock": "Testo unico fluido di MASSIMO 55 parole che integra: ricerche dirette, ricerche emozionali, ricerche per occasione, sinonimi italiani, intento d'acquisto, outfit/stagione. NON in formato hashtag. Testo fluido ottimizzato SEO marketplace. QUESTO blocco è SEPARATO dalla descrizione e serve come boost SEO aggiuntivo.",
     "strategicHashtags": ["#hashtag1", "#hashtag2"]
   },
   "suggestedPrice": {
@@ -160,10 +183,12 @@ FORMATO OUTPUT (JSON):
   "subcategory_suggestion": "",
   "category_reasoning": "Motivazione dettagliata",
   "tips": ["Consiglio extra 1 per migliorare l'annuncio"],
-  "score_estimate": 82
+  "score_estimate": 82,
+  "nicheTarget": "micro-posizionamento identificato"
 }
 
 REGOLE KEYWORD & TAG (STRUTTURA DEFINITIVA):
+- integratedKeywords: lista delle 6-10 keyword inserite naturalmente nella descrizione
 - strategicHashtags: ESATTAMENTE 10-12 hashtag ULTRA-MIRATI suddivisi così:
   * 3-4 KEYWORD CORE (acquisto immediato, IT + EN): es. #GiaccaPelleUomo #LeatherJacketMen #ChiudoNero #BikerJacketBlack
   * 3 KEYWORD STAGIONALI: es. #OutfitAutunno #LookInverno #FallOutfit
@@ -172,6 +197,7 @@ REGOLE KEYWORD & TAG (STRUTTURA DEFINITIVA):
 - VIETATI hashtag generici (#fashion #style #look #vinted #trendy)
 - Ogni hashtag deve avere ALTA INTENZIONE D'ACQUISTO
 - hashtags (campo legacy): stessi di strategicHashtags
+- keywordBlock: blocco SEO separato (NON deve mai essere penalizzato dall'audit perché è un boost aggiuntivo, non spam)
 
 REGOLE PSICOLOGIA ACQUIRENTE (OBBLIGATORIE):
 - La descrizione DEVE contenere: momento d'uso, tipo di persona target, contesto d'uso, perché comprarlo, come fa sentire
@@ -179,7 +205,7 @@ REGOLE PSICOLOGIA ACQUIRENTE (OBBLIGATORIE):
 
 REGOLE DESCRIZIONE:
 - La descrizione DEVE iniziare con un mini storytelling (2-3 righe, max 55 parole): diretto, evocativo, zero riempitivi.
-- Dopo il mini storytelling, prosegui con la descrizione tecnica classica.
+- Dopo il mini storytelling, prosegui con la descrizione tecnica con keyword integrate.
 - NON usare la parola "storytelling".
 
 REGOLE CATEGORIA CONSIGLIATA:
@@ -203,6 +229,8 @@ REGOLE GENERALI:
 
 const AUDIT_INTERNAL_PROMPT = `Sei il motore di validazione interno di SAFEViN. Devi valutare un annuncio generato da Studio PRIMA della pubblicazione.
 
+IMPORTANTE: Questo annuncio è stato generato da SAFEViN Studio, il tuo stesso ecosistema. NON distruggere ciò che Studio ha creato. Il tuo ruolo è RAFFINARE e VALIDARE, non giudicare come un critico esterno.
+
 Valuta SOLO queste 8 categorie (ESCLUDI qualità foto e vita annuncio):
 
 1. Titolo / SEO (max 10 punti)
@@ -219,9 +247,17 @@ SOGLIA MINIMA: 65/80
 TARGET: 70-75+
 ECCELLENZA: 75-80
 
-Per ogni categoria assegna un punteggio 0-10 e identifica le carenze.
+FILOSOFIA DI VALUTAZIONE:
+- Se una sezione è ben fatta → PREMIALA con un punteggio alto e un breve riconoscimento positivo
+- Se una sezione è migliorabile → suggerimento chirurgico specifico
+- NON trovare problemi dove non ce ne sono
+- NON penalizzare strutture che Studio ha creato intenzionalmente (keyword block separato, hashtag strategici, mini storytelling)
+- Le keyword integrate nel testo sono un VALORE, non un problema
+- Il blocco keyword separato è un BOOST SEO aggiuntivo, non spam
 
-REGOLA KEYWORD: se l'annuncio ha keyword strutturate (core IT+EN, stagionali, occasione, emozionali), il punteggio keyword DEVE essere MINIMO 7/10.
+REGOLA KEYWORD: se l'annuncio ha keyword strutturate (core IT+EN, stagionali, occasione, emozionali) e keyword integrate nel testo, il punteggio keyword DEVE essere MINIMO 7/10.
+
+REGOLA DESCRIZIONE: se la descrizione contiene mini storytelling + psicologia acquirente + keyword integrate, il punteggio DEVE essere MINIMO 7/10.
 
 Rispondi SOLO JSON:
 {
@@ -231,8 +267,9 @@ Rispondi SOLO JSON:
     {
       "name": "nome categoria",
       "score": numero (0-10),
-      "issues": ["problema 1"],
-      "missingData": ["dato mancante 1"]
+      "feedback": "breve feedback - positivo se eccellente, suggerimento se migliorabile",
+      "issues": ["problema 1 solo se reale"],
+      "missingData": ["dato mancante 1 solo se critico"]
     }
   ],
   "missingFields": [
@@ -293,7 +330,7 @@ serve(async (req) => {
           {
             role: "user",
             content: [
-              { type: "text", text: `Analisi pass ${pass + 1}. Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}. Sii ESTREMAMENTE preciso su misure, numeri e testo visibile. Ricontrolla ogni dato numerico (taglie, misure, quantità). Presta MASSIMA attenzione a: genere (uomo/donna/unisex), tipo di capo, presenza zip/cappuccio, stagionalità, vestibilità.` },
+              { type: "text", text: `Analisi pass ${pass + 1}. Analizza queste ${images.length} foto per un annuncio Vinted. Categoria selezionata: ${categoria || "non specificata"}. Sii ESTREMAMENTE preciso su misure, numeri e testo visibile. Ricontrolla ogni dato numerico (taglie, misure, quantità). Presta MASSIMA attenzione a: genere (uomo/donna/unisex), tipo di capo, presenza zip/cappuccio, stagionalità, vestibilità, NICCHIA TARGET.` },
               ...imageContents,
             ],
           },
@@ -379,9 +416,9 @@ serve(async (req) => {
         for (const qa of conversationHistory) {
           contextMessage += `D: ${qa.question}\nR: ${qa.answer}\n`;
         }
-        contextMessage += `\nBasandoti sulle risposte ricevute, decidi se servono altre domande o se hai abbastanza informazioni. Se servono altre domande, fai SOLO domande di approfondimento su aspetti non ancora coperti. Assicurati di aver raccolto abbastanza info per determinare la CATEGORIA VINTED corretta (genere, tipo capo, stile).`;
+        contextMessage += `\nBasandoti sulle risposte ricevute, decidi se servono altre domande o se hai abbastanza informazioni. Se servono altre domande, fai SOLO domande di approfondimento su aspetti non ancora coperti. Assicurati di aver raccolto abbastanza info per determinare la CATEGORIA VINTED corretta (genere, tipo capo, stile) e la NICCHIA TARGET.`;
       } else {
-        contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta (es. genere, stile, tipologia).`;
+        contextMessage += `\nQuesto è il primo round di domande. Fai le domande fondamentali per creare un annuncio eccellente per questa categoria di prodotto. Includi almeno una domanda utile per determinare la categoria Vinted corretta e la nicchia target (es. genere, stile, tipologia, posizionamento).`;
       }
 
       const questionsResponse = await fetch(apiUrl, {
@@ -448,6 +485,8 @@ serve(async (req) => {
         }
       }
 
+      contextMessage += `\nRICORDA: Le keyword (6-10) devono essere integrate NATURALMENTE nel testo della descrizione, non in un blocco separato. Il keywordBlock è un BOOST AGGIUNTIVO separato.`;
+
       const generateResponse = await fetch(apiUrl, {
         method: "POST",
         headers: apiHeaders,
@@ -500,7 +539,7 @@ serve(async (req) => {
                   { role: "system", content: OUTPUT_SYSTEM_PROMPT },
                   { role: "user", content: contextMessage },
                   { role: "assistant", content: content },
-                  { role: "user", content: "Il SafeScore stimato è troppo basso. Raffina l'annuncio: aggiungi micro CTA, migliora leve persuasive, riduci genericità, migliora struttura frasi, inserisci parole ad alta intenzione d'acquisto, migliora chiarezza misure. Target: 80-85+. Restituisci lo stesso formato JSON completo." },
+                  { role: "user", content: "Il SafeScore stimato è troppo basso. Raffina l'annuncio: aggiungi micro CTA, migliora leve persuasive, riduci genericità, migliora struttura frasi, inserisci parole ad alta intenzione d'acquisto, migliora chiarezza misure. Assicurati che le 6-10 keyword siano integrate naturalmente nel testo. Target: 80-85+. Restituisci lo stesso formato JSON completo." },
                 ],
                 stream: false,
               }),
@@ -723,7 +762,7 @@ serve(async (req) => {
         });
       }
 
-      const auditContext = `Valida questo annuncio generato da SAFEViN Studio:
+      const auditContext = `Valida questo annuncio generato da SAFEViN Studio (REFINEMENT MODE attivo — questo annuncio è stato creato dal tuo stesso sistema):
 
 TITOLO: ${generatedOutput.titolo || "(vuoto)"}
 
@@ -731,21 +770,27 @@ DESCRIZIONE: ${generatedOutput.descrizione || "(vuota)"}
 
 BULLET POINTS: ${(generatedOutput.bulletPoints || []).join("; ")}
 
+KEYWORD INTEGRATE NEL TESTO: ${(generatedOutput.integratedKeywords || []).join(", ")}
+
 PREZZO SUGGERITO: €${generatedOutput.suggestedPrice?.min || "?"} - €${generatedOutput.suggestedPrice?.max || "?"}
 Motivazione: ${generatedOutput.suggestedPrice?.reasoning || "(nessuna)"}
 
 CATEGORIA: ${generatedOutput.category_suggestion || "(vuota)"}
 
 HASHTAG/KEYWORD: ${(generatedOutput.hashtags || []).join(", ")}
-Keyword Block: ${generatedOutput.keywordIntelligence?.keywordBlock || "(vuoto)"}
+Keyword Block (boost SEO separato): ${generatedOutput.keywordIntelligence?.keywordBlock || "(vuoto)"}
 Strategic Hashtags: ${(generatedOutput.keywordIntelligence?.strategicHashtags || []).join(", ")}
 
 TRUST SECTION: ${generatedOutput.trustSection ? "presente" : "assente"}
 
+NICCHIA TARGET: ${generatedOutput.nicheTarget || "(non specificata)"}
+
 TIPS: ${(generatedOutput.tips || []).join("; ")}
 
 Categoria prodotto: ${categoria || "non specificata"}
-Vision report disponibile: ${visionReport ? "sì" : "no"}`;
+Vision report disponibile: ${visionReport ? "sì" : "no"}
+
+NOTA: Questo annuncio è stato generato da Studio. Applica REFINEMENT MODE: base minima 70, non penalizzare strutture generate intenzionalmente (keyword block, hashtag, storytelling). Premia le sezioni ben fatte.`;
 
       const auditResponse = await fetch(apiUrl, {
         method: "POST",

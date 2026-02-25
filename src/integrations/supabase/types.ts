@@ -26,7 +26,9 @@ export type Database = {
           descrizione: string
           first_image_url: string | null
           id: string
+          origin: string
           prezzo: string
+          studio_creation_id: string | null
           taglia: string
           tempo_caricamento: string
           titolo: string
@@ -42,7 +44,9 @@ export type Database = {
           descrizione?: string
           first_image_url?: string | null
           id?: string
+          origin?: string
           prezzo?: string
+          studio_creation_id?: string | null
           taglia?: string
           tempo_caricamento?: string
           titolo?: string
@@ -58,12 +62,22 @@ export type Database = {
           descrizione?: string
           first_image_url?: string | null
           id?: string
+          origin?: string
           prezzo?: string
+          studio_creation_id?: string | null
           taglia?: string
           tempo_caricamento?: string
           titolo?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "analyses_studio_creation_id_fkey"
+            columns: ["studio_creation_id"]
+            isOneToOne: false
+            referencedRelation: "studio_creations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       studio_creations: {
         Row: {
@@ -72,8 +86,13 @@ export type Database = {
           first_image_url: string | null
           id: string
           images: Json
+          keyword_list: Json | null
+          origin: string
           output: Json | null
           questions_answers: Json
+          semantic_fingerprint: string | null
+          structural_blocks: Json | null
+          studio_version: string
           titolo_generato: string | null
           vision_report: string | null
         }
@@ -83,8 +102,13 @@ export type Database = {
           first_image_url?: string | null
           id?: string
           images?: Json
+          keyword_list?: Json | null
+          origin?: string
           output?: Json | null
           questions_answers?: Json
+          semantic_fingerprint?: string | null
+          structural_blocks?: Json | null
+          studio_version?: string
           titolo_generato?: string | null
           vision_report?: string | null
         }
@@ -94,8 +118,13 @@ export type Database = {
           first_image_url?: string | null
           id?: string
           images?: Json
+          keyword_list?: Json | null
+          origin?: string
           output?: Json | null
           questions_answers?: Json
+          semantic_fingerprint?: string | null
+          structural_blocks?: Json | null
+          studio_version?: string
           titolo_generato?: string | null
           vision_report?: string | null
         }
