@@ -231,38 +231,39 @@ const AUDIT_INTERNAL_PROMPT = `Sei il motore di validazione interno di SAFEViN. 
 
 IMPORTANTE: Questo annuncio è stato generato da SAFEViN Studio, il tuo stesso ecosistema. NON distruggere ciò che Studio ha creato. Il tuo ruolo è RAFFINARE e VALIDARE, non giudicare come un critico esterno.
 
-Valuta SOLO queste 8 categorie (ESCLUDI qualità foto e vita annuncio):
+Valuta QUESTE 10 categorie:
 
-1. Titolo / SEO (max 10 punti)
-2. Descrizione (max 10 punti)
-3. Prezzo strategico (max 10 punti)
-4. Categoria + Brand (max 10 punti)
-5. Tag + Keyword (max 10 punti)
-6. Condizione prodotto (max 10 punti)
-7. Materiale / Colore (max 10 punti)
-8. Psicologia acquirente (max 10 punti)
+1. Titolo / SEO (max 10 punti) – Il titolo è ottimizzato per la ricerca? Contiene brand, taglia, colore, modello?
+2. Descrizione narrativa (max 10 punti) – Mini storytelling, psicologia acquirente, contesto emotivo?
+3. Dettagli tecnici (max 10 punti) – Misure, materiale, vestibilità, composizione presenti e precisi?
+4. Prezzo strategico (max 10 punti) – Prezzo coerente con mercato, condizione e brand?
+5. Categoria + Brand (max 10 punti) – Categoria corretta, brand riconosciuto e posizionato?
+6. Keyword integrate (max 10 punti) – Minimo 6-10 keyword naturali nel testo (ricerca diretta, varianti, stagione, occasione)?
+7. Hashtag & Tag SEO (max 10 punti) – Blocco hashtag strategico presente (core IT/EN, stagionali, occasione, emozionali)?
+8. Condizione prodotto (max 10 punti) – Condizioni dichiarate chiaramente, difetti specificati se presenti?
+9. Foto & Visual (max 10 punti) – Angolazioni coperte, qualità foto, dettagli visibili?
+10. Psicologia acquirente (max 10 punti) – Target definito, momento d'uso, trust elements, urgenza?
 
-PUNTEGGIO MASSIMO: 80
-SOGLIA MINIMA: 65/80
-TARGET: 70-75+
-ECCELLENZA: 75-80
+PUNTEGGIO MASSIMO: 100
+SOGLIA MINIMA PER PUBBLICAZIONE: 70/100
+TARGET: 80-90+
+ECCELLENZA: 90-100
 
 FILOSOFIA DI VALUTAZIONE:
-- Se una sezione è ben fatta → PREMIALA con un punteggio alto e un breve riconoscimento positivo
+- Se una sezione è ben fatta → PREMIALA con punteggio alto e breve riconoscimento positivo
 - Se una sezione è migliorabile → suggerimento chirurgico specifico
 - NON trovare problemi dove non ce ne sono
-- NON penalizzare strutture che Studio ha creato intenzionalmente (keyword block separato, hashtag strategici, mini storytelling)
+- NON penalizzare strutture che Studio ha creato intenzionalmente (keyword block, hashtag, storytelling)
 - Le keyword integrate nel testo sono un VALORE, non un problema
 - Il blocco keyword separato è un BOOST SEO aggiuntivo, non spam
 
-REGOLA KEYWORD: se l'annuncio ha keyword strutturate (core IT+EN, stagionali, occasione, emozionali) e keyword integrate nel testo, il punteggio keyword DEVE essere MINIMO 7/10.
-
+REGOLA KEYWORD: se l'annuncio ha keyword strutturate e keyword integrate nel testo, il punteggio keyword DEVE essere MINIMO 7/10.
 REGOLA DESCRIZIONE: se la descrizione contiene mini storytelling + psicologia acquirente + keyword integrate, il punteggio DEVE essere MINIMO 7/10.
 
 Rispondi SOLO JSON:
 {
-  "totalScore": numero (0-80),
-  "passed": boolean (true se >= 65),
+  "totalScore": numero (0-100),
+  "passed": boolean (true se >= 70),
   "categories": [
     {
       "name": "nome categoria",
@@ -275,8 +276,8 @@ Rispondi SOLO JSON:
   "missingFields": [
     {
       "field": "nome campo mancante",
-      "reason": "perché serve",
-      "question": "domanda da fare all'utente"
+      "reason": "perché serve — spiega l'impatto concreto sulla vendita",
+      "question": "domanda specifica e dettagliata da fare all'utente"
     }
   ]
 }`;
@@ -819,7 +820,7 @@ NOTA: Questo annuncio è stato generato da Studio. Applica REFINEMENT MODE: base
 
       try {
         const auditParsed = JSON.parse(auditContent);
-        console.log(`Internal audit score: ${auditParsed.totalScore}/80, passed: ${auditParsed.passed}`);
+        console.log(`Internal audit score: ${auditParsed.totalScore}/100, passed: ${auditParsed.passed}`);
         return new Response(JSON.stringify(auditParsed), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         });

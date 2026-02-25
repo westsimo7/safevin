@@ -255,8 +255,8 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
           });
 
           if (!auditError && auditResult && !auditResult.passed) {
-            // Score < 65/80 — ask for missing data
-            console.log(`Internal audit failed: ${auditResult.totalScore}/80`);
+            // Score < 70/100 — ask for missing data
+            console.log(`Internal audit failed: ${auditResult.totalScore}/100`);
             const fields = auditResult.missingFields || [];
             
             if (fields.length > 0) {
@@ -320,6 +320,16 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
 
     const updatedHistory = [...conversationHistory, ...newAnswers];
     await generateOutput(updatedHistory);
+  };
+
+  const handleSkipMissingData = () => {
+    if (outputData) {
+      setConversationHistory(conversationHistory);
+      setStep("output");
+      saveCreation(outputData, conversationHistory).catch((err) =>
+        console.error("Failed to save creation:", err),
+      );
+    }
   };
 
   const computeSemanticFingerprint = (output: StudioOutputData): string => {
@@ -489,9 +499,10 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
             <div className="w-14 h-14 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto mb-4">
               <span className="text-2xl">⚠️</span>
             </div>
-            <h2 className="text-xl font-bold mb-2">Informazioni critiche mancanti</h2>
+            <h2 className="text-xl font-bold mb-2">SafeScore sotto soglia: dettagli mancanti</h2>
             <p className="text-sm text-muted-foreground">
-              L'annuncio non è ancora pubblicabile. Mancano alcuni dettagli fondamentali per raggiungere la qualità minima richiesta.
+              L'audit interno ha rilevato che l'annuncio non raggiunge il punteggio minimo di 70/100. 
+              Rispondi alle domande qui sotto per migliorare la qualità e massimizzare le probabilità di vendita.
             </p>
           </div>
 
@@ -522,6 +533,21 @@ const StudioFlow = ({ onBack }: { onBack: () => void }) => {
           >
             Rigenera annuncio con i nuovi dati
           </Button>
+
+          <div className="border border-border/30 rounded-xl p-4 bg-muted/30">
+            <p className="text-xs text-muted-foreground mb-3">
+              ⚠️ Puoi procedere senza aggiungere i dettagli richiesti, ma SAFEViN <strong>non garantisce</strong> che l'annuncio 
+              sia massimizzato per la vendita. I dati mancanti riducono la probabilità di conversione e la visibilità nelle ricerche.
+            </p>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full text-muted-foreground hover:text-foreground"
+              onClick={handleSkipMissingData}
+            >
+              Procedi comunque senza modifiche
+            </Button>
+          </div>
         </div>
       )}
 
