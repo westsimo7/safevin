@@ -151,7 +151,7 @@ const EngineImprove = () => {
         {phase !== "generating" && phase !== "output" && (
           <Button
             variant="ghost"
-            className="mb-6 text-muted-foreground hover:text-foreground"
+            className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground"
             onClick={() => navigate("/engine/analyze/audit")}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
