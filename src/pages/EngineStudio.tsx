@@ -12,7 +12,7 @@ const EngineStudio = () => {
       <AppNavbar />
 
       <main className="container mx-auto px-6 pt-8 pb-12">
-        <Button variant="ghost" className="mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine")}>
+        <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Engine Home
         </Button>
