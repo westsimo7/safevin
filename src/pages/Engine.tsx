@@ -27,20 +27,20 @@ const Engine = () => {
           <p className="text-[11px] md:text-base text-muted-foreground">Scegli la modalità per iniziare.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 max-w-3xl mx-auto">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-3 md:gap-6 max-w-3xl mx-auto">
           {/* ANALIZZA */}
           <Card
-            className="border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all cursor-pointer group"
+            className="border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all cursor-pointer group flex-1"
             onClick={() => navigate("/engine/analyze")}
           >
-            <CardContent className="p-5 md:p-8 flex md:flex-col items-center md:text-center gap-4 md:gap-0">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 md:mx-auto md:mb-5 group-hover:scale-110 transition-transform">
-                <Search className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+            <CardContent className="p-5 md:p-8 flex flex-col items-center text-center gap-3 md:gap-0 h-full justify-center">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 md:mx-auto md:mb-5 group-hover:scale-110 transition-transform">
+                <Search className="w-7 h-7 md:w-8 md:h-8 text-primary" />
               </div>
               <div>
-                <h2 className="text-base md:text-2xl font-bold mb-0.5 md:mb-3">ANALIZZA</h2>
+                <h2 className="text-lg md:text-2xl font-bold mb-1 md:mb-3">ANALIZZA</h2>
                 <p className="text-xs md:text-sm text-muted-foreground leading-snug">
-                  Carica immagini o annuncio, ricevi score e fix
+                  Valuta il tuo annuncio con il sistema <span className="font-semibold text-primary">Audit</span>: carica immagini o link, ricevi uno score dettagliato e suggerimenti per migliorare.
                 </p>
               </div>
             </CardContent>
@@ -48,17 +48,17 @@ const Engine = () => {
 
           {/* CREA */}
           <Card
-            className="border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all cursor-pointer group"
+            className="border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all cursor-pointer group flex-1"
             onClick={() => navigate("/engine/studio")}
           >
-            <CardContent className="p-5 md:p-8 flex md:flex-col items-center md:text-center gap-4 md:gap-0">
-              <div className="w-12 h-12 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 md:mx-auto md:mb-5 group-hover:scale-110 transition-transform">
-                <PenTool className="w-6 h-6 md:w-8 md:h-8 text-primary" />
+            <CardContent className="p-5 md:p-8 flex flex-col items-center text-center gap-3 md:gap-0 h-full justify-center">
+              <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center flex-shrink-0 md:mx-auto md:mb-5 group-hover:scale-110 transition-transform">
+                <PenTool className="w-7 h-7 md:w-8 md:h-8 text-primary" />
               </div>
               <div>
-                <h2 className="text-base md:text-2xl font-bold mb-0.5 md:mb-3">CREA</h2>
+                <h2 className="text-lg md:text-2xl font-bold mb-1 md:mb-3">CREA</h2>
                 <p className="text-xs md:text-sm text-muted-foreground leading-snug">
-                  Genera annuncio completo guidato (Studio)
+                  Genera un annuncio completo con il sistema <span className="font-semibold text-primary">Studio</span>: rispondi a poche domande e ottieni titolo, descrizione e struttura ottimizzata.
                 </p>
               </div>
             </CardContent>
