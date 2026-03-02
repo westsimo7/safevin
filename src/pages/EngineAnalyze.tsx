@@ -12,22 +12,22 @@ const EngineAnalyze = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
-      <main className="container mx-auto px-6 pt-8 pb-12">
+      <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12">
         <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
           Engine Home
         </Button>
 
-        <div className="text-center mb-10">
-          <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
+        <div className="text-center mb-4 md:mb-10">
+          <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 md:mb-4">
             <Search className="w-3 h-3 mr-1" />
             Analisi
           </Badge>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Scegli tipo di analisi</h1>
-          <p className="text-muted-foreground">Seleziona cosa vuoi analizzare.</p>
+          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-1 md:mb-2">Scegli tipo di analisi</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Seleziona cosa vuoi analizzare.</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6 max-w-3xl mx-auto">
           {/* Solo immagini */}
           <Card
             className="border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.2)] hover:shadow-[0_0_30px_hsl(var(--primary)/0.4)] transition-all cursor-pointer group"
