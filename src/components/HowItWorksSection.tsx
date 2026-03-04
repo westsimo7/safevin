@@ -1,4 +1,4 @@
-import { Upload, BarChart3, PenTool, Eye, Camera, Cpu, Target, FileText } from "lucide-react";
+import { Upload, BarChart3, PenTool, Eye, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const steps = [
@@ -24,54 +24,31 @@ const steps = [
 
 const blocks = [
   {
-    icon: Cpu,
-    title: "Come funziona SafeViN",
-    items: [
-      "Carichi le immagini del tuo prodotto",
-      "L'IA Vision analizza dettagli, difetti e qualità visiva",
-      "GPT elabora dati strutturati e genera analisi operativa",
-      "Viene calcolato il SafeScore™ dinamico e proporzionale",
-      "Ricevi correzioni operative precise e actionable",
-    ],
-  },
-  {
-    icon: Target,
-    title: "SafeScore™ spiegato",
-    items: [
-      "Sistema proporzionale: il cap massimo dipende dai dati forniti",
-      "Nell'analisi immagini, lo score è basato sul numero di foto caricate",
-      "Analisi reale e tecnica, non generica né di marketing",
-      "Punteggio calcolato su parametri oggettivi verificabili",
-    ],
-  },
-  {
     icon: Eye,
-    title: "SafeViN Audit",
+    title: "SAFEViN Audit",
     items: [
       "Verifica struttura della descrizione e completezza informativa",
       "Coerenza tra immagini, titolo e contenuto dell'annuncio",
       "Ottimizzazione keyword e visibilità nelle ricerche",
       "Rilevamento errori invisibili che riducono visibilità e conversione",
+      "SafeScore™ proporzionale: il cap massimo dipende dai dati forniti",
+      "Punteggio calcolato su parametri oggettivi verificabili, non opinioni",
+      "Vision AI analizza ogni foto: difetti, illuminazione, composizione e sfondo",
+      "Score per foto: ogni immagine vale massimo 10 punti",
     ],
   },
   {
     icon: FileText,
-    title: "SafeViN Studio",
+    title: "SAFEViN Studio",
     items: [
       "Creazione annuncio guidata passo-passo con domande strutturate",
       "Domande dinamiche adattate al prodotto identificato dalla Vision",
       "Ottimizzazione premium con keyword intelligence integrata",
       "Output completo pronto per il marketplace (titolo, descrizione, keyword)",
-    ],
-  },
-  {
-    icon: Camera,
-    title: "Analisi Immagini",
-    items: [
-      "Vision AI analizza ogni singola foto individualmente",
-      "Rilevamento difetti, illuminazione, composizione e sfondo",
-      "Valutazione contesto visivo e coerenza con la categoria",
-      "Score per foto: ogni immagine vale massimo 10 punti",
+      "Generazione titoli ottimizzati e descrizioni persuasive",
+      "Analisi foto con Vision AI per contesto e coerenza categoria",
+      "Struttura professionale calibrata per massimizzare visibilità",
+      "Salvataggio nello storico per confronto e iterazione continua",
     ],
   },
 ];
@@ -116,7 +93,7 @@ const HowItWorksSection = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {blocks.map((block, index) => (
-              <Card key={index} className={`border-border/50 bg-card/50 hover:border-primary/30 transition-colors ${index === 0 ? "md:col-span-2" : ""}`}>
+              <Card key={index} className="border-border/50 bg-card/50 hover:border-primary/30 transition-colors h-full">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
