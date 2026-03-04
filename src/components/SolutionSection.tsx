@@ -1,11 +1,16 @@
 import { Eye, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const SolutionSection = () => {
+  const headerRef = useScrollReveal({ direction: "up", duration: 0.7 });
+  const auditRef = useScrollReveal({ direction: "left", delay: 0.15, duration: 0.8 });
+  const studioRef = useScrollReveal({ direction: "right", delay: 0.3, duration: 0.8 });
+
   return (
     <section className="relative py-16 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-4 md:px-6 max-w-5xl">
-        <div className="text-center mb-10 md:mb-14">
+        <div ref={headerRef} className="text-center mb-10 md:mb-14">
           <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
             L'ecosistema <span className="text-primary">SAFEViN</span>
           </h2>
@@ -16,7 +21,7 @@ const SolutionSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {/* Audit Card */}
-          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+          <Card ref={auditRef} className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
             <CardContent className="p-6 md:p-8 flex flex-col h-full">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                 <Eye className="w-6 h-6 text-primary" />
@@ -35,7 +40,7 @@ const SolutionSection = () => {
           </Card>
 
           {/* Studio Card */}
-          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+          <Card ref={studioRef} className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
             <CardContent className="p-6 md:p-8 flex flex-col h-full">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-primary" />

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Check, Zap, Crown, Rocket } from "lucide-react";
+import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const plans = [
   {
@@ -65,12 +66,16 @@ const plans = [
 ];
 
 const PricingSection = () => {
+  const headerRef = useScrollReveal({ direction: "up", duration: 0.7 });
+  const gridRef = useStaggerReveal({ direction: "up", stagger: 0.15, distance: 60 });
+  const footerRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.6, distance: 20 });
+
   return (
     <section className="relative py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="container mx-auto px-6 max-w-6xl">
-        <div className="text-center mb-16">
+        <div ref={headerRef} className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Scegli il tuo piano
           </h2>
@@ -79,10 +84,11 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid md:grid-cols-3 gap-6">
           {plans.map((plan, index) => (
             <div
               key={index}
+              data-reveal
               className={`relative flex flex-col p-6 rounded-2xl transition-all duration-300 ${
                 plan.popular
                   ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
@@ -142,7 +148,7 @@ const PricingSection = () => {
           ))}
         </div>
 
-        <div className="mt-12 text-center">
+        <div ref={footerRef} className="mt-12 text-center">
           <p className="text-muted-foreground text-sm">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
