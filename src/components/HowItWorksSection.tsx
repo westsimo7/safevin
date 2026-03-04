@@ -1,4 +1,4 @@
-import { Upload, BarChart3, PenTool, Eye, Camera, Cpu, Target, FileText } from "lucide-react";
+import { Upload, BarChart3, PenTool, Eye, FileText } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const steps = [
