@@ -93,7 +93,7 @@ const HowItWorksSection = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {blocks.map((block, index) => (
-              <Card key={index} className={`border-border/50 bg-card/50 hover:border-primary/30 transition-colors ${index === 0 ? "md:col-span-2" : ""}`}>
+              <Card key={index} className="border-border/50 bg-card/50 hover:border-primary/30 transition-colors h-full">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
