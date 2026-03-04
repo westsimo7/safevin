@@ -1,9 +1,12 @@
 import { AlertTriangle } from "lucide-react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const DisclaimerSection = () => {
+  const ref = useScrollReveal({ direction: "up", duration: 0.7, distance: 30 });
+
   return (
     <section className="py-12 bg-background">
-      <div className="container mx-auto px-6 max-w-3xl">
+      <div ref={ref} className="container mx-auto px-6 max-w-3xl">
         <div className="p-6 rounded-2xl border border-border/50 bg-card/50">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
