@@ -1,83 +1,57 @@
-import { BarChart3, Eye, Shield, Zap, Camera } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { Eye, Zap } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-const features = [
-  {
-    icon: Eye,
-    title: "SAFEViN Audit",
-    description: "Analisi strutturale di annunci già pubblicati. 10 categorie, punteggio SafeScore™, problemi identificati e soluzioni operative immediate.",
-  },
-  {
-    icon: BarChart3,
-    title: "SafeScore™",
-    description: "Metrica proprietaria che quantifica la qualità del tuo annuncio. Proporzionale ai dati forniti, non un'opinione: un dato su cui agire.",
-  },
-  {
-    icon: Shield,
-    title: "Correzioni operative",
-    description: "Ogni problema rilevato include una soluzione concreta. Sai esattamente cosa cambiare, perché e quale impatto avrà.",
-  },
-  {
-    icon: Camera,
-    title: "Analisi Immagini",
-    description: "Vision AI rileva difetti, qualità visiva, contesto e coerenza categoria. Score proporzionale al numero di foto analizzate.",
-  },
-  {
-    icon: Zap,
-    title: "SAFEViN Studio",
-    description: "Costruzione strategica dell'annuncio con domande guidate, keyword intelligence e output pronto per il marketplace.",
-  },
-];
 
 const SolutionSection = () => {
   return (
-    <section className="relative py-24 bg-background overflow-hidden">
-      <div className="container mx-auto px-6 max-w-5xl">
-        <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+    <section className="relative py-16 md:py-24 bg-background overflow-hidden">
+      <div className="container mx-auto px-4 md:px-6 max-w-5xl">
+        <div className="text-center mb-10 md:mb-14">
+          <h2 className="text-2xl md:text-4xl font-bold text-foreground mb-3 md:mb-4">
             L'ecosistema <span className="text-primary">SAFEViN</span>
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Strumenti AI che analizzano, correggono e costruiscono i tuoi annunci per massimizzare le vendite.
+          <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
+            Due strumenti AI complementari per analizzare e costruire annunci che vendono.
           </p>
         </div>
 
-        {/* Carousel */}
-        <Carousel
-          opts={{ align: "start", loop: true }}
-          className="w-full"
-        >
-          <CarouselContent className="-ml-4">
-            {features.map((feature, index) => (
-              <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
-                  <CardContent className="p-6 flex flex-col h-full">
-                    <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-                      <feature.icon className="w-6 h-6 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2">
-                      {feature.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm leading-relaxed flex-1">
-                      {feature.description}
-                    </p>
-                  </CardContent>
-                </Card>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <div className="flex justify-center gap-2 mt-6">
-            <CarouselPrevious className="static translate-y-0" />
-            <CarouselNext className="static translate-y-0" />
-          </div>
-        </Carousel>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+          {/* Audit Card */}
+          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+            <CardContent className="p-6 md:p-8 flex flex-col h-full">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Eye className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                SAFEViN Audit
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+                Analisi strutturale completa di annunci già pubblicati su 10 categorie. 
+                Include il <strong className="text-foreground">SafeScore™</strong>, la metrica proprietaria 
+                che quantifica la qualità del tuo annuncio in modo proporzionale ai dati forniti — non un'opinione, 
+                ma un dato su cui agire. Ogni problema rilevato include una <strong className="text-foreground">correzione operativa</strong> concreta: 
+                sai esattamente cosa cambiare, perché e quale impatto avrà sulle vendite.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Studio Card */}
+          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+            <CardContent className="p-6 md:p-8 flex flex-col h-full">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+                <Zap className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-foreground mb-3">
+                SAFEViN Studio
+              </h3>
+              <p className="text-muted-foreground text-sm leading-relaxed flex-1">
+                Costruzione strategica dell'annuncio da zero. Attraverso domande guidate e analisi delle foto 
+                con Vision AI, Studio genera titoli ottimizzati, descrizioni persuasive e keyword intelligence 
+                calibrata sulla tua categoria. L'output è pronto per essere pubblicato direttamente sul marketplace, 
+                con struttura professionale e contenuto pensato per massimizzare visibilità e conversioni.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </section>
   );
