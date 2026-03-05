@@ -385,12 +385,9 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
     });
   };
 
-  /* ── Determine actual current step (handle tempo as virtual step) ── */
-  const actualStep: WizardStep = currentStepIdx >= steps.length
-    ? { type: "tempo" }
-    : steps[currentStepIdx];
+  const actualStep: WizardStep = steps[currentStepIdx] || steps[steps.length - 1];
 
-  const totalVisualSteps = steps.length + (origin === "online" ? 1 : 0);
+  const totalVisualSteps = steps.length;
   const currentVisualStep = Math.min(currentStepIdx + 1, totalVisualSteps);
 
   /* ── Progress bar ── */
