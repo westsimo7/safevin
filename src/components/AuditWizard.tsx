@@ -666,7 +666,7 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
                   </p>
                 </button>
                 <button
-                  onClick={() => setOrigin("test")}
+                  onClick={() => { setOrigin("test"); setTempoCaricamento(""); }}
                   className={`text-left px-5 py-4 rounded-xl border transition-all duration-200 ${
                     origin === "test"
                       ? "border-primary bg-primary/10"
@@ -681,23 +681,20 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
                   </p>
                 </button>
               </div>
-            </div>
-          )}
 
-          {/* ── Tempo online ── */}
-          {actualStep.type === "tempo" && (
-            <div className="flex-1 space-y-4">
-              <div>
-                <h2 className="text-xl font-bold text-foreground">Da quanto è online?</h2>
-                <p className="text-sm text-muted-foreground mt-1">Aiutaci a capire da quanto tempo è pubblicato il tuo annuncio</p>
-              </div>
-              <Input
-                value={tempoCaricamento}
-                onChange={e => setTempoCaricamento(e.target.value)}
-                placeholder="Es: 3 giorni, 2 settimane, 1 mese..."
-                className="bg-background border-border text-base h-12"
-                autoFocus
-              />
+              {/* Inline tempo field when online is selected */}
+              {origin === "online" && (
+                <div className="space-y-2 animate-fade-in pt-2">
+                  <h3 className="text-sm font-semibold text-foreground">Da quanto è online?</h3>
+                  <Input
+                    value={tempoCaricamento}
+                    onChange={e => setTempoCaricamento(e.target.value)}
+                    placeholder="Es: 3 giorni, 2 settimane, 1 mese..."
+                    className="bg-background border-border text-base h-12"
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
           )}
 
