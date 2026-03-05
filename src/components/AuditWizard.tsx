@@ -333,19 +333,10 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
   };
 
   const isLastStep = (): boolean => {
-    if (currentStep.type === "origin" && origin === "test") return true;
-    if (currentStep.type === "tempo") return true;
-    if (currentStep.type === "origin" && origin === "online") return false;
-    // Check if we're at the last step in the array
-    return currentStepIdx >= steps.length - 1 && currentStep.type !== "origin";
+    return actualStep.type === "origin" && !!origin;
   };
 
   const goNext = () => {
-    if (currentStep.type === "origin" && origin === "online") {
-      // Add tempo step and go to it
-      setCurrentStepIdx(steps.length); // This will be the "tempo" step
-      return;
-    }
     if (!isLastStep()) {
       setCurrentStepIdx(prev => prev + 1);
     }
@@ -353,11 +344,6 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
 
   const goBack = () => {
     if (currentStepIdx > 0) {
-      // If we're on tempo step (beyond steps array)
-      if (currentStepIdx >= steps.length) {
-        setCurrentStepIdx(steps.length - 1);
-        return;
-      }
       setCurrentStepIdx(prev => prev - 1);
     }
   };
