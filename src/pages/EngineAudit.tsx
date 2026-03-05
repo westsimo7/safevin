@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, TrendingUp, Sparkles, Wand2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import ListingInputForm from "@/components/ListingInputForm";
+import AuditWizard from "@/components/AuditWizard";
 import SmartLoader from "@/components/SmartLoader";
 import EngineAnalysisCard from "@/components/EngineAnalysisCard";
 import AnalysisSummary from "@/components/AnalysisSummary";
@@ -139,7 +139,7 @@ const EngineAudit = () => {
         </Button>
 
         {!analysisResult && !isLoading && (
-          <ListingInputForm onSubmit={handleAnalyze} isLoading={isLoading} />
+          <AuditWizard onSubmit={handleAnalyze} isLoading={isLoading} />
         )}
 
         {isLoading && (
