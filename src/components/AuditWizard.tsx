@@ -333,19 +333,10 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
   };
 
   const isLastStep = (): boolean => {
-    if (currentStep.type === "origin" && origin === "test") return true;
-    if (currentStep.type === "tempo") return true;
-    if (currentStep.type === "origin" && origin === "online") return false;
-    // Check if we're at the last step in the array
-    return currentStepIdx >= steps.length - 1 && currentStep.type !== "origin";
+    return actualStep.type === "origin" && !!origin;
   };
 
   const goNext = () => {
-    if (currentStep.type === "origin" && origin === "online") {
-      // Add tempo step and go to it
-      setCurrentStepIdx(steps.length); // This will be the "tempo" step
-      return;
-    }
     if (!isLastStep()) {
       setCurrentStepIdx(prev => prev + 1);
     }
@@ -353,11 +344,6 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
 
   const goBack = () => {
     if (currentStepIdx > 0) {
-      // If we're on tempo step (beyond steps array)
-      if (currentStepIdx >= steps.length) {
-        setCurrentStepIdx(steps.length - 1);
-        return;
-      }
       setCurrentStepIdx(prev => prev - 1);
     }
   };
@@ -399,18 +385,15 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
     });
   };
 
-  /* ── Determine actual current step (handle tempo as virtual step) ── */
-  const actualStep: WizardStep = currentStepIdx >= steps.length
-    ? { type: "tempo" }
-    : steps[currentStepIdx];
+  const actualStep: WizardStep = steps[currentStepIdx] || steps[steps.length - 1];
 
-  const totalVisualSteps = steps.length + (origin === "online" ? 1 : 0);
+  const totalVisualSteps = steps.length;
   const currentVisualStep = Math.min(currentStepIdx + 1, totalVisualSteps);
 
   /* ── Progress bar ── */
   const progress = totalVisualSteps > 0 ? (currentVisualStep / totalVisualSteps) * 100 : 0;
 
-  const isLast = actualStep.type === "tempo" || (actualStep.type === "origin" && origin === "test");
+  const isLast = actualStep.type === "origin" && !!origin;
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -666,7 +649,7 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
                   </p>
                 </button>
                 <button
-                  onClick={() => setOrigin("test")}
+                  onClick={() => { setOrigin("test"); setTempoCaricamento(""); }}
                   className={`text-left px-5 py-4 rounded-xl border transition-all duration-200 ${
                     origin === "test"
                       ? "border-primary bg-primary/10"
@@ -681,23 +664,20 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
                   </p>
                 </button>
               </div>
-            </div>
-          )}
 
-          {/* ── Tempo online ── */}
-          {actualStep.type === "tempo" && (
-            <div className="flex-1 space-y-4">
-              <div>
-                <h2 className="text-xl font-bold text-foreground">Da quanto è online?</h2>
-                <p className="text-sm text-muted-foreground mt-1">Aiutaci a capire da quanto tempo è pubblicato il tuo annuncio</p>
-              </div>
-              <Input
-                value={tempoCaricamento}
-                onChange={e => setTempoCaricamento(e.target.value)}
-                placeholder="Es: 3 giorni, 2 settimane, 1 mese..."
-                className="bg-background border-border text-base h-12"
-                autoFocus
-              />
+              {/* Inline tempo field when online is selected */}
+              {origin === "online" && (
+                <div className="space-y-2 animate-fade-in pt-2">
+                  <h3 className="text-sm font-semibold text-foreground">Da quanto è online?</h3>
+                  <Input
+                    value={tempoCaricamento}
+                    onChange={e => setTempoCaricamento(e.target.value)}
+                    placeholder="Es: 3 giorni, 2 settimane, 1 mese..."
+                    className="bg-background border-border text-base h-12"
+                    autoFocus
+                  />
+                </div>
+              )}
             </div>
           )}
 
