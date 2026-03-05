@@ -393,7 +393,7 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
   /* ── Progress bar ── */
   const progress = totalVisualSteps > 0 ? (currentVisualStep / totalVisualSteps) * 100 : 0;
 
-  const isLast = actualStep.type === "tempo" || (actualStep.type === "origin" && origin === "test");
+  const isLast = actualStep.type === "origin" && !!origin;
 
   return (
     <div className="space-y-4 animate-fade-in">
