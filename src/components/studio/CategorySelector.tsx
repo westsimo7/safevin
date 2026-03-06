@@ -45,7 +45,7 @@ const CategorySelector = ({ onSelect, selected }: CategorySelectorProps) => {
   );
 
   return (
-    <div className="h-[calc(100vh-120px)] flex flex-col animate-fade-in overflow-hidden">
+    <div className="flex flex-col animate-fade-in">
       <div className="flex-shrink-0 space-y-4 pb-4">
         <h2 className="text-2xl md:text-3xl font-bold">
           Cosa stai vendendo?
@@ -65,7 +65,7 @@ const CategorySelector = ({ onSelect, selected }: CategorySelectorProps) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto pr-1 -mr-1">
+      <div>
         <div className="grid grid-cols-2 gap-3 pb-4">
           {filtered.map((cat) => (
             <Card
