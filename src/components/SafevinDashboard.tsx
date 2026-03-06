@@ -9,8 +9,8 @@ const SafevinDashboard = () => {
   const navigate = useNavigate();
 
   // GSAP-style spring config
-  const spring = { type: "spring", stiffness: 80, damping: 18 };
-  const snappy = { type: "spring", stiffness: 120, damping: 14 };
+  const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
+  const snappy = { type: "spring" as const, stiffness: 120, damping: 14 };
 
   return (
     <div className="min-h-screen bg-background">

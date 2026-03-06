@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Engine from "./pages/Engine";
@@ -17,8 +18,62 @@ import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import CoachWidget from "./components/CoachWidget";
+import PageTransition from "./components/PageTransition";
 
 const queryClient = new QueryClient();
+
+const AnimatedRoutes = () => {
+  const location = useLocation();
+
+  // Determine transition direction based on path
+  const getDirection = (path: string): "left" | "right" | "up" => {
+    if (path.startsWith("/engine")) return "left";
+    if (path.startsWith("/storico")) return "right";
+    return "up";
+  };
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Index />} />
+        <Route path="/dashboard" element={
+          <PageTransition direction="up"><Dashboard /></PageTransition>
+        } />
+        <Route path="/engine" element={
+          <PageTransition direction="left"><Engine /></PageTransition>
+        } />
+        <Route path="/engine/analyze" element={
+          <PageTransition direction="left"><EngineAnalyze /></PageTransition>
+        } />
+        <Route path="/engine/analyze/images" element={
+          <PageTransition direction="left"><EngineImageAnalysis /></PageTransition>
+        } />
+        <Route path="/engine/analyze/audit" element={
+          <PageTransition direction="left"><EngineAudit /></PageTransition>
+        } />
+        <Route path="/engine/studio" element={
+          <PageTransition direction="left"><EngineStudio /></PageTransition>
+        } />
+        <Route path="/engine/improve" element={
+          <PageTransition direction="left"><EngineImprove /></PageTransition>
+        } />
+        <Route path="/storico" element={
+          <PageTransition direction="right"><Storico /></PageTransition>
+        } />
+        <Route path="/storico/studio/:id" element={
+          <PageTransition direction="right"><StudioDetailPage /></PageTransition>
+        } />
+        <Route path="/storico/:id" element={
+          <PageTransition direction="right"><StoricoDetail /></PageTransition>
+        } />
+        <Route path="/settings" element={
+          <PageTransition direction="up"><Settings /></PageTransition>
+        } />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </AnimatePresence>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -26,21 +81,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/engine" element={<Engine />} />
-          <Route path="/engine/analyze" element={<EngineAnalyze />} />
-          <Route path="/engine/analyze/images" element={<EngineImageAnalysis />} />
-          <Route path="/engine/analyze/audit" element={<EngineAudit />} />
-          <Route path="/engine/studio" element={<EngineStudio />} />
-          <Route path="/engine/improve" element={<EngineImprove />} />
-          <Route path="/storico" element={<Storico />} />
-          <Route path="/storico/studio/:id" element={<StudioDetailPage />} />
-          <Route path="/storico/:id" element={<StoricoDetail />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AnimatedRoutes />
         <CoachWidget />
       </BrowserRouter>
     </TooltipProvider>
