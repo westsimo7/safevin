@@ -33,10 +33,9 @@ const PageTransition = ({ children, direction = "left" }: PageTransitionProps) =
       animate={v.animate}
       exit={v.exit}
       transition={{
-        type: "spring",
-        stiffness: 100,
-        damping: 20,
-        mass: 0.8,
+        type: "tween",
+        duration: 0.2,
+        ease: [0.25, 0.1, 0.25, 1],
       }}
       style={{ minHeight: "100vh" }}
     >
