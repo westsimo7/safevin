@@ -68,6 +68,12 @@ const AnimatedRoutes = () => {
         <Route path="/storico/:id" element={
           <PageTransition direction="right"><StoricoDetail /></PageTransition>
         } />
+        <Route path="/about/audit" element={
+          <PageTransition direction="up"><AboutAudit /></PageTransition>
+        } />
+        <Route path="/about/studio" element={
+          <PageTransition direction="up"><AboutStudio /></PageTransition>
+        } />
         <Route path="/settings" element={
           <PageTransition direction="up"><Settings /></PageTransition>
         } />
