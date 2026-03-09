@@ -137,6 +137,48 @@ const SafevinDashboard = () => {
               </motion.span>
             ))}
           </motion.div>
+
+          {/* Audit & Studio CTA buttons */}
+          <motion.div
+            className="flex items-center justify-center gap-4 mt-2"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...spring, delay: 1.15 }}
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-auto py-4 px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+              onClick={() => navigate("/about/audit")}
+            >
+              <div className="flex items-center gap-2.5">
+                <Search className="w-4.5 h-4.5 text-primary" />
+                <div className="text-left">
+                  <span className="text-xs text-muted-foreground block leading-none mb-0.5">
+                    SAFE<span className="text-primary">ViN</span>
+                  </span>
+                  <span className="font-bold text-foreground text-sm">Audit</span>
+                </div>
+              </div>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="h-auto py-4 px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+              onClick={() => navigate("/about/studio")}
+            >
+              <div className="flex items-center gap-2.5">
+                <PenTool className="w-4.5 h-4.5 text-primary" />
+                <div className="text-left">
+                  <span className="text-xs text-muted-foreground block leading-none mb-0.5">
+                    SAFE<span className="text-primary">ViN</span>
+                  </span>
+                  <span className="font-bold text-foreground text-sm">Studio</span>
+                </div>
+              </div>
+            </Button>
+          </motion.div>
         </div>
       </main>
     </div>

@@ -17,6 +17,9 @@ import StoricoDetail from "./pages/StoricoDetail";
 import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import AboutAudit from "./pages/AboutAudit";
+import AboutStudio from "./pages/AboutStudio";
+import Settings from "./pages/Settings";
 import CoachWidget from "./components/CoachWidget";
 import PageTransition from "./components/PageTransition";
 
