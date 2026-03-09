@@ -79,12 +79,29 @@ const SafevinDashboard = () => {
             </motion.span>
           </motion.h1>
 
+          {/* CTA Button — scale up with glow pulse */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.5, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ ...spring, delay: 0.7 }}
+          >
+            <Button
+              variant="neon"
+              size="lg"
+              className="text-lg px-12 py-6 h-auto group animate-pulse-glow mb-6"
+              onClick={() => navigate("/engine")}
+            >
+              Avvia SafeVin Engine
+              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+          </motion.div>
+
           {/* Description — slide up with fade */}
           <motion.p
             className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
           >
             Analizza il tuo annuncio, ricevi score e criticità.<br />
             Correggi tutto e genera la versione migliore.
@@ -96,7 +113,7 @@ const SafevinDashboard = () => {
             initial="hidden"
             animate="visible"
             variants={{
-              visible: { transition: { staggerChildren: 0.1, delayChildren: 0.85 } },
+              visible: { transition: { staggerChildren: 0.1, delayChildren: 1.0 } },
             }}
           >
             {[
@@ -119,23 +136,6 @@ const SafevinDashboard = () => {
                 {item.label}
               </motion.span>
             ))}
-          </motion.div>
-
-          {/* CTA Button — scale up with glow pulse */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.5, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ ...spring, delay: 1.1 }}
-          >
-            <Button
-              variant="neon"
-              size="lg"
-              className="text-lg px-12 py-6 h-auto group animate-pulse-glow"
-              onClick={() => navigate("/engine")}
-            >
-              Avvia SafeVin Engine
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
           </motion.div>
         </div>
       </main>
