@@ -16,8 +16,8 @@ const SafevinDashboard = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
-      <main className="container mx-auto px-6 flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
-        <div className="text-center max-w-3xl mx-auto -mt-16">
+      <main className="container mx-auto px-6 flex flex-col items-center">
+        <div className="text-center max-w-3xl mx-auto mt-12 md:mt-16">
           {/* Badge — drops down with bounce */}
           <motion.div
             initial={{ opacity: 0, y: -40, scale: 0.7 }}
