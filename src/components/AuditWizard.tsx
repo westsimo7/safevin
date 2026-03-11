@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -278,11 +278,14 @@ const AuditWizard = ({ onSubmit, isLoading }: AuditWizardProps) => {
   const steps = useMemo(() => buildSteps(selectedCat, selectedSubcat), [selectedCat, selectedSubcat]);
   const currentStep = steps[currentStepIdx] || steps[0];
 
+
   // Ensure we don't go out of bounds after category change
-  const safeStepIdx = Math.min(currentStepIdx, steps.length - 1);
-  if (safeStepIdx !== currentStepIdx) {
-    setCurrentStepIdx(safeStepIdx);
-  }
+  useEffect(() => {
+    const safeStepIdx = Math.min(currentStepIdx, steps.length - 1);
+    if (safeStepIdx !== currentStepIdx) {
+      setCurrentStepIdx(safeStepIdx);
+    }
+  }, [currentStepIdx, steps.length]);
 
   /* ── Image handling ── */
   const addImages = useCallback((files: FileList | File[]) => {
