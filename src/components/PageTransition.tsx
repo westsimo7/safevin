@@ -8,19 +8,19 @@ interface PageTransitionProps {
 
 const variants = {
   left: {
-    initial: { x: "100%", opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: "-100%", opacity: 0 },
+    initial: { x: 40, opacity: 0, filter: "blur(6px)" },
+    animate: { x: 0, opacity: 1, filter: "blur(0px)" },
+    exit: { x: -20, opacity: 0, filter: "blur(4px)" },
   },
   right: {
-    initial: { x: "-100%", opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: "100%", opacity: 0 },
+    initial: { x: -40, opacity: 0, filter: "blur(6px)" },
+    animate: { x: 0, opacity: 1, filter: "blur(0px)" },
+    exit: { x: 20, opacity: 0, filter: "blur(4px)" },
   },
   up: {
-    initial: { y: 60, opacity: 0, scale: 0.96 },
-    animate: { y: 0, opacity: 1, scale: 1 },
-    exit: { y: -40, opacity: 0, scale: 0.97 },
+    initial: { y: 18, opacity: 0, filter: "blur(6px)" },
+    animate: { y: 0, opacity: 1, filter: "blur(0px)" },
+    exit: { y: -10, opacity: 0, filter: "blur(4px)" },
   },
 };
 
@@ -33,9 +33,8 @@ const PageTransition = ({ children, direction = "left" }: PageTransitionProps) =
       animate={v.animate}
       exit={v.exit}
       transition={{
-        type: "tween",
-        duration: 0.2,
-        ease: [0.25, 0.1, 0.25, 1],
+        duration: 0.45,
+        ease: [0.16, 1, 0.3, 1],
       }}
       style={{ minHeight: "100vh" }}
     >
