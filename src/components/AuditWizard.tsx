@@ -117,7 +117,7 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
   const canProceed = (): boolean => {
     switch (step) {
-      case "photos": return images.length > 0;
+      case "photos": return true;
       case "titolo": return titolo.trim().length > 0;
       case "descrizione": return descrizione.trim().length > 0;
       case "categoria": return categoria.trim().length > 0;
