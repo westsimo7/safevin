@@ -182,6 +182,16 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
               </p>
             </div>
 
+            {images.length === 0 && (
+              <button
+                type="button"
+                onClick={goNext}
+                className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors w-full text-center pt-1"
+              >
+                Procedi senza foto →
+              </button>
+            )}
+
             {previews.length > 0 && (
               <div className="space-y-2">
                 <Badge variant="outline" className="text-xs">{images.length}/{MAX_IMAGES} foto</Badge>
