@@ -44,16 +44,39 @@ Valuta quanto le foto fanno vendere da sole.
 - Trasmettono qualità o incertezza?
 Segnale chiave: se non aiutano a decidere, non convertono.
 
-REGOLE PER LE FRASI:
-- Max 8-10 parole per frase
-- Naturale, diretta, credibile
-- Generica ma contestuale all'annuncio
+REGOLE OUTPUT:
+- Ogni frase: max 8-10 parole, naturale, diretta, credibile
+- Basata sui dati reali dell'annuncio
 - Nessuna spiegazione, nessuna soluzione
-- NON usare frasi fisse (es. "il problema è…")
-- NON ripetere la stessa struttura tra categorie
-- Varia il linguaggio tra le frasi
-- Deve sembrare scritto da una persona reale
-- Anche se una categoria è discreta, evidenzia il principale margine di miglioramento
+- NON usare frasi fisse
+- NON iniziare sempre allo stesso modo
+- NON ripetere struttura tra categorie
+- Varia ritmo, parole e costruzione
+- Ogni frase deve sembrare scritta da una persona reale diversa
+
+LOGICA CAMALEONTICA (ANTI-PATTERN):
+Alterna tra:
+- osservazioni dirette
+- percezioni
+- micro-giudizi
+- sensazioni
+
+Usa variazioni naturali come:
+"non colpisce subito"
+"lascia qualche dubbio"
+"non convince del tutto"
+"si capisce ma non spinge"
+"ok ma migliorabile"
+
+Evita simmetrie tra frasi.
+
+TRIGGER DI DEBOLEZZA:
+- Titolo generico → annuncio invisibile
+- Info mancanti → aumento rischio
+- Prezzo incerto → blocco decisione
+- Foto deboli → perdita valore
+- Incoerenze → crollo fiducia
+Se presenti più problemi, abbassa sensibilmente il Safe Score.
 
 PUNTEGGIO PER CATEGORIA:
 - Assegna un punteggio da 0 a 100 per ogni categoria
@@ -68,7 +91,7 @@ SCALA ETICHETTE:
 
 - NON dare mai 100 se non rarissimo
 - Tono: neutro, leggermente critico, mai aggressivo
-- Obiettivo: far percepire margine di miglioramento
+- Obiettivo: far percepire chiaramente che l'annuncio non sta performando al massimo. Creare consapevolezza del margine di miglioramento. NON risolvere.
 
 FORMATO JSON:
 {
