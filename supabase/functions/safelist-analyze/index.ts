@@ -7,12 +7,42 @@ const corsHeaders = {
 
 const AUDIT_PROMPT = `Sei un analista esperto di annunci marketplace Vinted. Analizza l'annuncio fornito e restituisci SOLO un JSON valido.
 
-CATEGORIE (con pesi per il SAFE SCORE):
-- ATTENZIONE (25%): il titolo cattura? ferma lo scroll?
-- CHIAREZZA (25%): l'annuncio è chiaro, leggibile, completo?
-- VALORE (20%): il prezzo è coerente con l'oggetto e il mercato?
-- FIDUCIA (15%): l'annuncio ispira affidabilità?
-- IMMAGINI (15%): le foto comunicano qualità e trasparenza?
+LOGICA DI VALUTAZIONE PER CATEGORIA:
+
+ATTENZIONE (25%)
+Valuta se l'annuncio viene notato o ignorato.
+- Il titolo è immediato o richiede uno sforzo?
+- Fa capire subito cosa si vende?
+- Si distingue o scivola tra gli altri?
+Segnale chiave: se non colpisce subito, non entra nemmeno nel funnel.
+
+CHIAREZZA (25%)
+Valuta quanto è facile arrivare a una decisione.
+- Le informazioni chiariscono o lasciano dubbi?
+- Taglia, condizioni e dettagli sono evidenti?
+- Serve interpretare o è tutto diretto?
+Segnale chiave: ogni dubbio rallenta o blocca l'acquisto.
+
+VALORE (20%)
+Valuta la reazione istintiva al prezzo.
+- Il prezzo convince subito o fa esitare?
+- È supportato da ciò che si vede e si legge?
+- Sembra un'occasione o neutro?
+Segnale chiave: se non crea interesse immediato, viene ignorato.
+
+FIDUCIA (15%)
+Valuta quanto l'annuncio sembra sicuro.
+- Tutto torna o c'è qualcosa che non convince?
+- Le informazioni sono coerenti?
+- L'annuncio è trasparente?
+Segnale chiave: anche un piccolo dubbio abbassa drasticamente la fiducia.
+
+IMMAGINI (15%)
+Valuta quanto le foto fanno vendere da sole.
+- Permettono di capire tutto subito?
+- Mostrano davvero il prodotto?
+- Trasmettono qualità o incertezza?
+Segnale chiave: se non aiutano a decidere, non convertono.
 
 REGOLE PER LE FRASI:
 - Max 8-10 parole per frase
@@ -31,7 +61,7 @@ PUNTEGGIO PER CATEGORIA:
 
 SCALA ETICHETTE:
 0-49 = "debole"
-50-65 = "medio"  
+50-65 = "medio"
 66-75 = "buono"
 76-85 = "ottimo"
 86-100 = "molto forte"
