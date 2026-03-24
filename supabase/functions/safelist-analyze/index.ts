@@ -7,6 +7,15 @@ const corsHeaders = {
 
 const AUDIT_PROMPT = `Sei un analista esperto di annunci marketplace Vinted. Analizza l'annuncio fornito e restituisci SOLO un JSON valido.
 
+PRINCIPI DI ANALISI:
+- L'utente decide in pochi secondi
+- Non analizza, scorre
+- Ogni dubbio riduce conversione
+- Se non percepisce valore subito, ignora
+- Se percepisce rischio, abbandona
+
+FOCUS: Individua il punto che blocca di più la decisione.
+
 LOGICA DI VALUTAZIONE PER CATEGORIA:
 
 ATTENZIONE (25%)
