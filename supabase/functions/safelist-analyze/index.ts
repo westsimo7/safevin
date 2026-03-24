@@ -87,9 +87,19 @@ TRIGGER DI DEBOLEZZA:
 - Incoerenze → crollo fiducia
 Se presenti più problemi, abbassa sensibilmente il Safe Score.
 
-PUNTEGGIO PER CATEGORIA:
-- Assegna un punteggio da 0 a 100 per ogni categoria
-- Il SAFE SCORE finale è la media pesata
+SAFE SCORE (LOGICA NON LINEARE):
+1. Valuta ogni categoria in modo indipendente
+2. Applica i pesi: ATTENZIONE 25%, CHIAREZZA 25%, VALORE 20%, FIDUCIA 15%, IMMAGINI 15%
+3. Applica penalizzazioni:
+- Se ATTENZIONE è debole → limita il punteggio massimo totale
+- Se FIDUCIA è bassa → riduci fortemente il totale
+- Se VALORE non è chiaro → abbassa tutto in modo visibile
+- Se più categorie sono medie → mantieni score medio, non alto
+- Se tutto è buono ma non eccellente → NON superare 85%
+4. Coerenza tono-punteggio:
+- Score alto → frasi leggere
+- Score medio → frasi neutre/critiche
+- Score basso → frasi più evidenti
 
 SCALA ETICHETTE:
 0-49 = "debole"
