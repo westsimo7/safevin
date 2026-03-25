@@ -110,12 +110,20 @@ const FIT_OPTIONS = [
   { value: "loose", label: "Loose / ampio" },
 ];
 
-const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
+const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputProps) => {
+  // Map audit condizioni to condition option value
+  const getInitialCondition = () => {
+    if (!auditSource?.condizioni) return "";
+    const c = auditSource.condizioni.toLowerCase();
+    const match = CONDITION_OPTIONS.find(o => c.includes(o.label.toLowerCase()));
+    return match?.value || "";
+  };
+
   const [size, setSize] = useState("");
   const [fit, setFit] = useState("");
-  const [condition, setCondition] = useState("");
+  const [condition, setCondition] = useState(getInitialCondition());
   const [materials, setMaterials] = useState(analysis.materials || "");
-  const [minPrice, setMinPrice] = useState("");
+  const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [context, setContext] = useState("");
   const [extras, setExtras] = useState("");
