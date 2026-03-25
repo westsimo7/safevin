@@ -55,14 +55,22 @@ Analizza: completezza info, struttura, comprensibilità generale.
 
 VALORE (20%)
 Valuta il prezzo rispetto al mercato reale.
-LOGICA OBBLIGATORIA:
-1. Estrai keyword dal titolo (brand, prodotto, stile, condizioni)
-2. Simula ricerca di 10-15 annunci simili su Vinted
-3. Stima range prezzi realistici (basso, medio, alto)
-4. Confronta con prezzo dell'annuncio
-OUTPUT nella phrase: indica se il prezzo è sotto media / in linea / sopra media.
-Specifica il confronto (es: "media ~20€, annuncio 25€ → sopra media").
+LOGICA OBBLIGATORIA E DETERMINISTICA:
+1. Estrai: brand, tipo prodotto, condizioni dichiarate
+2. Usa queste fasce di riferimento fisse per Vinted (usato, buone condizioni):
+   - Fast fashion (H&M, Zara, Primark, Bershka): 5-15€
+   - Sportswear mainstream (Nike, Adidas, Puma): 12-25€
+   - Premium casual (Tommy Hilfiger, Ralph Lauren, Lacoste, Calvin Klein): 18-35€
+   - Streetwear/hype (Supreme, Stüssy, Carhartt WIP): 25-50€
+   - Luxury entry (Burberry, Hugo Boss, The North Face premium): 30-60€
+   - Luxury (Gucci, Prada, Balenciaga): 50-150€
+3. Aggiusta la fascia: "nuovo con etichetta" +30%, "ottime condizioni" +10%, "usato" -20%
+4. Calcola il punto medio della fascia aggiustata come "media stimata"
+5. Confronta con prezzo annuncio
+OUTPUT nella phrase: indica prezzo sotto/in linea/sopra media.
+Specifica SEMPRE il confronto numerico (es: "fascia 12-25€, media ~18€, annuncio 19€ → in linea").
 Se il prezzo non è fornito, segnala "prezzo non indicato".
+IMPORTANTE: usa SEMPRE le stesse fasce. Il risultato deve essere IDENTICO per gli stessi input.
 
 FIDUCIA (15%)
 Valuta quanto l'annuncio trasmette affidabilità.
