@@ -162,6 +162,20 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
           </div>
 
           <div className="space-y-2">
+            <Label className="text-sm font-medium">Vestibilità *</Label>
+            <Select value={fit} onValueChange={setFit}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona vestibilità" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIT_OPTIONS.map(f => (
+                  <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label className="text-sm font-medium">Condizione *</Label>
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
