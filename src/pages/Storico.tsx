@@ -45,14 +45,16 @@ const getScore = (a: AnalysisRecord) =>
   (a.analysis_result?.sections as any[] | undefined)?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? 0;
 
 const getScoreColor = (score: number) => {
-  if (score >= 70) return "text-green-400";
-  if (score >= 40) return "text-yellow-400";
+  if (score >= 75) return "text-green-400";
+  if (score >= 55) return "text-yellow-400";
+  if (score >= 48) return "text-orange-400";
   return "text-red-400";
 };
 
 const getScoreBg = (score: number) => {
-  if (score >= 70) return "bg-green-500/10 border-green-500/30";
-  if (score >= 40) return "bg-yellow-500/10 border-yellow-500/30";
+  if (score >= 75) return "bg-green-500/10 border-green-500/30";
+  if (score >= 55) return "bg-yellow-500/10 border-yellow-500/30";
+  if (score >= 48) return "bg-orange-500/10 border-orange-500/30";
   return "bg-red-500/10 border-red-500/30";
 };
 
