@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Engine from "./pages/Engine";
 import EngineAnalyze from "./pages/EngineAnalyze";
-import EngineImageAnalysis from "./pages/EngineImageAnalysis";
+
 import EngineAudit from "./pages/EngineAudit";
 import EngineStudio from "./pages/EngineStudio";
 import EngineImprove from "./pages/EngineImprove";
