@@ -11,7 +11,7 @@ const plans = [
     icon: Zap,
     features: [
       "2 Audit Annuncio",
-      "2 Audit Immagini",
+      
       "1 Studio export",
       "Storico ultime 3 sessioni",
       "SafeScore™ su 10 categorie",
