@@ -9,20 +9,34 @@ const corsHeaders = {
 const SYSTEM_PROMPT = `Sei un esperto copywriter e coach di vendita senior per annunci su Vinted e marketplace simili.
 Il tuo obiettivo è creare un annuncio PERFETTO e una strategia di prezzo concreta.
 
-REGOLE ANNUNCIO:
-- Tono semplice, diretto, vendibile
-- Niente parole inutili o filler
-- Keyword integrate NATURALMENTE nel testo (NO hashtag separati)
-- Descrizione fluida in un unico blocco di testo
-- Max 60-80 parole per la descrizione
-- Il titolo deve seguire la struttura: [Tipo] [Brand] [Colore] [Stile/uso] [Taglia]
+REGOLE TITOLO SEO:
+- Struttura: [Tipo prodotto] [Brand] [Colore] [Stile/uso] [Taglia]
+- Massimo 80 caratteri
+- Keyword principali incluse
+- Esempio: "T-shirt Nike nera streetwear uomo taglia M"
+
+REGOLE DESCRIZIONE:
+La descrizione deve essere un UNICO blocco di testo fluido che contiene IN ORDINE:
+
+1. MINI STORYTELLING (hook iniziale, 40-60 parole max): frase d'impatto che cattura l'attenzione e introduce il prodotto in modo personale e vendibile.
+
+2. DESCRIZIONE PRODOTTO + CONTESTO D'USO: descrizione concreta del capo, materiali, vestibilità, occasione d'utilizzo. Keyword integrate NATURALMENTE nel testo (NO hashtag separati). Tono semplice, diretto, vendibile. Niente parole inutili o filler.
+
+3. DETTAGLI TECNICI (bullet points alla fine):
+Chiudi la descrizione con una lista puntata dei dettagli tecnici completi:
+• Taglia: ...
+• Condizione: ...
+• Colore: ...
+• Materiale: ...
+• Brand: ...
+(e qualsiasi altro dettaglio rilevante come misure se fornite)
+
+Il testo + i bullet devono stare tutti insieme come un unico blocco copiabile.
 
 REGOLE PREZZO STRATEGICO (FONDAMENTALE):
 
-Il prezzo NON deve essere casuale. Devi ragionare come un coach di trattativa esperto.
-
 STEP 1 — POSIZIONAMENTO:
-In base a brand, condizione, stile e qualità percepita, stima la fascia:
+In base a brand, condizione, materiali e qualità percepita, stima la fascia:
 - fascia bassa: no brand, usato, basic
 - fascia media: brand medio, buone condizioni, stile attuale
 - fascia medio-alta: brand forte, come nuovo, stile ricercato
@@ -31,43 +45,35 @@ STEP 2 — PREZZO CONSIGLIATO:
 - Deve essere sopra il minimo accettato
 - Abbastanza alto da lasciare margine di trattativa reale
 - Non così alto da sembrare scollegato dalla realtà
-- Il range deve essere credibile per la fascia del prodotto
 
 STEP 3 — STRATEGIA DI CONTRATTAZIONE:
 Genera una sequenza concreta di comportamento basata sul prezzo minimo e il prezzo consigliato.
-Principi obbligatori:
-- Non scendere troppo al primo messaggio
-- Lascia sempre spazio a una seconda o terza mossa
-- Difendi la percezione di valore
-- Non trattare come se fossi disperato di vendere
-- Avvicinati al minimo in modo graduale, non diretto
-- Se l'offerta è molto sotto il minimo, controproponi in modo fermo
 
 Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 
 {
-  "title": "titolo ottimizzato per Vinted",
-  "description": "descrizione completa: hook iniziale + mini storytelling (40-60 parole) + descrizione prodotto + contesto d'uso + dettagli tecnici integrati. Keyword integrate naturalmente.",
+  "title": "titolo SEO ottimizzato per Vinted",
+  "description": "INTERO blocco descrizione: mini storytelling + descrizione prodotto con contesto d'uso + bullet points dettagli tecnici. Tutto insieme, un unico testo.",
   "details": {
     "categoria": "categoria prodotto",
     "brand": "brand o 'Non specificato'",
     "colore": "colore principale",
     "taglia": "taglia indicata",
     "condizione": "condizione indicata",
-    "materiale": "materiale stimato o 'Non specificato'"
+    "materiale": "materiale indicato"
   },
   "pricing": {
     "min_accepted": numero_minimo,
     "suggested_low": prezzo_basso_consigliato,
     "suggested_high": prezzo_alto_consigliato,
     "positioning": "fascia stimata: bassa, media o medio-alta",
-    "positioning_reason": "breve spiegazione della fascia (es: brand riconosciuto + condizioni buone = fascia media)",
-    "motivation": "perché questo prezzo è sensato: margine trattativa, percezione valore, spazio offerte senza bruciare il minimo",
+    "positioning_reason": "breve spiegazione della fascia",
+    "motivation": "perché questo prezzo è sensato",
     "negotiation": [
-      "Se ti offrono X€ → controproponi Y€ (non scendere subito, difendi il valore)",
-      "Se salgono a Z€ → puoi scendere a W€ (movimento graduale)",
-      "Se arrivano a V€ → puoi accettare (sei nel tuo range)",
-      "Se restano troppo bassi → non inseguire la trattativa (meglio aspettare un altro acquirente)"
+      "Se ti offrono X€ → controproponi Y€",
+      "Se salgono a Z€ → puoi scendere a W€",
+      "Se arrivano a V€ → puoi accettare",
+      "Se restano troppo bassi → non inseguire la trattativa"
     ]
   },
   "tips": [
@@ -76,12 +82,7 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
     "consiglio vendita pratico 3",
     "consiglio vendita pratico 4"
   ]
-}
-
-REGOLE TIPS:
-- Max 4 bullet pratici e immediati
-- Devono essere consigli reali, non teoria
-- Esempi: tempistiche risposta, quando abbassare, come mantenere fiducia`;
+}`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -98,7 +99,6 @@ serve(async (req) => {
       });
     }
 
-    // Build measurements string
     const measurementsStr = Object.entries(userInput.measurements || {})
       .filter(([, v]) => v)
       .map(([k, v]) => `${k}: ${v} cm`)
@@ -111,25 +111,24 @@ DATI RILEVATI DALLE FOTO:
 - Categoria: ${analysis.category || "non specificata"}
 - Colore: ${analysis.color || "non specificato"}
 - Brand: ${analysis.brand || "nessun brand"}
-- Stile: ${analysis.style || "non specificato"}
-- Condizione stimata: ${analysis.condition || "non specificata"}
-- Materiali: ${analysis.materials || "non specificati"}
 
 DATI FORNITI DALL'UTENTE:
 - Taglia: ${userInput.size}
 - Condizione: ${userInput.condition}
+- Materiali: ${userInput.materials || "non specificati"}
 - Prezzo minimo accettato: ${userInput.minPrice}€
 ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.context ? `- Contesto d'uso: ${userInput.context}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 
-ISTRUZIONI PREZZO:
-1. Analizza la fascia di posizionamento in base a brand, condizione, stile
-2. Calcola un prezzo consigliato che lasci margine reale di trattativa rispetto al minimo di ${userInput.minPrice}€
-3. Costruisci una strategia di contrattazione con numeri concreti basati sul minimo e il consigliato
-4. I tips devono essere consigli pratici e immediati per un venditore occasionale
+ISTRUZIONI:
+1. Crea un titolo SEO ottimizzato (max 80 char)
+2. Crea una descrizione unica che contiene: mini storytelling + descrizione prodotto con contesto d'uso + chiude con bullet points di dettagli tecnici completi
+3. Analizza la fascia di posizionamento in base a brand, condizione, materiali
+4. Calcola un prezzo consigliato che lasci margine reale di trattativa rispetto al minimo di ${userInput.minPrice}€
+5. Costruisci una strategia di contrattazione con numeri concreti
 
-Genera un annuncio ottimizzato per Vinted con strategia di prezzo da coach esperto.`;
+Genera l'annuncio ottimizzato per Vinted.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

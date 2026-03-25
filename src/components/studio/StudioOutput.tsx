@@ -36,16 +36,26 @@ interface StudioOutputProps {
 
 const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
   const { toast } = useToast();
-  const [copied, setCopied] = useState(false);
+  const [copiedTitle, setCopiedTitle] = useState(false);
+  const [copiedDesc, setCopiedDesc] = useState(false);
 
-  const copyText = `${output.title}\n\n${output.description}`;
-
-  const handleCopy = async () => {
+  const handleCopyTitle = async () => {
     try {
-      await navigator.clipboard.writeText(copyText);
-      setCopied(true);
-      toast({ title: "Copiato!", description: "Testo pronto da incollare su Vinted" });
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(output.title);
+      setCopiedTitle(true);
+      toast({ title: "Titolo copiato!", description: "Incollalo nel campo titolo su Vinted" });
+      setTimeout(() => setCopiedTitle(false), 2000);
+    } catch {
+      toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
+    }
+  };
+
+  const handleCopyDesc = async () => {
+    try {
+      await navigator.clipboard.writeText(output.description);
+      setCopiedDesc(true);
+      toast({ title: "Descrizione copiata!", description: "Incollala nel campo descrizione su Vinted" });
+      setTimeout(() => setCopiedDesc(false), 2000);
     } catch {
       toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
     }
@@ -60,27 +70,47 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
         </Badge>
         <h2 className="text-2xl font-bold tracking-tight mb-2">Il tuo annuncio è pronto! 🎉</h2>
         <p className="text-sm text-muted-foreground">
-          Copia e incolla direttamente su Vinted
+          Copia titolo e descrizione separatamente e incollali su Vinted
         </p>
       </div>
 
-      {/* COPY-READY BOX */}
+      {/* TITLE BLOCK - separate copy */}
       <Card className="border-primary/30 bg-primary/5">
-        <CardContent className="p-5 space-y-4">
+        <CardContent className="p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Pronto da copiare</p>
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Titolo SEO</p>
             <Button
               variant="ghost"
               size="sm"
-              onClick={handleCopy}
+              onClick={handleCopyTitle}
               className="text-xs gap-1.5"
             >
-              {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "Copiato!" : "Copia tutto"}
+              {copiedTitle ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedTitle ? "Copiato!" : "Copia titolo"}
             </Button>
           </div>
-          <div className="space-y-3 p-4 rounded-xl bg-background/80 border border-border/30">
+          <div className="p-4 rounded-xl bg-background/80 border border-border/30">
             <p className="font-bold text-base">{output.title}</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* DESCRIPTION BLOCK - separate copy */}
+      <Card className="border-primary/30 bg-primary/5">
+        <CardContent className="p-5 space-y-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Descrizione completa</p>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCopyDesc}
+              className="text-xs gap-1.5"
+            >
+              {copiedDesc ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+              {copiedDesc ? "Copiato!" : "Copia descrizione"}
+            </Button>
+          </div>
+          <div className="p-4 rounded-xl bg-background/80 border border-border/30">
             <p className="text-sm text-foreground/80 whitespace-pre-line leading-relaxed">{output.description}</p>
           </div>
         </CardContent>
@@ -122,7 +152,6 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Strategia prezzo</p>
           </div>
 
-          {/* Positioning badge */}
           {output.pricing.positioning && (
             <div className="space-y-1">
               <p className="text-xs text-muted-foreground">Fascia di posizionamento</p>
@@ -181,10 +210,6 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
 
       {/* Actions */}
       <div className="flex flex-col gap-3">
-        <Button variant="neon" size="lg" className="w-full" onClick={handleCopy}>
-          {copied ? <Check className="w-4 h-4 mr-2" /> : <Copy className="w-4 h-4 mr-2" />}
-          {copied ? "Copiato!" : "Copia annuncio"}
-        </Button>
         <Button variant="glass" className="w-full" onClick={onNewAnalysis}>
           <RotateCcw className="w-4 h-4 mr-2" />
           Nuova analisi
