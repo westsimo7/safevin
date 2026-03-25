@@ -277,6 +277,14 @@ REGOLE:
 
       userContent.push({ type: "text", text: listingText });
 
+      // Add similarity context if a previous similar analysis exists
+      if (similarContext?.previousResult && similarContext?.similarity) {
+        const simNote = `\nCONTESTO ANALISI PRECEDENTE (similarità ${similarContext.similarity}%):
+Le parti identiche all'analisi precedente devono ricevere gli STESSI punteggi. Valuta solo le differenze.
+Risultato precedente: ${JSON.stringify(similarContext.previousResult)}`;
+        userContent.push({ type: "text", text: simNote });
+      }
+
       // Add images if present
       if (hasImages) {
         for (const dataUrl of auditData.imagePreviews) {
