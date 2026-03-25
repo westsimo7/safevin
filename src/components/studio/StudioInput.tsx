@@ -16,6 +16,7 @@ import type { ProductAnalysis } from "./StudioRecognition";
 
 export interface StudioUserInput {
   size: string;
+  fit: string;
   condition: string;
   materials: string;
   minPrice: string;
