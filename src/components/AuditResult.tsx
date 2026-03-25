@@ -14,6 +14,7 @@ export interface AuditResultData {
     fiducia: { score: number; phrase: string };
     immagini: { score: number; phrase: string };
   };
+  deepIssues?: string[];
 }
 
 const categoryMeta = [

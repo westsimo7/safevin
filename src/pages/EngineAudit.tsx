@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Loader2 } from "lucide-react";
+import { ArrowLeft, Search, Loader2, Sparkles } from "lucide-react";
 import AuditWizard, { type AuditData } from "@/components/AuditWizard";
 import AuditResult, { type AuditResultData } from "@/components/AuditResult";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,6 +54,27 @@ const EngineAudit = () => {
     setAuditResult(null);
   };
 
+  const handleImproveWithStudio = () => {
+    if (!auditData || !auditResult) return;
+
+    navigate("/engine/studio", {
+      state: {
+        fromAudit: true,
+        auditSource: {
+          titolo: auditData.titolo,
+          descrizione: auditData.descrizione,
+          categoria: auditData.categoria,
+          brand: auditData.brand,
+          prezzo: auditData.prezzo,
+          condizioni: auditData.condizioni,
+          imagePreviews: auditData.imagePreviews,
+          deepIssues: auditResult.deepIssues || [],
+          safeScore: auditResult.safeScore,
+        },
+      },
+    });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
@@ -97,7 +118,17 @@ const EngineAudit = () => {
         {auditResult && (
           <>
             <AuditResult result={auditResult} />
-            <div className="flex justify-center mt-8">
+            <div className="flex flex-col items-center gap-3 mt-8">
+              {auditResult.safeScore <= 74 && (
+                <Button
+                  onClick={handleImproveWithStudio}
+                  className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground font-bold shadow-lg hover:shadow-xl transition-all"
+                  size="lg"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Migliora con Studio
+                </Button>
+              )}
               <Button variant="outline" onClick={handleReset}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Analizza un altro annuncio

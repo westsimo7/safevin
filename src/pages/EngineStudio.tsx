@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import SmartLoader from "@/components/SmartLoader";
 import { Button } from "@/components/ui/button";
@@ -14,8 +14,21 @@ import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/St
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
+interface AuditSource {
+  titolo: string;
+  descrizione: string;
+  categoria: string;
+  brand: string;
+  prezzo: string;
+  condizioni: string;
+  imagePreviews: string[];
+  deepIssues: string[];
+  safeScore: number;
+}
+
 const EngineStudio = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const [phase, setPhase] = useState<Phase>("upload");
@@ -23,6 +36,33 @@ const EngineStudio = () => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
+  const [auditSource, setAuditSource] = useState<AuditSource | null>(null);
+
+  // Handle arrival from Audit with pre-filled data
+  useEffect(() => {
+    const state = location.state as { fromAudit?: boolean; auditSource?: AuditSource } | null;
+    if (state?.fromAudit && state?.auditSource) {
+      const src = state.auditSource;
+      setAuditSource(src);
+      setPreviews(src.imagePreviews || []);
+
+      // Create synthetic analysis from audit data
+      const syntheticAnalysis: ProductAnalysis = {
+        product_type: "",
+        category: src.categoria || "",
+        color: "",
+        brand: src.brand || null,
+        brand_confidence: null,
+        photos_assessment: {},
+        missing_photos: [],
+      };
+      setAnalysis(syntheticAnalysis);
+      setPhase("input");
+
+      // Clear navigation state to avoid re-triggering
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
     setImages(files);
@@ -77,7 +117,20 @@ const EngineStudio = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("studio-generate", {
-        body: { analysis, userInput },
+        body: {
+          analysis,
+          userInput,
+          // Pass audit context if coming from audit improvement flow
+          ...(auditSource ? {
+            auditContext: {
+              originalTitle: auditSource.titolo,
+              originalDescription: auditSource.descrizione,
+              deepIssues: auditSource.deepIssues,
+              safeScore: auditSource.safeScore,
+              condizioni: auditSource.condizioni,
+            },
+          } : {}),
+        },
       });
 
       if (error) throw error;
@@ -94,7 +147,7 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
       setPhase("input");
     }
-  }, [analysis, toast]);
+  }, [analysis, auditSource, toast]);
 
   const handleNewAnalysis = useCallback(() => {
     setPhase("upload");
@@ -102,6 +155,7 @@ const EngineStudio = () => {
     setImages([]);
     setPreviews([]);
     setGeneratedOutput(null);
+    setAuditSource(null);
   }, []);
 
   return (
@@ -155,20 +209,34 @@ const EngineStudio = () => {
           <StudioInput
             analysis={analysis}
             onContinue={handleGenerateOutput}
-            onBack={() => setPhase("missing_photos")}
+            onBack={auditSource ? () => navigate(-1) : () => setPhase("missing_photos")}
+            auditSource={auditSource ? {
+              condizioni: auditSource.condizioni,
+              prezzo: auditSource.prezzo,
+            } : undefined}
           />
         )}
 
         {phase === "generating" && (
           <SmartLoader
-            title="Creo il tuo annuncio..."
-            messages={[
-              "Genero titolo ottimizzato…",
-              "Scrivo descrizione con keyword…",
-              "Calcolo prezzo strategico…",
-              "Preparo strategia trattativa…",
-              "Finalizzazione annuncio…",
-            ]}
+            title={auditSource ? "Miglioro il tuo annuncio..." : "Creo il tuo annuncio..."}
+            messages={
+              auditSource
+                ? [
+                    "Analizzo le problematiche dell'audit…",
+                    "Riscrivo titolo ottimizzato…",
+                    "Genero descrizione migliorata…",
+                    "Calcolo prezzo strategico…",
+                    "Certifico annuncio 80+…",
+                  ]
+                : [
+                    "Genero titolo ottimizzato…",
+                    "Scrivo descrizione con keyword…",
+                    "Calcolo prezzo strategico…",
+                    "Preparo strategia trattativa…",
+                    "Finalizzazione annuncio…",
+                  ]
+            }
           />
         )}
 
