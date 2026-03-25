@@ -283,6 +283,7 @@ REGOLE:
         headers: apiHeaders,
         body: JSON.stringify({
           model: "google/gemini-2.5-flash",
+          temperature: 0,
           messages: [
             { role: "system", content: AUDIT_PROMPT },
             { role: "user", content: userContent },
