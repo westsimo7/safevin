@@ -135,7 +135,7 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
         </Badge>
         <h2 className="text-2xl font-bold tracking-tight mb-2">Ultimi dettagli</h2>
         <p className="text-sm text-muted-foreground">
-          Solo 3 informazioni obbligatorie, il resto lo facciamo noi
+          Compila i campi obbligatori, il resto lo facciamo noi
         </p>
       </div>
 
