@@ -92,6 +92,21 @@ const CoachWidget = () => {
     }
   }, [messages, isLoading]);
 
+  // Listen for external "open-coach" events (e.g. from Studio missing photos)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.message) {
+        setOpen(true);
+        setDismissed(true);
+        // Small delay to ensure panel is open before sending
+        setTimeout(() => sendMessage(detail.message), 300);
+      }
+    };
+    window.addEventListener("open-coach", handler);
+    return () => window.removeEventListener("open-coach", handler);
+  }, [messages, isLoading]);
+
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return;
     const userMsg: Msg = { role: "user", content: text.trim() };
