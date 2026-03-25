@@ -46,7 +46,6 @@ const EngineStudio = () => {
       setAuditSource(src);
       setPreviews(src.imagePreviews || []);
 
-      // Create synthetic analysis from audit data
       const syntheticAnalysis: ProductAnalysis = {
         product_type: "",
         category: src.categoria || "",
@@ -59,7 +58,6 @@ const EngineStudio = () => {
       setAnalysis(syntheticAnalysis);
       setPhase("input");
 
-      // Clear navigation state to avoid re-triggering
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -112,6 +110,23 @@ const EngineStudio = () => {
     setPhase("input");
   }, []);
 
+  /** Save studio creation to DB */
+  const saveStudioCreation = async (output: StudioGeneratedOutput) => {
+    try {
+      await supabase.from("studio_creations").insert([{
+        titolo_generato: output.title || null,
+        first_image_url: previews[0] || null,
+        categoria: analysis?.category || "",
+        images: previews as any,
+        questions_answers: [] as any,
+        output: output as any,
+        origin: auditSource ? "audit" : "studio",
+      }]);
+    } catch (err) {
+      console.error("Failed to save studio creation:", err);
+    }
+  };
+
   const handleGenerateOutput = useCallback(async (userInput: StudioUserInput) => {
     setPhase("generating");
 
@@ -120,7 +135,6 @@ const EngineStudio = () => {
         body: {
           analysis,
           userInput,
-          // Pass audit context if coming from audit improvement flow
           ...(auditSource ? {
             auditContext: {
               originalTitle: auditSource.titolo,
@@ -139,6 +153,8 @@ const EngineStudio = () => {
       if (data?.output) {
         setGeneratedOutput(data.output);
         setPhase("output");
+        // Save to storico
+        await saveStudioCreation(data.output);
       } else {
         throw new Error("Risposta non valida");
       }
@@ -147,7 +163,7 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
       setPhase("input");
     }
-  }, [analysis, auditSource, toast]);
+  }, [analysis, auditSource, toast, previews]);
 
   const handleNewAnalysis = useCallback(() => {
     setPhase("upload");
