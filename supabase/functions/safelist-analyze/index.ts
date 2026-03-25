@@ -136,8 +136,17 @@ FORMATO JSON:
     "valore": { "score": <0-100>, "phrase": "<frase breve>" },
     "fiducia": { "score": <0-100>, "phrase": "<frase breve>" },
     "immagini": { "score": <0-100>, "phrase": "<frase breve>" }
-  }
+  },
+  "deepIssues": [
+    "<problema specifico e dettagliato che impedisce la vendita, es: 'Il titolo non contiene keyword di ricerca come taglia o stile'>"
+  ]
 }
+
+DEEP ISSUES (OBBLIGATORIO):
+Genera SEMPRE un array "deepIssues" con 3-8 problemi concreti e azionabili dell'annuncio.
+Ogni issue deve essere una frase specifica che descrive COSA non va e PERCHÉ blocca la vendita.
+Queste issues servono per guidare la rigenerazione automatica dell'annuncio.
+Esempi: "Titolo privo di keyword: manca taglia, stile e materiale", "Descrizione non argomenta il valore del capo", "Prezzo non giustificato rispetto al brand", "Nessun storytelling o contesto d'uso", "Foto con sfondo disordinato riducono la percezione di qualità".
 
 Rispondi SOLO con JSON valido, nient'altro.`;
 
