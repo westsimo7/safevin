@@ -32,7 +32,7 @@ const getScoreColor = (score: number) => {
 };
 
 const getProgressColor = (score: number) => {
-  if (score >= 70) return "bg-green-400";
+  if (score >= 75) return "bg-green-400";
   if (score >= 55) return "bg-yellow-400";
   if (score >= 48) return "bg-orange-400";
   return "bg-red-400";

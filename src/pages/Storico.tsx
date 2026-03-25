@@ -52,8 +52,9 @@ const getScoreColor = (score: number) => {
 };
 
 const getScoreBg = (score: number) => {
-  if (score >= 70) return "bg-green-500/10 border-green-500/30";
-  if (score >= 40) return "bg-yellow-500/10 border-yellow-500/30";
+  if (score >= 75) return "bg-green-500/10 border-green-500/30";
+  if (score >= 55) return "bg-yellow-500/10 border-yellow-500/30";
+  if (score >= 48) return "bg-orange-500/10 border-orange-500/30";
   return "bg-red-500/10 border-red-500/30";
 };
 
