@@ -29,6 +29,10 @@ interface StudioInputProps {
   analysis: ProductAnalysis;
   onContinue: (input: StudioUserInput) => void;
   onBack: () => void;
+  auditSource?: {
+    condizioni: string;
+    prezzo: string;
+  };
 }
 
 const CONDITION_OPTIONS = [
