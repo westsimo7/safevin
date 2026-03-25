@@ -9,8 +9,10 @@ import { useToast } from "@/hooks/use-toast";
 import StudioUpload, { compressImage } from "@/components/studio/StudioUpload";
 import StudioRecognition, { type ProductAnalysis } from "@/components/studio/StudioRecognition";
 import StudioMissingPhotos from "@/components/studio/StudioMissingPhotos";
+import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInput";
+import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
 
-type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "done";
+type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
 const EngineStudio = () => {
   const navigate = useNavigate();
@@ -20,6 +22,7 @@ const EngineStudio = () => {
   const [analysis, setAnalysis] = useState<ProductAnalysis | null>(null);
   const [previews, setPreviews] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
+  const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
     setImages(files);
@@ -58,7 +61,6 @@ const EngineStudio = () => {
   }, []);
 
   const handleAskCoach = useCallback((photoName: string) => {
-    // Dispatch custom event to open Coach with context
     window.dispatchEvent(new CustomEvent("open-coach", {
       detail: {
         message: `Ho bisogno di aiuto per scattare la foto: "${photoName}". Spiegami come fare in modo semplice e pratico.`,
@@ -67,10 +69,40 @@ const EngineStudio = () => {
   }, []);
 
   const handleMissingPhotosContinue = useCallback(() => {
-    // Future phases will be implemented here
-    toast({ title: "Studio 2.0", description: "Le prossime fasi sono in fase di sviluppo!" });
-    setPhase("done");
-  }, [toast]);
+    setPhase("input");
+  }, []);
+
+  const handleGenerateOutput = useCallback(async (userInput: StudioUserInput) => {
+    setPhase("generating");
+
+    try {
+      const { data, error } = await supabase.functions.invoke("studio-generate", {
+        body: { analysis, userInput },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (data?.output) {
+        setGeneratedOutput(data.output);
+        setPhase("output");
+      } else {
+        throw new Error("Risposta non valida");
+      }
+    } catch (err: any) {
+      console.error("Studio generate error:", err);
+      toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
+      setPhase("input");
+    }
+  }, [analysis, toast]);
+
+  const handleNewAnalysis = useCallback(() => {
+    setPhase("upload");
+    setAnalysis(null);
+    setImages([]);
+    setPreviews([]);
+    setGeneratedOutput(null);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -117,19 +149,33 @@ const EngineStudio = () => {
           />
         )}
 
-        {phase === "done" && (
-          <div className="text-center pt-12 space-y-6 animate-fade-in">
-            <h2 className="text-2xl font-bold">Fase 1 e 2 completate! 🎉</h2>
-            <p className="text-muted-foreground">Le prossime fasi di Studio 2.0 sono in arrivo.</p>
-            <div className="flex flex-col gap-3 max-w-sm mx-auto">
-              <Button variant="neon" onClick={() => { setPhase("upload"); setAnalysis(null); setImages([]); setPreviews([]); }}>
-                Nuova analisi
-              </Button>
-              <Button variant="glass" onClick={() => navigate("/engine")}>
-                Torna a Engine
-              </Button>
-            </div>
-          </div>
+        {phase === "input" && analysis && (
+          <StudioInput
+            analysis={analysis}
+            onContinue={handleGenerateOutput}
+            onBack={() => setPhase("missing_photos")}
+          />
+        )}
+
+        {phase === "generating" && (
+          <SmartLoader
+            title="Creo il tuo annuncio..."
+            messages={[
+              "Genero titolo ottimizzato…",
+              "Scrivo descrizione con keyword…",
+              "Calcolo prezzo strategico…",
+              "Preparo strategia trattativa…",
+              "Finalizzazione annuncio…",
+            ]}
+          />
+        )}
+
+        {phase === "output" && generatedOutput && (
+          <StudioOutput
+            output={generatedOutput}
+            onNewAnalysis={handleNewAnalysis}
+            onBack={() => setPhase("input")}
+          />
         )}
       </main>
     </div>
