@@ -25,16 +25,16 @@ const categoryMeta = [
 ];
 
 const getScoreColor = (score: number) => {
-  if (score >= 85) return "text-green-400";
-  if (score >= 65) return "text-yellow-400";
-  if (score >= 55) return "text-orange-400";
+  if (score >= 70) return "text-green-400";
+  if (score >= 55) return "text-yellow-400";
+  if (score >= 48) return "text-orange-400";
   return "text-red-400";
 };
 
 const getProgressColor = (score: number) => {
-  if (score >= 85) return "bg-green-400";
-  if (score >= 65) return "bg-yellow-400";
-  if (score >= 55) return "bg-orange-400";
+  if (score >= 70) return "bg-green-400";
+  if (score >= 55) return "bg-yellow-400";
+  if (score >= 48) return "bg-orange-400";
   return "bg-red-400";
 };
 
