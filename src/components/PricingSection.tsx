@@ -51,7 +51,7 @@ const plans = [
     icon: Rocket,
     features: [
       "Audit Annuncio illimitati",
-      "Audit Immagini illimitati",
+      
       "Studio illimitato",
       "Storico illimitato",
       "Preset avanzati / template premium",
