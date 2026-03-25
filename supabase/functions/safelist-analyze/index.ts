@@ -157,7 +157,7 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { images: imageDataUrls, imageOnly, auditData } = body;
+    const { images: imageDataUrls, imageOnly, auditData, similarContext } = body;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
