@@ -99,8 +99,16 @@ const CONTEXT_SUGGESTIONS = [
   "Lavoro / ufficio",
 ];
 
+const FIT_OPTIONS = [
+  { value: "slim", label: "Slim fit" },
+  { value: "regular", label: "Regular fit" },
+  { value: "oversize", label: "Oversize" },
+  { value: "loose", label: "Loose / ampio" },
+];
+
 const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
   const [size, setSize] = useState("");
+  const [fit, setFit] = useState("");
   const [condition, setCondition] = useState("");
   const [materials, setMaterials] = useState(analysis.materials || "");
   const [minPrice, setMinPrice] = useState("");
@@ -114,11 +122,12 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
     [analysis.product_type]
   );
 
-  const canContinue = size && condition && minPrice;
+  const canContinue = size && fit && condition && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
+      fit: FIT_OPTIONS.find(f => f.value === fit)?.label || fit,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
       materials,
       minPrice,
