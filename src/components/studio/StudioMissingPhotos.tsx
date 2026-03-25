@@ -6,8 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import type { MissingPhoto } from "./StudioRecognition";
 
 export interface PhotoQualityIssue {
-  type: "background" | "light" | "sharpness" | "framing";
-  severity: "minor" | "moderate" | "major";
+  type: string;
+  severity: string;
   problem: string;
   suggestion: string;
   impact: string;
