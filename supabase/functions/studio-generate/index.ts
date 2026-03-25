@@ -134,6 +134,7 @@ DATI RILEVATI DALLE FOTO:
 
 DATI FORNITI DALL'UTENTE:
 - Taglia: ${userInput.size}
+- Vestibilità: ${userInput.fit || "non specificata"}
 - Condizione: ${userInput.condition}
 - Materiali: ${userInput.materials || "non specificati"}
 - Prezzo minimo accettato: ${userInput.minPrice}€

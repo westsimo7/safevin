@@ -16,6 +16,7 @@ import type { ProductAnalysis } from "./StudioRecognition";
 
 export interface StudioUserInput {
   size: string;
+  fit: string;
   condition: string;
   materials: string;
   minPrice: string;
@@ -98,8 +99,16 @@ const CONTEXT_SUGGESTIONS = [
   "Lavoro / ufficio",
 ];
 
+const FIT_OPTIONS = [
+  { value: "slim", label: "Slim fit" },
+  { value: "regular", label: "Regular fit" },
+  { value: "oversize", label: "Oversize" },
+  { value: "loose", label: "Loose / ampio" },
+];
+
 const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
   const [size, setSize] = useState("");
+  const [fit, setFit] = useState("");
   const [condition, setCondition] = useState("");
   const [materials, setMaterials] = useState(analysis.materials || "");
   const [minPrice, setMinPrice] = useState("");
@@ -113,11 +122,12 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
     [analysis.product_type]
   );
 
-  const canContinue = size && condition && minPrice;
+  const canContinue = size && fit && condition && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
+      fit: FIT_OPTIONS.find(f => f.value === fit)?.label || fit,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
       materials,
       minPrice,
@@ -149,6 +159,20 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
               onChange={e => setSize(e.target.value)}
               placeholder="es. M, 42, Taglia unica..."
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Vestibilità *</Label>
+            <Select value={fit} onValueChange={setFit}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona vestibilità" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIT_OPTIONS.map(f => (
+                  <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
