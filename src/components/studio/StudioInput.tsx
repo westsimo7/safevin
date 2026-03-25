@@ -17,6 +17,7 @@ import type { ProductAnalysis } from "./StudioRecognition";
 export interface StudioUserInput {
   size: string;
   condition: string;
+  materials: string;
   minPrice: string;
   measurements: Record<string, string>;
   context: string;
@@ -29,12 +30,6 @@ interface StudioInputProps {
   onBack: () => void;
 }
 
-const SIZE_OPTIONS = [
-  "XXS", "XS", "S", "M", "L", "XL", "XXL", "3XL",
-  "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "48", "50", "52",
-  "Taglia unica",
-];
-
 const CONDITION_OPTIONS = [
   { value: "nuovo_cartellino", label: "Nuovo con cartellino" },
   { value: "nuovo_senza_cartellino", label: "Nuovo senza cartellino" },
@@ -45,6 +40,14 @@ const CONDITION_OPTIONS = [
 
 const MEASUREMENT_FIELDS: Record<string, { label: string; placeholder: string }[]> = {
   maglietta: [
+    { label: "Larghezza petto", placeholder: "es. 52" },
+    { label: "Lunghezza", placeholder: "es. 70" },
+  ],
+  "t-shirt": [
+    { label: "Larghezza petto", placeholder: "es. 52" },
+    { label: "Lunghezza", placeholder: "es. 70" },
+  ],
+  "t shirt": [
     { label: "Larghezza petto", placeholder: "es. 52" },
     { label: "Lunghezza", placeholder: "es. 70" },
   ],
@@ -79,7 +82,6 @@ function getMeasurementFields(productType: string) {
   for (const [k, fields] of Object.entries(MEASUREMENT_FIELDS)) {
     if (key.includes(k)) return fields;
   }
-  // Default generic
   return [
     { label: "Larghezza", placeholder: "es. 50" },
     { label: "Lunghezza", placeholder: "es. 70" },
@@ -99,6 +101,7 @@ const CONTEXT_SUGGESTIONS = [
 const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
   const [size, setSize] = useState("");
   const [condition, setCondition] = useState("");
+  const [materials, setMaterials] = useState(analysis.materials || "");
   const [minPrice, setMinPrice] = useState("");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [context, setContext] = useState("");
@@ -116,6 +119,7 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
     onContinue({
       size,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
+      materials,
       minPrice,
       measurements,
       context,
@@ -140,16 +144,11 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
         <CardContent className="p-4 space-y-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Taglia *</Label>
-            <Select value={size} onValueChange={setSize}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleziona taglia" />
-              </SelectTrigger>
-              <SelectContent>
-                {SIZE_OPTIONS.map(s => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Input
+              value={size}
+              onChange={e => setSize(e.target.value)}
+              placeholder="es. M, 42, Taglia unica..."
+            />
           </div>
 
           <div className="space-y-2">
@@ -164,6 +163,15 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Materiali *</Label>
+            <Input
+              value={materials}
+              onChange={e => setMaterials(e.target.value)}
+              placeholder="es. cotone, poliestere, pelle..."
+            />
           </div>
 
           <div className="space-y-2">

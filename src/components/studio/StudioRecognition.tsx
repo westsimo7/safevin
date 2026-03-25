@@ -14,9 +14,9 @@ export interface ProductAnalysis {
   color: string;
   brand: string | null;
   brand_confidence: string | null;
-  style: string;
-  condition: string;
-  materials: string | null;
+  style?: string;
+  condition?: string;
+  materials?: string | null;
   photos_assessment: Record<string, boolean>;
   missing_photos: MissingPhoto[];
   photo_quality?: Array<{
@@ -46,16 +46,13 @@ interface StudioRecognitionProps {
   onBack: () => void;
 }
 
-type FieldKey = "product_type" | "category" | "color" | "brand" | "style" | "condition" | "materials";
+type FieldKey = "product_type" | "category" | "color" | "brand";
 
 const FIELD_LABELS: Record<FieldKey, string> = {
   product_type: "Tipo prodotto",
   category: "Categoria",
   color: "Colore principale",
   brand: "Brand",
-  style: "Stile",
-  condition: "Condizione",
-  materials: "Materiali",
 };
 
 const BRAND_OPTIONS = [
@@ -98,7 +95,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
     setShowBrandPicker(false);
   };
 
-  const fields: FieldKey[] = ["product_type", "category", "color", "brand", "style", "condition", "materials"];
+  const fields: FieldKey[] = ["product_type", "category", "color", "brand"];
 
   return (
     <div className="space-y-6 animate-fade-in">

@@ -35,7 +35,6 @@ const PHOTO_ICONS: Record<string, string> = {
   label_materials: "🏷️",
   defects: "🔍",
   logo_closeup: "🔎",
-  worn: "👤",
   sole: "👟",
   inside: "🔲",
   lateral: "↔️",
@@ -66,10 +65,13 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
   const [openTip, setOpenTip] = useState<number | null>(null);
   const [openQualityTip, setOpenQualityTip] = useState<string | null>(null);
 
+  // Filter out "worn" type from missing photos
+  const filteredMissing = missingPhotos.filter(p => p.type !== "worn" && p.type !== "has_worn");
+
   // Filter photos with actual issues
   const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
   const hasQualityIssues = photosWithIssues.length > 0;
-  const hasMissing = missingPhotos.length > 0;
+  const hasMissing = filteredMissing.length > 0;
   const hasNothing = !hasMissing && !hasQualityIssues;
 
   if (hasNothing) {
@@ -125,7 +127,6 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
             <Card key={`quality-${pq.photo_index}`} className="border-border/50">
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
-                  {/* Photo thumbnail */}
                   {previews && previews[pq.photo_index] ? (
                     <img
                       src={previews[pq.photo_index]}
@@ -150,7 +151,6 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
                   </button>
                 </div>
 
-                {/* Expanded quality details */}
                 {openQualityTip === `q-${pq.photo_index}` && (
                   <div className="mt-3 p-3 rounded-xl bg-muted/20 border border-border/30 animate-fade-in">
                     <div className="flex items-center justify-between mb-2">
@@ -191,18 +191,18 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </div>
       )}
 
-      {/* MISSING PHOTOS */}
+      {/* MISSING PHOTOS - shot aggiuntivi suggeriti */}
       {hasMissing && (
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-1">
             <Camera className="w-4 h-4 text-primary" />
-            <p className="text-sm font-semibold">Foto suggerite</p>
+            <p className="text-sm font-semibold">Shot aggiuntivi consigliati</p>
           </div>
           <p className="text-xs text-muted-foreground -mt-2 mb-2">
-            Queste foto potrebbero migliorare il tuo annuncio.
+            Queste foto aggiuntive possono dare più dettagli e aumentare la fiducia degli acquirenti.
           </p>
 
-          {missingPhotos.map((photo, i) => (
+          {filteredMissing.map((photo, i) => (
             <Card key={i} className="border-border/50">
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
