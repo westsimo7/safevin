@@ -32,8 +32,8 @@ interface StudioRecord {
 }
 
 const tabLabels: Record<Tab, { label: string; icon: React.ReactNode }> = {
-  full: { label: "Analisi Annuncio", icon: <FileText className="w-3.5 h-3.5" /> },
-  creations: { label: "Creazioni Annuncio", icon: <PenTool className="w-3.5 h-3.5" /> },
+  full: { label: "Audit", icon: <FileText className="w-3.5 h-3.5" /> },
+  creations: { label: "Studio", icon: <PenTool className="w-3.5 h-3.5" /> },
 };
 
 const formatDate = (dateStr: string) => {
