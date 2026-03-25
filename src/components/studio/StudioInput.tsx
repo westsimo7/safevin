@@ -122,7 +122,7 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
     [analysis.product_type]
   );
 
-  const canContinue = size && fit && condition && minPrice;
+  const canContinue = context && size && fit && condition && materials && minPrice;
 
   const handleContinue = () => {
     onContinue({
