@@ -20,6 +20,8 @@ export interface StudioGeneratedOutput {
     min_accepted: number;
     suggested_low: number;
     suggested_high: number;
+    positioning?: string;
+    positioning_reason?: string;
     motivation: string;
     negotiation: string[];
   };
@@ -120,6 +122,17 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Strategia prezzo</p>
           </div>
 
+          {/* Positioning badge */}
+          {output.pricing.positioning && (
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">Fascia di posizionamento</p>
+              <Badge variant="outline" className="text-xs capitalize">{output.pricing.positioning}</Badge>
+              {output.pricing.positioning_reason && (
+                <p className="text-xs text-foreground/60 mt-1">{output.pricing.positioning_reason}</p>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-4">
             <div className="text-center">
               <p className="text-xs text-muted-foreground">Minimo</p>
@@ -134,7 +147,10 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
             </div>
           </div>
 
-          <p className="text-xs text-foreground/70">{output.pricing.motivation}</p>
+          <div className="p-3 rounded-xl bg-muted/20 border border-border/30">
+            <p className="text-xs font-semibold text-foreground/80 mb-1">Perché questo prezzo:</p>
+            <p className="text-xs text-foreground/70">{output.pricing.motivation}</p>
+          </div>
 
           <div className="space-y-2 p-3 rounded-xl bg-muted/20 border border-border/30">
             <p className="text-xs font-semibold text-foreground/80">Strategia trattativa:</p>

@@ -19,6 +19,17 @@ export interface ProductAnalysis {
   materials: string | null;
   photos_assessment: Record<string, boolean>;
   missing_photos: MissingPhoto[];
+  photo_quality?: Array<{
+    photo_index: number;
+    summary: string;
+    issues: Array<{
+      type: string;
+      severity: string;
+      problem: string;
+      suggestion: string;
+      impact: string;
+    }>;
+  }>;
 }
 
 export interface MissingPhoto {

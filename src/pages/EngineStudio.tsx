@@ -143,6 +143,8 @@ const EngineStudio = () => {
         {phase === "missing_photos" && analysis && (
           <StudioMissingPhotos
             missingPhotos={analysis.missing_photos || []}
+            photoQuality={analysis.photo_quality || []}
+            previews={previews}
             onContinue={handleMissingPhotosContinue}
             onBack={() => setPhase("recognition")}
             onAskCoach={handleAskCoach}
