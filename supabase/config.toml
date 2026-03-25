@@ -3,8 +3,8 @@ project_id = "ilnkeilltvkceohcjfjy"
 [functions.safelist-analyze]
 verify_jwt = false
 
-[functions.safelist-studio]
+[functions.coach-chat]
 verify_jwt = false
 
-[functions.coach-chat]
+[functions.studio-analyze]
 verify_jwt = false
