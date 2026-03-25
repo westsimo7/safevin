@@ -29,6 +29,21 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
     "has_worn": true/false,
     "has_logo_closeup": true/false
   },
+  "photo_quality": [
+    {
+      "photo_index": 0,
+      "summary": "breve valutazione complessiva della foto (es: buona, migliorabile, da rifare)",
+      "issues": [
+        {
+          "type": "background | light | sharpness | framing",
+          "severity": "minor | moderate | major",
+          "problem": "descrizione breve e chiara del problema (es: sfondo disordinato con oggetti visibili)",
+          "suggestion": "consiglio pratico per migliorare (es: usa uno sfondo più neutro e ordinato)",
+          "impact": "perché penalizza la vendita (es: distrae l'attenzione dal prodotto)"
+        }
+      ]
+    }
+  ],
   "missing_photos": [
     {
       "type": "tipo foto mancante (es: front, back, label_size, label_materials, defects, logo_closeup, worn)",
@@ -46,6 +61,19 @@ REGOLE FONDAMENTALI:
 - Per abbigliamento: front, back, label_size, label_materials, logo_closeup (se brandizzato), defects sono importanti.
 - Per scarpe: aggiungere suola, interno, laterale.
 - Ogni suggerimento di foto mancante deve avere 3-4 tips pratici e semplicissimi.
+
+REGOLE QUALITÀ FOTO (photo_quality):
+- Analizza OGNI foto singolarmente, nell'ordine in cui sono fornite (photo_index parte da 0).
+- Per ogni foto valuta 4 fattori: sfondo, luce, nitidezza, messa in risalto del prodotto.
+- Segnala problemi SOLO se reali e concreti. Non inventare difetti.
+- Se una foto è buona, restituisci un array "issues" vuoto.
+- severity "minor" = piccolo dettaglio migliorabile. "moderate" = potrebbe penalizzare. "major" = sarebbe meglio rifare.
+- NON essere mai aggressivo o giudicante. Tono informativo e utile.
+- Valutazione sfondo: sfondo pulito/neutro = OK. Sfondo confuso/disordinato/con oggetti = segnala.
+- Valutazione luce: luce uniforme e chiara = OK. Troppo buia, riflessi forti, ombre pesanti = segnala.
+- Valutazione nitidezza: foto nitida = OK. Mossa, sfocata, compressa male = segnala.
+- Valutazione framing: prodotto intero, centrato, ben presentato = OK. Tagliato, storto, piegato male = segnala.
+
 - Rispondi SOLO con il JSON, senza markdown o testo aggiuntivo.`;
 
 serve(async (req) => {
@@ -81,7 +109,7 @@ serve(async (req) => {
           {
             role: "user",
             content: [
-              { type: "text", text: `Analizza queste ${images.length} immagini di un prodotto in vendita.` },
+              { type: "text", text: `Analizza queste ${images.length} immagini di un prodotto in vendita. Valuta sia il contenuto che la qualità di ciascuna foto per la vendita online.` },
               ...imageContent,
             ],
           },
