@@ -152,6 +152,31 @@ const StudioInput = ({ analysis, onContinue, onBack }: StudioInputProps) => {
       {/* Required fields */}
       <Card className="border-border/50">
         <CardContent className="p-4 space-y-4">
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">Contesto d'uso *</Label>
+            <div className="flex flex-wrap gap-2">
+              {CONTEXT_SUGGESTIONS.map(sug => (
+                <button
+                  key={sug}
+                  onClick={() => setContext(prev => prev.includes(sug) ? prev.replace(sug, "").trim() : (prev ? prev + ", " + sug : sug))}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
+                    context.includes(sug)
+                      ? "bg-primary/10 border-primary/30 text-primary"
+                      : "bg-muted/20 border-border/50 text-muted-foreground hover:bg-muted/40"
+                  }`}
+                >
+                  {sug}
+                </button>
+              ))}
+            </div>
+            <Input
+              value={context}
+              onChange={e => setContext(e.target.value)}
+              placeholder="es. perfetto per outfit casual invernali"
+              className="text-sm"
+            />
+          </div>
+
           <div className="space-y-2">
             <Label className="text-sm font-medium">Taglia *</Label>
             <Input
