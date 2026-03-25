@@ -47,9 +47,6 @@ const AnimatedRoutes = () => {
         <Route path="/engine/analyze" element={
           <PageTransition direction="left"><EngineAnalyze /></PageTransition>
         } />
-        <Route path="/engine/analyze/images" element={
-          <PageTransition direction="left"><EngineImageAnalysis /></PageTransition>
-        } />
         <Route path="/engine/analyze/audit" element={
           <PageTransition direction="left"><EngineAudit /></PageTransition>
         } />

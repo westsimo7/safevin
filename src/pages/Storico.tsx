@@ -5,15 +5,14 @@ import AppNavbar from "@/components/AppNavbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Sparkles, PenTool, Camera, FileText, Search, Trash2, X, History } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Sparkles, PenTool, FileText, Search, Trash2, X, History } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "@/components/ui/sonner";
 
-type Tab = "image_only" | "full" | "creations";
+type Tab = "full" | "creations";
 
 interface AnalysisRecord {
   id: string;
@@ -33,7 +32,6 @@ interface StudioRecord {
 }
 
 const tabLabels: Record<Tab, { label: string; icon: React.ReactNode }> = {
-  image_only: { label: "Analisi Immagini", icon: <Camera className="w-3.5 h-3.5" /> },
   full: { label: "Analisi Annuncio", icon: <FileText className="w-3.5 h-3.5" /> },
   creations: { label: "Creazioni Annuncio", icon: <PenTool className="w-3.5 h-3.5" /> },
 };
@@ -45,12 +43,6 @@ const formatDate = (dateStr: string) => {
 
 const getScore = (a: AnalysisRecord) =>
   (a.analysis_result?.sections as any[] | undefined)?.reduce((sum: number, s: any) => sum + (s.score || 0), 0) ?? 0;
-
-const getImageScore = (a: AnalysisRecord) => {
-  const match = a.titolo?.match(/(\d+)/);
-  const numImages = match ? parseInt(match[1]) : 1;
-  return Math.min(numImages * 10, 100);
-};
 
 const getScoreColor = (score: number) => {
   if (score >= 70) return "text-green-400";
@@ -79,7 +71,7 @@ const Storico = () => {
         supabase.from("analyses").select("id, titolo, first_image_url, analysis_result, created_at, analysis_type").order("created_at", { ascending: false }),
         supabase.from("studio_creations").select("id, titolo_generato, first_image_url, categoria, created_at").order("created_at", { ascending: false }),
       ]);
-      if (analysesRes.data) setAnalyses(analysesRes.data as any);
+      if (analysesRes.data) setAnalyses((analysesRes.data as any).filter((a: AnalysisRecord) => (a.analysis_type || "full") !== "image_only"));
       if (creationsRes.data) setCreations(creationsRes.data);
       setLoading(false);
     };
@@ -100,8 +92,8 @@ const Storico = () => {
   };
 
   const filteredAnalyses = useMemo(() => {
-    const type = tab === "image_only" ? "image_only" : "full";
-    let list = analyses.filter(a => (a.analysis_type || "full") === type);
+    if (tab !== "full") return [];
+    let list = [...analyses];
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       list = list.filter(a => (a.titolo || "").toLowerCase().includes(q));
@@ -118,8 +110,6 @@ const Storico = () => {
     }
     return list;
   }, [creations, tab, searchQuery]);
-
-  const isAnalysisTab = tab === "image_only" || tab === "full";
 
   return (
     <div className="min-h-screen bg-background">
@@ -165,7 +155,7 @@ const Storico = () => {
           <div className="text-center text-muted-foreground py-12">Caricamento...</div>
         ) : (
           <div className="flex flex-col gap-2">
-            {isAnalysisTab && filteredAnalyses.length === 0 && (
+            {tab === "full" && filteredAnalyses.length === 0 && (
               <div className="text-center text-muted-foreground py-12">
                 {searchQuery ? `Nessun risultato per "${searchQuery}"` : "Nessuna analisi in questa categoria."}
               </div>
@@ -177,8 +167,8 @@ const Storico = () => {
             )}
 
             {/* Analysis items */}
-            {isAnalysisTab && filteredAnalyses.map(item => {
-              const score = tab === "full" ? getScore(item) : getImageScore(item);
+            {tab === "full" && filteredAnalyses.map(item => {
+              const score = getScore(item);
               return (
                 <div
                   key={item.id}
@@ -190,7 +180,7 @@ const Storico = () => {
                       <img src={item.first_image_url} alt="" className="w-full h-full object-cover" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Camera className="w-4 h-4 text-muted-foreground/30" />
+                        <Sparkles className="w-4 h-4 text-muted-foreground/30" />
                       </div>
                     )}
                   </div>
