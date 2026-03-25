@@ -31,7 +31,7 @@ const plans = [
     icon: Crown,
     features: [
       "30 Audit Annuncio / mese",
-      "30 Audit Immagini / mese",
+      
       "30 Studio / mese",
       "Storico completo mensile",
       "Export testi ottimizzati",
