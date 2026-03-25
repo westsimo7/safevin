@@ -125,17 +125,48 @@ SAFE SCORE (LOGICA NON LINEARE):
 - Se VALORE non è chiaro → abbassa tutto in modo visibile
 - Se più categorie sono medie → mantieni score medio, non alto
 - Se tutto è buono ma non eccellente → NON superare 85%
-4. Coerenza tono-punteggio:
-- Score alto → frasi leggere
-- Score medio → frasi neutre/critiche
-- Score basso → frasi più evidenti
+REGOLE DI COERENZA PUNTEGGIO (OBBLIGATORIE):
+Il punteggio numerico DEVE essere SEMPRE coerente con il giudizio testuale.
+Non assegnare mai percentuali casuali o troppo generose rispetto alla frase scritta.
 
-SCALA ETICHETTE:
-0-49 = "debole"
-50-65 = "medio"
-66-75 = "buono"
-76-85 = "ottimo"
-86-100 = "molto forte"
+SCALA FISSA ETICHETTE:
+0-39 = "gravemente insufficiente"
+40-54 = "debole"
+55-64 = "sufficiente"
+65-74 = "discreto"
+75-84 = "buono"
+85-92 = "forte"
+93-100 = "eccellente"
+
+VINCOLI SEMANTICI OBBLIGATORI:
+- Se la frase contiene "basico", "sufficiente", "essenziale", "minimo" → punteggio 55-64
+- Se la frase contiene "discreto", "abbastanza buono", "solido ma migliorabile" → punteggio 65-74
+- Se la frase contiene "buono", "ben fatto", "chiaro", "convincente" → punteggio 75-84
+- Se la frase contiene "forte", "molto curato", "ottimo" → punteggio 85-92
+- Se la frase è molto negativa o evidenzia mancanze gravi → punteggio sotto 55
+- NON usare mai parole positive forti con punteggi mediocri
+- NON usare mai parole mediocri con punteggi alti
+
+DISTRIBUZIONE INTERNA DELLA FASCIA:
+- parte bassa = categoria appena sufficiente in quel livello
+- parte centrale = categoria pienamente dentro quel livello
+- parte alta = categoria quasi pronta a salire di livello
+
+Esempi:
+- "Descrizione basica ma comprensibile" = 58-62
+- "Descrizione discreta ma poco persuasiva" = 66-72
+- "Descrizione buona, chiara e ordinata" = 76-82
+- "Descrizione molto forte, completa e orientata alla vendita" = 86-91
+
+PROCESSO DI VALUTAZIONE (in ordine):
+1. Valuta i segnali reali della categoria
+2. Scegli la fascia corretta dalla scala
+3. Scegli un numero interno a quella fascia
+4. Scrivi la frase coerente con quella fascia
+
+CONTROLLO FINALE OBBLIGATORIO:
+Prima di restituire l'output, verifica che il linguaggio usato e il numero appartengano alla stessa fascia semantica.
+Se non coincidono, CORREGGI IL PUNTEGGIO, non la frase.
 
 - NON dare mai 100 se non rarissimo
 - La sufficienza NON è il default. Se l'annuncio è scarno, il voto deve essere basso.
