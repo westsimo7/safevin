@@ -20,6 +20,8 @@ export interface StudioGeneratedOutput {
     min_accepted: number;
     suggested_low: number;
     suggested_high: number;
+    positioning?: string;
+    positioning_reason?: string;
     motivation: string;
     negotiation: string[];
   };
