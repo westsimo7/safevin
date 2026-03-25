@@ -182,7 +182,7 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4 mb-4">
-                    {["Audit Annuncio", "Audit Immagini", "Studio"].map(label => (
+                    {["Audit Annuncio", "Studio"].map(label => (
                       <div key={label} className="p-4 rounded-lg bg-muted/30 border border-border/30 text-center">
                         <p className="text-2xl font-bold text-foreground">???</p>
                         <p className="text-xs text-muted-foreground mt-1">{label}</p>

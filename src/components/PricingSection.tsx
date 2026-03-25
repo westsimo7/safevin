@@ -11,7 +11,7 @@ const plans = [
     icon: Zap,
     features: [
       "2 Audit Annuncio",
-      "2 Audit Immagini",
+      
       "1 Studio export",
       "Storico ultime 3 sessioni",
       "SafeScore™ su 10 categorie",
@@ -31,7 +31,7 @@ const plans = [
     icon: Crown,
     features: [
       "30 Audit Annuncio / mese",
-      "30 Audit Immagini / mese",
+      
       "30 Studio / mese",
       "Storico completo mensile",
       "Export testi ottimizzati",
@@ -51,7 +51,7 @@ const plans = [
     icon: Rocket,
     features: [
       "Audit Annuncio illimitati",
-      "Audit Immagini illimitati",
+      
       "Studio illimitato",
       "Storico illimitato",
       "Preset avanzati / template premium",
