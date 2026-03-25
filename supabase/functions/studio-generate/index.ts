@@ -106,7 +106,7 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const { analysis, userInput } = body;
+    const { analysis, userInput, auditContext } = body;
     if (!analysis || !userInput) {
       return new Response(JSON.stringify({ error: "Dati mancanti" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -117,6 +117,22 @@ serve(async (req) => {
       .filter(([, v]) => v)
       .map(([k, v]) => `${k}: ${v} cm`)
       .join(", ");
+
+    // Build audit improvement context if coming from audit
+    let auditSection = "";
+    if (auditContext) {
+      auditSection = `
+CONTESTO MIGLIORAMENTO (da Audit con score ${auditContext.safeScore}/100):
+Il titolo originale era: "${auditContext.originalTitle}"
+La descrizione originale era: "${auditContext.originalDescription}"
+
+PROBLEMATICHE IDENTIFICATE DALL'AUDIT:
+${(auditContext.deepIssues || []).map((issue: string, i: number) => `${i + 1}. ${issue}`).join("\n")}
+
+OBIETTIVO: Genera un annuncio che RISOLVE TUTTE queste problematiche e raggiunge un punteggio 80+.
+Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto.
+`;
+    }
 
     const userPrompt = `Genera l'annuncio completo e la strategia di prezzo per questo prodotto:
 
@@ -135,7 +151,7 @@ DATI FORNITI DALL'UTENTE:
 ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.context ? `- Contesto d'uso: ${userInput.context}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
-
+${auditSection}
 ISTRUZIONI:
 1. Crea un titolo SEO ottimizzato (max 80 char)
 2. Crea una descrizione unica che contiene: mini storytelling + descrizione prodotto con contesto d'uso + chiude con bullet points di dettagli tecnici completi
