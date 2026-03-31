@@ -223,7 +223,7 @@ const Storico = () => {
                   <h3 className="text-sm font-semibold truncate">{item.titolo_generato || "Senza titolo"}</h3>
                   <p className="text-[11px] text-muted-foreground">{formatDate(item.created_at)}</p>
                 </div>
-                <Badge variant="outline" className="text-[10px] flex-shrink-0">{item.categoria}</Badge>
+                
                 <button
                   className="p-1.5 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
                   onClick={e => { e.stopPropagation(); setDeleteTarget({ id: item.id, type: "creation" }); }}
