@@ -240,7 +240,6 @@ const StoricoAudit = () => {
                   {/* Score */}
                   <div className={`px-2.5 py-1 rounded-lg border text-center flex-shrink-0 ${getScoreBg(score)}`}>
                     <span className={`text-base font-bold ${getScoreColor(score)}`}>{score}</span>
-                    <span className="text-[10px] text-muted-foreground">/100</span>
                   </div>
 
                   {/* Delete */}
