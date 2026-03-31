@@ -80,37 +80,37 @@
 }
 
 @layer utilities {
-  /* Neon text glow effects */
+  /* Teal text glow effects */
   .text-glow-red {
     text-shadow: 
-      0 0 10px hsl(0 100% 50% / 0.4),
-      0 0 20px hsl(0 100% 50% / 0.3),
-      0 0 40px hsl(0 100% 50% / 0.2);
+      0 0 10px hsl(174 65% 34% / 0.4),
+      0 0 20px hsl(174 65% 34% / 0.3),
+      0 0 40px hsl(174 65% 34% / 0.2);
   }
 
   .text-glow-gold {
     text-shadow: 
-      0 0 10px hsl(45 100% 50% / 0.8),
-      0 0 20px hsl(45 100% 50% / 0.6),
-      0 0 40px hsl(45 100% 50% / 0.4);
+      0 0 10px hsl(174 50% 46% / 0.6),
+      0 0 20px hsl(174 50% 46% / 0.4),
+      0 0 40px hsl(174 50% 46% / 0.3);
   }
 
   /* Glassmorphism */
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+    @apply bg-white/10 backdrop-blur-xl border border-white/20;
   }
 
   .glass-red {
-    @apply bg-red-500/5 backdrop-blur-xl border border-red-500/20;
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
   }
 
   /* Gradient backgrounds */
   .gradient-red {
-    background: linear-gradient(135deg, hsl(0 100% 50%) 0%, hsl(0 100% 30%) 100%);
+    background: linear-gradient(135deg, hsl(174 65% 34%) 0%, hsl(174 73% 21%) 100%);
   }
 
   .gradient-gold {
-    background: linear-gradient(135deg, hsl(45 100% 50%) 0%, hsl(35 100% 40%) 100%);
+    background: linear-gradient(135deg, hsl(174 50% 46%) 0%, hsl(174 55% 39%) 100%);
   }
 
   /* Animations */
