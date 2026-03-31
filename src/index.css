@@ -8,56 +8,59 @@
 
 @layer base {
   :root {
-    /* Light white background */
-    --background: 0 0% 98%;
-    --foreground: 0 0% 8%;
+    /* Main teal background */
+    --background: 174 70% 28%;
+    --foreground: 0 0% 100%;
 
-    /* Cards - slightly off-white */
+    /* Cards - white */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 8%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 8%;
+    --popover-foreground: 0 0% 10%;
 
-    /* Neon Red as primary */
-    --primary: 0 100% 50%;
+    /* Primary CTA teal */
+    --primary: 174 65% 34%;
     --primary-foreground: 0 0% 100%;
 
-    /* Light secondary */
-    --secondary: 0 0% 93%;
-    --secondary-foreground: 0 0% 12%;
+    /* Secondary - soft teal accent */
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 18%;
 
-    /* Muted grays */
-    --muted: 0 0% 90%;
-    --muted-foreground: 0 0% 40%;
+    /* Muted */
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 18%;
 
-    /* Accent - gold tinted */
-    --accent: 45 100% 50%;
-    --accent-foreground: 0 0% 5%;
+    /* Accent - highlight teal */
+    --accent: 174 50% 46%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders - subtle light */
+    /* Borders */
     --border: 0 0% 85%;
     --input: 0 0% 85%;
-    --ring: 0 100% 50%;
+    --ring: 174 65% 34%;
 
     --radius: 0.75rem;
 
     /* Custom brand colors */
-    --neon-red: 0 100% 50%;
-    --gold: 45 100% 50%;
-    --cyan: 195 100% 40%;
+    --teal-main: 174 70% 28%;
+    --teal-cta: 174 65% 34%;
+    --teal-hover: 174 73% 21%;
+    --teal-secondary: 174 55% 39%;
+    --teal-glow: 174 50% 46%;
+    --teal-deep: 174 75% 17%;
 
-    --sidebar-background: 0 0% 96%;
-    --sidebar-foreground: 0 0% 15%;
-    --sidebar-primary: 0 100% 50%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 174 65% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 93%;
-    --sidebar-accent-foreground: 0 0% 15%;
+    --sidebar-accent: 0 0% 95%;
+    --sidebar-accent-foreground: 0 0% 10%;
     --sidebar-border: 0 0% 85%;
-    --sidebar-ring: 0 100% 50%;
+    --sidebar-ring: 174 65% 34%;
   }
 }
 
