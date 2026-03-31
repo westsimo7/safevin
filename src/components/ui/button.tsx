@@ -16,8 +16,8 @@ const buttonVariants = cva(
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         // SafeVin custom variants
-        neon: "bg-neon-red text-white font-bold shadow-[0_0_20px_hsl(0_100%_50%_/_0.4)] hover:shadow-[0_0_30px_hsl(0_100%_50%_/_0.6)] hover:bg-neon-red/90 border border-neon-red/50",
-        glass: "bg-white/5 backdrop-blur-xl border border-white/20 text-foreground hover:bg-white/10 hover:border-neon-red/30",
+        neon: "bg-teal-cta text-white font-bold shadow-[0_0_20px_hsl(174_65%_34%_/_0.3)] hover:shadow-[0_0_30px_hsl(174_65%_34%_/_0.5)] hover:bg-teal-hover border border-teal-cta/50",
+        glass: "bg-white/10 backdrop-blur-xl border border-white/20 text-foreground hover:bg-white/15 hover:border-teal-glow/30",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -61,9 +61,14 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         // SafeVin brand colors
-        "neon-red": "hsl(var(--neon-red))",
-        "gold": "hsl(var(--gold))",
-        "cyan": "hsl(var(--cyan))",
+        "neon-red": "hsl(var(--teal-cta))",
+        "gold": "hsl(var(--teal-glow))",
+        "cyan": "hsl(var(--teal-secondary))",
+        "teal-main": "hsl(var(--teal-main))",
+        "teal-cta": "hsl(var(--teal-cta))",
+        "teal-hover": "hsl(var(--teal-hover))",
+        "teal-glow": "hsl(var(--teal-glow))",
+        "teal-deep": "hsl(var(--teal-deep))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -84,8 +89,8 @@ export default {
           "50%": { transform: "translateY(-10px)" },
         },
         "pulse-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(0 100% 50% / 0.4)" },
-          "50%": { boxShadow: "0 0 40px hsl(0 100% 50% / 0.6)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(174 65% 34% / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(174 65% 34% / 0.5)" },
         },
         "fade-in": {
           from: { opacity: "0", transform: "translateY(20px)" },
