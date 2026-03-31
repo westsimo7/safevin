@@ -61,9 +61,14 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         // SafeVin brand colors
-        "neon-red": "hsl(var(--neon-red))",
-        "gold": "hsl(var(--gold))",
-        "cyan": "hsl(var(--cyan))",
+        "neon-red": "hsl(var(--teal-cta))",
+        "gold": "hsl(var(--teal-glow))",
+        "cyan": "hsl(var(--teal-secondary))",
+        "teal-main": "hsl(var(--teal-main))",
+        "teal-cta": "hsl(var(--teal-cta))",
+        "teal-hover": "hsl(var(--teal-hover))",
+        "teal-glow": "hsl(var(--teal-glow))",
+        "teal-deep": "hsl(var(--teal-deep))",
       },
       borderRadius: {
         lg: "var(--radius)",
