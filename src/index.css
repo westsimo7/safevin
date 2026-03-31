@@ -8,9 +8,9 @@
 
 @layer base {
   :root {
-    /* Main teal background */
-    --background: 174 70% 28%;
-    --foreground: 0 0% 100%;
+    /* White background */
+    --background: 0 0% 100%;
+    --foreground: 174 70% 28%;
 
     /* Cards - white */
     --card: 0 0% 100%;
@@ -23,7 +23,7 @@
     --primary: 174 65% 34%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - soft teal accent */
+    /* Secondary - light gray */
     --secondary: 0 0% 95%;
     --secondary-foreground: 0 0% 18%;
 
@@ -38,7 +38,7 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders */
+    /* Borders - light gray */
     --border: 0 0% 85%;
     --input: 0 0% 85%;
     --ring: 174 65% 34%;
@@ -54,11 +54,11 @@
     --teal-deep: 174 75% 17%;
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 0 0% 10%;
+    --sidebar-foreground: 174 70% 28%;
     --sidebar-primary: 174 65% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 0 0% 95%;
-    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-accent-foreground: 174 70% 28%;
     --sidebar-border: 0 0% 85%;
     --sidebar-ring: 174 65% 34%;
   }
