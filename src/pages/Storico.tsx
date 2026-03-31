@@ -192,7 +192,6 @@ const Storico = () => {
                   </div>
                   <div className={`px-2.5 py-1 rounded-lg border text-center flex-shrink-0 ${getScoreBg(score)}`}>
                     <span className={`text-base font-bold ${getScoreColor(score)}`}>{score}</span>
-                    <span className="text-[10px] text-muted-foreground">/100</span>
                   </div>
                   <button
                     className="p-1.5 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
