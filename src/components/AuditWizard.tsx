@@ -144,19 +144,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
     switch (step) {
       case "photos":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Camera className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Camera className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Foto dell'annuncio
               </h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-[13px] sm:text-sm text-muted-foreground">
                 Carica le foto esattamente come le hai nell'annuncio
               </p>
             </div>
 
             <div
-              className={`border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
+              className={`border-2 border-dashed rounded-xl p-5 sm:p-8 text-center transition-all cursor-pointer ${
                 dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40"
               }`}
               onDragEnter={handleDrag}
@@ -173,11 +173,11 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
                 className="hidden"
                 onChange={e => e.target.files && addImages(e.target.files)}
               />
-              <ImagePlus className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
-              <p className="text-sm text-muted-foreground">
+              <ImagePlus className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground mx-auto mb-2 sm:mb-3" />
+              <p className="text-[13px] sm:text-sm text-muted-foreground">
                 Trascina qui o <span className="text-primary font-medium">seleziona</span>
               </p>
-              <p className="text-xs text-muted-foreground/60 mt-1">
+              <p className="text-[11px] sm:text-xs text-muted-foreground/60 mt-1">
                 Max {MAX_IMAGES} foto · Max {MAX_MB}MB per foto
               </p>
             </div>
@@ -186,7 +186,7 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
               <button
                 type="button"
                 onClick={goNext}
-                className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors w-full text-center pt-1"
+                className="text-[13px] sm:text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors w-full text-center pt-1"
               >
                 Procedi senza foto →
               </button>
@@ -194,15 +194,15 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
             {previews.length > 0 && (
               <div className="space-y-2">
-                <Badge variant="outline" className="text-xs">{images.length}/{MAX_IMAGES} foto</Badge>
-                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+                <Badge variant="outline" className="text-[11px] sm:text-xs">{images.length}/{MAX_IMAGES} foto</Badge>
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-1.5 sm:gap-2">
                   {previews.map((src, i) => (
                     <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50">
                       <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
                       <button
                         type="button"
                         onClick={e => { e.stopPropagation(); removeImage(i); }}
-                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100 active:opacity-100 transition-opacity"
                       >
                         <X className="w-3 h-3" />
                       </button>
