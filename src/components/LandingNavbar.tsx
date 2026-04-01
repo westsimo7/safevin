@@ -5,10 +5,10 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 const LandingNavbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full h-16 flex items-center justify-between px-4">
+      <div className="w-full h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6">
         {/* Logo - flush left */}
         <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span className="text-3xl font-black tracking-tight">
+          <span className="text-2xl sm:text-3xl font-black tracking-tight">
             <span className="text-foreground">SAFE</span>
             <span className="text-primary">ViN</span>
           </span>

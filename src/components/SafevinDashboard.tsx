@@ -8,7 +8,6 @@ import { motion } from "framer-motion";
 const SafevinDashboard = () => {
   const navigate = useNavigate();
 
-  // GSAP-style spring config
   const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
   const snappy = { type: "spring" as const, stiffness: 120, damping: 14 };
 
@@ -16,23 +15,23 @@ const SafevinDashboard = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
-      <main className="container mx-auto px-6 flex flex-col items-center">
-        <div className="text-center max-w-3xl mx-auto mt-12 md:mt-16">
-          {/* Badge — drops down with bounce */}
+      <main className="container mx-auto px-5 sm:px-6 flex flex-col items-center">
+        <div className="text-center max-w-3xl mx-auto mt-8 sm:mt-12 md:mt-16">
+          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -40, scale: 0.7 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ ...snappy, delay: 0.1 }}
           >
-            <Badge className="bg-primary/10 text-primary border-primary/20 mb-6">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 sm:mb-6 text-[11px] sm:text-xs">
               <Zap className="w-3 h-3 mr-1" />
               Audit + Studio in un unico motore
             </Badge>
           </motion.div>
 
-          {/* Title — split letter-stagger effect */}
+          {/* Title */}
           <motion.h1
-            className="text-5xl md:text-7xl font-black tracking-tighter mb-6 overflow-hidden"
+            className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 sm:mb-6 overflow-hidden"
             initial="hidden"
             animate="visible"
           >
@@ -79,7 +78,7 @@ const SafevinDashboard = () => {
             </motion.span>
           </motion.h1>
 
-          {/* CTA Button — scale up with glow pulse */}
+          {/* CTA Button */}
           <motion.div
             initial={{ opacity: 0, scale: 0.5, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -88,17 +87,17 @@ const SafevinDashboard = () => {
             <Button
               variant="neon"
               size="lg"
-              className="text-lg px-12 py-6 h-auto group animate-pulse-glow mb-6"
+              className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto"
               onClick={() => navigate("/engine")}
             >
               Avvia SafeVin Engine
-              <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
 
-          {/* Description — slide up with fade */}
+          {/* Description */}
           <motion.p
-            className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-4 leading-relaxed"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-3 sm:mb-4 leading-relaxed px-2 sm:px-0"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
@@ -107,9 +106,9 @@ const SafevinDashboard = () => {
             Correggi tutto e genera la versione migliore.
           </motion.p>
 
-          {/* Pipeline steps — stagger from left */}
+          {/* Pipeline steps */}
           <motion.div
-            className="flex items-center justify-center gap-3 text-sm text-muted-foreground mb-10"
+            className="flex items-center justify-center gap-2 sm:gap-3 text-[13px] sm:text-sm text-muted-foreground mb-8 sm:mb-10"
             initial="hidden"
             animate="visible"
             variants={{
@@ -117,15 +116,15 @@ const SafevinDashboard = () => {
             }}
           >
             {[
-              { icon: <Search className="w-3.5 h-3.5 text-primary" />, label: "Audit" },
+              { icon: <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />, label: "Audit" },
               { icon: null, label: "→", className: "text-border" },
               { icon: null, label: "Fix", className: "text-foreground font-medium" },
               { icon: null, label: "→", className: "text-border" },
-              { icon: <PenTool className="w-3.5 h-3.5 text-primary" />, label: "Studio" },
+              { icon: <PenTool className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />, label: "Studio" },
             ].map((item, i) => (
               <motion.span
                 key={i}
-                className={`flex items-center gap-1.5 ${item.className || ""}`}
+                className={`flex items-center gap-1 sm:gap-1.5 ${item.className || ""}`}
                 variants={{
                   hidden: { opacity: 0, x: -30 },
                   visible: { opacity: 1, x: 0 },
@@ -140,7 +139,7 @@ const SafevinDashboard = () => {
 
           {/* Audit & Studio CTA buttons */}
           <motion.div
-            className="flex items-center justify-center gap-4 mt-2"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-2 px-2 sm:px-0"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ ...spring, delay: 1.15 }}
@@ -148,13 +147,13 @@ const SafevinDashboard = () => {
             <Button
               variant="outline"
               size="lg"
-              className="h-auto py-4 px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+              className="h-auto py-3.5 sm:py-4 px-6 sm:px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group w-full sm:w-auto"
               onClick={() => navigate("/about/audit")}
             >
               <div className="flex items-center gap-2.5">
-                <Search className="w-4.5 h-4.5 text-primary" />
+                <Search className="w-4 h-4 text-primary" />
                 <div className="text-left">
-                  <span className="text-xs text-muted-foreground block leading-none mb-0.5">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground block leading-none mb-0.5">
                     SAFE<span className="text-primary">ViN</span>
                   </span>
                   <span className="font-bold text-foreground text-sm">Audit</span>
@@ -165,13 +164,13 @@ const SafevinDashboard = () => {
             <Button
               variant="outline"
               size="lg"
-              className="h-auto py-4 px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group"
+              className="h-auto py-3.5 sm:py-4 px-6 sm:px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group w-full sm:w-auto"
               onClick={() => navigate("/about/studio")}
             >
               <div className="flex items-center gap-2.5">
-                <PenTool className="w-4.5 h-4.5 text-primary" />
+                <PenTool className="w-4 h-4 text-primary" />
                 <div className="text-left">
-                  <span className="text-xs text-muted-foreground block leading-none mb-0.5">
+                  <span className="text-[10px] sm:text-xs text-muted-foreground block leading-none mb-0.5">
                     SAFE<span className="text-primary">ViN</span>
                   </span>
                   <span className="font-bold text-foreground text-sm">Studio</span>
