@@ -259,19 +259,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "categoria":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Layers className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Layers className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Categoria
               </h2>
-              <p className="text-sm text-muted-foreground">In che categoria hai inserito l'annuncio?</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">In che categoria hai inserito l'annuncio?</p>
             </div>
             <Input
               value={categoria}
               onChange={e => setCategoria(e.target.value)}
               placeholder="Es: Scarpe, Felpe, Elettronica..."
-              className="text-base"
+              className="text-base h-11 sm:h-10"
               autoFocus
             />
           </div>
@@ -279,19 +279,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "brand":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Tag className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Brand
               </h2>
-              <p className="text-sm text-muted-foreground">Quale marca hai indicato? (opzionale)</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">Quale marca hai indicato? (opzionale)</p>
             </div>
             <Input
               value={brand}
               onChange={e => setBrand(e.target.value)}
               placeholder="Es: Nike, Adidas, Zara..."
-              className="text-base"
+              className="text-base h-11 sm:h-10"
               autoFocus
             />
           </div>
@@ -299,13 +299,13 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "prezzo":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Prezzo
               </h2>
-              <p className="text-sm text-muted-foreground">A quanto lo stai vendendo?</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">A quanto lo stai vendendo?</p>
             </div>
             <div className="relative">
               <Input
@@ -314,7 +314,7 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
                 placeholder="Es: 25.00"
                 type="number"
                 step="0.01"
-                className="text-base pl-8"
+                className="text-base pl-8 h-11 sm:h-10"
                 autoFocus
               />
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">€</span>
@@ -324,19 +324,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "condizioni":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Condizioni
               </h2>
-              <p className="text-sm text-muted-foreground">In che stato è l'articolo?</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">In che stato è l'articolo?</p>
             </div>
             <Input
               value={condizioni}
               onChange={e => setCondizioni(e.target.value)}
               placeholder="Es: Nuovo con etichetta, Usato poco, Buone condizioni..."
-              className="text-base"
+              className="text-base h-11 sm:h-10"
               autoFocus
             />
           </div>
@@ -344,25 +344,25 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "pubblicato":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Globe className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Stato dell'annuncio
               </h2>
-              <p className="text-sm text-muted-foreground">Questo annuncio è già online o è un test?</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">Questo annuncio è già online o è un test?</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
               <Card
                 className={`cursor-pointer transition-all hover:border-primary/50 ${
                   isPubblicato === true ? "border-primary shadow-[0_0_15px_hsl(var(--primary)/0.2)]" : "border-border/50"
                 }`}
                 onClick={() => setIsPubblicato(true)}
               >
-                <CardContent className="p-5 text-center space-y-2">
-                  <Globe className="w-8 h-8 mx-auto text-primary" />
-                  <p className="font-semibold text-sm">Già pubblicato</p>
-                  <p className="text-xs text-muted-foreground">È già online su una piattaforma</p>
+                <CardContent className="p-3.5 sm:p-5 text-center space-y-1.5 sm:space-y-2">
+                  <Globe className="w-7 h-7 sm:w-8 sm:h-8 mx-auto text-primary" />
+                  <p className="font-semibold text-[13px] sm:text-sm">Già pubblicato</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground">È già online su una piattaforma</p>
                 </CardContent>
               </Card>
               <Card
@@ -371,10 +371,10 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
                 }`}
                 onClick={() => setIsPubblicato(false)}
               >
-                <CardContent className="p-5 text-center space-y-2">
-                  <FlaskConical className="w-8 h-8 mx-auto text-primary" />
-                  <p className="font-semibold text-sm">Test / Bozza</p>
-                  <p className="text-xs text-muted-foreground">Non è ancora pubblicato</p>
+                <CardContent className="p-3.5 sm:p-5 text-center space-y-1.5 sm:space-y-2">
+                  <FlaskConical className="w-7 h-7 sm:w-8 sm:h-8 mx-auto text-primary" />
+                  <p className="font-semibold text-[13px] sm:text-sm">Test / Bozza</p>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground">Non è ancora pubblicato</p>
                 </CardContent>
               </Card>
             </div>
@@ -383,19 +383,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "tempo":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <Clock className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Da quanto è online?
               </h2>
-              <p className="text-sm text-muted-foreground">Indica da quanto tempo è pubblicato l'annuncio</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">Indica da quanto tempo è pubblicato l'annuncio</p>
             </div>
             <Input
               value={tempoOnline}
               onChange={e => setTempoOnline(e.target.value)}
               placeholder="Es: 3 giorni, 2 settimane, 1 mese..."
-              className="text-base"
+              className="text-base h-11 sm:h-10"
               autoFocus
             />
           </div>
@@ -404,17 +404,17 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
   };
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-4 sm:space-y-6">
       {/* Progress bar */}
-      <div className="space-y-2">
-        <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+      <div className="space-y-1.5 sm:space-y-2">
+        <div className="h-1 sm:h-1.5 bg-muted rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-primary rounded-full"
             animate={{ width: `${progress}%` }}
             transition={{ duration: 0.4, ease: "easeOut" }}
           />
         </div>
-        <p className="text-xs text-muted-foreground text-right">
+        <p className="text-[11px] sm:text-xs text-muted-foreground text-right">
           {currentIndex + 1} di {allSteps.length}
         </p>
       </div>
@@ -434,10 +434,10 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
       </AnimatePresence>
 
       {/* Navigation */}
-      <div className="flex gap-3 pt-2">
+      <div className="flex gap-2.5 sm:gap-3 pt-2">
         {currentIndex > 0 && (
-          <Button variant="outline" onClick={goBack} className="flex-1">
-            <ArrowLeft className="w-4 h-4 mr-2" />
+          <Button variant="outline" onClick={goBack} className="flex-1 h-11 sm:h-10">
+            <ArrowLeft className="w-4 h-4 mr-1.5 sm:mr-2" />
             Indietro
           </Button>
         )}
@@ -445,17 +445,17 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
           variant="neon"
           onClick={goNext}
           disabled={!canProceed()}
-          className="flex-1"
+          className="flex-1 h-11 sm:h-10"
         >
           {isLastStep ? (
             <>
-              <Check className="w-4 h-4 mr-2" />
+              <Check className="w-4 h-4 mr-1.5 sm:mr-2" />
               Avvia Audit
             </>
           ) : (
             <>
               Continua
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-4 h-4 ml-1.5 sm:ml-2" />
             </>
           )}
         </Button>
