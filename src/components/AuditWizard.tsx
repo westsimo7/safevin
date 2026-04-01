@@ -239,19 +239,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "descrizione":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <FileText className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Descrizione
               </h2>
-              <p className="text-sm text-muted-foreground">Incolla la descrizione completa del tuo annuncio</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">Incolla la descrizione completa del tuo annuncio</p>
             </div>
             <Textarea
               value={descrizione}
               onChange={e => setDescrizione(e.target.value)}
               placeholder="Incolla qui la descrizione..."
-              className="min-h-[160px] text-base"
+              className="min-h-[140px] sm:min-h-[160px] text-base"
               autoFocus
             />
           </div>

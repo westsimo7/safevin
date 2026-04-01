@@ -41,7 +41,7 @@ const getProgressColor = (score: number) => {
 
 const AuditResult = ({ result }: { result: AuditResultData }) => {
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-4 sm:space-y-6">
       {/* SAFE SCORE */}
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -49,29 +49,29 @@ const AuditResult = ({ result }: { result: AuditResultData }) => {
         transition={{ duration: 0.5 }}
       >
         <Card className="border-primary/20 bg-card/80 backdrop-blur-sm overflow-hidden">
-          <CardContent className="p-6 text-center space-y-3">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+          <CardContent className="p-4 sm:p-6 text-center space-y-2 sm:space-y-3">
+            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground">
               Safe Score
             </p>
             <div className="flex items-baseline justify-center gap-1">
-              <span className={`text-5xl font-bold tabular-nums ${getScoreColor(result.safeScore)}`}>
+              <span className={`text-4xl sm:text-5xl font-bold tabular-nums ${getScoreColor(result.safeScore)}`}>
                 {result.safeScore}%
               </span>
-              <span className="text-lg text-muted-foreground">/100%</span>
+              <span className="text-base sm:text-lg text-muted-foreground">/100%</span>
             </div>
             <Badge
               variant="outline"
-              className={`text-xs ${getScoreColor(result.safeScore)} border-current`}
+              className={`text-[10px] sm:text-xs ${getScoreColor(result.safeScore)} border-current`}
             >
               {result.label}
             </Badge>
-            <p className="text-xs text-muted-foreground">probabilità di vendita stimata</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground">probabilità di vendita stimata</p>
           </CardContent>
         </Card>
       </motion.div>
 
       {/* Categories */}
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {categoryMeta.map((cat, i) => {
           const data = result.categories[cat.key];
           const Icon = cat.icon;
@@ -83,17 +83,17 @@ const AuditResult = ({ result }: { result: AuditResultData }) => {
               transition={{ duration: 0.35, delay: 0.1 + i * 0.08 }}
             >
               <Card className="border-border/50 bg-card/60">
-                <CardContent className="p-4 space-y-2">
+                <CardContent className="p-3 sm:p-4 space-y-1.5 sm:space-y-2">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Icon className="w-4 h-4 text-primary" />
-                      <span className="text-sm font-semibold">{cat.label}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                      <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+                      <span className="text-[13px] sm:text-sm font-semibold">{cat.label}</span>
                     </div>
-                    <span className={`text-sm font-bold tabular-nums ${getScoreColor(data.score)}`}>
+                    <span className={`text-[13px] sm:text-sm font-bold tabular-nums ${getScoreColor(data.score)}`}>
                       {data.score}%
                     </span>
                   </div>
-                  <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                  <div className="h-1 sm:h-1.5 bg-muted rounded-full overflow-hidden">
                     <motion.div
                       className={`h-full rounded-full ${getProgressColor(data.score)}`}
                       initial={{ width: 0 }}
@@ -101,7 +101,7 @@ const AuditResult = ({ result }: { result: AuditResultData }) => {
                       transition={{ duration: 0.6, delay: 0.2 + i * 0.08 }}
                     />
                   </div>
-                  <p className="text-sm text-muted-foreground">{data.phrase}</p>
+                  <p className="text-[13px] sm:text-sm text-muted-foreground">{data.phrase}</p>
                 </CardContent>
               </Card>
             </motion.div>
