@@ -219,19 +219,19 @@ const AuditWizard = ({ onComplete }: AuditWizardProps) => {
 
       case "titolo":
         return (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             <div className="space-y-1">
-              <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
-                <FileText className="w-5 h-5 text-primary" />
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-2">
+                <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
                 Titolo dell'annuncio
               </h2>
-              <p className="text-sm text-muted-foreground">Copia e incolla il titolo esatto del tuo annuncio</p>
+              <p className="text-[13px] sm:text-sm text-muted-foreground">Copia e incolla il titolo esatto del tuo annuncio</p>
             </div>
             <Input
               value={titolo}
               onChange={e => setTitolo(e.target.value)}
               placeholder="Es: Nike Air Force 1 Bianche 42 Nuove"
-              className="text-base"
+              className="text-base h-11 sm:h-10"
               autoFocus
             />
           </div>
