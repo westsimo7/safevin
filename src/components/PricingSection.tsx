@@ -11,7 +11,6 @@ const plans = [
     icon: Zap,
     features: [
       "2 Audit Annuncio",
-      
       "1 Studio export",
       "Storico ultime 3 sessioni",
       "SafeScore™ su 10 categorie",
@@ -31,7 +30,6 @@ const plans = [
     icon: Crown,
     features: [
       "30 Audit Annuncio / mese",
-      
       "30 Studio / mese",
       "Storico completo mensile",
       "Export testi ottimizzati",
@@ -51,7 +49,6 @@ const plans = [
     icon: Rocket,
     features: [
       "Audit Annuncio illimitati",
-      
       "Studio illimitato",
       "Storico illimitato",
       "Preset avanzati / template premium",
@@ -71,25 +68,25 @@ const PricingSection = () => {
   const footerRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.6, distance: 20 });
 
   return (
-    <section className="relative py-24 bg-card/20 overflow-hidden" id="pricing">
+    <section className="relative py-14 sm:py-20 md:py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="container mx-auto px-6 max-w-6xl">
-        <div ref={headerRef} className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+      <div className="container mx-auto px-5 sm:px-6 max-w-6xl">
+        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
             Scegli il tuo piano
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+          <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
             Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.
           </p>
         </div>
 
-        <div ref={gridRef} className="grid md:grid-cols-3 gap-6">
+        <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
           {plans.map((plan, index) => (
             <div
               key={index}
               data-reveal
-              className={`relative flex flex-col p-6 rounded-2xl transition-all duration-300 ${
+              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 ${
                 plan.popular
                   ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
                   : "bg-card/50 border border-border/50 hover:border-border"
@@ -103,53 +100,53 @@ const PricingSection = () => {
                 </div>
               )}
 
-              <div className="mb-6">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-4 ${
+              <div className="mb-4 sm:mb-6">
+                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
                   plan.popular ? "bg-primary/20" : "bg-muted"
                 }`}>
-                  <plan.icon className={`w-5 h-5 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
+                  <plan.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
                 </div>
-                <h3 className={`text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
+                <h3 className={`text-lg sm:text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
                   {plan.name}
                 </h3>
-                <p className="text-sm text-muted-foreground">{plan.description}</p>
+                <p className="text-[13px] sm:text-sm text-muted-foreground">{plan.description}</p>
               </div>
 
-              <div className="mb-6">
-                <span className="text-4xl font-bold text-foreground">${plan.price}</span>
-                <span className="text-muted-foreground text-sm">{plan.period}</span>
+              <div className="mb-4 sm:mb-6">
+                <span className="text-3xl sm:text-4xl font-bold text-foreground">${plan.price}</span>
+                <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
               </div>
 
-              <ul className="space-y-3 mb-6 flex-grow">
+              <ul className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6 flex-grow">
                 {plan.features.map((feature, i) => (
                   <li key={i} className="flex items-start gap-2">
-                    <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                    <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
                       plan.popular ? "bg-primary/10" : "bg-muted"
                     }`}>
-                      <Check className={`w-3 h-3 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
+                      <Check className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
                     </div>
-                    <span className="text-foreground/80 text-sm">{feature}</span>
+                    <span className="text-foreground/80 text-[13px] sm:text-sm">{feature}</span>
                   </li>
                 ))}
                 {plan.limitations.map((limitation, i) => (
                   <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
-                    <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
-                      <span className="text-xs text-muted-foreground">–</span>
+                    <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                      <span className="text-[10px] sm:text-xs text-muted-foreground">–</span>
                     </div>
-                    <span className="text-muted-foreground text-sm line-through">{limitation}</span>
+                    <span className="text-muted-foreground text-[13px] sm:text-sm line-through">{limitation}</span>
                   </li>
                 ))}
               </ul>
 
-              <Button variant={plan.variant} className="w-full" size="lg" disabled>
+              <Button variant={plan.variant} className="w-full h-11 sm:h-auto text-sm" size="lg" disabled>
                 {plan.cta}
               </Button>
             </div>
           ))}
         </div>
 
-        <div ref={footerRef} className="mt-12 text-center">
-          <p className="text-muted-foreground text-sm">
+        <div ref={footerRef} className="mt-8 sm:mt-12 text-center">
+          <p className="text-muted-foreground text-[13px] sm:text-sm">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
         </div>
