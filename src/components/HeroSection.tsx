@@ -1,7 +1,29 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, LayoutDashboard } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutDashboard, Eye, FileText, DollarSign, Shield, Camera } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+
+const demoCategories = [
+  { label: "Attenzione", icon: Eye, score: 82 },
+  { label: "Chiarezza", icon: FileText, score: 68 },
+  { label: "Valore", icon: DollarSign, score: 75 },
+  { label: "Fiducia", icon: Shield, score: 80 },
+  { label: "Immagini", icon: Camera, score: 52 },
+];
+
+const getScoreColor = (score: number) => {
+  if (score >= 75) return "text-green-500";
+  if (score >= 55) return "text-yellow-500";
+  if (score >= 48) return "text-orange-500";
+  return "text-red-500";
+};
+
+const getBarColor = (score: number) => {
+  if (score >= 75) return "bg-green-500";
+  if (score >= 55) return "bg-yellow-500";
+  if (score >= 48) return "bg-orange-500";
+  return "bg-red-500";
+};
 
 const HeroSection = () => {
   const badgeRef = useScrollReveal({ direction: "down", delay: 0, duration: 0.7, distance: 30 });
@@ -9,6 +31,8 @@ const HeroSection = () => {
   const descRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.8 });
   const ctaRef = useScrollReveal({ direction: "up", delay: 0.45, duration: 0.8 });
   const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
+
+  const totalScore = 72;
 
   return (
     <section className="relative min-h-[70vh] md:min-h-[85vh] flex items-center justify-center overflow-hidden bg-background">
@@ -45,27 +69,43 @@ const HeroSection = () => {
           </Link>
         </div>
 
-        {/* Mini demo card */}
+        {/* SafeScore Demo Card */}
         <div ref={cardRef} className="mt-8 md:mt-14">
-          <div className="inline-block p-4 md:p-6 rounded-2xl bg-card border border-border/50 shadow-lg max-w-sm">
-            <p className="text-xs text-muted-foreground mb-2">SafeScore™ Preview</p>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl md:text-4xl font-black text-primary">78</span>
-              <span className="text-base md:text-lg text-muted-foreground">/100</span>
+          <div className="inline-block p-5 md:p-6 rounded-2xl bg-card border border-border/50 shadow-lg w-full max-w-sm text-left">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground text-center mb-3">SafeScore™ Preview</p>
+
+            {/* Main score */}
+            <div className="flex items-baseline justify-center gap-1 mb-4">
+              <span className={`text-4xl md:text-5xl font-bold tabular-nums ${getScoreColor(totalScore)}`}>
+                {totalScore}%
+              </span>
+              <span className="text-base text-muted-foreground">/100%</span>
             </div>
-            <div className="space-y-1.5">
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Titolo</span>
-                <span className="text-green-500 font-medium">9/10</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Descrizione</span>
-                <span className="text-yellow-500 font-medium">6/10</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-muted-foreground">Foto</span>
-                <span className="text-red-500 font-medium">4/10</span>
-              </div>
+
+            {/* Category breakdown */}
+            <div className="space-y-2.5">
+              {demoCategories.map((cat) => {
+                const Icon = cat.icon;
+                return (
+                  <div key={cat.label} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <Icon className="w-3.5 h-3.5 text-primary" />
+                        <span className="text-xs font-medium text-foreground">{cat.label}</span>
+                      </div>
+                      <span className={`text-xs font-bold tabular-nums ${getScoreColor(cat.score)}`}>
+                        {cat.score}%
+                      </span>
+                    </div>
+                    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${getBarColor(cat.score)}`}
+                        style={{ width: `${cat.score}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
