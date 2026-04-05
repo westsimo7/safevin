@@ -44,6 +44,42 @@ const StudioPhotoGuide = () => {
     return () => el?.removeEventListener("scroll", checkScroll);
   }, []);
 
+  // Auto-scroll lento continuo
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    let raf: number;
+    let paused = false;
+    const speed = 0.4; // px per frame
+
+    const step = () => {
+      if (!paused && el) {
+        el.scrollLeft += speed;
+        // Loop: torna all'inizio quando arriva alla fine
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
+          el.scrollLeft = 0;
+        }
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+
+    const pause = () => { paused = true; };
+    const resume = () => { paused = false; };
+    el.addEventListener("pointerdown", pause);
+    el.addEventListener("pointerup", resume);
+    el.addEventListener("touchstart", pause, { passive: true });
+    el.addEventListener("touchend", resume);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("pointerdown", pause);
+      el.removeEventListener("pointerup", resume);
+      el.removeEventListener("touchstart", pause);
+      el.removeEventListener("touchend", resume);
+    };
+  }, []);
+
   const scroll = (dir: number) => {
     scrollRef.current?.scrollBy({ left: dir * 160, behavior: "smooth" });
   };
