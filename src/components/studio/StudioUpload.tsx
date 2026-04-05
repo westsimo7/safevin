@@ -83,6 +83,8 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         </p>
       </div>
 
+      <StudioPhotoGuide />
+
       <Card className="border-border/50">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-3">
