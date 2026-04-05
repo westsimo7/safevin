@@ -16,8 +16,8 @@ const slides = [
   { img: foto1, label: "1. Foto frontale del capo" },
   { img: foto2, label: "2. Primo piano del logo" },
   { img: foto3, label: "3. Etichetta principale" },
-  { img: foto4, label: "4. Etichetta materiale" },
-  { img: foto5, label: "5. Codice identificativo" },
+  { img: foto5, label: "4. Codice identificativo" },
+  { img: foto4, label: "5. Etichetta materiale" },
   { img: foto6, label: "6. Dettaglio (lacci, zip…)" },
   { img: foto7, label: "6. Dettaglio aggiuntivo" },
   { img: foto8, label: "7. Foto retro del capo" },
@@ -141,6 +141,10 @@ const StudioPhotoGuide = () => {
             </div>
           ))}
         </div>
+
+        <p className="text-[11px] text-muted-foreground italic mt-1">
+          💡 Consiglio extra! Prendi un lenzuolo/tela con colore che faccia contrasto con il colore del prodotto.
+        </p>
       </div>
 
       <Dialog open={selectedSlide !== null} onOpenChange={handleDialogClose}>
