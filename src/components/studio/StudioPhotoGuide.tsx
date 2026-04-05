@@ -1,5 +1,5 @@
-import { useRef, useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import foto1 from "@/assets/studio-guide/foto1.jpg";
 import foto2 from "@/assets/studio-guide/foto2.jpg";
@@ -27,35 +27,20 @@ const slides = [
 
 const StudioPhotoGuide = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(true);
+  const pausedRef = useRef(false);
+  const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [selectedSlide, setSelectedSlide] = useState<number | null>(null);
 
-  const checkScroll = () => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanLeft(el.scrollLeft > 4);
-    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
-  };
-
-  useEffect(() => {
-    checkScroll();
-    const el = scrollRef.current;
-    el?.addEventListener("scroll", checkScroll, { passive: true });
-    return () => el?.removeEventListener("scroll", checkScroll);
-  }, []);
-
-  // Auto-scroll lento continuo
+  // Auto-scroll lento continuo verso sinistra
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     let raf: number;
-    let paused = false;
-    const speed = 0.4; // px per frame
+    const speed = 0.4;
 
     const step = () => {
-      if (!paused && el) {
+      if (!pausedRef.current && el) {
         el.scrollLeft += speed;
-        // Loop: torna all'inizio quando arriva alla fine
         if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
           el.scrollLeft = 0;
         }
@@ -64,41 +49,48 @@ const StudioPhotoGuide = () => {
     };
     raf = requestAnimationFrame(step);
 
-    const pause = () => { paused = true; };
-    const resume = () => { paused = false; };
-    el.addEventListener("pointerdown", pause);
-    el.addEventListener("pointerup", resume);
-    el.addEventListener("touchstart", pause, { passive: true });
-    el.addEventListener("touchend", resume);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      el.removeEventListener("pointerdown", pause);
-      el.removeEventListener("pointerup", resume);
-      el.removeEventListener("touchstart", pause);
-      el.removeEventListener("touchend", resume);
-    };
+    return () => cancelAnimationFrame(raf);
   }, []);
 
-  const scroll = (dir: number) => {
-    scrollRef.current?.scrollBy({ left: dir * 160, behavior: "smooth" });
+  const pauseAndResume = useCallback(() => {
+    pausedRef.current = true;
+    if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    resumeTimerRef.current = setTimeout(() => {
+      pausedRef.current = false;
+    }, 1000);
+  }, []);
+
+  // Pause on touch/pointer interaction, resume after 1s
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handler = () => pauseAndResume();
+    el.addEventListener("pointerdown", handler);
+    el.addEventListener("touchstart", handler, { passive: true });
+    return () => {
+      el.removeEventListener("pointerdown", handler);
+      el.removeEventListener("touchstart", handler);
+    };
+  }, [pauseAndResume]);
+
+  const handlePhotoClick = (index: number) => {
+    setSelectedSlide(index);
+    pausedRef.current = true;
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open) {
+      setSelectedSlide(null);
+      pauseAndResume();
+    }
   };
 
   return (
-    <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
-      <p className="text-xs font-semibold text-primary">
-        📸 Per un output massimizzato, segui quest'ordine:
-      </p>
-
-      <div className="relative">
-        {canLeft && (
-          <button
-            onClick={() => scroll(-1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-background/90 border border-border/50 shadow flex items-center justify-center"
-          >
-            <ChevronLeft className="w-4 h-4 text-foreground" />
-          </button>
-        )}
+    <>
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-3">
+        <p className="text-xs font-semibold text-primary">
+          📸 Per un output massimizzato, segui quest'ordine:
+        </p>
 
         <div
           ref={scrollRef}
@@ -108,9 +100,10 @@ const StudioPhotoGuide = () => {
           {slides.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[120px] snap-start"
+              className="flex-shrink-0 w-[120px] snap-start cursor-pointer"
+              onClick={() => handlePhotoClick(i)}
             >
-              <div className="aspect-[3/4] rounded-lg overflow-hidden border border-border/40 mb-1.5">
+              <div className="aspect-[3/4] rounded-lg overflow-hidden border border-border/40 mb-1.5 active:scale-95 transition-transform">
                 <img
                   src={s.img}
                   alt={s.label}
@@ -124,17 +117,25 @@ const StudioPhotoGuide = () => {
             </div>
           ))}
         </div>
-
-        {canRight && (
-          <button
-            onClick={() => scroll(1)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-background/90 border border-border/50 shadow flex items-center justify-center"
-          >
-            <ChevronRight className="w-4 h-4 text-foreground" />
-          </button>
-        )}
       </div>
-    </div>
+
+      <Dialog open={selectedSlide !== null} onOpenChange={handleDialogClose}>
+        <DialogContent className="max-w-[90vw] sm:max-w-md p-2 bg-background">
+          {selectedSlide !== null && (
+            <div className="space-y-2">
+              <img
+                src={slides[selectedSlide].img}
+                alt={slides[selectedSlide].label}
+                className="w-full rounded-lg object-contain max-h-[70vh]"
+              />
+              <p className="text-sm text-center font-medium text-foreground">
+                {slides[selectedSlide].label}
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
