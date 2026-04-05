@@ -16,13 +16,13 @@ const slides = [
   { img: foto1, label: "1. Foto frontale del capo" },
   { img: foto2, label: "2. Primo piano del logo" },
   { img: foto3, label: "3. Etichetta principale" },
-  { img: foto5, label: "4. Etichetta materiale" },
-  { img: foto4, label: "5. Codice identificativo" },
+  { img: foto4, label: "4. Etichetta materiale" },
+  { img: foto5, label: "5. Codice identificativo" },
   { img: foto6, label: "6. Dettaglio (lacci, zip…)" },
-  { img: foto7, label: "7. Dettaglio aggiuntivo" },
-  { img: foto8, label: "8. Foto retro del capo" },
-  { img: foto9, label: "9. Dettaglio retro" },
-  { img: foto10, label: "10. Dettaglio retro (2)" },
+  { img: foto7, label: "6. Dettaglio aggiuntivo" },
+  { img: foto8, label: "7. Foto retro del capo" },
+  { img: foto9, label: "8. Dettaglio retro" },
+  { img: foto10, label: "8. Dettaglio retro (2)" },
 ];
 
 const StudioPhotoGuide = () => {
