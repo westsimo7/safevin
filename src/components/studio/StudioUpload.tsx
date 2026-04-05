@@ -3,6 +3,7 @@ import { Camera, ImagePlus, X, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import StudioPhotoGuide from "./StudioPhotoGuide";
 
 const MAX_IMAGES = 15;
 const MAX_SIZE_MB = 25;
@@ -81,6 +82,8 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           Il sistema analizzerà automaticamente le immagini per capire cosa stai vendendo
         </p>
       </div>
+
+      <StudioPhotoGuide />
 
       <Card className="border-border/50">
         <CardContent className="p-6">
