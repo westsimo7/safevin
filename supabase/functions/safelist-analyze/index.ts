@@ -216,7 +216,7 @@ REGOLE:
         method: "POST",
         headers: apiHeaders,
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: "openai/gpt-5.2",
           messages: [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
@@ -299,7 +299,7 @@ Risultato precedente: ${JSON.stringify(similarContext.previousResult)}`;
         method: "POST",
         headers: apiHeaders,
         body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
+          model: "openai/gpt-5.2",
           temperature: 0,
           messages: [
             { role: "system", content: AUDIT_PROMPT },
