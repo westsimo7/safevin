@@ -25,9 +25,12 @@ const slides = [
   { img: foto10, label: "8. Dettaglio retro (2)" },
 ];
 
+const duplicatedSlides = [...slides, ...slides];
+
 const StudioPhotoGuide = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const pausedRef = useRef(false);
+  const scrollPositionRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [selectedSlide, setSelectedSlide] = useState<number | null>(null);
 
@@ -35,21 +38,33 @@ const StudioPhotoGuide = () => {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
     let raf: number;
-    const speed = 0.4;
+    const speed = 0.35;
+
+    scrollPositionRef.current = el.scrollLeft;
 
     const step = () => {
       if (!pausedRef.current && el) {
-        el.scrollLeft += speed;
-        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
-          el.scrollLeft = 0;
+        const loopPoint = el.scrollWidth / 2;
+        scrollPositionRef.current += speed;
+
+        if (scrollPositionRef.current >= loopPoint) {
+          scrollPositionRef.current = 0;
         }
+
+        el.scrollLeft = scrollPositionRef.current;
       }
+
       raf = requestAnimationFrame(step);
     };
+
     raf = requestAnimationFrame(step);
 
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
+    };
   }, []);
 
   const pauseAndResume = useCallback(() => {
@@ -64,12 +79,21 @@ const StudioPhotoGuide = () => {
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
+
+    const syncScrollPosition = () => {
+      scrollPositionRef.current = el.scrollLeft;
+    };
+
     const handler = () => pauseAndResume();
+
     el.addEventListener("pointerdown", handler);
     el.addEventListener("touchstart", handler, { passive: true });
+    el.addEventListener("scroll", syncScrollPosition, { passive: true });
+
     return () => {
       el.removeEventListener("pointerdown", handler);
       el.removeEventListener("touchstart", handler);
+      el.removeEventListener("scroll", syncScrollPosition);
     };
   }, [pauseAndResume]);
 
@@ -94,14 +118,14 @@ const StudioPhotoGuide = () => {
 
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto scrollbar-hide px-1 snap-x snap-mandatory"
+          className="flex gap-3 overflow-x-auto scrollbar-hide px-1"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          {slides.map((s, i) => (
+          {duplicatedSlides.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[120px] snap-start cursor-pointer"
-              onClick={() => handlePhotoClick(i)}
+              className="flex-shrink-0 w-[120px] cursor-pointer"
+              onClick={() => handlePhotoClick(i % slides.length)}
             >
               <div className="aspect-[3/4] rounded-lg overflow-hidden border border-border/40 mb-1.5 active:scale-95 transition-transform">
                 <img
