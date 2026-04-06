@@ -111,7 +111,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
     setShowBrandPicker(false);
   };
 
-  const fields: FieldKey[] = ["product_type", "category", "color", "brand"];
+  const fields: FieldKey[] = ["gender", "product_type", "category", "color", "brand"];
 
   return (
     <div className="space-y-6 animate-fade-in">
