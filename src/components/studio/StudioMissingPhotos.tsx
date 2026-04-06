@@ -1,4 +1,4 @@
-import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown } from "lucide-react";
+import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,92 +33,97 @@ interface StudioMissingPhotosProps {
   onAskCoach: (photoName: string) => void;
 }
 
-const CRITERIA_LABELS: Record<string, string> = {
-  quality: "Qualità",
-  light: "Luce",
-  background_contrast: "Contrasto sfondo",
-  completeness: "Completezza",
+const CRITERIA_LABELS: Record<string, { label: string; icon: string }> = {
+  quality: { label: "Qualità", icon: "📷" },
+  light: { label: "Luce", icon: "💡" },
+  background_contrast: { label: "Contrasto sfondo", icon: "🎨" },
+  completeness: { label: "Completezza", icon: "✅" },
 };
 
-/** Build a natural-language paragraph summarizing all photo quality */
-function buildPhotoReport(photoQuality: PhotoQuality[], previews: string[], missingPhotos: MissingPhoto[]): string {
-  const totalPhotos = previews.length;
-  const photosWithIssues = photoQuality.filter(pq => pq.issues.length > 0);
+/** Build per-criteria verdict (max ~45 words each) */
+function buildCriteriaVerdicts(
+  photoQuality: PhotoQuality[],
+  missingPhotos: MissingPhoto[]
+): { key: string; label: string; icon: string; score: number; verdict: string; ok: boolean }[] {
+  const avgScores: Record<string, number[]> = {};
+  for (const pq of photoQuality) {
+    if (pq.scores) {
+      for (const [key, val] of Object.entries(pq.scores)) {
+        if (!avgScores[key]) avgScores[key] = [];
+        avgScores[key].push(val);
+      }
+    }
+  }
+
+  const results: { key: string; label: string; icon: string; score: number; verdict: string; ok: boolean }[] = [];
+
+  // Quality
+  const qAvg = avgScores.quality ? avgScores.quality.reduce((a, b) => a + b, 0) / avgScores.quality.length : 0;
+  results.push({
+    key: "quality",
+    label: "Qualità",
+    icon: "📷",
+    score: qAvg,
+    ok: qAvg >= 3.5,
+    verdict: qAvg >= 4
+      ? "Le foto sono nitide e ben definite. Ottimo lavoro."
+      : qAvg >= 3
+        ? "Qualità accettabile ma alcune foto risultano poco definite. Prova a scattare con più luce naturale."
+        : "Le foto risultano sgranate o sfocate. Riscatta con luce naturale e fotocamera stabile.",
+  });
+
+  // Light
+  const lAvg = avgScores.light ? avgScores.light.reduce((a, b) => a + b, 0) / avgScores.light.length : 0;
+  results.push({
+    key: "light",
+    label: "Luce",
+    icon: "💡",
+    score: lAvg,
+    ok: lAvg >= 3.5,
+    verdict: lAvg >= 4
+      ? "Illuminazione uniforme e naturale. I dettagli sono ben visibili."
+      : lAvg >= 3
+        ? "Luce sufficiente ma alcune zone risultano in ombra. Usa luce naturale frontale."
+        : "Illuminazione troppo scarsa o artificiale. Scatta vicino a una finestra con luce del giorno.",
+  });
+
+  // Background contrast
+  const bgAvg = avgScores.background_contrast ? avgScores.background_contrast.reduce((a, b) => a + b, 0) / avgScores.background_contrast.length : 0;
+  results.push({
+    key: "background_contrast",
+    label: "Contrasto sfondo",
+    icon: "🎨",
+    score: bgAvg,
+    ok: bgAvg >= 3.5,
+    verdict: bgAvg >= 4
+      ? "Buon contrasto tra prodotto e sfondo. Il capo risalta bene."
+      : bgAvg >= 3
+        ? "Contrasto migliorabile. Evita sfondo e prodotto dello stesso tono (es. nero su blu scuro)."
+        : "Poco contrasto: sfondo e prodotto si confondono. Usa un lenzuolo chiaro per capi scuri e viceversa.",
+  });
+
+  // Completeness
+  const cAvg = avgScores.completeness ? avgScores.completeness.reduce((a, b) => a + b, 0) / avgScores.completeness.length : 0;
   const filteredMissing = missingPhotos.filter(p => p.type !== "worn" && p.type !== "has_worn");
+  results.push({
+    key: "completeness",
+    label: "Completezza",
+    icon: "✅",
+    score: cAvg,
+    ok: cAvg >= 3.5 && filteredMissing.length === 0,
+    verdict: filteredMissing.length === 0
+      ? "Set foto completo. Hai coperto tutti gli angoli importanti."
+      : `Mancano: ${filteredMissing.map(m => m.name.toLowerCase()).join(", ")}. Aggiungile per un annuncio più completo.`,
+  });
 
-  const lines: string[] = [];
-
-  // Overall intro
-  if (totalPhotos > 0) {
-    lines.push(`Hai caricato ${totalPhotos} foto.`);
-  }
-
-  // Quality summary per criteria
-  if (photoQuality.length > 0) {
-    const avgScores: Record<string, number[]> = {};
-    for (const pq of photoQuality) {
-      if (pq.scores) {
-        for (const [key, val] of Object.entries(pq.scores)) {
-          if (!avgScores[key]) avgScores[key] = [];
-          avgScores[key].push(val);
-        }
-      }
-    }
-
-    const good: string[] = [];
-    const improve: string[] = [];
-
-    for (const [key, vals] of Object.entries(avgScores)) {
-      const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-      const label = CRITERIA_LABELS[key] || key;
-      if (avg >= 4) {
-        good.push(label.toLowerCase());
-      } else if (avg < 3) {
-        improve.push(label.toLowerCase());
-      }
-    }
-
-    if (good.length > 0) {
-      lines.push(`La ${good.join(", la ")} delle tue foto ${good.length === 1 ? "è buona" : "sono buone"} — ottimo lavoro.`);
-    }
-
-    if (improve.length > 0) {
-      lines.push(`Potresti migliorare ${improve.join(" e ")}: questo aiuterebbe il tuo annuncio a risultare più professionale e affidabile.`);
-    }
-  }
-
-  // Specific issues
-  if (photosWithIssues.length > 0) {
-    const issueTexts: string[] = [];
-    for (const pq of photosWithIssues) {
-      for (const issue of pq.issues) {
-        issueTexts.push(`nella foto ${pq.photo_index + 1}, ${issue.problem.toLowerCase()}${issue.suggestion ? ` — ${issue.suggestion.toLowerCase()}` : ""}`);
-      }
-    }
-    if (issueTexts.length > 0) {
-      lines.push(`In particolare: ${issueTexts.slice(0, 4).join("; ")}.`);
-    }
-  }
-
-  // Missing photos
-  if (filteredMissing.length > 0) {
-    const missingNames = filteredMissing.map(m => m.name.toLowerCase());
-    lines.push(`Per un annuncio più completo, consigliamo di aggiungere anche: ${missingNames.join(", ")}.`);
-  }
-
-  // No issues at all
-  if (photosWithIssues.length === 0 && filteredMissing.length === 0) {
-    lines.push("Le tue foto sono complete e di buona qualità — sei pronto per continuare!");
-  }
-
-  return lines.join(" ");
+  return results;
 }
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
-  const report = buildPhotoReport(photoQuality || [], previews || [], missingPhotos || []);
+  const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
   const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
-  const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0;
+  const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0 || verdicts.some(v => !v.ok);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -152,12 +157,25 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </div>
       )}
 
-      {/* Written report */}
-      <Card className="border-border/50">
-        <CardContent className="p-5">
-          <p className="text-sm leading-relaxed text-foreground/80">
-            {report}
-          </p>
+      {/* Criteria table */}
+      <Card className="border-border/50 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="divide-y divide-border/50">
+            {verdicts.map((v) => (
+              <div key={v.key} className="flex items-start gap-3 p-4">
+                <div className="flex items-center gap-2 shrink-0 w-[130px]">
+                  <span className="text-base">{v.icon}</span>
+                  {v.ok ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                  )}
+                  <span className="text-sm font-medium text-foreground">{v.label}</span>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{v.verdict}</p>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
