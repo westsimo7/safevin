@@ -157,27 +157,25 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </div>
       )}
 
-      {/* Criteria table */}
-      <Card className="border-border/50 overflow-hidden">
-        <CardContent className="p-0">
-          <div className="divide-y divide-border/50">
-            {verdicts.map((v) => (
-              <div key={v.key} className="flex items-start gap-3 p-4">
-                <div className="flex items-center gap-2 shrink-0 w-[130px]">
-                  <span className="text-base">{v.icon}</span>
-                  {v.ok ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  ) : (
-                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
-                  )}
-                  <span className="text-sm font-medium text-foreground">{v.label}</span>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{v.verdict}</p>
+      {/* Criteria cards */}
+      <div className="space-y-3">
+        {verdicts.map((v) => (
+          <Card key={v.key} className="border-border/50">
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2.5 mb-1.5">
+                <span className="text-lg">{v.icon}</span>
+                {v.ok ? (
+                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                ) : (
+                  <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+                )}
+                <h3 className="text-base font-semibold text-foreground font-heading">{v.label}</h3>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              <p className="text-sm text-muted-foreground leading-relaxed pl-[34px]">{v.verdict}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       {/* CTAs */}
       <div className="space-y-3">
