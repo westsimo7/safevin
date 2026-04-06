@@ -61,9 +61,10 @@ interface StudioRecognitionProps {
   onBack: () => void;
 }
 
-type FieldKey = "product_type" | "category" | "color" | "brand";
+type FieldKey = "gender" | "product_type" | "category" | "color" | "brand";
 
 const FIELD_LABELS: Record<FieldKey, string> = {
+  gender: "Genere",
   product_type: "Tipo prodotto",
   category: "Categoria",
   color: "Colore principale",
