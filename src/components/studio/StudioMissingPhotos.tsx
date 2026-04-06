@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { Camera, Info, X, ArrowRight, CheckCircle, MessageCircle, AlertTriangle } from "lucide-react";
+import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +15,12 @@ export interface PhotoQualityIssue {
 export interface PhotoQuality {
   photo_index: number;
   summary: string;
+  scores?: {
+    quality: number;
+    light: number;
+    background_contrast: number;
+    completeness: number;
+  };
   issues: PhotoQualityIssue[];
 }
 
@@ -28,240 +33,174 @@ interface StudioMissingPhotosProps {
   onAskCoach: (photoName: string) => void;
 }
 
-const PHOTO_ICONS: Record<string, string> = {
-  front: "📸",
-  back: "🔄",
-  label_size: "📏",
-  label_materials: "🏷️",
-  defects: "🔍",
-  logo_closeup: "🔎",
-  sole: "👟",
-  inside: "🔲",
-  lateral: "↔️",
-  detail: "✨",
-};
-
-const ISSUE_TYPE_LABELS: Record<string, string> = {
-  background: "Sfondo",
+const CRITERIA_LABELS: Record<string, string> = {
+  quality: "Qualità",
   light: "Luce",
-  sharpness: "Nitidezza",
-  framing: "Inquadratura",
+  background_contrast: "Contrasto sfondo",
+  completeness: "Completezza",
 };
 
-const ISSUE_TYPE_ICONS: Record<string, string> = {
-  background: "🖼️",
-  light: "💡",
-  sharpness: "🔍",
-  framing: "📐",
-};
-
-const SEVERITY_COLORS: Record<string, string> = {
-  minor: "text-yellow-500",
-  moderate: "text-orange-500",
-  major: "text-red-500",
-};
-
-const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onAskCoach }: StudioMissingPhotosProps) => {
-  const [openTip, setOpenTip] = useState<number | null>(null);
-  const [openQualityTip, setOpenQualityTip] = useState<string | null>(null);
-
-  // Filter out "worn" type from missing photos
+/** Build a natural-language paragraph summarizing all photo quality */
+function buildPhotoReport(photoQuality: PhotoQuality[], previews: string[], missingPhotos: MissingPhoto[]): string {
+  const totalPhotos = previews.length;
+  const photosWithIssues = photoQuality.filter(pq => pq.issues.length > 0);
   const filteredMissing = missingPhotos.filter(p => p.type !== "worn" && p.type !== "has_worn");
 
-  // Filter photos with actual issues
-  const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
-  const hasQualityIssues = photosWithIssues.length > 0;
-  const hasMissing = filteredMissing.length > 0;
-  const hasNothing = !hasMissing && !hasQualityIssues;
+  const lines: string[] = [];
 
-  if (hasNothing) {
-    return (
-      <div className="space-y-6 animate-fade-in">
-        <div className="text-center mb-6">
-          <Badge className="bg-green-500/10 text-green-500 border-green-500/30 mb-4">
-            <CheckCircle className="w-3 h-3 mr-1" />
-            Foto complete
-          </Badge>
-          <h2 className="text-2xl font-bold tracking-tight mb-2">Ottime foto!</h2>
-          <p className="text-sm text-muted-foreground">
-            Hai caricato tutte le foto importanti e la qualità è buona
-          </p>
-        </div>
-
-        <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
-          Continua
-          <ArrowRight className="w-4 h-4 ml-2" />
-        </Button>
-        <Button variant="ghost" className="w-full text-muted-foreground" onClick={onBack}>
-          ← Torna ai dettagli
-        </Button>
-      </div>
-    );
+  // Overall intro
+  if (totalPhotos > 0) {
+    lines.push(`Hai caricato ${totalPhotos} foto.`);
   }
+
+  // Quality summary per criteria
+  if (photoQuality.length > 0) {
+    const avgScores: Record<string, number[]> = {};
+    for (const pq of photoQuality) {
+      if (pq.scores) {
+        for (const [key, val] of Object.entries(pq.scores)) {
+          if (!avgScores[key]) avgScores[key] = [];
+          avgScores[key].push(val);
+        }
+      }
+    }
+
+    const good: string[] = [];
+    const improve: string[] = [];
+
+    for (const [key, vals] of Object.entries(avgScores)) {
+      const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
+      const label = CRITERIA_LABELS[key] || key;
+      if (avg >= 4) {
+        good.push(label.toLowerCase());
+      } else if (avg < 3) {
+        improve.push(label.toLowerCase());
+      }
+    }
+
+    if (good.length > 0) {
+      lines.push(`La ${good.join(", la ")} delle tue foto ${good.length === 1 ? "è buona" : "sono buone"} — ottimo lavoro.`);
+    }
+
+    if (improve.length > 0) {
+      lines.push(`Potresti migliorare ${improve.join(" e ")}: questo aiuterebbe il tuo annuncio a risultare più professionale e affidabile.`);
+    }
+  }
+
+  // Specific issues
+  if (photosWithIssues.length > 0) {
+    const issueTexts: string[] = [];
+    for (const pq of photosWithIssues) {
+      for (const issue of pq.issues) {
+        issueTexts.push(`nella foto ${pq.photo_index + 1}, ${issue.problem.toLowerCase()}${issue.suggestion ? ` — ${issue.suggestion.toLowerCase()}` : ""}`);
+      }
+    }
+    if (issueTexts.length > 0) {
+      lines.push(`In particolare: ${issueTexts.slice(0, 4).join("; ")}.`);
+    }
+  }
+
+  // Missing photos
+  if (filteredMissing.length > 0) {
+    const missingNames = filteredMissing.map(m => m.name.toLowerCase());
+    lines.push(`Per un annuncio più completo, consigliamo di aggiungere anche: ${missingNames.join(", ")}.`);
+  }
+
+  // No issues at all
+  if (photosWithIssues.length === 0 && filteredMissing.length === 0) {
+    lines.push("Le tue foto sono complete e di buona qualità — sei pronto per continuare!");
+  }
+
+  return lines.join(" ");
+}
+
+const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
+  const report = buildPhotoReport(photoQuality || [], previews || [], missingPhotos || []);
+  const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
+  const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
+  const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0;
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="text-center mb-6">
+      {/* Header */}
+      <div className="text-center mb-4">
         <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
           <Camera className="w-3 h-3 mr-1" />
-          Fase 2 di 2
+          Resoconto foto
         </Badge>
-        <h2 className="text-2xl font-bold tracking-tight mb-2">Migliora il tuo annuncio</h2>
+        <h2 className="text-2xl font-bold tracking-tight mb-2 font-heading text-primary">
+          {hasIssues ? "Resoconto delle tue foto" : "Foto perfette!"}
+        </h2>
         <p className="text-sm text-muted-foreground">
-          Suggerimenti per aumentare le possibilità di vendita. Non sono obbligatori.
+          {hasIssues
+            ? "Ecco cosa va bene e cosa potresti migliorare"
+            : "Le tue immagini sono pronte per un annuncio efficace"}
         </p>
       </div>
 
-      {/* PHOTO QUALITY ISSUES */}
-      {hasQualityIssues && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 mb-1">
-            <AlertTriangle className="w-4 h-4 text-orange-500" />
-            <p className="text-sm font-semibold">Foto migliorabili</p>
-          </div>
-          <p className="text-xs text-muted-foreground -mt-2 mb-2">
-            Alcune foto non valorizzano al meglio il prodotto. Migliorarle può aumentare la fiducia degli acquirenti.
-          </p>
-
-          {photosWithIssues.map((pq) => (
-            <Card key={`quality-${pq.photo_index}`} className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  {previews && previews[pq.photo_index] ? (
-                    <img
-                      src={previews[pq.photo_index]}
-                      alt=""
-                      className="w-12 h-12 rounded-lg object-cover border border-border/50 shrink-0"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-lg bg-muted/30 border border-border/50 flex items-center justify-center text-xs text-muted-foreground shrink-0">
-                      #{pq.photo_index + 1}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold">Foto {pq.photo_index + 1}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 capitalize">{pq.summary}</p>
-                  </div>
-                  <button
-                    onClick={() => setOpenQualityTip(openQualityTip === `q-${pq.photo_index}` ? null : `q-${pq.photo_index}`)}
-                    className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
-                    aria-label="Info"
-                  >
-                    <Info className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                </div>
-
-                {openQualityTip === `q-${pq.photo_index}` && (
-                  <div className="mt-3 p-3 rounded-xl bg-muted/20 border border-border/30 animate-fade-in">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-semibold text-foreground/80">Come migliorare:</p>
-                      <button onClick={() => setOpenQualityTip(null)} className="p-0.5">
-                        <X className="w-3.5 h-3.5 text-muted-foreground" />
-                      </button>
-                    </div>
-                    <ul className="space-y-2.5 mb-3">
-                      {pq.issues.map((issue, j) => (
-                        <li key={j} className="space-y-0.5">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm">{ISSUE_TYPE_ICONS[issue.type] || "⚠️"}</span>
-                            <span className={`text-xs font-semibold ${SEVERITY_COLORS[issue.severity] || "text-muted-foreground"}`}>
-                              {ISSUE_TYPE_LABELS[issue.type] || issue.type}
-                            </span>
-                          </div>
-                          <p className="text-xs text-foreground/70 ml-5">{issue.problem}</p>
-                          <p className="text-xs text-primary/80 ml-5">→ {issue.suggestion}</p>
-                        </li>
-                      ))}
-                    </ul>
-                    <button
-                      onClick={() => {
-                        setOpenQualityTip(null);
-                        onAskCoach(`migliorare la foto ${pq.photo_index + 1} (problemi: ${pq.issues.map(i => ISSUE_TYPE_LABELS[i.type] || i.type).join(", ")})`);
-                      }}
-                      className="flex items-center gap-1.5 text-xs text-primary hover:underline cursor-pointer"
-                    >
-                      <MessageCircle className="w-3 h-3" />
-                      Hai bisogno di più aiuto?
-                    </button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+      {/* Thumbnail strip */}
+      {previews && previews.length > 0 && (
+        <div className="flex gap-2 overflow-x-auto pb-2">
+          {previews.slice(0, 8).map((src, i) => (
+            <img key={i} src={src} alt="" className="w-12 h-12 rounded-lg object-cover border border-border/50 shrink-0" />
           ))}
+          {previews.length > 8 && (
+            <div className="w-12 h-12 rounded-lg bg-muted/30 border border-border/50 flex items-center justify-center text-xs text-muted-foreground shrink-0">
+              +{previews.length - 8}
+            </div>
+          )}
         </div>
       )}
 
-      {/* MISSING PHOTOS - shot aggiuntivi suggeriti */}
-      {hasMissing && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 mb-1">
-            <Camera className="w-4 h-4 text-primary" />
-            <p className="text-sm font-semibold">Shot aggiuntivi consigliati</p>
-          </div>
-          <p className="text-xs text-muted-foreground -mt-2 mb-2">
-            Queste foto aggiuntive possono dare più dettagli e aumentare la fiducia degli acquirenti.
+      {/* Written report */}
+      <Card className="border-border/50">
+        <CardContent className="p-5">
+          <p className="text-sm leading-relaxed text-foreground/80">
+            {report}
           </p>
+        </CardContent>
+      </Card>
 
-          {filteredMissing.map((photo, i) => (
-            <Card key={i} className="border-border/50">
-              <CardContent className="p-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-xl mt-0.5">{PHOTO_ICONS[photo.type] || "📷"}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold">{photo.name}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{photo.reason}</p>
-                  </div>
-                  <button
-                    onClick={() => setOpenTip(openTip === i ? null : i)}
-                    className="p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
-                    aria-label="Info"
-                  >
-                    <Info className="w-4 h-4 text-muted-foreground" />
-                  </button>
-                </div>
+      {/* CTAs */}
+      <div className="space-y-3">
+        {/* Continue */}
+        <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
+          <Sparkles className="w-4 h-4 mr-2" />
+          Continua con queste foto
+          <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
 
-                {openTip === i && (
-                  <div className="mt-3 p-3 rounded-xl bg-muted/20 border border-border/30 animate-fade-in">
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-xs font-semibold text-foreground/80">Come scattare questa foto:</p>
-                      <button onClick={() => setOpenTip(null)} className="p-0.5">
-                        <X className="w-3.5 h-3.5 text-muted-foreground" />
-                      </button>
-                    </div>
-                    <ul className="space-y-1.5 mb-3">
-                      {photo.tips.map((tip, j) => (
-                        <li key={j} className="flex items-start gap-2 text-xs text-foreground/70">
-                          <span className="text-primary mt-0.5">•</span>
-                          <span>{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <button
-                      onClick={() => {
-                        setOpenTip(null);
-                        onAskCoach(photo.name);
-                      }}
-                      className="flex items-center gap-1.5 text-xs text-primary hover:underline cursor-pointer"
-                    >
-                      <MessageCircle className="w-3 h-3" />
-                      Hai bisogno di più aiuto?
-                    </button>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
+        {/* Go back and re-upload */}
+        <Button variant="glass" size="lg" className="w-full" onClick={onBack}>
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Torna indietro e ricarica le foto
+        </Button>
+        {hasIssues && (
+          <p className="text-xs text-center text-muted-foreground -mt-1">
+            Segui la guida fotografica nel carosello sopra per risultati migliori
+          </p>
+        )}
 
-      <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
-        {hasMissing ? "Continua senza aggiungere foto" : "Continua"}
-        <ArrowRight className="w-4 h-4 ml-2" />
-      </Button>
-
-      <Button variant="ghost" className="w-full text-muted-foreground" onClick={onBack}>
-        ← Torna ai dettagli
-      </Button>
+        {/* Premium CTA */}
+        <Button
+          variant="outline"
+          size="lg"
+          className="w-full border-amber-500/30 text-amber-600 hover:bg-amber-500/5 hover:border-amber-500/50"
+          onClick={() => {
+            window.dispatchEvent(new CustomEvent("open-coach", {
+              detail: {
+                message: "Vorrei usare SafeVin Creative Director per ottimizzare le mie foto professionalmente.",
+              },
+            }));
+          }}
+        >
+          <Crown className="w-4 h-4 mr-2" />
+          SafeVin Creative Director
+          <Badge className="ml-2 bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
+            Premium
+          </Badge>
+        </Button>
+      </div>
     </div>
   );
 };

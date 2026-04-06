@@ -217,7 +217,7 @@ const EngineStudio = () => {
             photoQuality={analysis.photo_quality || []}
             previews={previews}
             onContinue={handleMissingPhotosContinue}
-            onBack={() => setPhase("recognition")}
+            onBack={() => setPhase("upload")}
             onAskCoach={handleAskCoach}
           />
         )}
