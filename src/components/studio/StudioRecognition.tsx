@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 export interface ProductAnalysis {
+  gender: string;
   product_type: string;
   category: string;
   color: string;
@@ -17,11 +18,25 @@ export interface ProductAnalysis {
   style?: string;
   condition?: string;
   materials?: string | null;
+  distinctive_details?: {
+    stitching: string;
+    pockets: string;
+    drawstrings: string;
+    closures: string;
+    structural_elements: string;
+    other: string;
+  };
   photos_assessment: Record<string, boolean>;
   missing_photos: MissingPhoto[];
   photo_quality?: Array<{
     photo_index: number;
     summary: string;
+    scores?: {
+      quality: number;
+      light: number;
+      background_contrast: number;
+      completeness: number;
+    };
     issues: Array<{
       type: string;
       severity: string;
@@ -46,9 +61,10 @@ interface StudioRecognitionProps {
   onBack: () => void;
 }
 
-type FieldKey = "product_type" | "category" | "color" | "brand";
+type FieldKey = "gender" | "product_type" | "category" | "color" | "brand";
 
 const FIELD_LABELS: Record<FieldKey, string> = {
+  gender: "Genere",
   product_type: "Tipo prodotto",
   category: "Categoria",
   color: "Colore principale",
@@ -95,7 +111,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
     setShowBrandPicker(false);
   };
 
-  const fields: FieldKey[] = ["product_type", "category", "color", "brand"];
+  const fields: FieldKey[] = ["gender", "product_type", "category", "color", "brand"];
 
   return (
     <div className="space-y-6 animate-fade-in">

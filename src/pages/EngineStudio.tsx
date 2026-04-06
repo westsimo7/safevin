@@ -47,6 +47,7 @@ const EngineStudio = () => {
       setPreviews(src.imagePreviews || []);
 
       const syntheticAnalysis: ProductAnalysis = {
+        gender: "",
         product_type: "",
         category: src.categoria || "",
         color: "",
