@@ -81,10 +81,10 @@ function buildCriteriaVerdicts(
     score: lAvg,
     ok: lAvg >= 3.5,
     verdict: lAvg >= 4
-      ? "Illuminazione uniforme e naturale. I dettagli sono ben visibili."
+      ? "L'indumento si vede bene, nessun dettaglio nascosto. Ottimo."
       : lAvg >= 3
-        ? "Luce sufficiente ma alcune zone risultano in ombra. Usa luce naturale frontale."
-        : "Illuminazione troppo scarsa o artificiale. Scatta vicino a una finestra con luce del giorno.",
+        ? "Alcuni dettagli sono in ombra o in controluce. Scatta con luce frontale così l'indumento si vede chiaramente."
+        : "L'indumento è troppo scuro o in controluce, i dettagli non si vedono. Mettiti davanti a una finestra e scatta con luce naturale frontale.",
   });
 
   // Background contrast
