@@ -120,10 +120,10 @@ function buildCriteriaVerdicts(
 }
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
-  const report = buildPhotoReport(photoQuality || [], previews || [], missingPhotos || []);
+  const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
   const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
-  const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0;
+  const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0 || verdicts.some(v => !v.ok);
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -157,12 +157,25 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </div>
       )}
 
-      {/* Written report */}
-      <Card className="border-border/50">
-        <CardContent className="p-5">
-          <p className="text-sm leading-relaxed text-foreground/80">
-            {report}
-          </p>
+      {/* Criteria table */}
+      <Card className="border-border/50 overflow-hidden">
+        <CardContent className="p-0">
+          <div className="divide-y divide-border/50">
+            {verdicts.map((v) => (
+              <div key={v.key} className="flex items-start gap-3 p-4">
+                <div className="flex items-center gap-2 shrink-0 w-[130px]">
+                  <span className="text-base">{v.icon}</span>
+                  {v.ok ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+                  )}
+                  <span className="text-sm font-medium text-foreground">{v.label}</span>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{v.verdict}</p>
+              </div>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
