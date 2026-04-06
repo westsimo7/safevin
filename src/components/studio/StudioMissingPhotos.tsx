@@ -1,4 +1,4 @@
-import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown } from "lucide-react";
+import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown, CheckCircle2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
