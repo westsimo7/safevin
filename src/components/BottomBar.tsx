@@ -20,7 +20,7 @@ const BottomBar = () => {
   if (location.pathname === "/" || location.pathname === "/index") return null;
 
   const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/home", label: "Home", icon: LayoutDashboard },
     { to: "/storico", label: "Storico", icon: Clock },
   ];
 

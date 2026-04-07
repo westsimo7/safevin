@@ -6,7 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const navLinks = [
-  { to: "/dashboard", label: "Dashboard" },
+  { to: "/home", label: "Home" },
   { to: "/storico", label: "Storico" },
 ];
 
