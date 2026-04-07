@@ -17,6 +17,9 @@ import MeasurementGuideDialog from "./MeasurementGuideDialog";
 export interface StudioUserInput {
   size: string;
   gender: string;
+  productType: string;
+  fit: string;
+  style: string;
   condition: string;
   materials: string;
   minPrice: string;
@@ -97,6 +100,13 @@ const GENDER_OPTIONS = [
   { value: "donna", label: "Donna" },
 ];
 
+const STYLE_OPTIONS = [
+  { value: "vintage", label: "Vintage" },
+  { value: "casual", label: "Casual" },
+  { value: "streetwear", label: "Streetwear" },
+  { value: "elegante", label: "Elegante" },
+];
+
 const MATERIAL_OPTIONS = [
   "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
   "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
@@ -117,6 +127,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const zone = getGarmentZone(analysis.category, analysis.product_type);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
+  const [productType, setProductType] = useState(analysis.product_type || "");
+  const [fit, setFit] = useState("");
+  const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>(() => {
     const init = analysis.materials || "";
@@ -136,12 +149,15 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && condition && selectedMaterials.length > 0 && minPrice;
+  const canContinue = size && gender && productType && style && condition && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
+      productType,
+      fit,
+      style: STYLE_OPTIONS.find(s => s.value === style)?.label || style,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
       materials: selectedMaterials.join(", "),
       minPrice,
@@ -192,9 +208,41 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Tipologia prodotto *</Label>
+            <Input
+              value={productType}
+              onChange={e => setProductType(e.target.value)}
+              placeholder="Es: Felpa con cappuccio, Giacca bomber, Jeans skinny..."
+              className="text-sm"
+            />
+          </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Condizione *</Label>
+            <Label className="text-sm font-medium">Fit (facoltativo)</Label>
+            <Input
+              value={fit}
+              onChange={e => setFit(e.target.value)}
+              placeholder="Es: Oversize, Slim fit, Regular..."
+              className="text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Stile *</Label>
+            <Select value={style} onValueChange={setStyle}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona stile" />
+              </SelectTrigger>
+              <SelectContent>
+                {STYLE_OPTIONS.map(s => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleziona condizione" />

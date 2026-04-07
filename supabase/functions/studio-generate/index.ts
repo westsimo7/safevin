@@ -184,6 +184,9 @@ ${featuresStr}
 DATI FORNITI DALL'UTENTE:
 - Sesso: ${userInput.gender || "non specificato"}
 - Taglia: ${userInput.size}
+- Tipologia prodotto: ${userInput.productType || "non specificata"}
+- Fit: ${userInput.fit || "non specificato"}
+- Stile: ${userInput.style || "non specificato"}
 - Condizione: ${userInput.condition}
 - Materiali: ${userInput.materials || "non specificati"}
 - Prezzo minimo accettato: ${userInput.minPrice}€
