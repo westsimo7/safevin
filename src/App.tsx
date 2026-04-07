@@ -89,8 +89,16 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <AnimatedRoutes />
-        <BottomBar />
+        {/* Global background */}
+        <div
+          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/images/landing-bg.jpeg')" }}
+        />
+        <div className="fixed inset-0 z-0 bg-background/80 backdrop-blur-sm" />
+        <div className="relative z-10">
+          <AnimatedRoutes />
+          <BottomBar />
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
