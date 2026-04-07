@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 export interface ProductAnalysis {
-  gender: string;
+  recognition_confidence?: string;
   product_type: string;
   category: string;
   color: string;
