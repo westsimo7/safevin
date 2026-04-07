@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import type { ProductAnalysis } from "./StudioRecognition";
 import MeasurementGuideDialog from "./MeasurementGuideDialog";
 
@@ -93,6 +95,15 @@ const CONDITION_OPTIONS = [
 const GENDER_OPTIONS = [
   { value: "uomo", label: "Uomo" },
   { value: "donna", label: "Donna" },
+];
+
+const MATERIAL_OPTIONS = [
+  "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
+  "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
+  "Lino", "Merino", "Mohair", "Neoprene", "Nylon", "Paglia", "Paillette",
+  "Pelle", "Pelle verniciata", "Pile", "Piumino", "Pizzo", "Poliestere",
+  "Raso", "Rete", "Seta", "Similpelle", "Tulle", "Tweed", "Velluto",
+  "Velluto a coste", "Velour", "Viscosa",
 ];
 
 const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputProps) => {
