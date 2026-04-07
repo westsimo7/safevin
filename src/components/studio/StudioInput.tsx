@@ -282,7 +282,8 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
         </CardContent>
       </Card>
 
-      {/* Measurements (optional) */}
+      {/* Measurements (optional) — only for upper body */}
+      {zone !== "lower" && (
       <Card className="border-border/50">
         <CardContent className="p-4 space-y-4">
           <Label className="text-sm font-medium">Misure (facoltativo)</Label>
@@ -319,6 +320,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </button>
         </CardContent>
       </Card>
+      )}
 
       {/* Extras */}
       <Card className="border-border/50">
