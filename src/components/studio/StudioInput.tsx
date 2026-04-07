@@ -103,6 +103,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return match?.value || "";
   };
 
+  const zone = getGarmentZone(analysis.category, analysis.product_type);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
