@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Check, Pencil, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Pencil, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
