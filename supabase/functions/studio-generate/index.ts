@@ -15,9 +15,9 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + ([Taglia]) + – + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + [Stile] + ([Taglia]) + – + [Condizione]
 
-Esempio: "Nike Felpa con cappuccio Nera Uomo (L) – Come nuovo"
+Esempio: "Nike Felpa con cappuccio Nera Uomo Streetwear (L) – Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
@@ -87,7 +87,7 @@ categoria → tipo_prodotto → brand → taglia → condizione → colore → m
 Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 
 {
-  "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + ([Taglia]) + – + [Condizione]",
+  "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + [Stile] + ([Taglia]) + – + [Condizione]",
   "description": "INTERO blocco descrizione con struttura professionale + blocco DETTAGLI TECNICI con bullet points. Tutto insieme, un unico testo copiabile.",
   "details": {
     "categoria": "categoria prodotto (es. Abbigliamento)",
@@ -200,7 +200,7 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + ([Taglia]) – [Condizione]
+1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + [Stile] + ([Taglia]) – [Condizione]
    IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
