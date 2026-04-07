@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ArrowRight, Check, ChevronsUpDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -136,6 +136,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return init ? init.split(",").map(s => s.trim()).filter(Boolean).slice(0, 3) : [];
   });
   const [materialsOpen, setMaterialsOpen] = useState(false);
+  const [materialSearch, setMaterialSearch] = useState("");
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
@@ -243,6 +244,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
+            <Label className="text-sm font-medium">Condizione *</Label>
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleziona condizione" />
@@ -259,7 +261,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
             <Label className="text-sm font-medium">
               Materiali * <span className="text-xs text-muted-foreground font-normal">(max 3)</span>
             </Label>
-            <Popover open={materialsOpen} onOpenChange={setMaterialsOpen}>
+            <Popover open={materialsOpen} onOpenChange={(open) => { setMaterialsOpen(open); if (!open) setMaterialSearch(""); }}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
@@ -273,9 +275,23 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[250px] overflow-y-auto" align="start" side="bottom" sideOffset={4}>
-                <div className="p-1">
-                  {MATERIAL_OPTIONS.map(mat => (
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[280px] overflow-hidden" align="start" side="bottom" sideOffset={4}>
+                <div className="p-2 border-b border-border/50">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                    <Input
+                      value={materialSearch}
+                      onChange={e => setMaterialSearch(e.target.value)}
+                      placeholder="Cerca materiale..."
+                      className="h-8 pl-8 text-sm"
+                      autoFocus
+                    />
+                  </div>
+                </div>
+                <div className="p-1 max-h-[220px] overflow-y-auto">
+                  {MATERIAL_OPTIONS
+                    .filter(mat => mat.toLowerCase().includes(materialSearch.toLowerCase()))
+                    .map(mat => (
                     <button
                       key={mat}
                       type="button"
@@ -294,6 +310,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
                       {mat}
                     </button>
                   ))}
+                  {MATERIAL_OPTIONS.filter(mat => mat.toLowerCase().includes(materialSearch.toLowerCase())).length === 0 && (
+                    <p className="text-xs text-muted-foreground text-center py-3">Nessun materiale trovato</p>
+                  )}
                 </div>
               </PopoverContent>
             </Popover>
