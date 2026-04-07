@@ -18,13 +18,6 @@ const Index = () => {
       <PricingSection />
       <DisclaimerSection />
       <Footer />
-        <ProblemSection />
-        <SolutionSection />
-        <HowItWorksSection />
-        <PricingSection />
-        <DisclaimerSection />
-        <Footer />
-      </div>
     </main>
   );
 };
