@@ -220,7 +220,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Fit (facoltativo)</Label>
+            <Label className="text-sm font-medium">Fit *</Label>
             <Input
               value={fit}
               onChange={e => setFit(e.target.value)}
