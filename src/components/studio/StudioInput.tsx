@@ -127,7 +127,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const zone = getGarmentZone(analysis.category, analysis.product_type);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
-  const [productType, setProductType] = useState(analysis.product_type || "");
+  const [productType, setProductType] = useState("");
   const [fit, setFit] = useState("");
   const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
@@ -150,7 +150,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && productType && style && condition && selectedMaterials.length > 0 && minPrice;
+  const canContinue = size && gender && productType && fit && style && condition && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
@@ -220,7 +220,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Fit (facoltativo)</Label>
+            <Label className="text-sm font-medium">Fit *</Label>
             <Input
               value={fit}
               onChange={e => setFit(e.target.value)}
