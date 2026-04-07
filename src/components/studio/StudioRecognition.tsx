@@ -15,19 +15,29 @@ export interface ProductAnalysis {
   product_type: string;
   category: string;
   color: string;
+  colors?: string[];
   brand: string | null;
   brand_confidence: string | null;
   style?: string;
   condition?: string;
   materials?: string | null;
-  distinctive_details?: {
-    stitching: string;
-    pockets: string;
-    drawstrings: string;
-    closures: string;
-    structural_elements: string;
-    other: string;
+  garment_features?: {
+    logos?: Array<{ type: string; description: string; position: string; size: string }>;
+    prints?: Array<{ type: string; description: string; position: string; technique: string }>;
+    zippers?: string;
+    pockets?: string;
+    buttons?: string;
+    hood?: string;
+    collar?: string;
+    cuffs?: string;
+    hem?: string;
+    embossing_relief?: string;
+    patches_badges?: string;
+    drawstrings?: string;
+    stitching_details?: string;
+    other_details?: string;
   };
+  distinctive_details?: Record<string, string>;
   photos_assessment: Record<string, boolean>;
   missing_photos: MissingPhoto[];
   photo_quality?: Array<{
@@ -63,12 +73,10 @@ interface StudioRecognitionProps {
   onBack: () => void;
 }
 
-type FieldKey = "product_type" | "category" | "color" | "brand";
+type FieldKey = "color" | "brand";
 
 const FIELD_LABELS: Record<FieldKey, string> = {
-  category: "Categoria",
-  product_type: "Tipo prodotto",
-  color: "Colore principale",
+  color: "Colori dominanti",
   brand: "Brand",
 };
 
@@ -125,7 +133,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
     setShowBrandPicker(false);
   };
 
-  const fields: FieldKey[] = ["category", "product_type", "color", "brand"];
+  const fields: FieldKey[] = ["brand", "color"];
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -210,7 +218,9 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
       <Card className="border-border/50">
         <CardContent className="p-0 divide-y divide-border/30">
           {fields.map(field => {
-            const value = editedAnalysis[field];
+            const value = field === "color" 
+              ? (editedAnalysis.colors?.join(", ") || editedAnalysis.color || null)
+              : editedAnalysis[field];
             const displayValue = value || "—";
             const isEmpty = !value;
 

@@ -151,13 +151,35 @@ Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto
 `;
     }
 
+    // Build garment features string
+    const gf = analysis.garment_features || {};
+    const featuresLines: string[] = [];
+    if (gf.logos?.length) {
+      gf.logos.forEach((l: any) => featuresLines.push(`Logo: ${l.description} (${l.type}, ${l.position}, ${l.size})`));
+    }
+    if (gf.prints?.length) {
+      gf.prints.forEach((p: any) => featuresLines.push(`Stampa: ${p.description} (${p.type}, ${p.position}, ${p.technique})`));
+    }
+    const simpleFeatures = ["zippers", "pockets", "buttons", "hood", "collar", "cuffs", "hem", "embossing_relief", "patches_badges", "drawstrings", "stitching_details", "other_details"];
+    for (const key of simpleFeatures) {
+      if (gf[key] && gf[key] !== "nessuno" && gf[key] !== "nessuna") {
+        featuresLines.push(`${key}: ${gf[key]}`);
+      }
+    }
+    const featuresStr = featuresLines.length > 0 ? featuresLines.join("\n") : "nessun dettaglio rilevato";
+
+    const colorsStr = Array.isArray(analysis.colors) ? analysis.colors.join(", ") : (analysis.color || "non specificato");
+
     const userPrompt = `Genera l'annuncio completo e la strategia di prezzo per questo prodotto:
 
 DATI RILEVATI DALLE FOTO:
 - Tipo prodotto: ${analysis.product_type || "non specificato"}
 - Categoria: ${analysis.category || "non specificata"}
-- Colore: ${analysis.color || "non specificato"}
+- Colori dominanti: ${colorsStr}
 - Brand: ${analysis.brand || "nessun brand"}
+
+DETTAGLI INDUMENTO RILEVATI DALLE FOTO:
+${featuresStr}
 
 DATI FORNITI DALL'UTENTE:
 - Sesso: ${userInput.gender || "non specificato"}
@@ -170,7 +192,9 @@ ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
 1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Sesso] + ([Taglia]) – [Condizione]
+   IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
+   IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
 3. Analizza la fascia di posizionamento in base a brand, condizione, materiali
 4. Calcola un prezzo consigliato che lasci margine reale di trattativa rispetto al minimo di ${userInput.minPrice}€
 5. Costruisci una strategia di contrattazione con numeri concreti
