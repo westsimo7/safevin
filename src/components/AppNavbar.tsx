@@ -115,29 +115,6 @@ const AppNavbar = () => {
         </div>
       </header>
 
-      {/* Mobile tab bar under navbar */}
-      {isMobile && (
-        <div className="sticky top-14 z-40 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex items-center justify-center gap-1 px-4 py-1.5">
-            {navLinks.map(link => {
-              const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + "/");
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`flex-1 text-center text-xs font-semibold py-1.5 rounded-full transition-colors ${
-                    isActive
-                      ? "text-foreground bg-muted/60"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </>
   );
 };
