@@ -149,7 +149,7 @@ const StoricoAudit = () => {
           </Badge>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">I tuoi Audit.</h1>
           <p className="text-sm text-muted-foreground mb-4">Confronta, monitora, migliora.</p>
-          <Button variant="neon" size="sm" className="group" onClick={() => navigate("/dashboard")}>
+          <Button variant="neon" size="sm" className="group" onClick={() => navigate("/home")}>
             Avvia nuovo Audit
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
