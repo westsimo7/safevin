@@ -54,7 +54,6 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
     "has_detail": true/false,
     "has_label_size": true/false,
     "has_label_materials": true/false,
-    "has_defects": true/false,
     "has_logo_closeup": true/false
   },
   "photo_quality": [
