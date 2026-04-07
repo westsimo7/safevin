@@ -118,20 +118,32 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
-  const [materials, setMaterials] = useState(analysis.materials || "");
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>(() => {
+    const init = analysis.materials || "";
+    return init ? init.split(",").map(s => s.trim()).filter(Boolean).slice(0, 3) : [];
+  });
+  const [materialsOpen, setMaterialsOpen] = useState(false);
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
-  const canContinue = size && gender && condition && materials && minPrice;
+  const toggleMaterial = (mat: string) => {
+    setSelectedMaterials(prev => {
+      if (prev.includes(mat)) return prev.filter(m => m !== mat);
+      if (prev.length >= 3) return prev;
+      return [...prev, mat];
+    });
+  };
+
+  const canContinue = size && gender && condition && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
-      materials,
+      materials: selectedMaterials.join(", "),
       minPrice,
       measurements,
       extras,
