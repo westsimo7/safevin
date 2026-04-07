@@ -79,7 +79,7 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
   ],
   "missing_photos": [
     {
-      "type": "front | back | label_size | label_materials | defects | logo_closeup | detail | sole | lateral",
+      "type": "front | back | label_size | label_materials | logo_closeup | detail | sole | lateral",
       "name": "nome leggibile",
       "reason": "perché serve per vendere meglio",
       "tips": ["consiglio 1", "consiglio 2", "consiglio 3"]
