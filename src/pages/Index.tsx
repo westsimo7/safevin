@@ -9,7 +9,12 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <main className="min-h-screen bg-background overflow-x-hidden">
+    <main className="min-h-screen bg-background overflow-x-hidden relative">
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/landing-bg.jpeg')" }}
+      />
+      <div className="fixed inset-0 z-0 bg-background/80 backdrop-blur-sm" />
       <LandingNavbar />
       <HeroSection />
       <ProblemSection />
