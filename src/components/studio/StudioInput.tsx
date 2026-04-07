@@ -243,6 +243,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
+            <Label className="text-sm font-medium">Condizione *</Label>
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleziona condizione" />
