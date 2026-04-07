@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 import type { ProductAnalysis } from "./StudioRecognition";
 import MeasurementGuideDialog from "./MeasurementGuideDialog";
 
@@ -95,6 +97,15 @@ const GENDER_OPTIONS = [
   { value: "donna", label: "Donna" },
 ];
 
+const MATERIAL_OPTIONS = [
+  "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
+  "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
+  "Lino", "Merino", "Mohair", "Neoprene", "Nylon", "Paglia", "Paillette",
+  "Pelle", "Pelle verniciata", "Pile", "Piumino", "Pizzo", "Poliestere",
+  "Raso", "Rete", "Seta", "Similpelle", "Tulle", "Tweed", "Velluto",
+  "Velluto a coste", "Velour", "Viscosa",
+];
+
 const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputProps) => {
   const getInitialCondition = () => {
     if (!auditSource?.condizioni) return "";
@@ -107,20 +118,32 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
-  const [materials, setMaterials] = useState(analysis.materials || "");
+  const [selectedMaterials, setSelectedMaterials] = useState<string[]>(() => {
+    const init = analysis.materials || "";
+    return init ? init.split(",").map(s => s.trim()).filter(Boolean).slice(0, 3) : [];
+  });
+  const [materialsOpen, setMaterialsOpen] = useState(false);
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
-  const canContinue = size && gender && condition && materials && minPrice;
+  const toggleMaterial = (mat: string) => {
+    setSelectedMaterials(prev => {
+      if (prev.includes(mat)) return prev.filter(m => m !== mat);
+      if (prev.length >= 3) return prev;
+      return [...prev, mat];
+    });
+  };
+
+  const canContinue = size && gender && condition && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
-      materials,
+      materials: selectedMaterials.join(", "),
       minPrice,
       measurements,
       extras,
@@ -185,12 +208,61 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Materiali *</Label>
-            <Input
-              value={materials}
-              onChange={e => setMaterials(e.target.value)}
-              placeholder="es. cotone, poliestere, pelle..."
-            />
+            <Label className="text-sm font-medium">
+              Materiali * <span className="text-xs text-muted-foreground font-normal">(max 3)</span>
+            </Label>
+            <Popover open={materialsOpen} onOpenChange={setMaterialsOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={materialsOpen}
+                  className="w-full justify-between h-10 font-normal text-sm"
+                >
+                  {selectedMaterials.length > 0
+                    ? selectedMaterials.join(", ")
+                    : <span className="text-muted-foreground">Seleziona materiali...</span>}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[250px] overflow-y-auto" align="start" side="bottom" sideOffset={4}>
+                <div className="p-1">
+                  {MATERIAL_OPTIONS.map(mat => (
+                    <button
+                      key={mat}
+                      type="button"
+                      onClick={() => toggleMaterial(mat)}
+                      disabled={!selectedMaterials.includes(mat) && selectedMaterials.length >= 3}
+                      className={cn(
+                        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors",
+                        "hover:bg-accent hover:text-accent-foreground",
+                        "disabled:pointer-events-none disabled:opacity-40",
+                        selectedMaterials.includes(mat) && "bg-accent/50"
+                      )}
+                    >
+                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                        {selectedMaterials.includes(mat) && <Check className="h-4 w-4" />}
+                      </span>
+                      {mat}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            {selectedMaterials.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-1">
+                {selectedMaterials.map(mat => (
+                  <Badge
+                    key={mat}
+                    variant="secondary"
+                    className="text-xs cursor-pointer hover:bg-destructive/20"
+                    onClick={() => toggleMaterial(mat)}
+                  >
+                    {mat} ✕
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
