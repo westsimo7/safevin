@@ -27,14 +27,13 @@ Esempio: "Nike Felpa con cappuccio Nera Streetwear (L) – Come nuovo"
 2) DESCRIZIONE
 ═══════════════════════════════════════
 
-La descrizione è un blocco unico, professionale, copiabile. Segui questa struttura esatta:
+La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
-RIGA 1: [Brand] + [Tipo prodotto] + [Stile] + [Colore] + [Taglia].
-RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione].
-RIGA 3: Modello [tipo chiusura] con [elementi strutturali] e [extra].
-RIGA 4: Tessuto [materiale] [qualità].
-RIGA 5: Vestibilità [fit].
-RIGA 6: Disponibile per [foto extra] e [spedizione].
+Struttura:
+RIGA 1: [Brand] + [Tipo prodotto] + [Colore] + [Taglia].
+RIGA 2: [Condizione]. [Dettaglio principale se rilevante].
+RIGA 3: [Materiale]. Vestibilità [fit].
+RIGA 4: Disponibile per foto extra e spedizione.
 
 Poi aggiungi una riga vuota e:
 
@@ -45,17 +44,15 @@ Poi aggiungi una riga vuota e:
 • Materiale: ...
 • Sesso: ...
 
-REGOLE FONDAMENTALI DI STILE SCRITTURA:
-- SEMPLIFICA SEMPRE: descrivi i dettagli in modo diretto, chiaro e conciso. Niente giri di parole.
-  ESEMPIO SBAGLIATO: "Maxi stampa gotica in cerchio con riempimento giallo tartan giallo sul centro della schiena"
-  ESEMPIO GIUSTO: "Maxi stampa in cerchio gialla sul retro della maglia"
-  ESEMPIO SBAGLIATO: "Modello senza chiusura con cuciture raglan sulle spalle, maniche raglan in tessuto giallo con righe scure, polsini ad orlo a costine"
-  ESEMPIO GIUSTO: "Modello senza chiusura con cuciture sulle spalle, maniche e polsini in tessuto giallo e righe scure"
-- Non usare termini stilistici inventati (gotico, barocco, bohemien, ecc.). Gli UNICI stili ammessi sono: Vintage, Casual, Streetwear, Elegante
-- Tono pulito, professionale e naturale
+REGOLE FONDAMENTALI:
+- MASSIMO 60 PAROLE nella descrizione (esclusi bullet points). Conta le parole.
+- Scrivi SOLO informazioni essenziali e visibili. Niente riempitivi.
+- Una frase = un'informazione. Niente elenchi lunghi di dettagli.
+- ESEMPIO SBAGLIATO: "Modello senza chiusura con cuciture raglan sulle spalle, maniche raglan in tessuto giallo con righe scure, polsini ad orlo a costine"
+- ESEMPIO GIUSTO: "Modello senza chiusura, maniche gialle con righe scure"
+- Gli UNICI stili ammessi sono: Vintage, Casual, Streetwear, Elegante
 - Non inventare informazioni non fornite
-- Se un dato non è disponibile, ometti la riga corrispondente
-- Ogni frase deve essere essenziale: soggetto + dettaglio + posizione. Basta.
+- Se un dato non è disponibile, omettilo
 
 ═══════════════════════════════════════
 3) PREZZO STRATEGICO
