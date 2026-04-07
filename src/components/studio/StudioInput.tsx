@@ -208,12 +208,61 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Materiali *</Label>
-            <Input
-              value={materials}
-              onChange={e => setMaterials(e.target.value)}
-              placeholder="es. cotone, poliestere, pelle..."
-            />
+            <Label className="text-sm font-medium">
+              Materiali * <span className="text-xs text-muted-foreground font-normal">(max 3)</span>
+            </Label>
+            <Popover open={materialsOpen} onOpenChange={setMaterialsOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={materialsOpen}
+                  className="w-full justify-between h-10 font-normal text-sm"
+                >
+                  {selectedMaterials.length > 0
+                    ? selectedMaterials.join(", ")
+                    : <span className="text-muted-foreground">Seleziona materiali...</span>}
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 max-h-[250px] overflow-y-auto" align="start" side="bottom" sideOffset={4}>
+                <div className="p-1">
+                  {MATERIAL_OPTIONS.map(mat => (
+                    <button
+                      key={mat}
+                      type="button"
+                      onClick={() => toggleMaterial(mat)}
+                      disabled={!selectedMaterials.includes(mat) && selectedMaterials.length >= 3}
+                      className={cn(
+                        "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors",
+                        "hover:bg-accent hover:text-accent-foreground",
+                        "disabled:pointer-events-none disabled:opacity-40",
+                        selectedMaterials.includes(mat) && "bg-accent/50"
+                      )}
+                    >
+                      <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
+                        {selectedMaterials.includes(mat) && <Check className="h-4 w-4" />}
+                      </span>
+                      {mat}
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            {selectedMaterials.length > 0 && (
+              <div className="flex flex-wrap gap-1.5 mt-1">
+                {selectedMaterials.map(mat => (
+                  <Badge
+                    key={mat}
+                    variant="secondary"
+                    className="text-xs cursor-pointer hover:bg-destructive/20"
+                    onClick={() => toggleMaterial(mat)}
+                  >
+                    {mat} ✕
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
