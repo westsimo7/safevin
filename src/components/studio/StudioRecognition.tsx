@@ -61,12 +61,11 @@ interface StudioRecognitionProps {
   onBack: () => void;
 }
 
-type FieldKey = "gender" | "product_type" | "category" | "color" | "brand";
+type FieldKey = "product_type" | "category" | "color" | "brand";
 
 const FIELD_LABELS: Record<FieldKey, string> = {
-  gender: "Genere",
-  product_type: "Tipo prodotto",
   category: "Categoria",
+  product_type: "Tipo prodotto",
   color: "Colore principale",
   brand: "Brand",
 };
@@ -111,7 +110,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
     setShowBrandPicker(false);
   };
 
-  const fields: FieldKey[] = ["gender", "product_type", "category", "color", "brand"];
+  const fields: FieldKey[] = ["category", "product_type", "color", "brand"];
 
   return (
     <div className="space-y-6 animate-fade-in">
