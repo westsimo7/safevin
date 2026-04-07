@@ -126,6 +126,10 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   const [customBrand, setCustomBrand] = useState("");
   const [lowConfidenceInput, setLowConfidenceInput] = useState("");
   const [lowConfidenceResolved, setLowConfidenceResolved] = useState(false);
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
+  const [selectedColors, setSelectedColors] = useState<string[]>(() => {
+    return editedAnalysis.colors || (editedAnalysis.color ? [editedAnalysis.color] : []);
+  });
 
   const isLowConfidence = editedAnalysis.recognition_confidence === "low" && !lowConfidenceResolved;
 
