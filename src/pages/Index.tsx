@@ -15,14 +15,16 @@ const Index = () => {
         style={{ backgroundImage: "url('/images/landing-bg.jpeg')" }}
       />
       <div className="fixed inset-0 z-0 bg-background/80 backdrop-blur-sm" />
-      <LandingNavbar />
-      <HeroSection />
-      <ProblemSection />
-      <SolutionSection />
-      <HowItWorksSection />
-      <PricingSection />
-      <DisclaimerSection />
-      <Footer />
+      <div className="relative z-10">
+        <LandingNavbar />
+        <HeroSection />
+        <ProblemSection />
+        <SolutionSection />
+        <HowItWorksSection />
+        <PricingSection />
+        <DisclaimerSection />
+        <Footer />
+      </div>
     </main>
   );
 };
