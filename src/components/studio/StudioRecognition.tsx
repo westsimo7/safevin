@@ -84,7 +84,20 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   const [editValue, setEditValue] = useState("");
   const [showBrandPicker, setShowBrandPicker] = useState(false);
   const [customBrand, setCustomBrand] = useState("");
+  const [lowConfidenceInput, setLowConfidenceInput] = useState("");
+  const [lowConfidenceResolved, setLowConfidenceResolved] = useState(false);
 
+  const isLowConfidence = editedAnalysis.recognition_confidence === "low" && !lowConfidenceResolved;
+
+  const handleLowConfidenceSubmit = () => {
+    if (!lowConfidenceInput.trim()) return;
+    setEditedAnalysis(prev => ({
+      ...prev,
+      category: lowConfidenceInput.trim(),
+      recognition_confidence: "high",
+    }));
+    setLowConfidenceResolved(true);
+  };
   const needsBrandInput = !editedAnalysis.brand || editedAnalysis.brand_confidence !== "high";
 
   const handleEditStart = (field: FieldKey) => {
