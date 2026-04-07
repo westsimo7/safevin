@@ -100,6 +100,13 @@ const GENDER_OPTIONS = [
   { value: "donna", label: "Donna" },
 ];
 
+const STYLE_OPTIONS = [
+  { value: "vintage", label: "Vintage" },
+  { value: "casual", label: "Casual" },
+  { value: "streetwear", label: "Streetwear" },
+  { value: "elegante", label: "Elegante" },
+];
+
 const MATERIAL_OPTIONS = [
   "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
   "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
@@ -120,6 +127,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const zone = getGarmentZone(analysis.category, analysis.product_type);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
+  const [productType, setProductType] = useState(analysis.product_type || "");
+  const [fit, setFit] = useState("");
+  const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>(() => {
     const init = analysis.materials || "";
@@ -145,6 +155,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
+      productType,
+      fit,
+      style: STYLE_OPTIONS.find(s => s.value === style)?.label || style,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
       materials: selectedMaterials.join(", "),
       minPrice,
