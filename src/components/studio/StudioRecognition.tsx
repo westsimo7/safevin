@@ -144,7 +144,27 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   };
   const needsBrandInput = !editedAnalysis.brand || editedAnalysis.brand_confidence !== "high";
 
+  const toggleColor = (colorLabel: string) => {
+    setSelectedColors(prev => {
+      let next: string[];
+      if (prev.includes(colorLabel)) {
+        next = prev.filter(c => c !== colorLabel);
+      } else {
+        if (prev.length >= 2) return prev;
+        next = [...prev, colorLabel];
+      }
+      setEditedAnalysis(p => ({ ...p, colors: next, color: next.join(", ") }));
+      return next;
+    });
+  };
+
+  const getColorHex = (label: string) => VINTED_COLORS.find(c => c.label === label)?.hex || "#808080";
+
   const handleEditStart = (field: FieldKey) => {
+    if (field === "color") {
+      setColorPickerOpen(true);
+      return;
+    }
     setEditingField(field);
     setEditValue(editedAnalysis[field] || "");
   };
