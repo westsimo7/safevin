@@ -38,6 +38,9 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait" initial={false}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
+        <Route path="/home" element={
+          <PageTransition direction="up"><Dashboard /></PageTransition>
+        } />
         <Route path="/dashboard" element={
           <PageTransition direction="up"><Dashboard /></PageTransition>
         } />

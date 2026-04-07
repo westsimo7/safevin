@@ -61,7 +61,7 @@ const HeroSection = () => {
             Inizia gratis (3 giorni)
             <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Link to="/dashboard" className="w-full sm:w-auto">
+          <Link to="/home" className="w-full sm:w-auto">
             <Button variant="glass" size="lg" className="w-full sm:w-auto h-12 sm:h-11 text-sm sm:text-base">
               <LayoutDashboard className="mr-2 w-4 h-4" />
               Dashboard

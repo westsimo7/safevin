@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Clock, MessageCircle } from "lucide-react";
+import { Home, Clock, MessageCircle } from "lucide-react";
 import CoachWidget from "./CoachWidget";
 
 const BottomBar = () => {
@@ -20,7 +20,7 @@ const BottomBar = () => {
   if (location.pathname === "/" || location.pathname === "/index") return null;
 
   const navItems = [
-    { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/home", label: "Home", icon: Home },
     { to: "/storico", label: "Storico", icon: Clock },
   ];
 

@@ -10,9 +10,9 @@ const AboutStudio = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <main className="container mx-auto px-6 py-12 max-w-3xl text-center space-y-6">
-        <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => navigate("/dashboard")}>
+        <Button variant="ghost" className="text-muted-foreground hover:text-foreground" onClick={() => navigate("/home")}>
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna alla Dashboard
+          Torna alla Home
         </Button>
 
         <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">

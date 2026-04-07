@@ -19,7 +19,7 @@ const DashboardHeader = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
-          <Link to="/dashboard" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Dashboard</Link>
+          <Link to="/home" className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Home</Link>
           <Link to="/storico" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Storico</Link>
           <a href="#account" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Account</a>
           <a href="#upgrade" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Upgrade</a>
@@ -45,7 +45,7 @@ const DashboardHeader = () => {
       {/* Mobile menu */}
       {menuOpen && (
         <nav className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur px-6 py-4 flex flex-col gap-4">
-          <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Dashboard</Link>
+          <Link to="/home" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">Home</Link>
           <Link to="/storico" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Storico</Link>
           <a href="#account" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Account</a>
           <a href="#upgrade" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Upgrade</a>

@@ -13,9 +13,9 @@ const Engine = () => {
       <AppNavbar />
 
       <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-8 md:pb-12">
-        <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground h-10 text-sm" onClick={() => navigate("/dashboard")}>
+        <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground h-10 text-sm" onClick={() => navigate("/home")}>
           <ArrowLeft className="w-4 h-4 mr-1.5" />
-          Dashboard
+          Home
         </Button>
 
         <div className="text-center mb-4 md:mb-10">

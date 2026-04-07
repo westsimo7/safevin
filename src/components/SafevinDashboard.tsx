@@ -1,15 +1,33 @@
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, ArrowRight, Search, PenTool } from "lucide-react";
+import { Zap, ArrowRight, Search, PenTool, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const SafevinDashboard = () => {
+const SafevinHome = () => {
   const navigate = useNavigate();
 
   const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
   const snappy = { type: "spring" as const, stiffness: 120, damping: 14 };
+
+  const features = [
+    {
+      icon: <Search className="w-5 h-5 text-primary" />,
+      title: "Audit",
+      desc: "Analizza il tuo annuncio e scopri cosa migliorare",
+    },
+    {
+      icon: <PenTool className="w-5 h-5 text-primary" />,
+      title: "Studio",
+      desc: "Crea l'annuncio perfetto da zero con l'AI",
+    },
+    {
+      icon: <TrendingUp className="w-5 h-5 text-primary" />,
+      title: "Ottimizza",
+      desc: "Score, criticità e correzioni in tempo reale",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -17,15 +35,15 @@ const SafevinDashboard = () => {
 
       <main className="container mx-auto px-5 sm:px-6 flex flex-col items-center">
         <div className="text-center max-w-3xl mx-auto mt-8 sm:mt-12 md:mt-16">
-          {/* Badge */}
+          {/* Welcome badge */}
           <motion.div
             initial={{ opacity: 0, y: -40, scale: 0.7 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ ...snappy, delay: 0.1 }}
           >
             <Badge className="bg-primary/10 text-primary border-primary/20 mb-4 sm:mb-6 text-[11px] sm:text-xs">
-              <Zap className="w-3 h-3 mr-1" />
-              Audit + Studio in un unico motore
+              <Sparkles className="w-3 h-3 mr-1" />
+              Benvenuto nel tuo centro di controllo
             </Badge>
           </motion.div>
 
@@ -97,18 +115,18 @@ const SafevinDashboard = () => {
 
           {/* Description */}
           <motion.p
-            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-3 sm:mb-4 leading-relaxed px-2 sm:px-0"
+            className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
           >
-            Analizza il tuo annuncio, ricevi score e criticità.<br />
-            Correggi tutto e genera la versione migliore.
+            Analizza, correggi e ricrea i tuoi annunci.<br />
+            Tutto in un unico posto, potenziato dall'AI.
           </motion.p>
 
           {/* Pipeline steps */}
           <motion.div
-            className="flex items-center justify-center gap-2 sm:gap-3 text-[13px] sm:text-sm text-muted-foreground mb-8 sm:mb-10"
+            className="flex items-center justify-center gap-2 sm:gap-3 text-[13px] sm:text-sm text-muted-foreground mb-10 sm:mb-14"
             initial="hidden"
             animate="visible"
             variants={{
@@ -137,12 +155,40 @@ const SafevinDashboard = () => {
             ))}
           </motion.div>
 
-          {/* Audit & Studio CTA buttons */}
+          {/* Feature cards */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-2 px-2 sm:px-0"
+            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              visible: { transition: { staggerChildren: 0.12, delayChildren: 1.1 } },
+            }}
+          >
+            {features.map((feat, i) => (
+              <motion.div
+                key={i}
+                className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6 text-left hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 group"
+                variants={{
+                  hidden: { opacity: 0, y: 40, scale: 0.95 },
+                  visible: { opacity: 1, y: 0, scale: 1 },
+                }}
+                transition={{ ...spring }}
+              >
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  {feat.icon}
+                </div>
+                <h3 className="text-sm font-bold text-foreground mb-1">{feat.title}</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{feat.desc}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Audit & Studio deep-dive buttons */}
+          <motion.div
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-0"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 1.15 }}
+            transition={{ ...spring, delay: 1.4 }}
           >
             <Button
               variant="outline"
@@ -178,10 +224,21 @@ const SafevinDashboard = () => {
               </div>
             </Button>
           </motion.div>
+
+          {/* Trust badge */}
+          <motion.div
+            className="flex items-center justify-center gap-2 mt-10 sm:mt-14 mb-8 text-muted-foreground"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.6 }}
+          >
+            <ShieldCheck className="w-4 h-4 text-primary/60" />
+            <span className="text-xs">AI-powered • Dati sicuri • Risultati in secondi</span>
+          </motion.div>
         </div>
       </main>
     </div>
   );
 };
 
-export default SafevinDashboard;
+export default SafevinHome;

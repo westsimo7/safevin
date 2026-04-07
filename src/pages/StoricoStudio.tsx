@@ -112,7 +112,7 @@ const StoricoStudio = () => {
           </Badge>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">I tuoi annunci Studio.</h1>
           <p className="text-sm text-muted-foreground mb-4">Ogni annuncio creato, pronto per essere riutilizzato.</p>
-          <Button variant="neon" size="sm" className="group" onClick={() => navigate("/dashboard")}>
+          <Button variant="neon" size="sm" className="group" onClick={() => navigate("/home")}>
             Crea nuovo annuncio
             <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
