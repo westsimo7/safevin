@@ -1,13 +1,45 @@
 import { useState } from "react";
-import { Check, Pencil, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
+import { Check, Pencil, Sparkles, ArrowRight, HelpCircle, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+const VINTED_COLORS: { label: string; hex: string }[] = [
+  { label: "Nero", hex: "#000000" },
+  { label: "Grigio", hex: "#808080" },
+  { label: "Bianco", hex: "#FFFFFF" },
+  { label: "Panna", hex: "#FFFDD0" },
+  { label: "Beige", hex: "#D2B48C" },
+  { label: "Albicocca", hex: "#FBCEB1" },
+  { label: "Arancione", hex: "#FF8C00" },
+  { label: "Corallo", hex: "#FF6F61" },
+  { label: "Rosso", hex: "#D32F2F" },
+  { label: "Borgogna", hex: "#800020" },
+  { label: "Rosa", hex: "#F48FB1" },
+  { label: "Viola", hex: "#7B1FA2" },
+  { label: "Lilla", hex: "#C8A2C8" },
+  { label: "Azzurro", hex: "#87CEEB" },
+  { label: "Blu", hex: "#1565C0" },
+  { label: "Blu marino", hex: "#1B2A4A" },
+  { label: "Turchese", hex: "#00BCD4" },
+  { label: "Menta", hex: "#98FF98" },
+  { label: "Verde", hex: "#4CAF50" },
+  { label: "Verde scuro", hex: "#1B5E20" },
+  { label: "Cachi", hex: "#BDB76B" },
+  { label: "Marrone", hex: "#6D4C41" },
+  { label: "Senape", hex: "#FFDB58" },
+  { label: "Giallo", hex: "#FFEB3B" },
+  { label: "Argento", hex: "#C0C0C0" },
+  { label: "Oro", hex: "#FFD700" },
+  { label: "Multi color", hex: "linear-gradient(135deg, #FF0000, #FF8C00, #FFEB3B, #4CAF50, #1565C0, #7B1FA2)" },
+  { label: "Chiaro", hex: "#F5F5DC" },
+];
 
 export interface ProductAnalysis {
   recognition_confidence?: string;
@@ -94,6 +126,10 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   const [customBrand, setCustomBrand] = useState("");
   const [lowConfidenceInput, setLowConfidenceInput] = useState("");
   const [lowConfidenceResolved, setLowConfidenceResolved] = useState(false);
+  const [colorPickerOpen, setColorPickerOpen] = useState(false);
+  const [selectedColors, setSelectedColors] = useState<string[]>(() => {
+    return editedAnalysis.colors || (editedAnalysis.color ? [editedAnalysis.color] : []);
+  });
 
   const isLowConfidence = editedAnalysis.recognition_confidence === "low" && !lowConfidenceResolved;
 
@@ -108,7 +144,27 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   };
   const needsBrandInput = !editedAnalysis.brand || editedAnalysis.brand_confidence !== "high";
 
+  const toggleColor = (colorLabel: string) => {
+    setSelectedColors(prev => {
+      let next: string[];
+      if (prev.includes(colorLabel)) {
+        next = prev.filter(c => c !== colorLabel);
+      } else {
+        if (prev.length >= 2) return prev;
+        next = [...prev, colorLabel];
+      }
+      setEditedAnalysis(p => ({ ...p, colors: next, color: next.join(", ") }));
+      return next;
+    });
+  };
+
+  const getColorHex = (label: string) => VINTED_COLORS.find(c => c.label === label)?.hex || "#808080";
+
   const handleEditStart = (field: FieldKey) => {
+    if (field === "color") {
+      setColorPickerOpen(true);
+      return;
+    }
     setEditingField(field);
     setEditValue(editedAnalysis[field] || "");
   };
@@ -217,30 +273,88 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
       {/* Fields */}
       <Card className="border-border/50">
         <CardContent className="p-0 divide-y divide-border/30">
-          {fields.map(field => {
-            const value = field === "color" 
-              ? (editedAnalysis.colors?.join(", ") || editedAnalysis.color || null)
-              : editedAnalysis[field];
-            const displayValue = value || "—";
-            const isEmpty = !value;
+          {/* Brand field */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">{FIELD_LABELS.brand}</p>
+              <p className={`text-sm font-medium truncate ${!editedAnalysis.brand ? "text-muted-foreground/50 italic" : ""}`}>
+                {editedAnalysis.brand || "—"}
+              </p>
+            </div>
+            <button
+              onClick={() => needsBrandInput ? setShowBrandPicker(true) : handleEditStart("brand")}
+              className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
+            >
+              <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
+          </div>
 
-            return (
-              <div key={field} className="flex items-center justify-between px-4 py-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted-foreground">{FIELD_LABELS[field]}</p>
-                  <p className={`text-sm font-medium truncate ${isEmpty ? "text-muted-foreground/50 italic" : ""}`}>
-                    {displayValue}
-                  </p>
+          {/* Color field with dropdown */}
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground">{FIELD_LABELS.color}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  {selectedColors.length > 0 ? selectedColors.map(c => (
+                    <div key={c} className="flex items-center gap-1.5">
+                      <span
+                        className="w-4 h-4 rounded-full border border-border/50 shrink-0"
+                        style={{ background: getColorHex(c) }}
+                      />
+                      <span className="text-sm font-medium">{c}</span>
+                    </div>
+                  )) : (
+                    <span className="text-sm text-muted-foreground/50 italic">—</span>
+                  )}
                 </div>
-                <button
-                  onClick={() => field === "brand" && needsBrandInput ? setShowBrandPicker(true) : handleEditStart(field)}
-                  className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
-                >
-                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
-                </button>
               </div>
-            );
-          })}
+              <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
+                <PopoverTrigger asChild>
+                  <button className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0">
+                    <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-[260px] p-0 max-h-[280px] overflow-hidden" align="end" side="bottom" sideOffset={4}>
+                  <div className="p-2 border-b border-border/50">
+                    <p className="text-xs text-muted-foreground">Seleziona max 2 colori dominanti</p>
+                  </div>
+                  <div className="p-1 max-h-[230px] overflow-y-auto">
+                    {VINTED_COLORS.map(vc => {
+                      const isSelected = selectedColors.includes(vc.label);
+                      const isDisabled = !isSelected && selectedColors.length >= 2;
+                      const isMulti = vc.label === "Multi color";
+                      return (
+                        <button
+                          key={vc.label}
+                          type="button"
+                          onClick={() => toggleColor(vc.label)}
+                          disabled={isDisabled}
+                          className={cn(
+                            "relative flex w-full items-center gap-3 rounded-sm py-2 px-3 text-sm outline-none transition-colors",
+                            "hover:bg-accent hover:text-accent-foreground",
+                            "disabled:pointer-events-none disabled:opacity-40",
+                            isSelected && "bg-accent/50"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "w-5 h-5 rounded-full border shrink-0",
+                              vc.label === "Bianco" || vc.label === "Panna" || vc.label === "Chiaro"
+                                ? "border-border"
+                                : "border-transparent"
+                            )}
+                            style={{ background: isMulti ? vc.hex : vc.hex }}
+                          />
+                          <span className="flex-1 text-left">{vc.label}</span>
+                          {isSelected && <Check className="w-4 h-4 text-primary shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -260,16 +374,16 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
         ← Torna alle foto
       </Button>
 
-      {/* Edit dialog */}
-      <Dialog open={editingField !== null} onOpenChange={(open) => { if (!open) setEditingField(null); }}>
+      {/* Edit dialog (brand only) */}
+      <Dialog open={editingField === "brand"} onOpenChange={(open) => { if (!open) setEditingField(null); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifica {editingField ? FIELD_LABELS[editingField] : ""}</DialogTitle>
+            <DialogTitle>Modifica Brand</DialogTitle>
           </DialogHeader>
           <Input
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
-            placeholder={`Inserisci ${editingField ? FIELD_LABELS[editingField].toLowerCase() : ""}...`}
+            placeholder="Inserisci brand..."
             autoFocus
             onKeyDown={e => e.key === "Enter" && handleEditSave()}
           />
