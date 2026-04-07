@@ -8,28 +8,28 @@
 
 @layer base {
   :root {
-    /* White background */
-    --background: 0 0% 100%;
-    --foreground: 174 70% 28%;
+    /* Dark background */
+    --background: 200 10% 8%;
+    --foreground: 0 0% 90%;
 
-    /* Cards - white */
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    /* Cards - dark */
+    --card: 200 10% 12%;
+    --card-foreground: 0 0% 90%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover: 200 10% 12%;
+    --popover-foreground: 0 0% 90%;
 
     /* Primary CTA teal */
     --primary: 174 65% 34%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary - light gray */
-    --secondary: 0 0% 95%;
-    --secondary-foreground: 0 0% 18%;
+    /* Secondary - dark gray */
+    --secondary: 200 8% 18%;
+    --secondary-foreground: 0 0% 85%;
 
     /* Muted */
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 18%;
+    --muted: 200 8% 18%;
+    --muted-foreground: 0 0% 55%;
 
     /* Accent - highlight teal */
     --accent: 174 50% 46%;
@@ -38,28 +38,28 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    /* Borders - light gray */
-    --border: 0 0% 85%;
-    --input: 0 0% 85%;
+    /* Borders - dark */
+    --border: 200 8% 22%;
+    --input: 200 8% 22%;
     --ring: 174 65% 34%;
 
     --radius: 0.75rem;
 
     /* Custom brand colors */
-    --teal-main: 174 70% 28%;
+    --teal-main: 174 65% 45%;
     --teal-cta: 174 65% 34%;
-    --teal-hover: 174 73% 21%;
+    --teal-hover: 174 73% 28%;
     --teal-secondary: 174 55% 39%;
     --teal-glow: 174 50% 46%;
     --teal-deep: 174 75% 17%;
 
-    --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 174 70% 28%;
+    --sidebar-background: 200 10% 10%;
+    --sidebar-foreground: 0 0% 85%;
     --sidebar-primary: 174 65% 34%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 95%;
-    --sidebar-accent-foreground: 174 70% 28%;
-    --sidebar-border: 0 0% 85%;
+    --sidebar-accent: 200 8% 18%;
+    --sidebar-accent-foreground: 174 65% 45%;
+    --sidebar-border: 200 8% 22%;
     --sidebar-ring: 174 65% 34%;
   }
 }
@@ -79,7 +79,6 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.55;
-    color: hsl(0 0% 18%);
     overflow-x: hidden;
   }
 
