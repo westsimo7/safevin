@@ -6,20 +6,37 @@ import { motion } from "framer-motion";
 const LandingNavbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6">
+      <div className="w-full h-20 sm:h-24 flex items-center justify-between px-4 sm:px-6">
         {/* Logo - flush left */}
-        <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <a href="#" className="flex items-center hover:opacity-90 transition-opacity">
           <motion.span
-            className="text-3xl sm:text-4xl font-black tracking-tight"
-            initial={{ opacity: 0, scale: 0.7, filter: "blur(8px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            transition={{ type: "spring", stiffness: 100, damping: 14, delay: 0.1 }}
+            className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter select-none"
+            initial={{ opacity: 0, rotateX: 60, y: -40, scale: 0.6 }}
+            animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
+            transition={{ type: "spring", stiffness: 80, damping: 16, delay: 0.1 }}
+            style={{ perspective: "600px", transformStyle: "preserve-3d" }}
           >
-            <span className="text-foreground">SAFE</span>
+            <span
+              className="text-foreground inline-block"
+              style={{
+                textShadow: "0 2px 0 hsl(0 0% 30%), 0 4px 0 hsl(0 0% 25%), 0 6px 8px hsl(0 0% 0% / 0.3)",
+              }}
+            >
+              SAFE
+            </span>
             <motion.span
               className="text-primary inline-block"
-              animate={{ textShadow: ["0 0 8px hsl(174 65% 34% / 0.3)", "0 0 20px hsl(174 65% 34% / 0.6)", "0 0 8px hsl(174 65% 34% / 0.3)"] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              style={{
+                textShadow: "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 8px hsl(174 65% 10% / 0.4)",
+              }}
+              animate={{
+                textShadow: [
+                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 8px hsl(174 65% 10% / 0.4)",
+                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 16px hsl(174 65% 34% / 0.6)",
+                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 8px hsl(174 65% 10% / 0.4)",
+                ],
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
             >
               ViN
             </motion.span>
