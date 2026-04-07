@@ -36,7 +36,7 @@ interface StudioMissingPhotosProps {
 const CRITERIA_LABELS: Record<string, { label: string; icon: string }> = {
   quality: { label: "Qualità", icon: "📷" },
   light: { label: "Luce", icon: "💡" },
-  background_contrast: { label: "Contrasto sfondo", icon: "🎨" },
+  background_contrast: { label: "Contrasto", icon: "🎨" },
   completeness: { label: "Completezza", icon: "✅" },
 };
 
@@ -91,7 +91,7 @@ function buildCriteriaVerdicts(
   const bgAvg = avgScores.background_contrast ? avgScores.background_contrast.reduce((a, b) => a + b, 0) / avgScores.background_contrast.length : 0;
   results.push({
     key: "background_contrast",
-    label: "Contrasto sfondo",
+    label: "Contrasto",
     icon: "🎨",
     score: bgAvg,
     ok: bgAvg >= 3.5,
