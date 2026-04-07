@@ -1,17 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { motion } from "framer-motion";
 
 const LandingNavbar = () => {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="w-full h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6">
+      <div className="w-full h-16 sm:h-20 flex items-center justify-between px-4 sm:px-6">
         {/* Logo - flush left */}
         <a href="#" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <span className="text-2xl sm:text-3xl font-black tracking-tight">
+          <motion.span
+            className="text-3xl sm:text-4xl font-black tracking-tight"
+            initial={{ opacity: 0, scale: 0.7, filter: "blur(8px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ type: "spring", stiffness: 100, damping: 14, delay: 0.1 }}
+          >
             <span className="text-foreground">SAFE</span>
-            <span className="text-primary">ViN</span>
-          </span>
+            <motion.span
+              className="text-primary inline-block"
+              animate={{ textShadow: ["0 0 8px hsl(174 65% 34% / 0.3)", "0 0 20px hsl(174 65% 34% / 0.6)", "0 0 8px hsl(174 65% 34% / 0.3)"] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              ViN
+            </motion.span>
+          </motion.span>
         </a>
 
         {/* Profile icon - flush right */}
