@@ -9,15 +9,22 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <main className="min-h-screen overflow-x-hidden relative">
-      <LandingNavbar />
-      <HeroSection />
-      <ProblemSection />
-      <SolutionSection />
-      <HowItWorksSection />
-      <PricingSection />
-      <DisclaimerSection />
-      <Footer />
+    <main className="min-h-screen bg-background overflow-x-hidden relative">
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/landing-bg.jpeg')" }}
+      />
+      <div className="fixed inset-0 z-0 bg-background/80 backdrop-blur-sm" />
+      <div className="relative z-10">
+        <LandingNavbar />
+        <HeroSection />
+        <ProblemSection />
+        <SolutionSection />
+        <HowItWorksSection />
+        <PricingSection />
+        <DisclaimerSection />
+        <Footer />
+      </div>
     </main>
   );
 };
