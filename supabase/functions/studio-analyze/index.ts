@@ -15,16 +15,38 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
   "gender": "uomo | donna | unisex",
   "product_type": "sottocategoria specifica Vinted (vedi albero categorie sotto)",
   "category": "macro-categoria Vinted (es: Jeans, Abbigliamento da esterno, Maglioni e Pullover, Top e T-Shirt, ecc.)",
-  "color": "colore principale dalla palette Vinted (vedi lista sotto)",
+  "colors": ["colore dominante 1", "colore dominante 2 (se presente, altrimenti array con 1 solo elemento)"],
   "brand": "brand se CHIARAMENTE visibile, altrimenti null",
   "brand_confidence": "high | low | null",
-  "distinctive_details": {
-    "stitching": "tipologia ricami se presenti (es: ricamo floreale, ricamo logo, nessuno)",
-    "pockets": "tipologia tasche (es: tasche cargo, tasche a filo, tasche posteriori applicate, nessuna)",
+  "garment_features": {
+    "logos": [
+      {
+        "type": "stampato | ricamato | patch | gommato | in rilievo | serigrafato | tessuto | nessuno",
+        "description": "descrizione breve del logo (es: logo Nike swoosh, logo Adidas trefoil)",
+        "position": "posizione esatta (es: petto sinistro, schiena centro, manica destra, cappuccio, etichetta collo)",
+        "size": "piccolo | medio | grande"
+      }
+    ],
+    "prints": [
+      {
+        "type": "grafica | scritta | pattern | all-over | nessuno",
+        "description": "descrizione della stampa (es: stampa grafica vintage, scritta 'New York', pattern a righe)",
+        "position": "posizione (es: frontale centro, schiena, manica)",
+        "technique": "serigrafia | sublimazione | transfer | ricamo | non determinabile"
+      }
+    ],
+    "zippers": "descrizione zip (es: zip intera frontale, mezza zip, zip laterali, zip tasche, nessuna)",
+    "pockets": "descrizione tasche (es: 2 tasche laterali a filo, tasca canguro frontale, tasche cargo, nessuna)",
+    "buttons": "descrizione bottoni (es: bottoni a pressione, bottoni classici in metallo, nessuno)",
+    "hood": "cappuccio (es: cappuccio con cordino regolabile, cappuccio fisso, nessuno)",
+    "collar": "colletto (es: colletto alto, collo a V, girocollo, colletto button-down, nessuno)",
+    "cuffs": "polsini (es: polsini elastici, polsini a costine, polsini con bottone, nessuno)",
+    "hem": "orlo (es: orlo elastico, orlo dritto, orlo arrotondato, nessuno)",
+    "embossing_relief": "rilievi o goffrature (es: logo in rilievo sul petto, texture goffrata all-over, nessuno)",
+    "patches_badges": "patch o badge applicati (es: patch militare sulla manica, badge sportivo, nessuno)",
     "drawstrings": "cordini/lacci (es: cordino in vita, lacci cappuccio, nessuno)",
-    "closures": "chiusure (es: zip intera, mezza zip, bottoni a pressione, bottoni classici, velcro, nessuna)",
-    "structural_elements": "elementi strutturali distintivi (es: cappuccio, colletto button-down, spalline, polsini elastici, orlo arrotondato, nessuno)",
-    "other": "altri dettagli rilevanti non coperti sopra (es: stampa grafica, logo stampato, patch, spilla, nessuno)"
+    "stitching_details": "cuciture decorative (es: cuciture a contrasto, impunture visibili, nessuno)",
+    "other_details": "qualsiasi altro dettaglio visivo rilevante non coperto sopra"
   },
   "photos_assessment": {
     "has_front": true/false,
@@ -112,8 +134,8 @@ Nero, Grigio, Bianco, Panna, Beige, Albicocca, Arancione, Corallo, Rosso, Borgog
 - Per gender: identifica da taglio, vestibilità, etichette. Se ambiguo usa "unisex" e fornisci le categorie più probabili per entrambi i sessi.
 - Per product_type: usa SEMPRE la sottocategoria più specifica dall'albero categorie sopra.
 - Per category: usa la macro-categoria di appartenenza.
-- Per color: usa SOLO i colori dalla palette Vinted sopra. Se il capo ha più colori dominanti ugualmente presenti, usa "Multi".
-- Per distinctive_details: descrivi SOLO ciò che vedi realmente. Se un elemento non è presente o non è visibile, scrivi "nessuno".
+- Per colors: restituisci un array con i 2 colori PIÙ DOMINANTI del capo dalla palette Vinted. Se il capo è monocromatico, restituisci un array con 1 solo elemento. MAI più di 2 colori.
+- Per garment_features: descrivi SOLO ciò che vedi realmente nelle foto. Sii estremamente preciso sulla posizione e tipologia di ogni elemento. Se un elemento non è presente o non è visibile, scrivi "nessuno". Per i loghi, specifica SEMPRE il tipo di applicazione (stampato, ricamato, patch, gommato, in rilievo, etc.).
 
 === REGOLE QUALITÀ FOTO ===
 - Analizza OGNI foto singolarmente (photo_index parte da 0).
