@@ -108,7 +108,7 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
       "Se ti offrono X€ → controproponi Y€",
       "Se salgono a Z€ → puoi scendere a W€",
       "Se arrivano a V€ → puoi accettare",
-      "Se restano troppo bassi → non inseguire la trattativa"
+      "Se scendono sotto il minimo di pochi euro → valuta tu se accettare, altrimenti aspetta offerte migliori"
     ]
   },
   "tips": [
