@@ -261,7 +261,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
             <Label className="text-sm font-medium">
               Materiali * <span className="text-xs text-muted-foreground font-normal">(max 3)</span>
             </Label>
-            <Popover open={materialsOpen} onOpenChange={setMaterialsOpen}>
+            <Popover open={materialsOpen} onOpenChange={(open) => { setMaterialsOpen(open); if (!open) setMaterialSearch(""); }}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
