@@ -273,30 +273,88 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
       {/* Fields */}
       <Card className="border-border/50">
         <CardContent className="p-0 divide-y divide-border/30">
-          {fields.map(field => {
-            const value = field === "color" 
-              ? (editedAnalysis.colors?.join(", ") || editedAnalysis.color || null)
-              : editedAnalysis[field];
-            const displayValue = value || "—";
-            const isEmpty = !value;
+          {/* Brand field */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">{FIELD_LABELS.brand}</p>
+              <p className={`text-sm font-medium truncate ${!editedAnalysis.brand ? "text-muted-foreground/50 italic" : ""}`}>
+                {editedAnalysis.brand || "—"}
+              </p>
+            </div>
+            <button
+              onClick={() => needsBrandInput ? setShowBrandPicker(true) : handleEditStart("brand")}
+              className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
+            >
+              <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
+          </div>
 
-            return (
-              <div key={field} className="flex items-center justify-between px-4 py-3">
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-muted-foreground">{FIELD_LABELS[field]}</p>
-                  <p className={`text-sm font-medium truncate ${isEmpty ? "text-muted-foreground/50 italic" : ""}`}>
-                    {displayValue}
-                  </p>
+          {/* Color field with dropdown */}
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between">
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-muted-foreground">{FIELD_LABELS.color}</p>
+                <div className="flex items-center gap-2 mt-1">
+                  {selectedColors.length > 0 ? selectedColors.map(c => (
+                    <div key={c} className="flex items-center gap-1.5">
+                      <span
+                        className="w-4 h-4 rounded-full border border-border/50 shrink-0"
+                        style={{ background: getColorHex(c) }}
+                      />
+                      <span className="text-sm font-medium">{c}</span>
+                    </div>
+                  )) : (
+                    <span className="text-sm text-muted-foreground/50 italic">—</span>
+                  )}
                 </div>
-                <button
-                  onClick={() => field === "brand" && needsBrandInput ? setShowBrandPicker(true) : handleEditStart(field)}
-                  className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0"
-                >
-                  <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
-                </button>
               </div>
-            );
-          })}
+              <Popover open={colorPickerOpen} onOpenChange={setColorPickerOpen}>
+                <PopoverTrigger asChild>
+                  <button className="ml-2 p-1.5 rounded-lg hover:bg-muted/50 transition-colors shrink-0">
+                    <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[var(--radix-popover-trigger-width)] min-w-[260px] p-0 max-h-[280px] overflow-hidden" align="end" side="bottom" sideOffset={4}>
+                  <div className="p-2 border-b border-border/50">
+                    <p className="text-xs text-muted-foreground">Seleziona max 2 colori dominanti</p>
+                  </div>
+                  <div className="p-1 max-h-[230px] overflow-y-auto">
+                    {VINTED_COLORS.map(vc => {
+                      const isSelected = selectedColors.includes(vc.label);
+                      const isDisabled = !isSelected && selectedColors.length >= 2;
+                      const isMulti = vc.label === "Multi color";
+                      return (
+                        <button
+                          key={vc.label}
+                          type="button"
+                          onClick={() => toggleColor(vc.label)}
+                          disabled={isDisabled}
+                          className={cn(
+                            "relative flex w-full items-center gap-3 rounded-sm py-2 px-3 text-sm outline-none transition-colors",
+                            "hover:bg-accent hover:text-accent-foreground",
+                            "disabled:pointer-events-none disabled:opacity-40",
+                            isSelected && "bg-accent/50"
+                          )}
+                        >
+                          <span
+                            className={cn(
+                              "w-5 h-5 rounded-full border shrink-0",
+                              vc.label === "Bianco" || vc.label === "Panna" || vc.label === "Chiaro"
+                                ? "border-border"
+                                : "border-transparent"
+                            )}
+                            style={{ background: isMulti ? vc.hex : vc.hex }}
+                          />
+                          <span className="flex-1 text-left">{vc.label}</span>
+                          {isSelected && <Check className="w-4 h-4 text-primary shrink-0" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -316,16 +374,16 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
         ← Torna alle foto
       </Button>
 
-      {/* Edit dialog */}
-      <Dialog open={editingField !== null} onOpenChange={(open) => { if (!open) setEditingField(null); }}>
+      {/* Edit dialog (brand only) */}
+      <Dialog open={editingField === "brand"} onOpenChange={(open) => { if (!open) setEditingField(null); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Modifica {editingField ? FIELD_LABELS[editingField] : ""}</DialogTitle>
+            <DialogTitle>Modifica Brand</DialogTitle>
           </DialogHeader>
           <Input
             value={editValue}
             onChange={e => setEditValue(e.target.value)}
-            placeholder={`Inserisci ${editingField ? FIELD_LABELS[editingField].toLowerCase() : ""}...`}
+            placeholder="Inserisci brand..."
             autoFocus
             onKeyDown={e => e.key === "Enter" && handleEditSave()}
           />
