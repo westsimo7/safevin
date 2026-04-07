@@ -154,7 +154,35 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
         </div>
       )}
 
-      {/* Brand prompt if needed */}
+      {/* Low confidence prompt */}
+      {isLowConfidence && (
+        <Card className="border-destructive/30 bg-destructive/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <HelpCircle className="w-4 h-4 text-destructive" />
+              <p className="text-sm font-semibold text-foreground">
+                Non sono sicuro del tipo di indumento
+              </p>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">
+              Le foto non mi permettono di identificare il capo con certezza. Che indumento è?
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={lowConfidenceInput}
+                onChange={e => setLowConfidenceInput(e.target.value)}
+                placeholder="Es: Felpa con cappuccio, Giacca bomber..."
+                onKeyDown={e => e.key === "Enter" && handleLowConfidenceSubmit()}
+                className="flex-1"
+              />
+              <Button size="sm" onClick={handleLowConfidenceSubmit} disabled={!lowConfidenceInput.trim()}>
+                Conferma
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {needsBrandInput && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4">
