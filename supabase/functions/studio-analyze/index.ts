@@ -118,7 +118,7 @@ Nero, Grigio, Bianco, Panna, Beige, Albicocca, Arancione, Corallo, Rosso, Borgog
 - Per ogni foto valuta con punteggio 1-5:
   * quality: nitidezza e risoluzione complessiva
   * light: illuminazione (uniforme, naturale, senza ombre dure)
-  * background_contrast: contrasto tra sfondo e indumento (sfondo neutro/pulito = 5, sfondo caotico = 1)
+  * background_contrast: contrasto visivo tra indumento e sfondo. Analizza colore principale del capo e colore dominante dello sfondo. Valuta se esiste una separazione visiva NETTA in luminosità, tonalità e percezione. Un buon contrasto rende il capo subito leggibile, staccato e protagonista. Un cattivo contrasto lo confonde con lo sfondo (es. nero su blu scuro, beige su bianco). Verdetto: 5=contrasto efficace, 3=parzialmente efficace, 1=inefficace
   * completeness: quanto la foto mostra bene il soggetto (inquadratura, angolazione)
 - Usa come RIFERIMENTO IDEALE: foto su sfondo a tinta unita contrastante, luce naturale diffusa, prodotto steso/appeso centrato.
 - Segnala issues SOLO se reali. Se una foto è buona, "issues" vuoto.
