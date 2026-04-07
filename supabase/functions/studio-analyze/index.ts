@@ -22,7 +22,7 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
     "logos": [
       {
         "type": "stampato | ricamato | patch | gommato | in rilievo | serigrafato | tessuto | nessuno",
-        "description": "descrizione breve del logo (es: logo Nike swoosh, logo Adidas trefoil)",
+        "description": "NON leggere o trascrivere il testo/contenuto del logo. Indica solo 'logo' o 'logo brand' se il brand è già identificato. Es: 'logo', 'logo brand', 'doppio logo'",
         "position": "posizione esatta (es: petto sinistro, schiena centro, manica destra, cappuccio, etichetta collo)",
         "size": "piccolo | medio | grande"
       }
@@ -30,7 +30,7 @@ Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura es
     "prints": [
       {
         "type": "grafica | scritta | pattern | all-over | nessuno",
-        "description": "descrizione della stampa (es: stampa grafica vintage, scritta 'New York', pattern a righe)",
+        "description": "NON leggere o trascrivere il testo delle stampe. Indica solo il tipo generico. Es: 'stampa grafica', 'scritta', 'pattern a righe', 'stampa centrale'",
         "position": "posizione (es: frontale centro, schiena, manica)",
         "technique": "serigrafia | sublimazione | transfer | ricamo | non determinabile"
       }
