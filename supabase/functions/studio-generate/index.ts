@@ -45,11 +45,17 @@ Poi aggiungi una riga vuota e:
 • Materiale: ...
 • Sesso: ...
 
-REGOLE:
+REGOLE FONDAMENTALI DI STILE SCRITTURA:
+- SEMPLIFICA SEMPRE: descrivi i dettagli in modo diretto, chiaro e conciso. Niente giri di parole.
+  ESEMPIO SBAGLIATO: "Maxi stampa gotica in cerchio con riempimento giallo tartan giallo sul centro della schiena"
+  ESEMPIO GIUSTO: "Maxi stampa in cerchio gialla sul retro della maglia"
+  ESEMPIO SBAGLIATO: "Modello senza chiusura con cuciture raglan sulle spalle, maniche raglan in tessuto giallo con righe scure, polsini ad orlo a costine"
+  ESEMPIO GIUSTO: "Modello senza chiusura con cuciture sulle spalle, maniche e polsini in tessuto giallo e righe scure"
+- Non usare termini stilistici inventati (gotico, barocco, bohemien, ecc.). Gli UNICI stili ammessi sono: Vintage, Casual, Streetwear, Elegante
 - Tono pulito, professionale e naturale
 - Non inventare informazioni non fornite
 - Se un dato non è disponibile, ometti la riga corrispondente
-- Il risultato deve sembrare scritto da un venditore esperto e organizzato
+- Ogni frase deve essere essenziale: soggetto + dettaglio + posizione. Basta.
 
 ═══════════════════════════════════════
 3) PREZZO STRATEGICO
