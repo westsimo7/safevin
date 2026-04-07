@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
-import { ArrowRight, Ruler } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,19 +9,16 @@ import { Label } from "@/components/ui/label";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import {
-  Collapsible, CollapsibleContent, CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import type { ProductAnalysis } from "./StudioRecognition";
+import MeasurementGuideDialog from "./MeasurementGuideDialog";
 
 export interface StudioUserInput {
   size: string;
-  fit: string;
+  gender: string;
   condition: string;
   materials: string;
   minPrice: string;
   measurements: Record<string, string>;
-  context: string;
   extras: string;
 }
 
@@ -43,75 +40,12 @@ const CONDITION_OPTIONS = [
   { value: "discrete", label: "Condizioni discrete" },
 ];
 
-const MEASUREMENT_FIELDS: Record<string, { label: string; placeholder: string }[]> = {
-  maglietta: [
-    { label: "Larghezza petto", placeholder: "es. 52" },
-    { label: "Lunghezza", placeholder: "es. 70" },
-  ],
-  "t-shirt": [
-    { label: "Larghezza petto", placeholder: "es. 52" },
-    { label: "Lunghezza", placeholder: "es. 70" },
-  ],
-  "t shirt": [
-    { label: "Larghezza petto", placeholder: "es. 52" },
-    { label: "Lunghezza", placeholder: "es. 70" },
-  ],
-  felpa: [
-    { label: "Larghezza petto", placeholder: "es. 56" },
-    { label: "Lunghezza", placeholder: "es. 72" },
-    { label: "Maniche", placeholder: "es. 64" },
-  ],
-  giacca: [
-    { label: "Spalle", placeholder: "es. 46" },
-    { label: "Maniche", placeholder: "es. 63" },
-    { label: "Lunghezza", placeholder: "es. 75" },
-    { label: "Petto", placeholder: "es. 54" },
-  ],
-  pantaloni: [
-    { label: "Vita", placeholder: "es. 42" },
-    { label: "Lunghezza", placeholder: "es. 102" },
-    { label: "Cavallo", placeholder: "es. 30" },
-  ],
-  scarpe: [
-    { label: "Lunghezza suola (cm)", placeholder: "es. 28" },
-  ],
-  borsa: [
-    { label: "Larghezza", placeholder: "es. 35" },
-    { label: "Altezza", placeholder: "es. 25" },
-    { label: "Profondità", placeholder: "es. 12" },
-  ],
-};
-
-function getMeasurementFields(productType: string) {
-  const key = productType.toLowerCase();
-  for (const [k, fields] of Object.entries(MEASUREMENT_FIELDS)) {
-    if (key.includes(k)) return fields;
-  }
-  return [
-    { label: "Larghezza", placeholder: "es. 50" },
-    { label: "Lunghezza", placeholder: "es. 70" },
-  ];
-}
-
-const CONTEXT_SUGGESTIONS = [
-  "Uso quotidiano",
-  "Outfit streetwear",
-  "Palestra / sport",
-  "Inverno / freddo",
-  "Occasione elegante",
-  "Casual estivo",
-  "Lavoro / ufficio",
-];
-
-const FIT_OPTIONS = [
-  { value: "slim", label: "Slim fit" },
-  { value: "regular", label: "Regular fit" },
-  { value: "oversize", label: "Oversize" },
-  { value: "loose", label: "Loose / ampio" },
+const GENDER_OPTIONS = [
+  { value: "uomo", label: "Uomo" },
+  { value: "donna", label: "Donna" },
 ];
 
 const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputProps) => {
-  // Map audit condizioni to condition option value
   const getInitialCondition = () => {
     if (!auditSource?.condizioni) return "";
     const c = auditSource.condizioni.toLowerCase();
@@ -120,31 +54,24 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   };
 
   const [size, setSize] = useState("");
-  const [fit, setFit] = useState("");
+  const [gender, setGender] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
   const [materials, setMaterials] = useState(analysis.materials || "");
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
-  const [context, setContext] = useState("");
   const [extras, setExtras] = useState("");
-  const [showMeasurements, setShowMeasurements] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
-  const measurementFields = useMemo(
-    () => getMeasurementFields(analysis.product_type || ""),
-    [analysis.product_type]
-  );
-
-  const canContinue = context && size && fit && condition && materials && minPrice;
+  const canContinue = size && gender && condition && materials && minPrice;
 
   const handleContinue = () => {
     onContinue({
       size,
-      fit: FIT_OPTIONS.find(f => f.value === fit)?.label || fit,
+      gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
       condition: CONDITION_OPTIONS.find(c => c.value === condition)?.label || condition,
       materials,
       minPrice,
       measurements,
-      context,
       extras,
     });
   };
@@ -164,29 +91,18 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       {/* Required fields */}
       <Card className="border-border/50">
         <CardContent className="p-4 space-y-4">
-          <div className="space-y-3">
-            <Label className="text-sm font-medium">Contesto d'uso *</Label>
-            <div className="flex flex-wrap gap-2">
-              {CONTEXT_SUGGESTIONS.map(sug => (
-                <button
-                  key={sug}
-                  onClick={() => setContext(prev => prev.includes(sug) ? prev.replace(sug, "").trim() : (prev ? prev + ", " + sug : sug))}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
-                    context.includes(sug)
-                      ? "bg-primary/10 border-primary/30 text-primary"
-                      : "bg-muted/20 border-border/50 text-muted-foreground hover:bg-muted/40"
-                  }`}
-                >
-                  {sug}
-                </button>
-              ))}
-            </div>
-            <Input
-              value={context}
-              onChange={e => setContext(e.target.value)}
-              placeholder="es. perfetto per outfit casual invernali"
-              className="text-sm"
-            />
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Genere *</Label>
+            <Select value={gender} onValueChange={setGender}>
+              <SelectTrigger>
+                <SelectValue placeholder="Uomo o Donna?" />
+              </SelectTrigger>
+              <SelectContent>
+                {GENDER_OPTIONS.map(g => (
+                  <SelectItem key={g.value} value={g.value}>{g.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
@@ -196,20 +112,6 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
               onChange={e => setSize(e.target.value)}
               placeholder="es. M, 42, Taglia unica..."
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Vestibilità *</Label>
-            <Select value={fit} onValueChange={setFit}>
-              <SelectTrigger>
-                <SelectValue placeholder="Seleziona vestibilità" />
-              </SelectTrigger>
-              <SelectContent>
-                {FIT_OPTIONS.map(f => (
-                  <SelectItem key={f.value} value={f.value}>{f.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
 
           <div className="space-y-2">
@@ -252,43 +154,43 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
         </CardContent>
       </Card>
 
-      {/* Optional measurements */}
-      <Collapsible open={showMeasurements} onOpenChange={setShowMeasurements}>
-        <Card className="border-border/50">
-          <CollapsibleTrigger className="w-full">
-            <CardContent className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Ruler className="w-4 h-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Misure (facoltativo)</span>
-              </div>
-              <span className="text-xs text-muted-foreground">
-                {showMeasurements ? "Chiudi" : "Aggiungi"}
-              </span>
-            </CardContent>
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <CardContent className="px-4 pb-4 pt-0 space-y-3">
-              <p className="text-xs text-muted-foreground">
-                Misure suggerite per {analysis.product_type?.toLowerCase() || "questo prodotto"} (in cm)
-              </p>
-              {measurementFields.map(field => (
-                <div key={field.label} className="flex items-center gap-3">
-                  <Label className="text-xs text-muted-foreground w-32 shrink-0">{field.label}</Label>
-                  <Input
-                    type="number"
-                    placeholder={field.placeholder}
-                    value={measurements[field.label] || ""}
-                    onChange={e => setMeasurements(prev => ({ ...prev, [field.label]: e.target.value }))}
-                    className="h-9 text-sm"
-                  />
-                  <span className="text-xs text-muted-foreground">cm</span>
-                </div>
-              ))}
-            </CardContent>
-          </CollapsibleContent>
-        </Card>
-      </Collapsible>
-
+      {/* Measurements (optional) */}
+      <Card className="border-border/50">
+        <CardContent className="p-4 space-y-4">
+          <Label className="text-sm font-medium">Misure (facoltativo)</Label>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <Label className="text-xs text-muted-foreground w-40 shrink-0">Ampiezza delle spalle</Label>
+              <Input
+                type="number"
+                placeholder="es. 46"
+                value={measurements["Ampiezza delle spalle"] || ""}
+                onChange={e => setMeasurements(prev => ({ ...prev, "Ampiezza delle spalle": e.target.value }))}
+                className="h-9 text-sm"
+              />
+              <span className="text-xs text-muted-foreground">cm</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <Label className="text-xs text-muted-foreground w-40 shrink-0">Lunghezza</Label>
+              <Input
+                type="number"
+                placeholder="es. 70"
+                value={measurements["Lunghezza"] || ""}
+                onChange={e => setMeasurements(prev => ({ ...prev, "Lunghezza": e.target.value }))}
+                className="h-9 text-sm"
+              />
+              <span className="text-xs text-muted-foreground">cm</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowGuide(true)}
+            className="text-xs text-primary hover:underline mt-1"
+          >
+            📏 Scopri come misurare correttamente il tuo articolo. <span className="font-semibold">Leggi la nostra guida alle misure</span>
+          </button>
+        </CardContent>
+      </Card>
 
       {/* Extras */}
       <Card className="border-border/50">
@@ -319,6 +221,8 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       <Button variant="ghost" className="w-full text-muted-foreground" onClick={onBack}>
         ← Torna indietro
       </Button>
+
+      <MeasurementGuideDialog open={showGuide} onOpenChange={setShowGuide} />
     </div>
   );
 };
