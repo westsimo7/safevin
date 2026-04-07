@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { motion } from "framer-motion";
+
 
 const LandingNavbar = () => {
   return (
