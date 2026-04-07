@@ -218,7 +218,9 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
       <Card className="border-border/50">
         <CardContent className="p-0 divide-y divide-border/30">
           {fields.map(field => {
-            const value = editedAnalysis[field];
+            const value = field === "color" 
+              ? (editedAnalysis.colors?.join(", ") || editedAnalysis.color || null)
+              : editedAnalysis[field];
             const displayValue = value || "—";
             const isEmpty = !value;
 
