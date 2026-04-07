@@ -10,6 +10,7 @@ import {
 
 export interface ProductAnalysis {
   recognition_confidence?: string;
+  gender?: string;
   product_type: string;
   category: string;
   color: string;
