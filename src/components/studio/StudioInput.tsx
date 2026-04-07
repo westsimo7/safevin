@@ -22,6 +22,56 @@ export interface StudioUserInput {
   extras: string;
 }
 
+const UPPER_BODY_KEYWORDS = [
+  "t-shirt", "maglietta", "maglia", "felpa", "giacca", "giubbotto", "cappotto",
+  "blazer", "camicia", "polo", "top", "canotta", "maglione", "pullover",
+  "cardigan", "gilet", "piumino", "parka", "bomber", "hoodie", "sweatshirt",
+  "crop top", "body", "blusa", "vestaglia", "kimono",
+];
+
+const LOWER_BODY_KEYWORDS = [
+  "pantalone", "pantaloni", "jeans", "gonna", "shorts", "pantaloncini",
+  "leggings", "bermuda", "cargo", "chino", "jogger", "skort",
+];
+
+function getGarmentZone(category: string, productType: string): "upper" | "lower" | "unknown" {
+  const text = `${category} ${productType}`.toLowerCase();
+  if (LOWER_BODY_KEYWORDS.some(k => text.includes(k))) return "lower";
+  if (UPPER_BODY_KEYWORDS.some(k => text.includes(k))) return "upper";
+  return "unknown";
+}
+
+const SIZES_UPPER_UNISEX = [
+  "XS", "S", "M", "L", "XL", "XXL", "XXXL",
+  "4XL", "5XL", "6XL", "7XL", "8XL", "Taglia unica",
+];
+
+const SIZES_LOWER_UOMO = [
+  "IT 32 | W23", "IT 34 | W24", "IT 34 | W25", "IT 36 | W26", "IT 36 | W27",
+  "IT 38 | W28", "IT 38 | W29", "IT 40 | W30", "IT 40 | W31", "IT 42 | W32",
+  "IT 42 | W33", "IT 44 | W34", "IT 44 | W35", "IT 46 | W36", "IT 48 | W38",
+  "IT 50 | W40", "IT 52 | W42", "IT 54 | W44", "IT 56 | W46", "IT 58 | W48",
+  "IT 60 | W50", "IT 62 | W52", "IT 64 | W54",
+];
+
+const SIZES_DONNA = [
+  "XXXS / IT 34 / EU 30", "XXS / IT 36 / EU 32", "XS / IT 38 / EU 34",
+  "S / IT 40 / EU 36", "M / IT 42 / EU 38", "L / IT 44 / EU 40",
+  "XL / IT 46 / EU 42", "XXL / IT 48 / EU 44", "XXXL / IT 50 / EU 46",
+  "4XL / IT 52 / EU 48", "5XL / IT 54 / EU 50", "6XL / IT 56 / EU 52",
+  "7XL / IT 58 / EU 54", "8XL / IT 60 / EU 56", "9XL / IT 62 / EU 58",
+  "Taglia unica", "Altro",
+];
+
+function getSizeOptions(gender: string, zone: "upper" | "lower" | "unknown"): string[] {
+  if (gender === "donna") return SIZES_DONNA;
+  if (gender === "uomo") {
+    if (zone === "lower") return SIZES_LOWER_UOMO;
+    return SIZES_UPPER_UNISEX;
+  }
+  return SIZES_UPPER_UNISEX;
+}
+
 interface StudioInputProps {
   analysis: ProductAnalysis;
   onContinue: (input: StudioUserInput) => void;
@@ -53,6 +103,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return match?.value || "";
   };
 
+  const zone = getGarmentZone(analysis.category, analysis.product_type);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
@@ -93,7 +144,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
         <CardContent className="p-4 space-y-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Genere *</Label>
-            <Select value={gender} onValueChange={setGender}>
+            <Select value={gender} onValueChange={(v) => { setGender(v); setSize(""); }}>
               <SelectTrigger>
                 <SelectValue placeholder="Uomo o Donna?" />
               </SelectTrigger>
@@ -107,11 +158,16 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Taglia *</Label>
-            <Input
-              value={size}
-              onChange={e => setSize(e.target.value)}
-              placeholder="es. M, 42, Taglia unica..."
-            />
+            <Select value={size} onValueChange={setSize} disabled={!gender}>
+              <SelectTrigger>
+                <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
+              </SelectTrigger>
+              <SelectContent>
+                {getSizeOptions(gender, zone).map(s => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
