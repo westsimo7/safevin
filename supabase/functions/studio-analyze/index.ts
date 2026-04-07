@@ -11,6 +11,7 @@ const VISION_PROMPT = `Sei un Senior Computer Vision & Marketplace Listing Analy
 Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura esatta:
 
 {
+  "recognition_confidence": "high | low (quanto sei sicuro dell'identificazione del capo: high = identificazione chiara e sicura, low = capo ambiguo, parzialmente coperto, angolazione insolita o difficile da classificare)",
   "gender": "uomo | donna | unisex",
   "product_type": "sottocategoria specifica Vinted (vedi albero categorie sotto)",
   "category": "macro-categoria Vinted (es: Jeans, Abbigliamento da esterno, Maglioni e Pullover, Top e T-Shirt, ecc.)",
@@ -106,6 +107,7 @@ Nero, Grigio, Bianco, Panna, Beige, Albicocca, Arancione, Corallo, Rosso, Borgog
 
 === REGOLE FONDAMENTALI ===
 - NON inventare MAI informazioni. Se non vedi qualcosa, metti null.
+- recognition_confidence: metti "high" se riesci a identificare chiaramente il tipo di indumento. Metti "low" se il capo è ambiguo, parzialmente coperto, ripiegato in modo confuso, fotografato da un'angolazione che non permette di capire cosa sia, o se potrebbe essere più di un tipo di indumento. In caso di dubbio, metti "low".
 - Il brand deve essere CHIARAMENTE leggibile. Se hai dubbi, metti null e brand_confidence null.
 - Per gender: identifica da taglio, vestibilità, etichette. Se ambiguo usa "unisex" e fornisci le categorie più probabili per entrambi i sessi.
 - Per product_type: usa SEMPRE la sottocategoria più specifica dall'albero categorie sopra.

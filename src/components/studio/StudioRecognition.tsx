@@ -1,15 +1,17 @@
 import { useState } from "react";
-import { Check, Pencil, Sparkles, ArrowRight } from "lucide-react";
+import { Check, Pencil, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 
 export interface ProductAnalysis {
-  gender: string;
+  recognition_confidence?: string;
+  gender?: string;
   product_type: string;
   category: string;
   color: string;
@@ -82,7 +84,20 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
   const [editValue, setEditValue] = useState("");
   const [showBrandPicker, setShowBrandPicker] = useState(false);
   const [customBrand, setCustomBrand] = useState("");
+  const [lowConfidenceInput, setLowConfidenceInput] = useState("");
+  const [lowConfidenceResolved, setLowConfidenceResolved] = useState(false);
 
+  const isLowConfidence = editedAnalysis.recognition_confidence === "low" && !lowConfidenceResolved;
+
+  const handleLowConfidenceSubmit = () => {
+    if (!lowConfidenceInput.trim()) return;
+    setEditedAnalysis(prev => ({
+      ...prev,
+      category: lowConfidenceInput.trim(),
+      recognition_confidence: "high",
+    }));
+    setLowConfidenceResolved(true);
+  };
   const needsBrandInput = !editedAnalysis.brand || editedAnalysis.brand_confidence !== "high";
 
   const handleEditStart = (field: FieldKey) => {
@@ -139,7 +154,35 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
         </div>
       )}
 
-      {/* Brand prompt if needed */}
+      {/* Low confidence prompt */}
+      {isLowConfidence && (
+        <Card className="border-destructive/30 bg-destructive/5">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <HelpCircle className="w-4 h-4 text-destructive" />
+              <p className="text-sm font-semibold text-foreground">
+                Non sono sicuro del tipo di indumento
+              </p>
+            </div>
+            <p className="text-sm text-muted-foreground mb-3">
+              Le foto non mi permettono di identificare il capo con certezza. Che indumento è?
+            </p>
+            <div className="flex gap-2">
+              <Input
+                value={lowConfidenceInput}
+                onChange={e => setLowConfidenceInput(e.target.value)}
+                placeholder="Es: Felpa con cappuccio, Giacca bomber..."
+                onKeyDown={e => e.key === "Enter" && handleLowConfidenceSubmit()}
+                className="flex-1"
+              />
+              <Button size="sm" onClick={handleLowConfidenceSubmit} disabled={!lowConfidenceInput.trim()}>
+                Conferma
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {needsBrandInput && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4">
