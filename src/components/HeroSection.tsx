@@ -35,15 +35,15 @@ const HeroSection = () => {
   const totalScore = 72;
 
   return (
-    <section className="relative min-h-[85vh] sm:min-h-[90vh] flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-0">
       {/* Background effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-primary/5 rounded-full blur-[150px]" />
 
-      <div className="relative z-10 container mx-auto px-5 sm:px-6 text-center max-w-4xl">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center max-w-4xl">
         {/* Badge */}
         <motion.div
-          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm mb-6 sm:mb-8"
+          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm mb-4 sm:mb-8"
           initial={{ opacity: 0, y: -30, scale: 0.8 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.1 }}
@@ -54,13 +54,13 @@ const HeroSection = () => {
 
         {/* LOGO — hero element */}
         <motion.div
-          className="mb-4 sm:mb-6"
+          className="mb-3 sm:mb-6"
           initial={{ opacity: 0, rotateX: 50, y: 60, scale: 0.5 }}
           animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.2, stiffness: 60 }}
           style={{ perspective: "800px" }}
         >
-          <h1 className="text-7xl sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-none select-none">
+          <h1 className="text-[5.5rem] sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] select-none">
             <span
               className="text-foreground inline-block"
               style={{
@@ -92,7 +92,7 @@ const HeroSection = () => {
 
         {/* Subtitle */}
         <motion.p
-          className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium mb-6 sm:mb-8 tracking-tight"
+          className="text-base sm:text-xl md:text-2xl text-muted-foreground font-medium mb-5 sm:mb-8 tracking-tight leading-snug"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.5 }}
@@ -103,7 +103,7 @@ const HeroSection = () => {
 
         {/* CTA Buttons — big */}
         <motion.div
-          className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0 mb-6 sm:mb-8"
+          className="flex flex-col sm:flex-row gap-2.5 sm:gap-4 justify-center px-1 sm:px-0 mb-5 sm:mb-8"
           initial={{ opacity: 0, y: 40, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.65 }}
