@@ -208,9 +208,41 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
               </SelectContent>
             </Select>
           </div>
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Tipologia prodotto *</Label>
+            <Input
+              value={productType}
+              onChange={e => setProductType(e.target.value)}
+              placeholder="Es: Felpa con cappuccio, Giacca bomber, Jeans skinny..."
+              className="text-sm"
+            />
+          </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">Condizione *</Label>
+            <Label className="text-sm font-medium">Fit (facoltativo)</Label>
+            <Input
+              value={fit}
+              onChange={e => setFit(e.target.value)}
+              placeholder="Es: Oversize, Slim fit, Regular..."
+              className="text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">Stile *</Label>
+            <Select value={style} onValueChange={setStyle}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona stile" />
+              </SelectTrigger>
+              <SelectContent>
+                {STYLE_OPTIONS.map(s => (
+                  <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
                 <SelectValue placeholder="Seleziona condizione" />
