@@ -143,7 +143,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
         <CardContent className="p-4 space-y-4">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Genere *</Label>
-            <Select value={gender} onValueChange={setGender}>
+            <Select value={gender} onValueChange={(v) => { setGender(v); setSize(""); }}>
               <SelectTrigger>
                 <SelectValue placeholder="Uomo o Donna?" />
               </SelectTrigger>
@@ -157,11 +157,16 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Taglia *</Label>
-            <Input
-              value={size}
-              onChange={e => setSize(e.target.value)}
-              placeholder="es. M, 42, Taglia unica..."
-            />
+            <Select value={size} onValueChange={setSize} disabled={!gender}>
+              <SelectTrigger>
+                <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
+              </SelectTrigger>
+              <SelectContent>
+                {getSizeOptions(gender, zone).map(s => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
