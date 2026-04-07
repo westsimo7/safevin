@@ -1,13 +1,45 @@
 import { useState } from "react";
-import { Check, Pencil, Sparkles, ArrowRight, HelpCircle } from "lucide-react";
+import { Check, Pencil, Sparkles, ArrowRight, HelpCircle, ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+
+const VINTED_COLORS: { label: string; hex: string }[] = [
+  { label: "Nero", hex: "#000000" },
+  { label: "Grigio", hex: "#808080" },
+  { label: "Bianco", hex: "#FFFFFF" },
+  { label: "Panna", hex: "#FFFDD0" },
+  { label: "Beige", hex: "#D2B48C" },
+  { label: "Albicocca", hex: "#FBCEB1" },
+  { label: "Arancione", hex: "#FF8C00" },
+  { label: "Corallo", hex: "#FF6F61" },
+  { label: "Rosso", hex: "#D32F2F" },
+  { label: "Borgogna", hex: "#800020" },
+  { label: "Rosa", hex: "#F48FB1" },
+  { label: "Viola", hex: "#7B1FA2" },
+  { label: "Lilla", hex: "#C8A2C8" },
+  { label: "Azzurro", hex: "#87CEEB" },
+  { label: "Blu", hex: "#1565C0" },
+  { label: "Blu marino", hex: "#1B2A4A" },
+  { label: "Turchese", hex: "#00BCD4" },
+  { label: "Menta", hex: "#98FF98" },
+  { label: "Verde", hex: "#4CAF50" },
+  { label: "Verde scuro", hex: "#1B5E20" },
+  { label: "Cachi", hex: "#BDB76B" },
+  { label: "Marrone", hex: "#6D4C41" },
+  { label: "Senape", hex: "#FFDB58" },
+  { label: "Giallo", hex: "#FFEB3B" },
+  { label: "Argento", hex: "#C0C0C0" },
+  { label: "Oro", hex: "#FFD700" },
+  { label: "Multi color", hex: "linear-gradient(135deg, #FF0000, #FF8C00, #FFEB3B, #4CAF50, #1565C0, #7B1FA2)" },
+  { label: "Chiaro", hex: "#F5F5DC" },
+];
 
 export interface ProductAnalysis {
   recognition_confidence?: string;
