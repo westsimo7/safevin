@@ -136,6 +136,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return init ? init.split(",").map(s => s.trim()).filter(Boolean).slice(0, 3) : [];
   });
   const [materialsOpen, setMaterialsOpen] = useState(false);
+  const [materialSearch, setMaterialSearch] = useState("");
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
