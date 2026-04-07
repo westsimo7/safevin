@@ -96,10 +96,10 @@ function buildCriteriaVerdicts(
     score: bgAvg,
     ok: bgAvg >= 3.5,
     verdict: bgAvg >= 4
-      ? "Buon contrasto tra prodotto e sfondo. Il capo risalta bene."
+      ? "Contrasto efficace: il capo si stacca nettamente dallo sfondo, risulta leggibile e protagonista dell'immagine."
       : bgAvg >= 3
-        ? "Contrasto migliorabile. Evita sfondo e prodotto dello stesso tono (es. nero su blu scuro)."
-        : "Poco contrasto: sfondo e prodotto si confondono. Usa un lenzuolo chiaro per capi scuri e viceversa.",
+        ? "Contrasto parzialmente efficace: il capo si distingue ma non risalta al massimo. Prova uno sfondo con luminosità più distante dal colore del capo."
+        : "Contrasto inefficace: il capo si confonde con lo sfondo. Usa un telo di colore opposto (chiaro per capi scuri, scuro per capi chiari) per farlo risaltare.",
   });
 
   // Completeness
