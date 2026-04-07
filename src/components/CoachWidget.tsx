@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2, Sparkles } from "lucide-react";
+import { X, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
@@ -78,9 +78,12 @@ async function streamChat({
   onDone();
 }
 
-const CoachWidget = () => {
-  const [open, setOpen] = useState(false);
-  const [dismissed, setDismissed] = useState(false);
+interface CoachWidgetProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+const CoachWidget = ({ open, onClose }: CoachWidgetProps) => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -92,14 +95,11 @@ const CoachWidget = () => {
     }
   }, [messages, isLoading]);
 
-  // Listen for external "open-coach" events (e.g. from Studio missing photos)
+  // Listen for external "open-coach" events
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.message) {
-        setOpen(true);
-        setDismissed(true);
-        // Small delay to ensure panel is open before sending
         setTimeout(() => sendMessage(detail.message), 300);
       }
     };
@@ -150,138 +150,115 @@ const CoachWidget = () => {
     }
   };
 
+  if (!open) return null;
+
   return (
-    <>
-      {/* Bubble hint */}
-      {!open && !dismissed && (
-        <div className="fixed bottom-20 right-6 z-40 animate-fade-in">
-          <div className="relative bg-card border border-border/50 rounded-2xl rounded-br-sm px-4 py-2.5 shadow-lg max-w-[220px]">
-            <button onClick={() => setDismissed(true)} className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-muted flex items-center justify-center">
-              <X className="w-3 h-3 text-muted-foreground" />
-            </button>
-            <p className="text-xs text-foreground/80">
-              Sono il tuo coach AI. Chiedimi qualsiasi cosa! 💡
+    <div className="fixed bottom-16 right-2 sm:right-6 z-50 w-[calc(100vw-16px)] sm:w-[380px] max-h-[70vh] bg-card border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in">
+      {/* Header */}
+      <div className="px-4 py-3 border-b border-border/50 bg-primary/5 shrink-0 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold">SafeVin Coach</p>
+            <p className="text-[10px] text-muted-foreground">AI • Conosce i tuoi dati</p>
+          </div>
+        </div>
+        <button onClick={onClose} className="w-7 h-7 rounded-full bg-muted/50 flex items-center justify-center hover:bg-muted transition-colors">
+          <X className="w-4 h-4 text-muted-foreground" />
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
+        {messages.length === 0 && !isLoading && (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground mb-3">
+              Chiedimi qualsiasi cosa su vendite, annunci, o i tuoi dati SafeVin:
             </p>
-          </div>
-        </div>
-      )}
-
-      {/* Float button */}
-      <button
-        onClick={() => { setOpen(!open); setDismissed(true); }}
-        className="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
-        aria-label="Coach"
-      >
-        {open ? <X className="w-5 h-5" /> : <MessageCircle className="w-5 h-5" />}
-      </button>
-
-      {/* Chat panel */}
-      {open && (
-        <div className="fixed bottom-20 right-6 z-50 w-[340px] sm:w-[380px] max-h-[520px] bg-card border border-border/50 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in">
-          {/* Header */}
-          <div className="px-4 py-3 border-b border-border/50 bg-primary/5 shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm font-semibold">SafeVin Coach</p>
-                <p className="text-[10px] text-muted-foreground">AI • Conosce i tuoi dati</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0">
-            {messages.length === 0 && !isLoading && (
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground mb-3">
-                  Chiedimi qualsiasi cosa su vendite, annunci, o i tuoi dati SafeVin:
-                </p>
-                {SUGGESTED_QUESTIONS.map((q, i) => (
-                  <button
-                    key={i}
-                    onClick={() => sendMessage(q)}
-                    className="w-full text-left p-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 transition-colors text-xs text-foreground/80 leading-relaxed"
-                  >
-                    {q}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {messages.map((msg, i) => (
-              <div
+            {SUGGESTED_QUESTIONS.map((q, i) => (
+              <button
                 key={i}
-                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                onClick={() => sendMessage(q)}
+                className="w-full text-left p-2.5 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 transition-colors text-xs text-foreground/80 leading-relaxed"
               >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
-                    msg.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-sm"
-                      : "bg-muted/40 border border-border/30 rounded-bl-sm"
-                  }`}
-                >
-                  {msg.role === "assistant" ? (
-                    <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
-                      <ReactMarkdown>{msg.content}</ReactMarkdown>
-                    </div>
-                  ) : (
-                    msg.content
-                  )}
-                </div>
-              </div>
+                {q}
+              </button>
             ))}
+          </div>
+        )}
 
-            {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-              <div className="flex justify-start">
-                <div className="bg-muted/40 border border-border/30 rounded-2xl rounded-bl-sm px-3 py-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+        {messages.map((msg, i) => (
+          <div
+            key={i}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+          >
+            <div
+              className={`max-w-[85%] rounded-2xl px-3 py-2 text-sm leading-relaxed ${
+                msg.role === "user"
+                  ? "bg-primary text-primary-foreground rounded-br-sm"
+                  : "bg-muted/40 border border-border/30 rounded-bl-sm"
+              }`}
+            >
+              {msg.role === "assistant" ? (
+                <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
+                  <ReactMarkdown>{msg.content}</ReactMarkdown>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Suggested after first exchange */}
-          {messages.length > 0 && messages.length <= 4 && !isLoading && (
-            <div className="px-3 pb-1 flex gap-1.5 overflow-x-auto shrink-0">
-              {SUGGESTED_QUESTIONS.slice(0, 3).map((q, i) => (
-                <button
-                  key={i}
-                  onClick={() => sendMessage(q)}
-                  className="shrink-0 text-[10px] px-2.5 py-1 rounded-full bg-muted/30 border border-border/30 text-muted-foreground hover:bg-muted/50 transition-colors"
-                >
-                  {q.length > 35 ? q.slice(0, 35) + "…" : q}
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Input */}
-          <div className="px-3 py-2.5 border-t border-border/50 shrink-0">
-            <div className="flex items-center gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Scrivi un messaggio..."
-                className="flex-1 bg-muted/30 border border-border/30 rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
-                disabled={isLoading}
-              />
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-9 w-9 p-0 shrink-0"
-                onClick={() => sendMessage(input)}
-                disabled={!input.trim() || isLoading}
-              >
-                <Send className="w-4 h-4 text-primary" />
-              </Button>
+              ) : (
+                msg.content
+              )}
             </div>
           </div>
+        ))}
+
+        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+          <div className="flex justify-start">
+            <div className="bg-muted/40 border border-border/30 rounded-2xl rounded-bl-sm px-3 py-2">
+              <Loader2 className="w-4 h-4 animate-spin text-primary" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Suggested after first exchange */}
+      {messages.length > 0 && messages.length <= 4 && !isLoading && (
+        <div className="px-3 pb-1 flex gap-1.5 overflow-x-auto shrink-0">
+          {SUGGESTED_QUESTIONS.slice(0, 3).map((q, i) => (
+            <button
+              key={i}
+              onClick={() => sendMessage(q)}
+              className="shrink-0 text-[10px] px-2.5 py-1 rounded-full bg-muted/30 border border-border/30 text-muted-foreground hover:bg-muted/50 transition-colors"
+            >
+              {q.length > 35 ? q.slice(0, 35) + "…" : q}
+            </button>
+          ))}
         </div>
       )}
-    </>
+
+      {/* Input */}
+      <div className="px-3 py-2.5 border-t border-border/50 shrink-0">
+        <div className="flex items-center gap-2">
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="Scrivi un messaggio..."
+            className="flex-1 bg-muted/30 border border-border/30 rounded-xl px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+            disabled={isLoading}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-9 w-9 p-0 shrink-0"
+            onClick={() => sendMessage(input)}
+            disabled={!input.trim() || isLoading}
+          >
+            <Send className="w-4 h-4 text-primary" />
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import AboutAudit from "./pages/AboutAudit";
 import AboutStudio from "./pages/AboutStudio";
-import CoachWidget from "./components/CoachWidget";
+import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
 const queryClient = new QueryClient();
@@ -87,7 +87,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AnimatedRoutes />
-        <CoachWidget />
+        <BottomBar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
