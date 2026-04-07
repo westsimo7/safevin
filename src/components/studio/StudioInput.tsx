@@ -17,6 +17,9 @@ import MeasurementGuideDialog from "./MeasurementGuideDialog";
 export interface StudioUserInput {
   size: string;
   gender: string;
+  productType: string;
+  fit: string;
+  style: string;
   condition: string;
   materials: string;
   minPrice: string;
