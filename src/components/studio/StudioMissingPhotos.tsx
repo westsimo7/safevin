@@ -111,6 +111,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
           ? "Ecco cosa va bene e cosa potresti migliorare"
           : "Le tue immagini sono pronte per un annuncio efficace"}
         backTo={onBack}
+        badge={<Badge className="bg-primary/10 text-primary border-primary/20">Fase 2 di 3</Badge>}
         className="text-center"
       />
 
