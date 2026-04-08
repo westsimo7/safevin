@@ -81,7 +81,7 @@ const HeroSection = () => {
           <Link to="/home" className="w-full sm:w-auto">
             <Button variant="glass" size="lg" className="w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-10">
               <LayoutDashboard className="mr-2 w-5 h-5" />
-              Home
+              Dashboard
             </Button>
           </Link>
         </motion.div>
