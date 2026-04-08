@@ -74,9 +74,9 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="text-center mb-6">
-        <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
+    <div className="flex flex-col h-full animate-fade-in overflow-hidden">
+      <div className="text-center shrink-0 mb-2">
+        <Badge className="bg-primary/10 text-primary border-primary/20 mb-2">
           <Camera className="w-3 h-3 mr-1" />
           Fase 1 di 3
         </Badge>
@@ -88,11 +88,13 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         />
       </div>
 
-      <StudioPhotoGuide />
+      <div className="shrink-0 mb-2">
+        <StudioPhotoGuide />
+      </div>
 
-      <Card className="border-border/50">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-3">
+      <Card className="border-border/50 flex-1 min-h-0 mb-2">
+        <CardContent className="p-4 h-full flex flex-col">
+          <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium flex items-center gap-2">
               <Camera className="w-4 h-4 text-primary" />
               Foto prodotto
@@ -101,9 +103,9 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           </div>
 
           <div
-            className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer ${
+            className={`relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer ${
               dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40"
-            }`}
+            } ${previews.length > 0 ? "" : "flex-1"}`}
             onDragEnter={e => { e.preventDefault(); setDragActive(true); }}
             onDragLeave={e => { e.preventDefault(); setDragActive(false); }}
             onDragOver={e => e.preventDefault()}
@@ -111,7 +113,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
             onClick={() => fileInputRef.current?.click()}
           >
             <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
-            <ImagePlus className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+            <ImagePlus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">
               Trascina le foto qui o <span className="text-primary font-medium">carica</span>
             </p>
@@ -119,7 +121,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           </div>
 
           {previews.length > 0 && (
-            <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 mt-4">
+            <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 mt-3 flex-1 min-h-0 overflow-y-auto scrollbar-hide">
               {previews.map((src, i) => (
                 <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer" onClick={() => setLightboxIndex(i)}>
                   <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
@@ -140,7 +142,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
       <Button
         variant="neon"
         size="lg"
-        className="w-full"
+        className="w-full shrink-0"
         onClick={handleSubmit}
         disabled={images.length === 0 || isLoading}
       >
