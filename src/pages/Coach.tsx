@@ -149,7 +149,7 @@ const Coach = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <AppNavbar />
 
-      <main className="flex-1 flex flex-col max-w-2xl mx-auto w-full px-4 sm:px-6 pb-20 lg:pb-6">
+      <main className="flex-1 flex flex-col w-full px-4 sm:px-6 lg:px-12 xl:px-24 pb-20 lg:pb-6">
         {/* Header */}
         <div className="py-6 sm:py-8 text-center shrink-0">
           <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
