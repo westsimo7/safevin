@@ -1,8 +1,9 @@
 import { useState, useRef, useCallback } from "react";
-import { Camera, ImagePlus, X, Loader2, Sparkles } from "lucide-react";
+import { Camera, ImagePlus, X, Loader2, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import StudioPhotoGuide from "./StudioPhotoGuide";
 
 const MAX_IMAGES = 15;
@@ -44,6 +45,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const addImages = useCallback((files: FileList | File[]) => {
@@ -116,7 +118,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           {previews.length > 0 && (
             <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 mt-4">
               {previews.map((src, i) => (
-                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50">
+                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer" onClick={() => setLightboxIndex(i)}>
                   <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
                   <button
                     onClick={e => { e.stopPropagation(); removeImage(i); }}
@@ -146,6 +148,40 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         )}
         {isLoading ? "Analisi in corso..." : "Analizza immagini"}
       </Button>
+
+      {/* Lightbox */}
+      <Dialog open={lightboxIndex !== null} onOpenChange={() => setLightboxIndex(null)}>
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl p-2 sm:p-4 bg-background/95 backdrop-blur-sm border-border/50">
+          {lightboxIndex !== null && (
+            <div className="relative flex items-center justify-center">
+              {previews.length > 1 && (
+                <button
+                  onClick={() => setLightboxIndex((lightboxIndex - 1 + previews.length) % previews.length)}
+                  className="absolute left-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-foreground" />
+                </button>
+              )}
+              <img
+                src={previews[lightboxIndex]}
+                alt={`Foto ${lightboxIndex + 1}`}
+                className="max-h-[70vh] w-auto mx-auto rounded-lg object-contain"
+              />
+              {previews.length > 1 && (
+                <button
+                  onClick={() => setLightboxIndex((lightboxIndex + 1) % previews.length)}
+                  className="absolute right-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-foreground" />
+                </button>
+              )}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-background/80 px-3 py-1 rounded-full">
+                {lightboxIndex + 1} / {previews.length}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
