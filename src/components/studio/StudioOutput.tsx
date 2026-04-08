@@ -38,14 +38,11 @@ interface StudioOutputProps {
 }
 
 const DETAIL_ORDER: { key: string; label: string }[] = [
-  { key: "categoria", label: "Categoria" },
-  { key: "tipo_prodotto", label: "Tipo Prodotto" },
   { key: "brand", label: "Brand" },
   { key: "taglia", label: "Taglia" },
-  { key: "condizione", label: "Condizione" },
   { key: "colore", label: "Colore" },
+  { key: "condizione", label: "Condizione" },
   { key: "materiale", label: "Materiale" },
-  { key: "sesso", label: "Sesso" },
   { key: "misure", label: "Misure" },
 ];
 
