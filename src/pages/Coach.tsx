@@ -138,7 +138,7 @@ const Coach = () => {
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 text-[11px] sm:text-xs">
             SafeVin Coach
           </Badge>
-          <h1 className="text-xl sm:text-2xl font-bold text-primary">Il tuo assistente di vendita</h1>
+          <h1 className="text-xl sm:text-2xl font-bold">Il tuo assistente di vendita</h1>
         </div>
 
         {/* Messages area */}
