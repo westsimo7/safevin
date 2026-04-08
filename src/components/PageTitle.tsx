@@ -11,6 +11,7 @@ interface PageTitleProps {
 
 const PageTitle = ({ title, backTo, subtitle, badge, className = "" }: PageTitleProps) => {
   const navigate = useNavigate();
+  const isCentered = className.includes("text-center");
 
   const handleBack = () => {
     if (!backTo) return;
@@ -24,11 +25,11 @@ const PageTitle = ({ title, backTo, subtitle, badge, className = "" }: PageTitle
   return (
     <div className={`mb-4 md:mb-6 ${className}`}>
       {badge && <div className="flex justify-center mb-2 md:mb-3">{badge}</div>}
-      <div className="flex items-center gap-1">
+      <div className={`flex items-center gap-1 ${isCentered ? "justify-center" : ""}`}>
         {backTo && (
           <button
             onClick={handleBack}
-            className="shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground transition-colors -ml-2"
+            className={`shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground transition-colors ${isCentered ? "" : "-ml-2"}`}
             aria-label="Torna indietro"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -37,7 +38,7 @@ const PageTitle = ({ title, backTo, subtitle, badge, className = "" }: PageTitle
         <h1 className="text-xl md:text-3xl font-bold tracking-tight">{title}</h1>
       </div>
       {subtitle && (
-        <p className="text-xs md:text-sm text-muted-foreground mt-0.5 ml-7">{subtitle}</p>
+        <p className={`text-xs md:text-sm text-muted-foreground mt-0.5 ${isCentered ? "" : "ml-7"}`}>{subtitle}</p>
       )}
     </div>
   );
