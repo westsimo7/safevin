@@ -103,53 +103,41 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
   const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0 || verdicts.some(v => !v.ok);
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="flex flex-col h-full animate-fade-in overflow-hidden">
       {/* Header */}
-      <PageTitle
-        title={hasIssues ? "Resoconto delle tue foto" : "Foto perfette!"}
-        subtitle={hasIssues
-          ? "Ecco cosa va bene e cosa potresti migliorare"
-          : "Le tue immagini sono pronte per un annuncio efficace"}
-        badge={<Badge className="bg-primary/10 text-primary border-primary/20">Fase 2 di 3</Badge>}
-        className="text-center"
-      />
+      <div className="shrink-0">
+        <PageTitle
+          title={hasIssues ? "Resoconto delle tue foto" : "Foto perfette!"}
+          subtitle={hasIssues
+            ? "Ecco cosa va bene e cosa potresti migliorare"
+            : "Le tue immagini sono pronte per un annuncio efficace"}
+          badge={<Badge className="bg-primary/10 text-primary border-primary/20">Fase 2 di 3</Badge>}
+          className="text-center"
+        />
+      </div>
 
-      {/* Thumbnail strip */}
-      {previews && previews.length > 0 && (
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {previews.slice(0, 8).map((src, i) => (
-            <img key={i} src={src} alt="" className="w-12 h-12 rounded-lg object-cover border border-border/50 shrink-0" />
-          ))}
-          {previews.length > 8 && (
-            <div className="w-12 h-12 rounded-lg bg-muted/30 border border-border/50 flex items-center justify-center text-xs text-muted-foreground shrink-0">
-              +{previews.length - 8}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Criteria cards */}
-      <div className="space-y-3">
+      {/* Criteria cards - scrollable */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide space-y-2 py-2">
         {verdicts.map((v) => (
           <Card key={v.key} className="border-border/50">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-2.5 mb-1.5">
-                <span className="text-lg">{v.icon}</span>
+            <CardContent className="p-3">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-base">{v.icon}</span>
                 {v.ok ? (
-                  <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
                 ) : (
-                  <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+                  <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0" />
                 )}
-                <h3 className="text-base font-semibold text-foreground font-heading">{v.label}</h3>
+                <h3 className="text-sm font-semibold text-foreground font-heading">{v.label}</h3>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed pl-[34px]">{v.verdict}</p>
+              <p className="text-xs text-muted-foreground leading-relaxed pl-[30px]">{v.verdict}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* CTAs */}
-      <div className="space-y-3">
+      <div className="shrink-0 space-y-2 pt-2">
         <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
           <Sparkles className="w-4 h-4 mr-2" />
           Continua con queste foto
@@ -157,7 +145,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </Button>
 
         <button
-          className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 hover:border-amber-500/50 transition-colors p-3 flex items-center justify-center gap-2 text-amber-500 font-semibold text-sm"
+          className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 hover:border-amber-500/50 transition-colors p-2.5 flex items-center justify-center gap-2 text-amber-500 font-semibold text-sm"
           onClick={() => setImproveOpen(true)}
         >
           <Wrench className="w-4 h-4" />
@@ -165,7 +153,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </button>
 
         <button
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+          className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1.5"
           onClick={onBack}
         >
           ← Torna ai dettagli
