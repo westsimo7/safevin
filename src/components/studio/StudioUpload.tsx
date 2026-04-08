@@ -88,12 +88,12 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         />
       </div>
 
-      <div className="shrink-0 mb-2">
+      <div className="shrink-0 mb-2 flex-[2]">
         <StudioPhotoGuide />
       </div>
 
       <Card className="border-border/50 flex-1 min-h-0 mb-2">
-        <CardContent className="p-4 h-full flex flex-col">
+        <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium flex items-center gap-2">
               <Camera className="w-4 h-4 text-primary" />
@@ -103,7 +103,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           </div>
 
           <div
-            className={`relative border-2 border-dashed rounded-xl p-4 text-center transition-all cursor-pointer ${
+            className={`relative border-2 border-dashed rounded-xl p-3 text-center transition-all cursor-pointer ${
               dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40"
             } ${previews.length > 0 ? "" : "flex-1"}`}
             onDragEnter={e => { e.preventDefault(); setDragActive(true); }}
@@ -113,11 +113,11 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
             onClick={() => fileInputRef.current?.click()}
           >
             <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
-            <ImagePlus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">
+            <ImagePlus className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
+            <p className="text-xs text-muted-foreground">
               Trascina le foto qui o <span className="text-primary font-medium">carica</span>
             </p>
-            <p className="text-xs text-muted-foreground/60 mt-1">Max 15 foto • Max 25MB per foto</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">Max 15 foto • Max 25MB per foto</p>
           </div>
 
           {previews.length > 0 && (
