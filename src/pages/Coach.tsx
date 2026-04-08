@@ -7,15 +7,6 @@ import { useSwipeBack } from "@/hooks/useSwipeBack";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const SUGGESTED_QUESTIONS = [
-  "Come posso migliorare il mio ultimo annuncio?",
-  "Quali errori comuni abbassano il SafeScore?",
-  "Come scrivere un titolo efficace su Vinted?",
-  "Come evitare il shadowban su Vinted?",
-  "Che prezzo dovrei mettere per vendere velocemente?",
-  "Qual è la differenza tra Audit e Studio?",
-];
-
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
 async function streamChat({
