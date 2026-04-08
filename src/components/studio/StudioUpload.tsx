@@ -154,34 +154,44 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         {isLoading ? "Analisi in corso..." : "Analizza immagini"}
       </Button>
 
-      {/* Lightbox */}
-      <Dialog open={lightboxIndex !== null} onOpenChange={() => setLightboxIndex(null)}>
+      {/* Gallery popup */}
+      <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
         <DialogContent className="max-w-[95vw] sm:max-w-2xl p-2 sm:p-4 bg-background/95 backdrop-blur-sm border-border/50">
-          {lightboxIndex !== null && (
-            <div className="relative flex items-center justify-center">
+          {previews.length > 0 && (
+            <div
+              className="relative flex items-center justify-center select-none"
+              onTouchStart={(e: ReactTouchEvent) => { touchStartX.current = e.touches[0].clientX; }}
+              onTouchEnd={(e: ReactTouchEvent) => {
+                const diff = touchStartX.current - e.changedTouches[0].clientX;
+                if (Math.abs(diff) > 50) {
+                  if (diff > 0) setGalleryIndex(prev => (prev + 1) % previews.length);
+                  else setGalleryIndex(prev => (prev - 1 + previews.length) % previews.length);
+                }
+              }}
+            >
               {previews.length > 1 && (
                 <button
-                  onClick={() => setLightboxIndex((lightboxIndex - 1 + previews.length) % previews.length)}
-                  className="absolute left-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                  onClick={() => setGalleryIndex(prev => (prev - 1 + previews.length) % previews.length)}
+                  className="absolute left-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted items-center justify-center transition-colors hidden sm:flex"
                 >
                   <ChevronLeft className="w-5 h-5 text-foreground" />
                 </button>
               )}
               <img
-                src={previews[lightboxIndex]}
-                alt={`Foto ${lightboxIndex + 1}`}
+                src={previews[galleryIndex]}
+                alt={`Foto ${galleryIndex + 1}`}
                 className="max-h-[70vh] w-auto mx-auto rounded-lg object-contain"
               />
               {previews.length > 1 && (
                 <button
-                  onClick={() => setLightboxIndex((lightboxIndex + 1) % previews.length)}
-                  className="absolute right-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                  onClick={() => setGalleryIndex(prev => (prev + 1) % previews.length)}
+                  className="absolute right-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted items-center justify-center transition-colors hidden sm:flex"
                 >
                   <ChevronRight className="w-5 h-5 text-foreground" />
                 </button>
               )}
               <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-background/80 px-3 py-1 rounded-full">
-                {lightboxIndex + 1} / {previews.length}
+                {galleryIndex + 1} / {previews.length}
               </div>
             </div>
           )}
