@@ -45,6 +45,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const addImages = useCallback((files: FileList | File[]) => {
