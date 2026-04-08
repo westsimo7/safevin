@@ -110,7 +110,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         subtitle={hasIssues
           ? "Ecco cosa va bene e cosa potresti migliorare"
           : "Le tue immagini sono pronte per un annuncio efficace"}
-        onBack={onBack}
+        backTo={onBack}
         className="text-center"
       />
 
