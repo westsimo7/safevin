@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from "react";
 import { Camera, ImagePlus, X, Loader2, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
