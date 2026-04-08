@@ -100,12 +100,12 @@ const EngineStudio = () => {
   }, []);
 
   const handleAskCoach = useCallback((photoName: string) => {
-    window.dispatchEvent(new CustomEvent("open-coach", {
-      detail: {
+    navigate("/coach", {
+      state: {
         message: `Ho bisogno di aiuto per scattare la foto: "${photoName}". Spiegami come fare in modo semplice e pratico.`,
       },
-    }));
-  }, []);
+    });
+  }, [navigate]);
 
   const handleMissingPhotosContinue = useCallback(() => {
     setPhase("input");
