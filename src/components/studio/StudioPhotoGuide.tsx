@@ -111,23 +111,23 @@ const StudioPhotoGuide = () => {
 
   return (
     <>
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-2">
-        <p className="text-xs font-semibold text-primary">
+      <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-2 h-full flex flex-col">
+        <p className="text-xs font-semibold text-primary shrink-0">
           📸 Per un output massimizzato, segui quest'ordine:
         </p>
 
         <div
           ref={scrollRef}
-          className="flex gap-2 overflow-x-auto scrollbar-hide px-1"
+          className="flex gap-2.5 overflow-x-auto scrollbar-hide px-1 flex-1 items-stretch"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {duplicatedSlides.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[90px] cursor-pointer"
+              className="flex-shrink-0 w-[120px] cursor-pointer flex flex-col"
               onClick={() => handlePhotoClick(i % slides.length)}
             >
-              <div className="aspect-[3/4] rounded-lg overflow-hidden border border-border/40 mb-1 active:scale-95 transition-transform">
+              <div className="flex-1 rounded-lg overflow-hidden border border-border/40 mb-1 active:scale-95 transition-transform">
                 <img
                   src={s.img}
                   alt={s.label}
@@ -135,14 +135,14 @@ const StudioPhotoGuide = () => {
                   loading="lazy"
                 />
               </div>
-              <p className="text-[9px] text-muted-foreground leading-tight text-center">
+              <p className="text-[9px] text-muted-foreground leading-tight text-center shrink-0">
                 {s.label}
               </p>
             </div>
           ))}
         </div>
 
-        <p className="text-[10px] text-muted-foreground italic">
+        <p className="text-[10px] text-muted-foreground italic shrink-0">
           💡 Usa uno sfondo a contrasto con il prodotto.
         </p>
       </div>
