@@ -169,18 +169,16 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
 
       {/* Improve dialog */}
       <Dialog open={improveOpen} onOpenChange={setImproveOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md mx-auto">
           <DialogHeader>
             <DialogTitle className="font-heading">Migliora le tue foto</DialogTitle>
             <DialogDescription>
               Scegli come vuoi migliorare le tue immagini
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-3 pt-2">
-            <Button
-              variant="glass"
-              size="lg"
-              className="w-full text-left justify-start h-auto py-4"
+          <div className="space-y-3 pt-2 overflow-hidden">
+            <button
+              className="w-full text-left rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors p-4"
               onClick={() => {
                 setImproveOpen(false);
                 window.dispatchEvent(new CustomEvent("open-coach", {
@@ -190,18 +188,14 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
                 }));
               }}
             >
-              <div className="flex flex-col items-start gap-1">
-                <span className="font-semibold text-foreground">Approfondisci con il Coach</span>
-                <span className="text-xs text-muted-foreground font-normal">
-                  Ricevi consigli pratici per risolvere o completare le info mancanti
-                </span>
-              </div>
-            </Button>
+              <span className="font-semibold text-foreground text-sm block">Approfondisci con il Coach</span>
+              <span className="text-xs text-muted-foreground mt-1 block">
+                Ricevi consigli pratici per risolvere o completare le info mancanti
+              </span>
+            </button>
 
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full text-left justify-start h-auto py-4 border-amber-500/30 text-amber-600 hover:bg-amber-500/5 hover:border-amber-500/50"
+            <button
+              className="w-full text-left rounded-lg border border-amber-500/30 hover:bg-amber-500/5 hover:border-amber-500/50 transition-colors p-4"
               onClick={() => {
                 setImproveOpen(false);
                 window.dispatchEvent(new CustomEvent("open-coach", {
@@ -211,19 +205,17 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
                 }));
               }}
             >
-              <Crown className="w-5 h-5 mr-3 shrink-0" />
-              <div className="flex flex-col items-start gap-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">SafeVin Creative Director</span>
-                  <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
-                    Premium
-                  </Badge>
-                </div>
-                <span className="text-xs text-muted-foreground font-normal">
-                  Affida le campagne dei tuoi indumenti al team SafeVin per una resa di qualità massima su misura
-                </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <Crown className="w-4 h-4 text-amber-600 shrink-0" />
+                <span className="font-semibold text-amber-600 text-sm">SafeVin Creative Director</span>
+                <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
+                  Premium
+                </Badge>
               </div>
-            </Button>
+              <span className="text-xs text-muted-foreground mt-1 block">
+                Affida le campagne dei tuoi indumenti al team SafeVin per una resa di qualità massima su misura
+              </span>
+            </button>
           </div>
         </DialogContent>
       </Dialog>
