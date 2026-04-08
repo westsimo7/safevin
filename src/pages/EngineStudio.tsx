@@ -1,5 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import SmartLoader from "@/components/SmartLoader";
@@ -13,21 +13,8 @@ import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/St
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
-interface AuditSource {
-  titolo: string;
-  descrizione: string;
-  categoria: string;
-  brand: string;
-  prezzo: string;
-  condizioni: string;
-  imagePreviews: string[];
-  deepIssues: string[];
-  safeScore: number;
-}
-
 const EngineStudio = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
 
   const [phase, setPhase] = useState<Phase>("upload");
@@ -35,32 +22,6 @@ const EngineStudio = () => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
-  const [auditSource, setAuditSource] = useState<AuditSource | null>(null);
-
-  // Handle arrival from Audit with pre-filled data
-  useEffect(() => {
-    const state = location.state as { fromAudit?: boolean; auditSource?: AuditSource } | null;
-    if (state?.fromAudit && state?.auditSource) {
-      const src = state.auditSource;
-      setAuditSource(src);
-      setPreviews(src.imagePreviews || []);
-
-      const syntheticAnalysis: ProductAnalysis = {
-        gender: "",
-        product_type: "",
-        category: src.categoria || "",
-        color: "",
-        brand: src.brand || null,
-        brand_confidence: null,
-        photos_assessment: {},
-        missing_photos: [],
-      };
-      setAnalysis(syntheticAnalysis);
-      setPhase("input");
-
-      window.history.replaceState({}, document.title);
-    }
-  }, [location.state]);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
     setImages(files);
@@ -110,7 +71,6 @@ const EngineStudio = () => {
     setPhase("input");
   }, []);
 
-  /** Save studio creation to DB */
   const saveStudioCreation = async (output: StudioGeneratedOutput) => {
     try {
       await supabase.from("studio_creations").insert([{
@@ -120,7 +80,7 @@ const EngineStudio = () => {
         images: previews as any,
         questions_answers: [] as any,
         output: output as any,
-        origin: auditSource ? "audit" : "studio",
+        origin: "studio",
       }]);
     } catch (err) {
       console.error("Failed to save studio creation:", err);
@@ -132,19 +92,7 @@ const EngineStudio = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("studio-generate", {
-        body: {
-          analysis,
-          userInput,
-          ...(auditSource ? {
-            auditContext: {
-              originalTitle: auditSource.titolo,
-              originalDescription: auditSource.descrizione,
-              deepIssues: auditSource.deepIssues,
-              safeScore: auditSource.safeScore,
-              condizioni: auditSource.condizioni,
-            },
-          } : {}),
-        },
+        body: { analysis, userInput },
       });
 
       if (error) throw error;
@@ -153,7 +101,6 @@ const EngineStudio = () => {
       if (data?.output) {
         setGeneratedOutput(data.output);
         setPhase("output");
-        // Save to storico
         await saveStudioCreation(data.output);
       } else {
         throw new Error("Risposta non valida");
@@ -163,7 +110,7 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
       setPhase("input");
     }
-  }, [analysis, auditSource, toast, previews]);
+  }, [analysis, toast, previews]);
 
   const handleNewAnalysis = useCallback(() => {
     setPhase("upload");
@@ -171,17 +118,15 @@ const EngineStudio = () => {
     setImages([]);
     setPreviews([]);
     setGeneratedOutput(null);
-    setAuditSource(null);
   }, []);
 
-  useSwipeBack("/engine");
+  useSwipeBack("/home");
 
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-24 pt-4 sm:pt-8 pb-8 sm:pb-12">
-
         {phase === "upload" && (
           <StudioUpload onAnalyze={handleAnalyze} isLoading={false} />
         )}
@@ -223,34 +168,20 @@ const EngineStudio = () => {
           <StudioInput
             analysis={analysis}
             onContinue={handleGenerateOutput}
-            onBack={auditSource ? () => navigate(-1) : () => setPhase("missing_photos")}
-            auditSource={auditSource ? {
-              condizioni: auditSource.condizioni,
-              prezzo: auditSource.prezzo,
-            } : undefined}
+            onBack={() => setPhase("missing_photos")}
           />
         )}
 
         {phase === "generating" && (
           <SmartLoader
-            title={auditSource ? "Miglioro il tuo annuncio..." : "Creo il tuo annuncio..."}
-            messages={
-              auditSource
-                ? [
-                    "Analizzo le problematiche dell'audit…",
-                    "Riscrivo titolo ottimizzato…",
-                    "Genero descrizione migliorata…",
-                    "Calcolo prezzo strategico…",
-                    "Certifico annuncio 80+…",
-                  ]
-                : [
-                    "Genero titolo ottimizzato…",
-                    "Scrivo descrizione con keyword…",
-                    "Calcolo prezzo strategico…",
-                    "Preparo strategia trattativa…",
-                    "Finalizzazione annuncio…",
-                  ]
-            }
+            title="Creo il tuo annuncio..."
+            messages={[
+              "Genero titolo ottimizzato…",
+              "Scrivo descrizione con keyword…",
+              "Calcolo prezzo strategico…",
+              "Preparo strategia trattativa…",
+              "Finalizzazione annuncio…",
+            ]}
           />
         )}
 
