@@ -118,7 +118,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           {previews.length > 0 && (
             <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 mt-4">
               {previews.map((src, i) => (
-                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50">
+                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer" onClick={() => setLightboxIndex(i)}>
                   <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
                   <button
                     onClick={e => { e.stopPropagation(); removeImage(i); }}
