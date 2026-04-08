@@ -91,11 +91,12 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         />
       </div>
 
-      <div className="shrink-0 mb-2 flex-[2]">
+      <div className="shrink-0 mb-2 sm:flex-[2]">
         <StudioPhotoGuide />
       </div>
 
-      <Card className="border-border/50 flex-1 min-h-0 mb-2">
+      <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+      <Card className="border-border/50 flex-1 min-h-0 mb-2 hidden sm:block">
         <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium flex items-center gap-2">
@@ -115,7 +116,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
             onDrop={e => { e.preventDefault(); setDragActive(false); if (e.dataTransfer.files) addImages(e.dataTransfer.files); }}
             onClick={previews.length === 0 ? () => fileInputRef.current?.click() : undefined}
           >
-            <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+            
             <ImagePlus className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
             <p className="text-xs text-muted-foreground">
               {previews.length > 0 ? (
@@ -138,6 +139,31 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Mobile: CTA buttons */}
+      <div className="flex flex-col gap-2 mb-2 sm:hidden shrink-0">
+        
+        <Button
+          variant="outline"
+          className="w-full border-primary/30 text-primary"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <Camera className="w-4 h-4 mr-2" />
+          Carica foto prodotto
+          {images.length > 0 && <Badge variant="outline" className="ml-2 text-[10px]">{images.length}</Badge>}
+        </Button>
+
+        {previews.length > 0 && (
+          <Button
+            variant="outline"
+            className="w-full border-border/50"
+            onClick={() => { setGalleryIndex(0); setGalleryOpen(true); }}
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            Visualizza foto allegate ({previews.length})
+          </Button>
+        )}
+      </div>
 
       <Button
         variant="neon"
