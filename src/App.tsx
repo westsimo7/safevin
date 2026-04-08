@@ -20,38 +20,42 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const isLanding = location.pathname === "/" || location.pathname === "/index";
 
   return (
-    <AnimatePresence mode="wait" initial={false}>
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<Index />} />
-        <Route path="/home" element={
-          <PageTransition direction="up"><Dashboard /></PageTransition>
-        } />
-        <Route path="/dashboard" element={
-          <PageTransition direction="up"><Dashboard /></PageTransition>
-        } />
-        <Route path="/engine/studio" element={
-          <PageTransition direction="left"><EngineStudio /></PageTransition>
-        } />
-        <Route path="/storico" element={
-          <PageTransition direction="right"><Storico /></PageTransition>
-        } />
-        <Route path="/storico/studio/:id" element={
-          <PageTransition direction="right"><StudioDetailPage /></PageTransition>
-        } />
-        <Route path="/coach" element={
-          <PageTransition direction="up"><Coach /></PageTransition>
-        } />
-        <Route path="/about/studio" element={
-          <PageTransition direction="up"><AboutStudio /></PageTransition>
-        } />
-        <Route path="/settings" element={
-          <PageTransition direction="up"><Settings /></PageTransition>
-        } />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </AnimatePresence>
+    <div className={isLanding ? "h-[100dvh] overflow-y-auto overflow-x-hidden" : "h-[100dvh] flex flex-col overflow-hidden"}>
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Index />} />
+          <Route path="/home" element={
+            <PageTransition direction="up"><Dashboard /></PageTransition>
+          } />
+          <Route path="/dashboard" element={
+            <PageTransition direction="up"><Dashboard /></PageTransition>
+          } />
+          <Route path="/engine/studio" element={
+            <PageTransition direction="left"><EngineStudio /></PageTransition>
+          } />
+          <Route path="/storico" element={
+            <PageTransition direction="right"><Storico /></PageTransition>
+          } />
+          <Route path="/storico/studio/:id" element={
+            <PageTransition direction="right"><StudioDetailPage /></PageTransition>
+          } />
+          <Route path="/coach" element={
+            <PageTransition direction="up"><Coach /></PageTransition>
+          } />
+          <Route path="/about/studio" element={
+            <PageTransition direction="up"><AboutStudio /></PageTransition>
+          } />
+          <Route path="/settings" element={
+            <PageTransition direction="up"><Settings /></PageTransition>
+          } />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </AnimatePresence>
+      {!isLanding && <BottomBar />}
+    </div>
   );
 };
 
@@ -62,7 +66,6 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AnimatedRoutes />
-        <BottomBar />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
