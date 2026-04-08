@@ -80,10 +80,12 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           <Camera className="w-3 h-3 mr-1" />
           Fase 1 di 2
         </Badge>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">Carica le foto del prodotto</h1>
-        <p className="text-sm text-muted-foreground">
-          Il sistema analizzerà automaticamente le immagini per capire cosa stai vendendo
-        </p>
+        <PageTitle
+          title="Carica le foto del prodotto"
+          backTo="/engine"
+          subtitle="Il sistema analizzerà automaticamente le immagini per capire cosa stai vendendo"
+          className="text-center"
+        />
       </div>
 
       <StudioPhotoGuide />
