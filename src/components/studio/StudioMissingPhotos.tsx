@@ -1,7 +1,9 @@
-import { Camera, ArrowRight, ArrowLeft, Sparkles, Crown, CheckCircle2, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import type { MissingPhoto } from "./StudioRecognition";
 
 export interface PhotoQualityIssue {
@@ -33,13 +35,6 @@ interface StudioMissingPhotosProps {
   onAskCoach: (photoName: string) => void;
 }
 
-const CRITERIA_LABELS: Record<string, { label: string; icon: string }> = {
-  quality: { label: "Qualità", icon: "📷" },
-  light: { label: "Luce", icon: "💡" },
-  background_contrast: { label: "Contrasto", icon: "🎨" },
-  completeness: { label: "Completezza", icon: "✅" },
-};
-
 /** Build per-criteria verdict (max ~45 words each) */
 function buildCriteriaVerdicts(
   photoQuality: PhotoQuality[],
@@ -57,14 +52,9 @@ function buildCriteriaVerdicts(
 
   const results: { key: string; label: string; icon: string; score: number; verdict: string; ok: boolean }[] = [];
 
-  // Quality
   const qAvg = avgScores.quality ? avgScores.quality.reduce((a, b) => a + b, 0) / avgScores.quality.length : 0;
   results.push({
-    key: "quality",
-    label: "Qualità",
-    icon: "📷",
-    score: qAvg,
-    ok: qAvg >= 3.5,
+    key: "quality", label: "Qualità", icon: "📷", score: qAvg, ok: qAvg >= 3.5,
     verdict: qAvg >= 4
       ? "Le foto sono nitide e ben definite. Ottimo lavoro."
       : qAvg >= 3
@@ -72,14 +62,9 @@ function buildCriteriaVerdicts(
         : "Le foto risultano sgranate o sfocate. Riscatta con luce naturale e fotocamera stabile.",
   });
 
-  // Light
   const lAvg = avgScores.light ? avgScores.light.reduce((a, b) => a + b, 0) / avgScores.light.length : 0;
   results.push({
-    key: "light",
-    label: "Luce",
-    icon: "💡",
-    score: lAvg,
-    ok: lAvg >= 3.5,
+    key: "light", label: "Luce", icon: "💡", score: lAvg, ok: lAvg >= 3.5,
     verdict: lAvg >= 4
       ? "L'indumento si vede bene, nessun dettaglio nascosto. Ottimo."
       : lAvg >= 3
@@ -87,14 +72,9 @@ function buildCriteriaVerdicts(
         : "L'indumento è troppo scuro o in controluce, i dettagli non si vedono. Mettiti davanti a una finestra e scatta con luce naturale frontale.",
   });
 
-  // Background contrast
   const bgAvg = avgScores.background_contrast ? avgScores.background_contrast.reduce((a, b) => a + b, 0) / avgScores.background_contrast.length : 0;
   results.push({
-    key: "background_contrast",
-    label: "Contrasto",
-    icon: "🎨",
-    score: bgAvg,
-    ok: bgAvg >= 3.5,
+    key: "background_contrast", label: "Contrasto", icon: "🎨", score: bgAvg, ok: bgAvg >= 3.5,
     verdict: bgAvg >= 4
       ? "Contrasto efficace: il capo si stacca nettamente dallo sfondo, risulta leggibile e protagonista dell'immagine."
       : bgAvg >= 3
@@ -102,15 +82,10 @@ function buildCriteriaVerdicts(
         : "Contrasto inefficace: il capo si confonde con lo sfondo. Usa un telo di colore opposto (chiaro per capi scuri, scuro per capi chiari) per farlo risaltare.",
   });
 
-  // Completeness
   const cAvg = avgScores.completeness ? avgScores.completeness.reduce((a, b) => a + b, 0) / avgScores.completeness.length : 0;
   const filteredMissing = missingPhotos.filter(p => p.type !== "worn" && p.type !== "has_worn");
   results.push({
-    key: "completeness",
-    label: "Completezza",
-    icon: "✅",
-    score: cAvg,
-    ok: cAvg >= 3.5 && filteredMissing.length === 0,
+    key: "completeness", label: "Completezza", icon: "✅", score: cAvg, ok: cAvg >= 3.5 && filteredMissing.length === 0,
     verdict: filteredMissing.length === 0
       ? "Set foto completo. Hai coperto tutti gli angoli importanti."
       : `Mancano: ${filteredMissing.map(m => m.name.toLowerCase()).join(", ")}. Aggiungile per un annuncio più completo.`,
@@ -120,6 +95,7 @@ function buildCriteriaVerdicts(
 }
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
+  const [improveOpen, setImproveOpen] = useState(false);
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
   const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
@@ -179,44 +155,78 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
 
       {/* CTAs */}
       <div className="space-y-3">
-        {/* Continue */}
         <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
           <Sparkles className="w-4 h-4 mr-2" />
           Continua con queste foto
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
 
-        {/* Go back and re-upload */}
-        <Button variant="glass" size="lg" className="w-full" onClick={onBack}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna indietro e ricarica le foto
-        </Button>
-        {hasIssues && (
-          <p className="text-xs text-center text-muted-foreground -mt-1">
-            Segui la guida fotografica nel carosello sopra per risultati migliori
-          </p>
-        )}
-
-        {/* Premium CTA */}
-        <Button
-          variant="outline"
-          size="lg"
-          className="w-full border-amber-500/30 text-amber-600 hover:bg-amber-500/5 hover:border-amber-500/50"
-          onClick={() => {
-            window.dispatchEvent(new CustomEvent("open-coach", {
-              detail: {
-                message: "Vorrei usare SafeVin Creative Director per ottimizzare le mie foto professionalmente.",
-              },
-            }));
-          }}
-        >
-          <Crown className="w-4 h-4 mr-2" />
-          SafeVin Creative Director
-          <Badge className="ml-2 bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
-            Premium
-          </Badge>
+        <Button variant="glass" size="lg" className="w-full" onClick={() => setImproveOpen(true)}>
+          <Wrench className="w-4 h-4 mr-2" />
+          Migliora le foto
         </Button>
       </div>
+
+      {/* Improve dialog */}
+      <Dialog open={improveOpen} onOpenChange={setImproveOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-heading">Migliora le tue foto</DialogTitle>
+            <DialogDescription>
+              Scegli come vuoi migliorare le tue immagini
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 pt-2">
+            <Button
+              variant="glass"
+              size="lg"
+              className="w-full text-left justify-start h-auto py-4"
+              onClick={() => {
+                setImproveOpen(false);
+                window.dispatchEvent(new CustomEvent("open-coach", {
+                  detail: {
+                    message: "Ho bisogno di consigli pratici per migliorare le foto del mio annuncio. Aiutami a risolvere i problemi e completare le info mancanti.",
+                  },
+                }));
+              }}
+            >
+              <div className="flex flex-col items-start gap-1">
+                <span className="font-semibold text-foreground">Approfondisci con il Coach</span>
+                <span className="text-xs text-muted-foreground font-normal">
+                  Ricevi consigli pratici per risolvere o completare le info mancanti
+                </span>
+              </div>
+            </Button>
+
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full text-left justify-start h-auto py-4 border-amber-500/30 text-amber-600 hover:bg-amber-500/5 hover:border-amber-500/50"
+              onClick={() => {
+                setImproveOpen(false);
+                window.dispatchEvent(new CustomEvent("open-coach", {
+                  detail: {
+                    message: "Vorrei usare SafeVin Creative Director per ottimizzare le mie foto professionalmente.",
+                  },
+                }));
+              }}
+            >
+              <Crown className="w-5 h-5 mr-3 shrink-0" />
+              <div className="flex flex-col items-start gap-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold">SafeVin Creative Director</span>
+                  <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
+                    Premium
+                  </Badge>
+                </div>
+                <span className="text-xs text-muted-foreground font-normal">
+                  Affida le campagne dei tuoi indumenti al team SafeVin per una resa di qualità massima su misura
+                </span>
+              </div>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
