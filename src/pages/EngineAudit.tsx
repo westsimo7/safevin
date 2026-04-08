@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
+import PageTitle from "@/components/PageTitle";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Loader2, Sparkles } from "lucide-react";
+import { Search, Loader2, Sparkles } from "lucide-react";
 import AuditWizard, { type AuditData } from "@/components/AuditWizard";
 import AuditResult, { type AuditResultData } from "@/components/AuditResult";
 import AlreadyAnalyzedDialog from "@/components/AlreadyAnalyzedDialog";

@@ -1,6 +1,8 @@
 import AppNavbar from "@/components/AppNavbar";
+import PageTitle from "@/components/PageTitle";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Search, CheckCircle, BarChart3, Image, FileText } from "lucide-react";
+import { Search, CheckCircle, BarChart3, Image, FileText } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 

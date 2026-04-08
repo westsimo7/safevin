@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppNavbar from "@/components/AppNavbar";
+import PageTitle from "@/components/PageTitle";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import AuditResult, { type AuditResultData } from "@/components/AuditResult";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, History } from "lucide-react";
+import { History } from "lucide-react";
 
 const formatDate = (dateStr: string) => {
   const d = new Date(dateStr);

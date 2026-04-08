@@ -3,6 +3,7 @@ import { Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import AppNavbar from "@/components/AppNavbar";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 
 type Msg = { role: "user" | "assistant"; content: string };
 

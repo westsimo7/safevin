@@ -1,9 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import SmartLoader from "@/components/SmartLoader";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import StudioUpload, { compressImage } from "@/components/studio/StudioUpload";
