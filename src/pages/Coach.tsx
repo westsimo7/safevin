@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Loader2, Sparkles } from "lucide-react";
+import { Send, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import AppNavbar from "@/components/AppNavbar";
@@ -133,11 +134,11 @@ const Coach = () => {
 
       <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-12 xl:px-24">
         {/* Header */}
-        <div className="py-4 sm:py-6 shrink-0">
-          <div className="flex items-center justify-center mb-1">
-            <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
-          </div>
-          <p className="text-sm text-muted-foreground text-center">Il tuo assistente di vendita</p>
+        <div className="py-4 sm:py-6 shrink-0 text-center">
+          <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 text-[11px] sm:text-xs">
+            SafeVin Coach
+          </Badge>
+          <h1 className="text-xl sm:text-2xl font-bold text-primary">Il tuo assistente di vendita</h1>
         </div>
 
         {/* Messages area */}
