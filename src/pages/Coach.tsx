@@ -132,7 +132,7 @@ const Coach = () => {
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-48 xl:px-80">
+      <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-64 xl:px-96">
         {/* Header */}
         <div className="py-4 sm:py-6 shrink-0 text-center">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 text-[11px] sm:text-xs">
