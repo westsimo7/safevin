@@ -7,15 +7,6 @@ import { useSwipeBack } from "@/hooks/useSwipeBack";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const SUGGESTED_QUESTIONS = [
-  "Come posso migliorare il mio ultimo annuncio?",
-  "Quali errori comuni abbassano il SafeScore?",
-  "Come scrivere un titolo efficace su Vinted?",
-  "Come evitare il shadowban su Vinted?",
-  "Che prezzo dovrei mettere per vendere velocemente?",
-  "Qual è la differenza tra Audit e Studio?",
-];
-
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
 async function streamChat({
@@ -155,19 +146,8 @@ const Coach = () => {
         {/* Messages area */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-3 min-h-0">
           {messages.length === 0 && !isLoading && (
-            <div className="space-y-2 max-w-md mx-auto">
-              <p className="text-xs text-muted-foreground mb-3">
-                Chiedimi qualsiasi cosa su vendite, annunci, o i tuoi dati SafeVin:
-              </p>
-              {SUGGESTED_QUESTIONS.map((q, i) => (
-                <button
-                  key={i}
-                  onClick={() => sendMessage(q)}
-                  className="w-full text-left p-3 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 transition-colors text-sm text-foreground/80 leading-relaxed"
-                >
-                  {q}
-                </button>
-              ))}
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-sm text-muted-foreground">Scrivi un messaggio per iniziare</p>
             </div>
           )}
 
@@ -200,20 +180,6 @@ const Coach = () => {
           )}
         </div>
 
-        {/* Suggested chips */}
-        {messages.length > 0 && messages.length <= 4 && !isLoading && (
-          <div className="py-2 flex gap-1.5 overflow-x-auto shrink-0">
-            {SUGGESTED_QUESTIONS.slice(0, 3).map((q, i) => (
-              <button
-                key={i}
-                onClick={() => sendMessage(q)}
-                className="shrink-0 text-[11px] px-3 py-1.5 rounded-full bg-muted/30 border border-border/30 text-muted-foreground hover:bg-muted/50 transition-colors"
-              >
-                {q.length > 35 ? q.slice(0, 35) + "…" : q}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Input */}
         <div className="py-3 shrink-0">
