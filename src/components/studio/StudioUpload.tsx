@@ -93,7 +93,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
       </div>
 
       <Card className="border-border/50 flex-1 min-h-0 mb-2">
-        <CardContent className="p-4 h-full flex flex-col">
+        <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium flex items-center gap-2">
               <Camera className="w-4 h-4 text-primary" />
