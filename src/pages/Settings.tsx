@@ -16,10 +16,10 @@ const Settings = () => {
   const [darkMode, setDarkMode] = useState(true);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-20">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-20">
         <PageTitle title="Impostazioni" backTo="/home" />
 
         <div className="max-w-2xl mx-auto space-y-6">
