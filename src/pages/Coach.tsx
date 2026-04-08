@@ -134,8 +134,8 @@ const Coach = () => {
       <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-12 xl:px-24">
         {/* Header */}
         <div className="py-4 sm:py-6 shrink-0">
-          <div className="flex items-center justify-center gap-3 mb-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+          <div className="relative flex items-center justify-center mb-1">
+            <div className="absolute left-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
             <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
