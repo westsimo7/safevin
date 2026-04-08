@@ -71,7 +71,7 @@ const Storico = () => {
             <History className="w-3 h-3 mr-1" />
             Storico
           </Badge>
-          <PageTitle title="I tuoi lavori" backTo="/home" className="text-center" />
+          <PageTitle title="I tuoi lavori" className="text-center" />
         </div>
 
         {/* Search */}
