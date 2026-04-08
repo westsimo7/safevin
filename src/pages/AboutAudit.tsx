@@ -33,6 +33,7 @@ const spring = { type: "spring" as const, stiffness: 100, damping: 18 };
 
 const AboutAudit = () => {
   const navigate = useNavigate();
+  useSwipeBack("/home");
 
   return (
     <div className="min-h-screen bg-background">

@@ -115,6 +115,8 @@ const Storico = () => {
     return list;
   }, [creations, tab, searchQuery]);
 
+  useSwipeBack("/home");
+
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
