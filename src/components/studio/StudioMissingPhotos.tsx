@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench } from "lucide-react";
+import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -104,20 +105,14 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
-      <div className="text-center mb-4">
-        <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-          <Camera className="w-3 h-3 mr-1" />
-          Resoconto foto
-        </Badge>
-        <h2 className="text-2xl font-bold tracking-tight mb-2 font-heading text-primary">
-          {hasIssues ? "Resoconto delle tue foto" : "Foto perfette!"}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {hasIssues
-            ? "Ecco cosa va bene e cosa potresti migliorare"
-            : "Le tue immagini sono pronte per un annuncio efficace"}
-        </p>
-      </div>
+      <PageTitle
+        title={hasIssues ? "Resoconto delle tue foto" : "Foto perfette!"}
+        subtitle={hasIssues
+          ? "Ecco cosa va bene e cosa potresti migliorare"
+          : "Le tue immagini sono pronte per un annuncio efficace"}
+        backTo={onBack}
+        className="text-center"
+      />
 
       {/* Thumbnail strip */}
       {previews && previews.length > 0 && (
