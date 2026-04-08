@@ -16,6 +16,7 @@ const formatDate = (dateStr: string) => {
 const StoricoDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  useSwipeBack("/storico");
 
   const [analysis, setAnalysis] = useState<{
     titolo: string;
@@ -60,10 +61,7 @@ const StoricoDetail = () => {
         <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground mb-4">Analisi non trovata.</p>
-          <Button variant="ghost" onClick={() => navigate("/storico")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna allo Storico
-          </Button>
+          <PageTitle title="Storico" backTo="/storico" />
         </main>
       </div>
     );
@@ -73,23 +71,16 @@ const StoricoDetail = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 max-w-2xl">
-        <Button
-          variant="ghost"
-          className="mb-6 text-muted-foreground hover:text-foreground"
-          onClick={() => navigate("/storico")}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo Storico
-        </Button>
-
         <div className="text-center mb-6">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2">
             <History className="w-3 h-3 mr-1" />
             Audit · {formatDate(analysis.created_at)}
           </Badge>
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight mb-1">
-            {analysis.titolo || "Senza titolo"}
-          </h1>
+          <PageTitle
+            title={analysis.titolo || "Senza titolo"}
+            backTo="/storico"
+            className="text-center"
+          />
           {analysis.origin === "studio" && (
             <Badge className="bg-green-500/10 text-green-500 border-green-500/20 text-[10px] mt-1">
               +5% Qualità Studio

@@ -16,6 +16,7 @@ const formatDate = (dateStr: string) => {
 const StudioDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  useSwipeBack("/storico");
 
   const [creation, setCreation] = useState<{
     titolo_generato: string | null;
@@ -61,10 +62,7 @@ const StudioDetail = () => {
         <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground mb-4">Creazione non trovata.</p>
-          <Button variant="ghost" onClick={() => navigate("/storico")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna allo Storico
-          </Button>
+          <PageTitle title="Storico" backTo="/storico" />
         </main>
       </div>
     );
@@ -76,10 +74,7 @@ const StudioDetail = () => {
         <AppNavbar />
         <main className="container mx-auto px-6 py-12 text-center">
           <p className="text-muted-foreground mb-4">Output non disponibile per questa creazione.</p>
-          <Button variant="ghost" onClick={() => navigate("/storico")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Torna allo Storico
-          </Button>
+          <PageTitle title="Storico" backTo="/storico" />
         </main>
       </div>
     );
@@ -89,20 +84,16 @@ const StudioDetail = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 max-w-2xl">
-        <Button
-          variant="ghost"
-          className="mb-6 text-muted-foreground hover:text-foreground"
-          onClick={() => navigate("/storico")}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Torna allo Storico
-        </Button>
-
         <div className="text-center mb-6">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2">
             <History className="w-3 h-3 mr-1" />
             Studio · {formatDate(creation.created_at)}
           </Badge>
+          <PageTitle
+            title={creation.titolo_generato || "Creazione Studio"}
+            backTo="/storico"
+            className="text-center"
+          />
         </div>
 
         {creation.first_image_url && (
