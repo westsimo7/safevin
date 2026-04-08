@@ -156,7 +156,7 @@ const Coach = () => {
             <Sparkles className="w-6 h-6 text-primary" />
           </div>
           <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
-          <p className="text-sm text-muted-foreground mt-1">AI • Conosce i tuoi dati</p>
+          <p className="text-sm text-muted-foreground mt-1">Il tuo assistente di vendita</p>
         </div>
 
         {/* Messages area */}
