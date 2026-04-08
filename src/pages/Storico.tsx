@@ -126,7 +126,7 @@ const Storico = () => {
             ))}
           </div>
         )}
-      </main>
+      </div>
 
       <AlertDialog open={!!deleteTarget} onOpenChange={open => !open && setDeleteTarget(null)}>
         <AlertDialogContent className="border-border bg-card">
