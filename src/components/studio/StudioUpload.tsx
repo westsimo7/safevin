@@ -148,6 +148,40 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         )}
         {isLoading ? "Analisi in corso..." : "Analizza immagini"}
       </Button>
+
+      {/* Lightbox */}
+      <Dialog open={lightboxIndex !== null} onOpenChange={() => setLightboxIndex(null)}>
+        <DialogContent className="max-w-[95vw] sm:max-w-2xl p-2 sm:p-4 bg-background/95 backdrop-blur-sm border-border/50">
+          {lightboxIndex !== null && (
+            <div className="relative flex items-center justify-center">
+              {previews.length > 1 && (
+                <button
+                  onClick={() => setLightboxIndex((lightboxIndex - 1 + previews.length) % previews.length)}
+                  className="absolute left-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                >
+                  <ChevronLeft className="w-5 h-5 text-foreground" />
+                </button>
+              )}
+              <img
+                src={previews[lightboxIndex]}
+                alt={`Foto ${lightboxIndex + 1}`}
+                className="max-h-[70vh] w-auto mx-auto rounded-lg object-contain"
+              />
+              {previews.length > 1 && (
+                <button
+                  onClick={() => setLightboxIndex((lightboxIndex + 1) % previews.length)}
+                  className="absolute right-1 z-10 w-9 h-9 rounded-full bg-muted/70 hover:bg-muted flex items-center justify-center transition-colors"
+                >
+                  <ChevronRight className="w-5 h-5 text-foreground" />
+                </button>
+              )}
+              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs text-muted-foreground bg-background/80 px-3 py-1 rounded-full">
+                {lightboxIndex + 1} / {previews.length}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
