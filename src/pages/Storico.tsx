@@ -62,10 +62,10 @@ const Storico = () => {
   useSwipeBack("/home");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
         <div className="text-center mb-6">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-3">
             <History className="w-3 h-3 mr-1" />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Home, Clock, MessageCircle } from "lucide-react";
 
@@ -14,6 +14,7 @@ const BottomBar = () => {
   }, []);
 
   if (location.pathname === "/" || location.pathname === "/index") return null;
+  if (!isSmallScreen) return null;
 
   const navItems = [
     { to: "/home", label: "Home", icon: Home },
@@ -22,7 +23,7 @@ const BottomBar = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
+    <div className="shrink-0 border-t border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
       <div className="flex items-center justify-around h-14 max-w-lg mx-auto px-4">
         {navItems.map(item => {
           const isActive = location.pathname === item.to || location.pathname.startsWith(item.to + "/");

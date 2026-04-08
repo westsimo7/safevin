@@ -7,9 +7,9 @@ const AboutStudio = () => {
   useSwipeBack("/home");
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
-      <main className="container mx-auto px-6 py-12 max-w-3xl text-center space-y-6">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-6 py-12 max-w-3xl text-center space-y-6">
         <PageTitle title="Studio 2.0" backTo="/home" className="text-center" />
 
         <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">

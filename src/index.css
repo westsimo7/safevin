@@ -70,7 +70,6 @@
   }
 
   html {
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
   }
 
@@ -79,8 +78,14 @@
     font-family: 'Inter', system-ui, sans-serif;
     font-size: 16px;
     line-height: 1.55;
-    padding-bottom: 3.5rem;
-    overflow-x: hidden;
+    overflow: hidden;
+  }
+
+  html, body, #root {
+    height: 100dvh;
+    height: 100vh; /* fallback */
+    max-height: 100dvh;
+    overflow: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {

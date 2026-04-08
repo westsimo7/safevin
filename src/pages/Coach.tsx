@@ -19,16 +19,8 @@ const SUGGESTED_QUESTIONS = [
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
 async function streamChat({
-  messages,
-  onDelta,
-  onDone,
-  onError,
-}: {
-  messages: Msg[];
-  onDelta: (text: string) => void;
-  onDone: () => void;
-  onError: (msg: string) => void;
-}) {
+  messages, onDelta, onDone, onError,
+}: { messages: Msg[]; onDelta: (text: string) => void; onDone: () => void; onError: (msg: string) => void; }) {
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
@@ -44,10 +36,7 @@ async function streamChat({
     return;
   }
 
-  if (!resp.body) {
-    onError("Nessuna risposta dallo stream");
-    return;
-  }
+  if (!resp.body) { onError("Nessuna risposta dallo stream"); return; }
 
   const reader = resp.body.getReader();
   const decoder = new TextDecoder();
@@ -148,12 +137,12 @@ const Coach = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="flex-1 flex flex-col w-full px-4 sm:px-6 lg:px-12 xl:px-24 pb-20 lg:pb-6">
+      <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-12 xl:px-24">
         {/* Header */}
-        <div className="py-6 sm:py-8 shrink-0">
+        <div className="py-4 sm:py-6 shrink-0">
           <div className="flex items-center justify-center gap-3 mb-1">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-primary" />
@@ -183,10 +172,7 @@ const Coach = () => {
           )}
 
           {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   msg.role === "user"

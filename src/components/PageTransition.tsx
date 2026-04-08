@@ -7,7 +7,6 @@ interface PageTransitionProps {
 }
 
 const PageTransition = ({ children, direction = "left" }: PageTransitionProps) => {
-  // Detect if this is a popstate (back/forward) navigation
   const isPopState = useRef(false);
 
   useEffect(() => {
@@ -17,14 +16,12 @@ const PageTransition = ({ children, direction = "left" }: PageTransitionProps) =
   }, []);
 
   useEffect(() => {
-    // Reset after mount so next navigation starts fresh
     const id = requestAnimationFrame(() => { isPopState.current = false; });
     return () => cancelAnimationFrame(id);
   });
 
-  // Skip animation on back/forward navigation
   if (isPopState.current) {
-    return <div style={{ minHeight: "100vh" }}>{children}</div>;
+    return <div className="flex flex-col flex-1 overflow-hidden">{children}</div>;
   }
 
   const variants: Record<string, any> = {
@@ -40,7 +37,7 @@ const PageTransition = ({ children, direction = "left" }: PageTransitionProps) =
       initial={v.initial}
       animate={v.animate}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      style={{ minHeight: "100vh" }}
+      className="flex flex-col flex-1 overflow-hidden"
     >
       {children}
     </motion.div>

@@ -47,9 +47,9 @@ const StudioDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col flex-1 overflow-hidden bg-background">
         <AppNavbar />
-        <main className="container mx-auto px-6 py-12 text-center text-muted-foreground">
+        <main className="flex-1 flex items-center justify-center text-muted-foreground">
           Caricamento...
         </main>
       </div>
@@ -58,9 +58,9 @@ const StudioDetail = () => {
 
   if (!creation) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col flex-1 overflow-hidden bg-background">
         <AppNavbar />
-        <main className="container mx-auto px-6 py-12 text-center">
+        <main className="flex-1 flex flex-col items-center justify-center px-6">
           <p className="text-muted-foreground mb-4">Creazione non trovata.</p>
           <PageTitle title="Storico" backTo="/storico" />
         </main>
@@ -70,9 +70,9 @@ const StudioDetail = () => {
 
   if (!creation.output) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="flex flex-col flex-1 overflow-hidden bg-background">
         <AppNavbar />
-        <main className="container mx-auto px-6 py-12 text-center">
+        <main className="flex-1 flex flex-col items-center justify-center px-6">
           <p className="text-muted-foreground mb-4">Output non disponibile per questa creazione.</p>
           <PageTitle title="Storico" backTo="/storico" />
         </main>
@@ -81,9 +81,9 @@ const StudioDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
-      <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 max-w-2xl">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12 max-w-2xl">
         <div className="text-center mb-6">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2">
             <History className="w-3 h-3 mr-1" />
