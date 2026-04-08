@@ -174,7 +174,6 @@ const EngineStudio = () => {
     setAuditSource(null);
   }, []);
 
-  return (
   useSwipeBack("/engine");
 
   return (
