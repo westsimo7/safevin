@@ -19,7 +19,7 @@ const AppNavbar = () => {
   return (
     <>
       <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+        <div className="container mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="text-xl sm:text-2xl font-black tracking-tight">
@@ -28,9 +28,9 @@ const AppNavbar = () => {
             </span>
           </Link>
 
-          {/* Center nav - hidden on mobile (moved below) */}
+          {/* Center nav - absolutely centered */}
           {!isMobile && (
-            <nav className="flex items-center gap-6">
+            <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-6">
               {navLinks.map(link => {
                 const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + "/");
                 return (
@@ -51,7 +51,7 @@ const AppNavbar = () => {
           )}
 
           {/* Right side */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
             <Button
               variant="outline"
               size="sm"
