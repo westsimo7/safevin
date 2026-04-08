@@ -17,6 +17,7 @@ const LandingNavbar = () => {
 
         {/* Profile icon - flush right */}
         <div className="lg:mr-16">
+        <Popover>
           <PopoverTrigger asChild>
             <button className="w-9 h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
               <User className="w-4 h-4 text-muted-foreground" />
