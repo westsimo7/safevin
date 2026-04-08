@@ -29,13 +29,13 @@ Esempio: "Nike Felpa con cappuccio Nera Streetwear (L) – Come nuovo"
 
 La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
-Struttura (ogni riga separata da una riga vuota):
+Struttura (4 righe, ogni riga separata da una riga vuota):
 RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + [Colore] + [Taglia].
-RIGA 2: [Condizione] con [Dettaglio distintivo] [posizione].
-RIGA 3: Modello [tipo chiusura] con [elementi strutturali] e [extra].
-RIGA 4: Tessuto [materiale] [qualità].
-RIGA 5: Vestibilità [fit].
-RIGA 6: Disponibile per foto extra e spedizione.
+RIGA 2: [Condizione] con [Dettaglio distintivo] [posizione]. Modello [tipo chiusura] con [elementi strutturali] e [extra].
+RIGA 3: Tessuto [materiale] [qualità]. Vestibilità [fit].
+RIGA 4: Disponibile per foto extra e spedizione.
+
+REGOLA MATERIALE: Se l'utente ha indicato UN SOLO materiale, scrivi "Tessuto [materiale] 100%". Se sono più materiali, elencali senza percentuale.
 
 Poi aggiungi una riga vuota e:
 
