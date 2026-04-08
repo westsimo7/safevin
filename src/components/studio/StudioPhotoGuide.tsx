@@ -131,7 +131,7 @@ const StudioPhotoGuide = () => {
                 <img
                   src={s.img}
                   alt={s.label}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </div>
