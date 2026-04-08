@@ -1,5 +1,5 @@
-import { useState, useRef, useCallback } from "react";
-import { Camera, ImagePlus, X, Loader2, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useRef, useCallback, TouchEvent as ReactTouchEvent } from "react";
+import { Camera, ImagePlus, X, Loader2, Sparkles, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -47,6 +47,9 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [dragActive, setDragActive] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
+  const [galleryIndex, setGalleryIndex] = useState(0);
+  const touchStartX = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const addImages = useCallback((files: FileList | File[]) => {
