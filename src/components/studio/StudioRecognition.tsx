@@ -196,7 +196,7 @@ const StudioRecognition = ({ analysis, previews, onConfirm, onBack }: StudioReco
       <div className="text-center mb-6">
         <Badge className="bg-green-500/10 text-green-500 border-green-500/30 mb-4">
           <Sparkles className="w-3 h-3 mr-1" />
-          Riconoscimento completato
+          Fase 2 di 3
         </Badge>
         <h2 className="text-2xl font-bold tracking-tight mb-2">Conferma i dettagli</h2>
         <p className="text-sm text-muted-foreground">

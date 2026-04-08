@@ -78,7 +78,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
       <div className="text-center mb-6">
         <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
           <Camera className="w-3 h-3 mr-1" />
-          Fase 1 di 2
+          Fase 1 di 3
         </Badge>
         <PageTitle
           title="Carica le foto del prodotto"

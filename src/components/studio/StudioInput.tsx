@@ -171,7 +171,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     <div className="space-y-6 animate-fade-in">
       <div className="text-center mb-6">
         <Badge className="bg-primary/10 text-primary border-primary/20 mb-4">
-          Fase 3
+          Fase 3 di 3
         </Badge>
         <h2 className="text-2xl font-bold tracking-tight mb-2">Ultimi dettagli</h2>
         <p className="text-sm text-muted-foreground">
