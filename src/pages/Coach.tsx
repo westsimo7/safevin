@@ -1,0 +1,255 @@
+import { useState, useRef, useEffect } from "react";
+import { Send, Loader2, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import ReactMarkdown from "react-markdown";
+import AppNavbar from "@/components/AppNavbar";
+
+type Msg = { role: "user" | "assistant"; content: string };
+
+const SUGGESTED_QUESTIONS = [
+  "Come posso migliorare il mio ultimo annuncio?",
+  "Quali errori comuni abbassano il SafeScore?",
+  "Come scrivere un titolo efficace su Vinted?",
+  "Come evitare il shadowban su Vinted?",
+  "Che prezzo dovrei mettere per vendere velocemente?",
+  "Qual è la differenza tra Audit e Studio?",
+];
+
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
+
+async function streamChat({
+  messages,
+  onDelta,
+  onDone,
+  onError,
+}: {
+  messages: Msg[];
+  onDelta: (text: string) => void;
+  onDone: () => void;
+  onError: (msg: string) => void;
+}) {
+  const resp = await fetch(CHAT_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ messages }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: "Errore di rete" }));
+    onError(err.error || "Errore dal server");
+    return;
+  }
+
+  if (!resp.body) {
+    onError("Nessuna risposta dallo stream");
+    return;
+  }
+
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+
+    let newlineIndex: number;
+    while ((newlineIndex = buffer.indexOf("\n")) !== -1) {
+      let line = buffer.slice(0, newlineIndex);
+      buffer = buffer.slice(newlineIndex + 1);
+      if (line.endsWith("\r")) line = line.slice(0, -1);
+      if (line.startsWith(":") || line.trim() === "") continue;
+      if (!line.startsWith("data: ")) continue;
+      const jsonStr = line.slice(6).trim();
+      if (jsonStr === "[DONE]") break;
+      try {
+        const parsed = JSON.parse(jsonStr);
+        const content = parsed.choices?.[0]?.delta?.content;
+        if (content) onDelta(content);
+      } catch {
+        buffer = line + "\n" + buffer;
+        break;
+      }
+    }
+  }
+  onDone();
+}
+
+const Coach = () => {
+  const [messages, setMessages] = useState<Msg[]>([]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.message) {
+        setTimeout(() => sendMessage(detail.message), 300);
+      }
+    };
+    window.addEventListener("open-coach", handler);
+    return () => window.removeEventListener("open-coach", handler);
+  }, [messages, isLoading]);
+
+  const sendMessage = async (text: string) => {
+    if (!text.trim() || isLoading) return;
+    const userMsg: Msg = { role: "user", content: text.trim() };
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
+    setInput("");
+    setIsLoading(true);
+
+    let assistantSoFar = "";
+    const upsertAssistant = (chunk: string) => {
+      assistantSoFar += chunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    try {
+      await streamChat({
+        messages: newMessages,
+        onDelta: (chunk) => upsertAssistant(chunk),
+        onDone: () => setIsLoading(false),
+        onError: (err) => {
+          setMessages((prev) => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
+          setIsLoading(false);
+        },
+      });
+    } catch {
+      setMessages((prev) => [...prev, { role: "assistant", content: "⚠️ Errore di connessione." }]);
+      setIsLoading(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage(input);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <AppNavbar />
+
+      <main className="flex-1 flex flex-col max-w-2xl mx-auto w-full px-4 sm:px-6 pb-20 lg:pb-6">
+        {/* Header */}
+        <div className="py-6 sm:py-8 text-center shrink-0">
+          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <Sparkles className="w-6 h-6 text-primary" />
+          </div>
+          <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
+          <p className="text-sm text-muted-foreground mt-1">AI • Conosce i tuoi dati</p>
+        </div>
+
+        {/* Messages area */}
+        <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-3 min-h-0">
+          {messages.length === 0 && !isLoading && (
+            <div className="space-y-2 max-w-md mx-auto">
+              <p className="text-xs text-muted-foreground mb-3">
+                Chiedimi qualsiasi cosa su vendite, annunci, o i tuoi dati SafeVin:
+              </p>
+              {SUGGESTED_QUESTIONS.map((q, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(q)}
+                  className="w-full text-left p-3 rounded-xl bg-muted/30 hover:bg-muted/50 border border-border/30 transition-colors text-sm text-foreground/80 leading-relaxed"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+            >
+              <div
+                className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                  msg.role === "user"
+                    ? "bg-primary text-primary-foreground rounded-br-sm"
+                    : "bg-muted/40 border border-border/30 rounded-bl-sm"
+                }`}
+              >
+                {msg.role === "assistant" ? (
+                  <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  msg.content
+                )}
+              </div>
+            </div>
+          ))}
+
+          {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+            <div className="flex justify-start">
+              <div className="bg-muted/40 border border-border/30 rounded-2xl rounded-bl-sm px-3 py-2">
+                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Suggested chips */}
+        {messages.length > 0 && messages.length <= 4 && !isLoading && (
+          <div className="py-2 flex gap-1.5 overflow-x-auto shrink-0">
+            {SUGGESTED_QUESTIONS.slice(0, 3).map((q, i) => (
+              <button
+                key={i}
+                onClick={() => sendMessage(q)}
+                className="shrink-0 text-[11px] px-3 py-1.5 rounded-full bg-muted/30 border border-border/30 text-muted-foreground hover:bg-muted/50 transition-colors"
+              >
+                {q.length > 35 ? q.slice(0, 35) + "…" : q}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Input */}
+        <div className="py-3 shrink-0">
+          <div className="flex items-center gap-2">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Scrivi un messaggio..."
+              className="flex-1 bg-muted/30 border border-border/30 rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:border-primary/50 transition-colors"
+              disabled={isLoading}
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-10 w-10 p-0 shrink-0"
+              onClick={() => sendMessage(input)}
+              disabled={!input.trim() || isLoading}
+            >
+              <Send className="w-4 h-4 text-primary" />
+            </Button>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default Coach;
