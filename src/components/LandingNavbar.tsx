@@ -8,7 +8,7 @@ const LandingNavbar = () => {
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6">
         {/* Logo - normal size in navbar */}
-        <a href="#" className="flex items-center hover:opacity-80 transition-opacity">
+        <a href="#" className="flex items-center hover:opacity-80 transition-opacity lg:ml-16">
           <span className="text-xl sm:text-2xl font-black tracking-tight">
             <span className="text-foreground">SAFE</span>
             <span className="text-primary">ViN</span>
@@ -16,7 +16,7 @@ const LandingNavbar = () => {
         </a>
 
         {/* Profile icon - flush right */}
-        <Popover>
+        <div className="lg:mr-16">
           <PopoverTrigger asChild>
             <button className="w-9 h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
               <User className="w-4 h-4 text-muted-foreground" />
@@ -42,6 +42,7 @@ const LandingNavbar = () => {
             </div>
           </PopoverContent>
         </Popover>
+        </div>
       </div>
     </header>
   );
