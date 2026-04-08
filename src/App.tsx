@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import AboutAudit from "./pages/AboutAudit";
 import AboutStudio from "./pages/AboutStudio";
+import Coach from "./pages/Coach";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -27,7 +28,6 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
 
-  // Determine transition direction based on path
   const getDirection = (path: string): "left" | "right" | "up" => {
     if (path.startsWith("/engine")) return "left";
     if (path.startsWith("/storico")) return "right";
@@ -67,6 +67,9 @@ const AnimatedRoutes = () => {
         } />
         <Route path="/storico/:id" element={
           <PageTransition direction="right"><StoricoDetail /></PageTransition>
+        } />
+        <Route path="/coach" element={
+          <PageTransition direction="up"><Coach /></PageTransition>
         } />
         <Route path="/about/audit" element={
           <PageTransition direction="up"><AboutAudit /></PageTransition>
