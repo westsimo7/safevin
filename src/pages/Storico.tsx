@@ -65,7 +65,7 @@ const Storico = () => {
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-4 sm:px-6 py-8 max-w-4xl">
+      <div className="shrink-0 container mx-auto px-4 sm:px-6 pt-8 pb-4 max-w-4xl">
         <div className="text-center mb-6">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-3">
             <History className="w-3 h-3 mr-1" />
@@ -75,7 +75,7 @@ const Storico = () => {
         </div>
 
         {/* Search */}
-        <div className="relative mb-6">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input placeholder="Cerca..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-9 h-9 text-sm bg-card border-border/50" />
           {searchQuery && (
@@ -84,11 +84,13 @@ const Storico = () => {
             </button>
           )}
         </div>
+      </div>
 
+      <div className="flex-1 overflow-y-auto overflow-x-hidden container mx-auto px-4 sm:px-6 max-w-4xl">
         {loading ? (
           <div className="text-center text-muted-foreground py-12">Caricamento...</div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 pb-6">
             {filtered.length === 0 && (
               <div className="text-center text-muted-foreground py-12">
                 {searchQuery ? `Nessun risultato per "${searchQuery}"` : "Nessuna creazione ancora."}
