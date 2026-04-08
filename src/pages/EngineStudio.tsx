@@ -126,7 +126,7 @@ const EngineStudio = () => {
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className={`flex-1 overflow-x-hidden px-4 sm:px-6 lg:px-20 xl:px-40 pt-4 sm:pt-6 pb-6 sm:pb-8 ${phase === "upload" ? "overflow-hidden flex flex-col" : "overflow-y-auto"}`}>
+      <main className={`flex-1 overflow-x-hidden px-4 sm:px-6 lg:px-48 xl:px-80 pt-4 sm:pt-6 pb-6 sm:pb-8 ${phase === "upload" ? "overflow-hidden flex flex-col" : "overflow-y-auto"}`}>
         {phase === "upload" && (
           <StudioUpload onAnalyze={handleAnalyze} isLoading={false} />
         )}
