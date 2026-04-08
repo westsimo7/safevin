@@ -51,7 +51,7 @@ const AppNavbar = () => {
           )}
 
           {/* Right side */}
-          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
+          <div className="flex items-center gap-1.5 sm:gap-2 ml-auto lg:mr-16">
             <Button
               variant="outline"
               size="sm"
