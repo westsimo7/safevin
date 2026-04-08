@@ -17,15 +17,6 @@ const HeroSection = () => {
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center max-w-4xl">
         {/* Badge */}
-        <motion.div
-          className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 backdrop-blur-sm mb-4 sm:mb-8"
-          initial={{ opacity: 0, y: -30, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ ...spring, delay: 0.1 }}
-        >
-          <Sparkles className="w-3.5 h-3.5 text-primary" />
-          <span className="text-[11px] sm:text-xs md:text-sm font-medium text-muted-foreground">Ecosistema AI per Marketplace</span>
-        </motion.div>
 
         {/* LOGO */}
         <motion.div
