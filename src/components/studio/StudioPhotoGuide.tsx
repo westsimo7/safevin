@@ -124,14 +124,14 @@ const StudioPhotoGuide = () => {
           {duplicatedSlides.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 w-[120px] cursor-pointer flex flex-col"
+              className="flex-shrink-0 w-[160px] cursor-pointer flex flex-col"
               onClick={() => handlePhotoClick(i % slides.length)}
             >
               <div className="flex-1 rounded-lg overflow-hidden border border-border/40 mb-1 active:scale-95 transition-transform">
                 <img
                   src={s.img}
                   alt={s.label}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                 />
               </div>
