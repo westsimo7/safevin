@@ -10,10 +10,9 @@ const plans = [
     description: "Scopri il metodo SafeViN senza impegno",
     icon: Zap,
     features: [
-      "2 Audit Annuncio",
       "1 Studio export",
       "Storico ultime 3 sessioni",
-      "SafeScore™ su 10 categorie",
+      "Coach base",
     ],
     limitations: [
       "Nessun accesso avanzato",
@@ -29,11 +28,10 @@ const plans = [
     description: "Per chi vende con metodo",
     icon: Crown,
     features: [
-      "30 Audit Annuncio / mese",
       "30 Studio / mese",
       "Storico completo mensile",
       "Export testi ottimizzati",
-      "Breakdown per categoria",
+      "Coach illimitato",
       "Correzioni prioritizzate",
     ],
     limitations: [],
@@ -48,7 +46,6 @@ const plans = [
     description: "Per venditori professionisti",
     icon: Rocket,
     features: [
-      "Audit Annuncio illimitati",
       "Studio illimitato",
       "Storico illimitato",
       "Preset avanzati / template premium",

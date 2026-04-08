@@ -6,18 +6,11 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
-import Engine from "./pages/Engine";
-import EngineAnalyze from "./pages/EngineAnalyze";
-
-import EngineAudit from "./pages/EngineAudit";
 import EngineStudio from "./pages/EngineStudio";
-import EngineImprove from "./pages/EngineImprove";
 import Storico from "./pages/Storico";
-import StoricoDetail from "./pages/StoricoDetail";
 import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
-import AboutAudit from "./pages/AboutAudit";
 import AboutStudio from "./pages/AboutStudio";
 import Coach from "./pages/Coach";
 import BottomBar from "./components/BottomBar";
@@ -27,12 +20,6 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
-
-  const getDirection = (path: string): "left" | "right" | "up" => {
-    if (path.startsWith("/engine")) return "left";
-    if (path.startsWith("/storico")) return "right";
-    return "up";
-  };
 
   return (
     <AnimatePresence mode="wait" initial={false}>
@@ -44,20 +31,8 @@ const AnimatedRoutes = () => {
         <Route path="/dashboard" element={
           <PageTransition direction="up"><Dashboard /></PageTransition>
         } />
-        <Route path="/engine" element={
-          <PageTransition direction="left"><Engine /></PageTransition>
-        } />
-        <Route path="/engine/analyze" element={
-          <PageTransition direction="left"><EngineAnalyze /></PageTransition>
-        } />
-        <Route path="/engine/analyze/audit" element={
-          <PageTransition direction="left"><EngineAudit /></PageTransition>
-        } />
         <Route path="/engine/studio" element={
           <PageTransition direction="left"><EngineStudio /></PageTransition>
-        } />
-        <Route path="/engine/improve" element={
-          <PageTransition direction="left"><EngineImprove /></PageTransition>
         } />
         <Route path="/storico" element={
           <PageTransition direction="right"><Storico /></PageTransition>
@@ -65,14 +40,8 @@ const AnimatedRoutes = () => {
         <Route path="/storico/studio/:id" element={
           <PageTransition direction="right"><StudioDetailPage /></PageTransition>
         } />
-        <Route path="/storico/:id" element={
-          <PageTransition direction="right"><StoricoDetail /></PageTransition>
-        } />
         <Route path="/coach" element={
           <PageTransition direction="up"><Coach /></PageTransition>
-        } />
-        <Route path="/about/audit" element={
-          <PageTransition direction="up"><AboutAudit /></PageTransition>
         } />
         <Route path="/about/studio" element={
           <PageTransition direction="up"><AboutStudio /></PageTransition>

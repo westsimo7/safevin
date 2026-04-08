@@ -1,7 +1,7 @@
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, ArrowRight, Search, PenTool, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
+import { Zap, ArrowRight, PenTool, Sparkles, MessageCircle, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -13,19 +13,14 @@ const SafevinHome = () => {
 
   const features = [
     {
-      icon: <Search className="w-5 h-5 text-primary" />,
-      title: "Audit",
-      desc: "Analizza il tuo annuncio e scopri cosa migliorare",
-    },
-    {
       icon: <PenTool className="w-5 h-5 text-primary" />,
       title: "Studio",
       desc: "Crea l'annuncio perfetto da zero con l'AI",
     },
     {
-      icon: <TrendingUp className="w-5 h-5 text-primary" />,
-      title: "Ottimizza",
-      desc: "Score, criticità e correzioni in tempo reale",
+      icon: <MessageCircle className="w-5 h-5 text-primary" />,
+      title: "Coach",
+      desc: "Il tuo esperto Vinted sempre disponibile",
     },
   ];
 
@@ -92,7 +87,7 @@ const SafevinHome = () => {
               }}
               transition={{ ...spring, delay: 0.6 }}
             >
-              ENGINE
+              STUDIO
             </motion.span>
           </motion.h1>
 
@@ -106,9 +101,9 @@ const SafevinHome = () => {
               variant="neon"
               size="lg"
               className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto"
-              onClick={() => navigate("/engine")}
+              onClick={() => navigate("/engine/studio")}
             >
-              Avvia SafeVin Engine
+              Crea il tuo annuncio
               <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </motion.div>
@@ -120,48 +115,17 @@ const SafevinHome = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
           >
-            Analizza, correggi e ricrea i tuoi annunci.<br />
-            Tutto in un unico posto, potenziato dall'AI.
+            Crea annunci ottimizzati dall'AI.<br />
+            Tutto in un unico posto, potenziato dall'intelligenza artificiale.
           </motion.p>
-
-          {/* Pipeline steps */}
-          <motion.div
-            className="flex items-center justify-center gap-2 sm:gap-3 text-[13px] sm:text-sm text-muted-foreground mb-10 sm:mb-14"
-            initial="hidden"
-            animate="visible"
-            variants={{
-              visible: { transition: { staggerChildren: 0.1, delayChildren: 1.0 } },
-            }}
-          >
-            {[
-              { icon: <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />, label: "Audit" },
-              { icon: null, label: "→", className: "text-border" },
-              { icon: null, label: "Fix", className: "text-foreground font-medium" },
-              { icon: null, label: "→", className: "text-border" },
-              { icon: <PenTool className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-primary" />, label: "Studio" },
-            ].map((item, i) => (
-              <motion.span
-                key={i}
-                className={`flex items-center gap-1 sm:gap-1.5 ${item.className || ""}`}
-                variants={{
-                  hidden: { opacity: 0, x: -30 },
-                  visible: { opacity: 1, x: 0 },
-                }}
-                transition={{ ...snappy }}
-              >
-                {item.icon}
-                {item.label}
-              </motion.span>
-            ))}
-          </motion.div>
 
           {/* Feature cards */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
             initial="hidden"
             animate="visible"
             variants={{
-              visible: { transition: { staggerChildren: 0.12, delayChildren: 1.1 } },
+              visible: { transition: { staggerChildren: 0.12, delayChildren: 1.0 } },
             }}
           >
             {features.map((feat, i) => (
@@ -183,30 +147,13 @@ const SafevinHome = () => {
             ))}
           </motion.div>
 
-          {/* Audit & Studio deep-dive buttons */}
+          {/* Studio deep-dive button */}
           <motion.div
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-0"
+            className="flex items-center justify-center px-2 sm:px-0"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 1.4 }}
+            transition={{ ...spring, delay: 1.2 }}
           >
-            <Button
-              variant="outline"
-              size="lg"
-              className="h-auto py-3.5 sm:py-4 px-6 sm:px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group w-full sm:w-auto"
-              onClick={() => navigate("/about/audit")}
-            >
-              <div className="flex items-center gap-2.5">
-                <Search className="w-4 h-4 text-primary" />
-                <div className="text-left">
-                  <span className="text-[10px] sm:text-xs text-muted-foreground block leading-none mb-0.5">
-                    SAFE<span className="text-primary">ViN</span>
-                  </span>
-                  <span className="font-bold text-foreground text-sm">Audit</span>
-                </div>
-              </div>
-            </Button>
-
             <Button
               variant="outline"
               size="lg"
@@ -230,7 +177,7 @@ const SafevinHome = () => {
             className="flex items-center justify-center gap-2 mt-10 sm:mt-14 mb-8 text-muted-foreground"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 1.6 }}
+            transition={{ duration: 0.8, delay: 1.4 }}
           >
             <ShieldCheck className="w-4 h-4 text-primary/60" />
             <span className="text-xs">AI-powered • Dati sicuri • Risultati in secondi</span>
