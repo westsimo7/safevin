@@ -83,7 +83,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         <PageTitle
           title="Carica le foto del prodotto"
           backTo="/engine"
-          subtitle="Il sistema analizzerà automaticamente le immagini per capire cosa stai vendendo"
+          subtitle="Il sistema raccoglie tutti i dettagli fondamentali per un annuncio ottimizzato"
           className="text-center"
         />
       </div>
