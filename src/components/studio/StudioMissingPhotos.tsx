@@ -110,7 +110,6 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         subtitle={hasIssues
           ? "Ecco cosa va bene e cosa potresti migliorare"
           : "Le tue immagini sono pronte per un annuncio efficace"}
-        backTo={onBack}
         badge={<Badge className="bg-primary/10 text-primary border-primary/20">Fase 2 di 3</Badge>}
         className="text-center"
       />
@@ -157,10 +156,20 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
           <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
 
-        <Button variant="glass" size="lg" className="w-full" onClick={() => setImproveOpen(true)}>
-          <Wrench className="w-4 h-4 mr-2" />
+        <button
+          className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 hover:border-amber-500/50 transition-colors p-3 flex items-center justify-center gap-2 text-amber-500 font-semibold text-sm"
+          onClick={() => setImproveOpen(true)}
+        >
+          <Wrench className="w-4 h-4" />
           Migliora le foto
-        </Button>
+        </button>
+
+        <button
+          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+          onClick={onBack}
+        >
+          ← Torna ai dettagli
+        </button>
       </div>
 
       {/* Improve dialog */}
