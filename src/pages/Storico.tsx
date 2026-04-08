@@ -125,7 +125,7 @@ const Storico = () => {
             <History className="w-3 h-3 mr-1" />
             Storico
           </Badge>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">I tuoi lavori</h1>
+          <PageTitle title="I tuoi lavori" backTo="/home" className="text-center" />
         </div>
 
         {/* Tabs */}
