@@ -116,7 +116,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
             onDrop={e => { e.preventDefault(); setDragActive(false); if (e.dataTransfer.files) addImages(e.dataTransfer.files); }}
             onClick={previews.length === 0 ? () => fileInputRef.current?.click() : undefined}
           >
-            <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+            
             <ImagePlus className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
             <p className="text-xs text-muted-foreground">
               {previews.length > 0 ? (
@@ -142,7 +142,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
 
       {/* Mobile: CTA buttons */}
       <div className="flex flex-col gap-2 mb-2 sm:hidden shrink-0">
-        <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+        
         <Button
           variant="outline"
           className="w-full border-primary/30 text-primary"
