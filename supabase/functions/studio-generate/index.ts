@@ -30,7 +30,7 @@ Esempio: "Nike Felpa con cappuccio Nera Streetwear (L) – Come nuovo"
 La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
 Struttura:
-RIGA 1: [Brand] + [Tipo prodotto] + [Colore] + [Taglia].
+RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + [Colore] + [Taglia].
 RIGA 2: [Condizione]. [Dettaglio principale se rilevante].
 RIGA 3: [Materiale]. Vestibilità [fit].
 RIGA 4: Disponibile per foto extra e spedizione.
