@@ -106,39 +106,36 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
           </div>
 
           <div
-            className={`relative border-2 border-dashed rounded-xl p-3 text-center transition-all cursor-pointer ${
+            className={`relative border-2 border-dashed rounded-xl p-3 text-center transition-all ${
               dragActive ? "border-primary bg-primary/5" : "border-border/50 hover:border-primary/40"
-            } ${previews.length > 0 ? "" : "flex-1"}`}
+            } ${previews.length > 0 ? "" : "flex-1 cursor-pointer"}`}
             onDragEnter={e => { e.preventDefault(); setDragActive(true); }}
             onDragLeave={e => { e.preventDefault(); setDragActive(false); }}
             onDragOver={e => e.preventDefault()}
             onDrop={e => { e.preventDefault(); setDragActive(false); if (e.dataTransfer.files) addImages(e.dataTransfer.files); }}
-            onClick={() => fileInputRef.current?.click()}
+            onClick={previews.length === 0 ? () => fileInputRef.current?.click() : undefined}
           >
             <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <ImagePlus className="w-6 h-6 text-muted-foreground mx-auto mb-1" />
             <p className="text-xs text-muted-foreground">
-              Trascina le foto qui o <span className="text-primary font-medium">carica</span>
+              {previews.length > 0 ? (
+                <span className="text-primary font-medium cursor-pointer" onClick={() => fileInputRef.current?.click()}>Aggiungi altre foto</span>
+              ) : (
+                <>Trascina le foto qui o <span className="text-primary font-medium">carica</span></>
+              )}
             </p>
-            <p className="text-[10px] text-muted-foreground/60 mt-0.5">Max 15 foto • Max 25MB per foto</p>
+            <p className="text-[10px] text-muted-foreground/60 mt-0.5">{images.length} foto caricate • Max {MAX_IMAGES}</p>
+            
+            {previews.length > 0 && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setGalleryIndex(0); setGalleryOpen(true); }}
+                className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 hover:bg-primary/20 text-primary text-xs font-medium transition-colors"
+              >
+                <Eye className="w-3.5 h-3.5" />
+                Vedi foto ({previews.length})
+              </button>
+            )}
           </div>
-
-          {previews.length > 0 && (
-            <div className="grid grid-cols-5 sm:grid-cols-8 gap-2 mt-3 flex-1 min-h-0 overflow-y-auto scrollbar-hide">
-              {previews.map((src, i) => (
-                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-border/50 cursor-pointer" onClick={() => setLightboxIndex(i)}>
-                  <img src={src} alt={`Foto ${i + 1}`} className="w-full h-full object-cover" />
-                  <button
-                    onClick={e => { e.stopPropagation(); removeImage(i); }}
-                    className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-destructive text-destructive-foreground flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-[10px] text-center text-white py-0.5">{i + 1}</div>
-                </div>
-              ))}
-            </div>
-          )}
         </CardContent>
       </Card>
 
