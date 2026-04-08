@@ -38,16 +38,6 @@ const AboutAudit = () => {
     <div className="min-h-screen bg-background">
       <AppNavbar />
       <main className="container mx-auto px-6 py-12 max-w-3xl">
-        <motion.button
-          onClick={() => navigate("/home")}
-          className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Torna alla Dashboard
-        </motion.button>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}

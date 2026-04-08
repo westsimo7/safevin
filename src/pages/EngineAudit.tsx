@@ -289,33 +289,26 @@ const EngineAudit = () => {
     });
   };
 
+  useSwipeBack("/engine");
+
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
       <main className="container mx-auto px-4 md:px-6 pt-4 md:pt-8 pb-12">
-        <Button
-          variant="ghost"
-          className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground"
-          onClick={() => auditResult ? handleReset() : navigate("/engine/analyze")}
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          {auditResult ? "Nuova analisi" : "Tipo analisi"}
-        </Button>
-
         <div className="text-center mb-6 md:mb-10">
           <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 md:mb-4">
             <Search className="w-3 h-3 mr-1" />
             Audit Completo
           </Badge>
-          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-1">
-            {auditResult ? "Risultato Audit" : "Analizza il tuo annuncio"}
-          </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            {auditResult
+          <PageTitle
+            title={auditResult ? "Risultato Audit" : "Analizza il tuo annuncio"}
+            backTo={() => auditResult ? handleReset() : navigate("/engine/analyze")}
+            subtitle={auditResult
               ? "Ecco come si posiziona il tuo annuncio"
               : "Inserisci i dati esatti del tuo annuncio, uno alla volta"}
-          </p>
+            className="text-center"
+          />
         </div>
 
         {!auditData && !isAnalyzing && !auditResult && (
@@ -344,7 +337,6 @@ const EngineAudit = () => {
                 </Button>
               )}
               <Button variant="outline" onClick={handleReset}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
                 Analizza un altro annuncio
               </Button>
             </div>

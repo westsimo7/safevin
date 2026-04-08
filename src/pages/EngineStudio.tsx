@@ -175,14 +175,13 @@ const EngineStudio = () => {
   }, []);
 
   return (
+  useSwipeBack("/engine");
+
+  return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-24 pt-4 sm:pt-8 pb-8 sm:pb-12">
-        <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine")}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Engine Home
-        </Button>
 
         {phase === "upload" && (
           <StudioUpload onAnalyze={handleAnalyze} isLoading={false} />
