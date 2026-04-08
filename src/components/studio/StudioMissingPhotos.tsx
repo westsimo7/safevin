@@ -137,7 +137,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
       </div>
 
       {/* CTAs */}
-      <div className="space-y-3">
+      <div className="shrink-0 space-y-2 pt-2">
         <Button variant="neon" size="lg" className="w-full" onClick={onContinue}>
           <Sparkles className="w-4 h-4 mr-2" />
           Continua con queste foto
@@ -145,7 +145,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </Button>
 
         <button
-          className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 hover:border-amber-500/50 transition-colors p-3 flex items-center justify-center gap-2 text-amber-500 font-semibold text-sm"
+          className="w-full rounded-xl border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/15 hover:border-amber-500/50 transition-colors p-2.5 flex items-center justify-center gap-2 text-amber-500 font-semibold text-sm"
           onClick={() => setImproveOpen(true)}
         >
           <Wrench className="w-4 h-4" />
@@ -153,7 +153,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
         </button>
 
         <button
-          className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors py-2"
+          className="w-full text-xs text-muted-foreground hover:text-foreground transition-colors py-1.5"
           onClick={onBack}
         >
           ← Torna ai dettagli
