@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppNavbar from "@/components/AppNavbar";
+import PageTitle from "@/components/PageTitle";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,6 +115,8 @@ const Storico = () => {
     return list;
   }, [creations, tab, searchQuery]);
 
+  useSwipeBack("/home");
+
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
@@ -123,7 +127,7 @@ const Storico = () => {
             <History className="w-3 h-3 mr-1" />
             Storico
           </Badge>
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">I tuoi lavori</h1>
+          <PageTitle title="I tuoi lavori" backTo="/home" className="text-center" />
         </div>
 
         {/* Tabs */}

@@ -3,6 +3,7 @@ import { Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import AppNavbar from "@/components/AppNavbar";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -80,6 +81,7 @@ async function streamChat({
 }
 
 const Coach = () => {
+  useSwipeBack("/home");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -151,12 +153,14 @@ const Coach = () => {
 
       <main className="flex-1 flex flex-col w-full px-4 sm:px-6 lg:px-12 xl:px-24 pb-20 lg:pb-6">
         {/* Header */}
-        <div className="py-6 sm:py-8 text-center shrink-0">
-          <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
-            <Sparkles className="w-6 h-6 text-primary" />
+        <div className="py-6 sm:py-8 shrink-0">
+          <div className="flex items-center justify-center gap-3 mb-1">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-primary" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold">SafeVin Coach</h1>
-          <p className="text-sm text-muted-foreground mt-1">Il tuo assistente di vendita</p>
+          <p className="text-sm text-muted-foreground text-center">Il tuo assistente di vendita</p>
         </div>
 
         {/* Messages area */}

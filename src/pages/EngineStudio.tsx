@@ -1,9 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
+import { useSwipeBack } from "@/hooks/useSwipeBack";
 import SmartLoader from "@/components/SmartLoader";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import StudioUpload, { compressImage } from "@/components/studio/StudioUpload";
@@ -175,15 +174,13 @@ const EngineStudio = () => {
     setAuditSource(null);
   }, []);
 
+  useSwipeBack("/engine");
+
   return (
     <div className="min-h-screen bg-background">
       <AppNavbar />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-12 xl:px-24 pt-4 sm:pt-8 pb-8 sm:pb-12">
-        <Button variant="ghost" className="hidden md:inline-flex mb-6 text-muted-foreground hover:text-foreground" onClick={() => navigate("/engine")}>
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Engine Home
-        </Button>
 
         {phase === "upload" && (
           <StudioUpload onAnalyze={handleAnalyze} isLoading={false} />
