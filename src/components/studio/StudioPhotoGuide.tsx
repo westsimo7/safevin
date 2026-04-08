@@ -40,7 +40,7 @@ const StudioPhotoGuide = () => {
     if (!el) return;
 
     let raf: number;
-    const speed = 0.35;
+    const speed = 0.175;
 
     scrollPositionRef.current = el.scrollLeft;
 
