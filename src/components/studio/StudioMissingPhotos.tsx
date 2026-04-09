@@ -34,6 +34,7 @@ interface StudioMissingPhotosProps {
   onContinue: () => void;
   onBack: () => void;
   onAskCoach: (photoName: string) => void;
+  onSaveIncompleteAndGoCoach?: (verdicts: string, images: string[]) => void;
 }
 
 /** Build per-criteria verdict (max ~45 words each) */
@@ -95,7 +96,7 @@ function buildCriteriaVerdicts(
   return results;
 }
 
-const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
+const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onSaveIncompleteAndGoCoach }: StudioMissingPhotosProps) => {
   const [improveOpen, setImproveOpen] = useState(false);
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
