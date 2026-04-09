@@ -4,7 +4,7 @@ import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Badge } from "@/components/ui/badge";
-import { PenTool, Trash2, Clock, ArrowRight } from "lucide-react";
+import { PenTool, Trash2, Clock, ArrowRight, MessageCircle } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
