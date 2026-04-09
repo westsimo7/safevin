@@ -1,28 +1,59 @@
+import { useState, useEffect } from "react";
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, ArrowRight, PenTool, Sparkles, MessageCircle, ShieldCheck } from "lucide-react";
+import { Zap, ArrowRight, PenTool, Sparkles, MessageCircle, ShieldCheck, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
+  const [incompleteCount, setIncompleteCount] = useState(0);
+
+  useEffect(() => {
+    const fetchIncomplete = async () => {
+      const { count } = await supabase
+        .from("studio_creations")
+        .select("id", { count: "exact", head: true })
+        .eq("status", "incomplete");
+      setIncompleteCount(count || 0);
+    };
+    fetchIncomplete();
+  }, []);
 
   const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
   const snappy = { type: "spring" as const, stiffness: 120, damping: 14 };
 
-  const features = [
-    {
-      icon: <PenTool className="w-5 h-5 text-primary" />,
-      title: "Studio",
-      desc: "Crea l'annuncio perfetto da zero con l'AI",
-    },
-    {
-      icon: <MessageCircle className="w-5 h-5 text-primary" />,
-      title: "Coach",
-      desc: "Il tuo esperto Vinted sempre disponibile",
-    },
-  ];
+  const features = incompleteCount > 0
+    ? [
+        {
+          icon: <PenTool className="w-5 h-5 text-primary" />,
+          title: "Studio",
+          desc: "Crea l'annuncio perfetto da zero con l'AI",
+          onClick: () => navigate("/engine/studio"),
+        },
+        {
+          icon: <Clock className="w-5 h-5 text-primary" />,
+          title: "Continua i tuoi lavori",
+          desc: `${incompleteCount} annunci incompleti da completare`,
+          onClick: () => navigate("/incomplete"),
+        },
+      ]
+    : [
+        {
+          icon: <PenTool className="w-5 h-5 text-primary" />,
+          title: "Studio",
+          desc: "Crea l'annuncio perfetto da zero con l'AI",
+          onClick: () => navigate("/engine/studio"),
+        },
+        {
+          icon: <MessageCircle className="w-5 h-5 text-primary" />,
+          title: "Coach",
+          desc: "Il tuo esperto Vinted sempre disponibile",
+          onClick: () => navigate("/coach"),
+        },
+      ];
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
@@ -132,12 +163,13 @@ const SafevinHome = () => {
               {features.map((feat, i) => (
                 <motion.div
                   key={i}
-                  className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6 text-left hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 group"
+                  className="rounded-xl border border-border/50 bg-card/50 p-5 sm:p-6 text-left hover:border-primary/30 hover:bg-primary/5 transition-all duration-300 group cursor-pointer"
                   variants={{
                     hidden: { opacity: 0, y: 40, scale: 0.95 },
                     visible: { opacity: 1, y: 0, scale: 1 },
                   }}
                   transition={{ ...spring }}
+                  onClick={feat.onClick}
                 >
                   <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                     {feat.icon}

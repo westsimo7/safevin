@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Send, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,20 +7,22 @@ import ReactMarkdown from "react-markdown";
 import AppNavbar from "@/components/AppNavbar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/coach-chat`;
 
 async function streamChat({
-  messages, onDelta, onDone, onError,
-}: { messages: Msg[]; onDelta: (text: string) => void; onDone: () => void; onError: (msg: string) => void; }) {
+  messages, images, onDelta, onDone, onError,
+}: { messages: Msg[]; images?: string[]; onDelta: (text: string) => void; onDone: () => void; onError: (msg: string) => void; }) {
+  const cleanMessages = messages.map(({ images: _img, ...rest }) => rest);
+
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages: cleanMessages, images: images || [] }),
   });
 
   if (!resp.ok) {
@@ -63,10 +66,13 @@ async function streamChat({
 
 const Coach = () => {
   useSwipeBack("/home");
+  const location = useLocation();
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [studioImages, setStudioImages] = useState<string[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const initRef = useRef(false);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -74,24 +80,29 @@ const Coach = () => {
     }
   }, [messages, isLoading]);
 
+  // Auto-send initial message from Studio if provided via location state
   useEffect(() => {
-    const handler = (e: Event) => {
-      const detail = (e as CustomEvent).detail;
-      if (detail?.message) {
-        setTimeout(() => sendMessage(detail.message), 300);
-      }
-    };
-    window.addEventListener("open-coach", handler);
-    return () => window.removeEventListener("open-coach", handler);
-  }, [messages, isLoading]);
+    if (initRef.current) return;
+    const state = location.state as { message?: string; images?: string[] } | null;
+    if (state?.message) {
+      initRef.current = true;
+      const imgs = state.images || [];
+      setStudioImages(imgs);
+      setTimeout(() => sendMessage(state.message!, imgs), 300);
+    }
+  }, [location.state]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
-    const userMsg: Msg = { role: "user", content: text.trim() };
+    const imgs = attachedImages?.length ? attachedImages : undefined;
+    const userMsg: Msg = { role: "user", content: text.trim(), images: imgs };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
     setIsLoading(true);
+
+    // Collect all images from the conversation for the API
+    const allImages = studioImages.length > 0 ? studioImages : [];
 
     let assistantSoFar = "";
     const upsertAssistant = (chunk: string) => {
@@ -108,6 +119,7 @@ const Coach = () => {
     try {
       await streamChat({
         messages: newMessages,
+        images: allImages,
         onDelta: (chunk) => upsertAssistant(chunk),
         onDone: () => setIsLoading(false),
         onError: (err) => {
@@ -158,6 +170,13 @@ const Coach = () => {
                     : "bg-muted/40 border border-border/30 rounded-bl-sm"
                 }`}
               >
+                {msg.images && msg.images.length > 0 && (
+                  <div className="flex gap-1 mb-2 overflow-x-auto">
+                    {msg.images.map((img, idx) => (
+                      <img key={idx} src={img} alt={`Foto ${idx + 1}`} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                    ))}
+                  </div>
+                )}
                 {msg.role === "assistant" ? (
                   <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
                     <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -177,7 +196,6 @@ const Coach = () => {
             </div>
           )}
         </div>
-
 
         {/* Input */}
         <div className="py-3 shrink-0">

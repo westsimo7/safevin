@@ -86,11 +86,14 @@ export type Database = {
           first_image_url: string | null
           id: string
           images: Json
+          incomplete_data: Json | null
+          incomplete_phase: string | null
           keyword_list: Json | null
           origin: string
           output: Json | null
           questions_answers: Json
           semantic_fingerprint: string | null
+          status: string
           structural_blocks: Json | null
           studio_version: string
           titolo_generato: string | null
@@ -102,11 +105,14 @@ export type Database = {
           first_image_url?: string | null
           id?: string
           images?: Json
+          incomplete_data?: Json | null
+          incomplete_phase?: string | null
           keyword_list?: Json | null
           origin?: string
           output?: Json | null
           questions_answers?: Json
           semantic_fingerprint?: string | null
+          status?: string
           structural_blocks?: Json | null
           studio_version?: string
           titolo_generato?: string | null
@@ -118,11 +124,14 @@ export type Database = {
           first_image_url?: string | null
           id?: string
           images?: Json
+          incomplete_data?: Json | null
+          incomplete_phase?: string | null
           keyword_list?: Json | null
           origin?: string
           output?: Json | null
           questions_answers?: Json
           semantic_fingerprint?: string | null
+          status?: string
           structural_blocks?: Json | null
           studio_version?: string
           titolo_generato?: string | null

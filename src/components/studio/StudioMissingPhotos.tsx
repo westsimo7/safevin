@@ -34,6 +34,7 @@ interface StudioMissingPhotosProps {
   onContinue: () => void;
   onBack: () => void;
   onAskCoach: (photoName: string) => void;
+  onSaveIncompleteAndGoCoach?: (verdicts: string, images: string[]) => void;
 }
 
 /** Build per-criteria verdict (max ~45 words each) */
@@ -95,7 +96,7 @@ function buildCriteriaVerdicts(
   return results;
 }
 
-const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack }: StudioMissingPhotosProps) => {
+const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onSaveIncompleteAndGoCoach }: StudioMissingPhotosProps) => {
   const [improveOpen, setImproveOpen] = useState(false);
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
@@ -175,12 +176,9 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
               onClick={() => {
                 setImproveOpen(false);
                 const reportSummary = verdicts.map(v => `${v.icon} ${v.label}: ${v.ok ? "OK" : "Da migliorare"} — ${v.verdict}`).join("\n");
-                window.dispatchEvent(new CustomEvent("open-coach", {
-                  detail: {
-                    message: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`,
-                    images: previews || [],
-                  },
-                }));
+                if (onSaveIncompleteAndGoCoach) {
+                  onSaveIncompleteAndGoCoach(reportSummary, previews || []);
+                }
               }}
             >
               <span className="font-semibold text-foreground text-sm block">Approfondisci con il Coach</span>
