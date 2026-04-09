@@ -11,6 +11,7 @@ import StudioMissingPhotos from "@/components/studio/StudioMissingPhotos";
 import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInput";
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
 import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
+import { savePreviews, loadPreviews, removePreviews } from "@/lib/studioPreviews";
 
 function createThumbnail(dataUrl: string): string {
   // Return a truncated version — just keep first 200 chars as identifier
@@ -55,17 +56,21 @@ const EngineStudio = () => {
     const state = location.state as ResumeState;
     if (state?.resumeFrom && state?.resumeData) {
       setAnalysis(state.resumeData.analysis);
-      setPreviews(state.resumeData.previews || []);
       setIncompleteId(state.incompleteId || null);
       setPhase(state.resumeFrom as Phase);
       window.history.replaceState({}, document.title);
+      // Load full previews from IndexedDB
+      if (state.incompleteId) {
+        loadPreviews(state.incompleteId).then((stored) => {
+          if (stored.length > 0) setPreviews(stored);
+        });
+      }
     }
   }, [location.state]);
 
   const saveDraft = useCallback((draftPhase: StudioDraftPhase, draftAnalysis: ProductAnalysis | null, draftPreviews: string[], existingId?: string | null) => {
     if (!draftAnalysis) return existingId || null;
     try {
-      // Save only a small thumbnail for the list, not full base64 previews
       const thumbUrl = draftPreviews[0] ? createThumbnail(draftPreviews[0]) : null;
       const draftId = upsertStudioDraft({
         id: existingId || null,
@@ -74,9 +79,13 @@ const EngineStudio = () => {
         incomplete_phase: draftPhase,
         incomplete_data: {
           analysis: draftAnalysis,
-          previews: [], // don't store full base64 in localStorage
+          previews: [],
         },
       });
+      // Save full previews to IndexedDB (async, non-blocking)
+      if (draftPreviews.length > 0) {
+        savePreviews(draftId, draftPreviews).catch(() => {});
+      }
       setIncompleteId(draftId);
       return draftId;
     } catch (err) {
@@ -155,6 +164,7 @@ const EngineStudio = () => {
       }]);
       if (incompleteId) {
         removeStudioDraft(incompleteId);
+        removePreviews(incompleteId).catch(() => {});
         setIncompleteId(null);
       }
     } catch (err) {
@@ -190,6 +200,7 @@ const EngineStudio = () => {
   const handleNewAnalysis = useCallback(() => {
     if (incompleteId) {
       removeStudioDraft(incompleteId);
+      removePreviews(incompleteId).catch(() => {});
     }
     setPhase("upload");
     setAnalysis(null);
