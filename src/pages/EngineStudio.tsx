@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import SmartLoader from "@/components/SmartLoader";
@@ -13,8 +13,11 @@ import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/St
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
+const SAVEABLE_PHASES: Phase[] = ["recognition", "missing_photos", "input"];
+
 const EngineStudio = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const [phase, setPhase] = useState<Phase>("upload");
@@ -22,6 +25,92 @@ const EngineStudio = () => {
   const [previews, setPreviews] = useState<string[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
+  const [incompleteId, setIncompleteId] = useState<string | null>(null);
+
+  // Refs to access latest state in cleanup
+  const phaseRef = useRef(phase);
+  const analysisRef = useRef(analysis);
+  const previewsRef = useRef(previews);
+  const incompleteIdRef = useRef(incompleteId);
+  const outputSavedRef = useRef(false);
+
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+  useEffect(() => { analysisRef.current = analysis; }, [analysis]);
+  useEffect(() => { previewsRef.current = previews; }, [previews]);
+  useEffect(() => { incompleteIdRef.current = incompleteId; }, [incompleteId]);
+
+  // Resume from incomplete creation if navigated with state
+  useEffect(() => {
+    const state = location.state as {
+      resumeFrom?: string;
+      resumeData?: { analysis: ProductAnalysis; previews: string[]; userInput?: StudioUserInput };
+      incompleteId?: string;
+    } | null;
+
+    if (state?.resumeFrom && state?.resumeData) {
+      setAnalysis(state.resumeData.analysis);
+      setPreviews(state.resumeData.previews || []);
+      setIncompleteId(state.incompleteId || null);
+      setPhase(state.resumeFrom as Phase);
+      // Clear location state to prevent re-resume on re-render
+      window.history.replaceState({}, document.title);
+    }
+  }, []);
+
+  // Auto-save as incomplete when leaving the page (after analysis, before output)
+  useEffect(() => {
+    const saveIncomplete = async () => {
+      const currentPhase = phaseRef.current;
+      const currentAnalysis = analysisRef.current;
+      const currentPreviews = previewsRef.current;
+      const currentIncompleteId = incompleteIdRef.current;
+
+      // Only save if we're in a saveable phase and have analysis data
+      if (!SAVEABLE_PHASES.includes(currentPhase) || !currentAnalysis || outputSavedRef.current) return;
+
+      const incompleteData = {
+        analysis: currentAnalysis,
+        previews: currentPreviews,
+      };
+
+      try {
+        if (currentIncompleteId) {
+          // Update existing incomplete record
+          await supabase.from("studio_creations").update({
+            incomplete_phase: currentPhase,
+            incomplete_data: incompleteData as any,
+            first_image_url: currentPreviews[0] || null,
+            categoria: currentAnalysis.category || "",
+          }).eq("id", currentIncompleteId);
+        } else {
+          // Create new incomplete record
+          await supabase.from("studio_creations").insert([{
+            first_image_url: currentPreviews[0] || null,
+            categoria: currentAnalysis.category || "",
+            images: currentPreviews as any,
+            questions_answers: [] as any,
+            output: null,
+            origin: "studio",
+            status: "incomplete",
+            incomplete_phase: currentPhase,
+            incomplete_data: incompleteData as any,
+          }]);
+        }
+      } catch (err) {
+        console.error("Failed to auto-save incomplete:", err);
+      }
+    };
+
+    // Save on beforeunload (tab close/refresh)
+    const handleBeforeUnload = () => { saveIncomplete(); };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      // Save when component unmounts (navigating away)
+      saveIncomplete();
+    };
+  }, []);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
     setImages(files);
@@ -67,33 +156,43 @@ const EngineStudio = () => {
     });
   }, [navigate]);
 
-  const handleSaveIncompleteAndGoCoach = useCallback(async (reportSummary: string, images: string[]) => {
-    // Save the current creation as incomplete
+  const handleSaveIncompleteAndGoCoach = useCallback(async (reportSummary: string, coachImages: string[]) => {
+    // Save will happen automatically via cleanup, but let's save explicitly and get the ID
     try {
-      await supabase.from("studio_creations").insert([{
-        first_image_url: previews[0] || null,
-        categoria: analysis?.category || "",
-        images: previews as any,
-        questions_answers: [] as any,
-        output: null,
-        origin: "studio",
-        status: "incomplete",
-        incomplete_phase: phase,
-        incomplete_data: {
-          analysis,
-          previews,
-        } as any,
-      }]);
+      const incompleteData = { analysis, previews };
+
+      if (incompleteId) {
+        await supabase.from("studio_creations").update({
+          incomplete_phase: phase,
+          incomplete_data: incompleteData as any,
+        }).eq("id", incompleteId);
+      } else {
+        const { data } = await supabase.from("studio_creations").insert([{
+          first_image_url: previews[0] || null,
+          categoria: analysis?.category || "",
+          images: previews as any,
+          questions_answers: [] as any,
+          output: null,
+          origin: "studio",
+          status: "incomplete",
+          incomplete_phase: phase,
+          incomplete_data: incompleteData as any,
+        }]).select("id").single();
+
+        if (data) setIncompleteId(data.id);
+      }
     } catch (err) {
       console.error("Failed to save incomplete creation:", err);
     }
 
-    // Navigate to Coach with photos and report
+    // Mark that we already saved so cleanup doesn't duplicate
+    outputSavedRef.current = true;
+
     const message = `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`;
     navigate("/coach", {
-      state: { message, images },
+      state: { message, images: coachImages },
     });
-  }, [navigate, previews, analysis, phase]);
+  }, [navigate, previews, analysis, phase, incompleteId]);
 
   const handleMissingPhotosContinue = useCallback(() => {
     setPhase("input");
@@ -101,15 +200,27 @@ const EngineStudio = () => {
 
   const saveStudioCreation = async (output: StudioGeneratedOutput) => {
     try {
-      await supabase.from("studio_creations").insert([{
-        titolo_generato: output.title || null,
-        first_image_url: previews[0] || null,
-        categoria: analysis?.category || "",
-        images: previews as any,
-        questions_answers: [] as any,
-        output: output as any,
-        origin: "studio",
-      }]);
+      if (incompleteId) {
+        // Complete the previously incomplete creation
+        await supabase.from("studio_creations").update({
+          titolo_generato: output.title || null,
+          output: output as any,
+          status: "complete",
+          incomplete_phase: null,
+          incomplete_data: null,
+        }).eq("id", incompleteId);
+      } else {
+        await supabase.from("studio_creations").insert([{
+          titolo_generato: output.title || null,
+          first_image_url: previews[0] || null,
+          categoria: analysis?.category || "",
+          images: previews as any,
+          questions_answers: [] as any,
+          output: output as any,
+          origin: "studio",
+        }]);
+      }
+      outputSavedRef.current = true;
     } catch (err) {
       console.error("Failed to save studio creation:", err);
     }
@@ -138,7 +249,7 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
       setPhase("input");
     }
-  }, [analysis, toast, previews]);
+  }, [analysis, toast, previews, incompleteId]);
 
   const handleNewAnalysis = useCallback(() => {
     setPhase("upload");
@@ -146,6 +257,8 @@ const EngineStudio = () => {
     setImages([]);
     setPreviews([]);
     setGeneratedOutput(null);
+    setIncompleteId(null);
+    outputSavedRef.current = false;
   }, []);
 
   useSwipeBack("/home");
