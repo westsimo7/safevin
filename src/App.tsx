@@ -48,6 +48,7 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/incomplete" element={
             <PageTransition direction="right"><IncompleteCreations /></PageTransition>
+          } />
           <Route path="/about/studio" element={
             <PageTransition direction="up"><AboutStudio /></PageTransition>
           } />
