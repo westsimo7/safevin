@@ -35,7 +35,7 @@ const Storico = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const { data } = await supabase.from("studio_creations").select("id, titolo_generato, first_image_url, categoria, created_at").order("created_at", { ascending: false });
+      const { data } = await supabase.from("studio_creations").select("id, titolo_generato, first_image_url, categoria, created_at").eq("status", "complete").order("created_at", { ascending: false });
       if (data) setCreations(data);
       setLoading(false);
     };
