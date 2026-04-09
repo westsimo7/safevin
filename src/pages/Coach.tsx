@@ -100,6 +100,45 @@ const Coach = () => {
     window.history.replaceState({}, document.title);
   }, [location.state]);
 
+  // Coach speaks first with studio photo context
+  const triggerCoachIntro = async (report: string, imgs: string[]) => {
+    setIsLoading(true);
+    // Send context as a hidden user message so the coach can analyze and respond
+    const contextMsg: Msg = {
+      role: "user",
+      content: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${report}\n\nHo allegato le foto del mio annuncio. Analizza le foto e il resoconto, poi presentami un recap di quello che hai trovato e chiedimi se voglio procedere con i feedback migliorativi.`,
+      images: imgs,
+    };
+
+    let assistantSoFar = "";
+    const upsertAssistant = (chunk: string) => {
+      assistantSoFar += chunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    try {
+      await streamChat({
+        messages: [contextMsg],
+        images: imgs,
+        onDelta: (chunk) => upsertAssistant(chunk),
+        onDone: () => setIsLoading(false),
+        onError: (err) => {
+          setMessages([{ role: "assistant", content: `⚠️ ${err}` }]);
+          setIsLoading(false);
+        },
+      });
+    } catch {
+      setMessages([{ role: "assistant", content: "⚠️ Errore di connessione." }]);
+      setIsLoading(false);
+    }
+  };
+
   const sendMessage = async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
     const imgs = attachedImages?.length ? attachedImages : undefined;
