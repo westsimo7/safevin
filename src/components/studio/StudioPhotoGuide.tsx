@@ -1,5 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import foto1 from "@/assets/studio-guide/foto1.jpg";
 import foto2 from "@/assets/studio-guide/foto2.jpg";
@@ -33,34 +35,33 @@ const StudioPhotoGuide = () => {
   const scrollPositionRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [selectedSlide, setSelectedSlide] = useState<number | null>(null);
+  const isMobile = useIsMobile();
 
-  // Auto-scroll lento continuo verso sinistra
+  // Swipe state for mobile dialog
+  const touchStartRef = useRef<number | null>(null);
+
+  // Auto-scroll
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
 
     let raf: number;
     const speed = window.innerWidth < 640 ? 0.2 : 0.1;
-
     scrollPositionRef.current = el.scrollLeft;
 
     const step = () => {
       if (!pausedRef.current && el) {
         const loopPoint = el.scrollWidth / 2;
         scrollPositionRef.current += speed;
-
         if (scrollPositionRef.current >= loopPoint) {
           scrollPositionRef.current = 0;
         }
-
         el.scrollLeft = scrollPositionRef.current;
       }
-
       raf = requestAnimationFrame(step);
     };
 
     raf = requestAnimationFrame(step);
-
     return () => {
       cancelAnimationFrame(raf);
       if (resumeTimerRef.current) clearTimeout(resumeTimerRef.current);
@@ -75,7 +76,6 @@ const StudioPhotoGuide = () => {
     }, 1000);
   }, []);
 
-  // Pause on touch/pointer interaction, resume after 1s
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -83,7 +83,6 @@ const StudioPhotoGuide = () => {
     const syncScrollPosition = () => {
       scrollPositionRef.current = el.scrollLeft;
     };
-
     const handler = () => pauseAndResume();
 
     el.addEventListener("pointerdown", handler);
@@ -109,6 +108,40 @@ const StudioPhotoGuide = () => {
     }
   };
 
+  const goToPrev = useCallback(() => {
+    setSelectedSlide((prev) => (prev !== null ? (prev - 1 + slides.length) % slides.length : null));
+  }, []);
+
+  const goToNext = useCallback(() => {
+    setSelectedSlide((prev) => (prev !== null ? (prev + 1) % slides.length : null));
+  }, []);
+
+  // Keyboard arrows for desktop
+  useEffect(() => {
+    if (selectedSlide === null) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowLeft") { e.preventDefault(); goToPrev(); }
+      if (e.key === "ArrowRight") { e.preventDefault(); goToNext(); }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedSlide, goToPrev, goToNext]);
+
+  // Touch handlers for mobile swipe in dialog
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartRef.current === null) return;
+    const diff = e.changedTouches[0].clientX - touchStartRef.current;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) goToPrev();
+      else goToNext();
+    }
+    touchStartRef.current = null;
+  };
+
   return (
     <>
       <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-2 h-full flex flex-col">
@@ -128,12 +161,7 @@ const StudioPhotoGuide = () => {
               onClick={() => handlePhotoClick(i % slides.length)}
             >
               <div className="flex-1 rounded-lg overflow-hidden border border-border/40 mb-1 active:scale-95 transition-transform">
-                <img
-                  src={s.img}
-                  alt={s.label}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+                <img src={s.img} alt={s.label} className="w-full h-full object-cover" loading="lazy" />
               </div>
               <p className="text-[9px] text-muted-foreground leading-tight text-center shrink-0">
                 {s.label}
@@ -150,15 +178,41 @@ const StudioPhotoGuide = () => {
       <Dialog open={selectedSlide !== null} onOpenChange={handleDialogClose}>
         <DialogContent className="max-w-[90vw] sm:max-w-md p-2 bg-background">
           {selectedSlide !== null && (
-            <div className="space-y-2">
+            <div
+              className="space-y-2 relative select-none"
+              onTouchStart={handleTouchStart}
+              onTouchEnd={handleTouchEnd}
+            >
               <img
                 src={slides[selectedSlide].img}
                 alt={slides[selectedSlide].label}
                 className="w-full rounded-lg object-contain max-h-[70vh]"
+                draggable={false}
               />
               <p className="text-sm text-center font-medium text-foreground">
                 {slides[selectedSlide].label}
               </p>
+              <p className="text-xs text-center text-muted-foreground">
+                {selectedSlide + 1} / {slides.length}
+              </p>
+
+              {/* Desktop arrow buttons */}
+              {!isMobile && (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goToPrev(); }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-[calc(100%+8px)] bg-background/80 backdrop-blur-sm border border-border rounded-full p-1.5 hover:bg-accent transition-colors"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-foreground" />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); goToNext(); }}
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[calc(100%+8px)] bg-background/80 backdrop-blur-sm border border-border rounded-full p-1.5 hover:bg-accent transition-colors"
+                  >
+                    <ChevronRight className="h-5 w-5 text-foreground" />
+                  </button>
+                </>
+              )}
             </div>
           )}
         </DialogContent>
