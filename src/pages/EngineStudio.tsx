@@ -12,6 +12,25 @@ import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInp
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
 import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
 
+function createThumbnail(dataUrl: string): string {
+  // Return a truncated version — just keep first 200 chars as identifier
+  // The actual thumbnail will be the first_image_url shown in incomplete list
+  try {
+    const canvas = document.createElement("canvas");
+    const img = new Image();
+    img.src = dataUrl;
+    canvas.width = 80;
+    canvas.height = 80;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(img, 0, 0, 80, 80);
+      return canvas.toDataURL("image/jpeg", 0.4);
+    }
+  } catch {}
+  return dataUrl.substring(0, 200);
+}
+
+
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
 type ResumeState = {
@@ -45,18 +64,25 @@ const EngineStudio = () => {
 
   const saveDraft = useCallback((draftPhase: StudioDraftPhase, draftAnalysis: ProductAnalysis | null, draftPreviews: string[], existingId?: string | null) => {
     if (!draftAnalysis) return existingId || null;
-    const draftId = upsertStudioDraft({
-      id: existingId || null,
-      categoria: draftAnalysis.category || "",
-      first_image_url: draftPreviews[0] || null,
-      incomplete_phase: draftPhase,
-      incomplete_data: {
-        analysis: draftAnalysis,
-        previews: draftPreviews,
-      },
-    });
-    setIncompleteId(draftId);
-    return draftId;
+    try {
+      // Save only a small thumbnail for the list, not full base64 previews
+      const thumbUrl = draftPreviews[0] ? createThumbnail(draftPreviews[0]) : null;
+      const draftId = upsertStudioDraft({
+        id: existingId || null,
+        categoria: draftAnalysis.category || "",
+        first_image_url: thumbUrl,
+        incomplete_phase: draftPhase,
+        incomplete_data: {
+          analysis: draftAnalysis,
+          previews: [], // don't store full base64 in localStorage
+        },
+      });
+      setIncompleteId(draftId);
+      return draftId;
+    } catch (err) {
+      console.warn("Draft save failed (non-blocking):", err);
+      return existingId || null;
+    }
   }, []);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
