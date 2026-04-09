@@ -15,9 +15,10 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + ([Taglia]) + – + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + ([Taglia]) + – + [Condizione]
 
 Esempio: "Nike Felpa con cappuccio Nera Streetwear (L) – Come nuovo"
+Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K (L) – Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
@@ -203,7 +204,7 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + ([Taglia]) – [Condizione]
+1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K") + ([Taglia]) – [Condizione]
    IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
