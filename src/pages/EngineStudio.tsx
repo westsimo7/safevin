@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
@@ -10,10 +10,15 @@ import StudioRecognition, { type ProductAnalysis } from "@/components/studio/Stu
 import StudioMissingPhotos from "@/components/studio/StudioMissingPhotos";
 import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInput";
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
+import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
-const SAVEABLE_PHASES: Phase[] = ["recognition", "missing_photos", "input"];
+type ResumeState = {
+  resumeFrom?: string;
+  resumeData?: { analysis: ProductAnalysis; previews: string[] };
+  incompleteId?: string;
+} | null;
 
 const EngineStudio = () => {
   const navigate = useNavigate();
@@ -27,14 +32,8 @@ const EngineStudio = () => {
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
   const [incompleteId, setIncompleteId] = useState<string | null>(null);
 
-  // Resume from incomplete creation if navigated with state
   useEffect(() => {
-    const state = location.state as {
-      resumeFrom?: string;
-      resumeData?: { analysis: ProductAnalysis; previews: string[] };
-      incompleteId?: string;
-    } | null;
-
+    const state = location.state as ResumeState;
     if (state?.resumeFrom && state?.resumeData) {
       setAnalysis(state.resumeData.analysis);
       setPreviews(state.resumeData.previews || []);
@@ -42,46 +41,22 @@ const EngineStudio = () => {
       setPhase(state.resumeFrom as Phase);
       window.history.replaceState({}, document.title);
     }
-  }, []);
+  }, [location.state]);
 
-  // Save/update incomplete record immediately when entering a saveable phase
-  const saveIncomplete = useCallback(async (
-    currentPhase: Phase,
-    currentAnalysis: ProductAnalysis | null,
-    currentPreviews: string[],
-    currentIncompleteId: string | null,
-  ) => {
-    if (!SAVEABLE_PHASES.includes(currentPhase) || !currentAnalysis) return currentIncompleteId;
-
-    const incompleteData = { analysis: currentAnalysis, previews: currentPreviews };
-
-    try {
-      if (currentIncompleteId) {
-        await supabase.from("studio_creations").update({
-          incomplete_phase: currentPhase,
-          incomplete_data: incompleteData as any,
-          first_image_url: currentPreviews[0] || null,
-          categoria: currentAnalysis.category || "",
-        }).eq("id", currentIncompleteId);
-        return currentIncompleteId;
-      } else {
-        const { data } = await supabase.from("studio_creations").insert([{
-          first_image_url: currentPreviews[0] || null,
-          categoria: currentAnalysis.category || "",
-          images: currentPreviews as any,
-          questions_answers: [] as any,
-          output: null,
-          origin: "studio",
-          status: "incomplete",
-          incomplete_phase: currentPhase,
-          incomplete_data: incompleteData as any,
-        }]).select("id").single();
-        return data?.id || null;
-      }
-    } catch (err) {
-      console.error("Failed to save incomplete:", err);
-      return currentIncompleteId;
-    }
+  const saveDraft = useCallback((draftPhase: StudioDraftPhase, draftAnalysis: ProductAnalysis | null, draftPreviews: string[], existingId?: string | null) => {
+    if (!draftAnalysis) return existingId || null;
+    const draftId = upsertStudioDraft({
+      id: existingId || null,
+      categoria: draftAnalysis.category || "",
+      first_image_url: draftPreviews[0] || null,
+      incomplete_phase: draftPhase,
+      incomplete_data: {
+        analysis: draftAnalysis,
+        previews: draftPreviews,
+      },
+    });
+    setIncompleteId(draftId);
+    return draftId;
   }, []);
 
   const handleAnalyze = useCallback(async (files: File[], filePreviews: string[]) => {
@@ -104,10 +79,8 @@ const EngineStudio = () => {
 
       if (data?.analysis) {
         setAnalysis(data.analysis);
+        saveDraft("recognition", data.analysis, filePreviews, null);
         setPhase("recognition");
-        // Save as incomplete immediately
-        const newId = await saveIncomplete("recognition", data.analysis, filePreviews, null);
-        if (newId) setIncompleteId(newId);
       } else {
         throw new Error("Risposta non valida");
       }
@@ -116,15 +89,13 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante l'analisi.", variant: "destructive" });
       setPhase("upload");
     }
-  }, [toast, saveIncomplete]);
+  }, [toast, saveDraft]);
 
-  const handleConfirm = useCallback(async (confirmed: ProductAnalysis) => {
+  const handleConfirm = useCallback((confirmed: ProductAnalysis) => {
     setAnalysis(confirmed);
+    saveDraft("missing_photos", confirmed, previews, incompleteId);
     setPhase("missing_photos");
-    // Update incomplete
-    const newId = await saveIncomplete("missing_photos", confirmed, previews, incompleteId);
-    if (newId) setIncompleteId(newId);
-  }, [previews, incompleteId, saveIncomplete]);
+  }, [previews, incompleteId, saveDraft]);
 
   const handleAskCoach = useCallback((photoName: string) => {
     navigate("/coach", {
@@ -134,41 +105,31 @@ const EngineStudio = () => {
     });
   }, [navigate]);
 
-  const handleSaveIncompleteAndGoCoach = useCallback(async (reportSummary: string, coachImages: string[]) => {
-    // Already saved as incomplete, just navigate
+  const handleSaveIncompleteAndGoCoach = useCallback((reportSummary: string, coachImages: string[]) => {
     navigate("/coach", {
       state: { studioReport: reportSummary, images: coachImages },
     });
   }, [navigate]);
 
-  const handleMissingPhotosContinue = useCallback(async () => {
+  const handleMissingPhotosContinue = useCallback(() => {
+    saveDraft("input", analysis, previews, incompleteId);
     setPhase("input");
-    // Update incomplete
-    const newId = await saveIncomplete("input", analysis, previews, incompleteId);
-    if (newId) setIncompleteId(newId);
-  }, [analysis, previews, incompleteId, saveIncomplete]);
+  }, [analysis, previews, incompleteId, saveDraft]);
 
   const saveStudioCreation = async (output: StudioGeneratedOutput) => {
     try {
+      await supabase.from("studio_creations").insert([{
+        titolo_generato: output.title || null,
+        first_image_url: previews[0] || null,
+        categoria: analysis?.category || "",
+        images: previews as any,
+        questions_answers: [] as any,
+        output: output as any,
+        origin: "studio",
+      }]);
       if (incompleteId) {
-        // Complete the previously incomplete creation
-        await supabase.from("studio_creations").update({
-          titolo_generato: output.title || null,
-          output: output as any,
-          status: "complete",
-          incomplete_phase: null,
-          incomplete_data: null,
-        }).eq("id", incompleteId);
-      } else {
-        await supabase.from("studio_creations").insert([{
-          titolo_generato: output.title || null,
-          first_image_url: previews[0] || null,
-          categoria: analysis?.category || "",
-          images: previews as any,
-          questions_answers: [] as any,
-          output: output as any,
-          origin: "studio",
-        }]);
+        removeStudioDraft(incompleteId);
+        setIncompleteId(null);
       }
     } catch (err) {
       console.error("Failed to save studio creation:", err);
@@ -201,13 +162,16 @@ const EngineStudio = () => {
   }, [analysis, toast, previews, incompleteId]);
 
   const handleNewAnalysis = useCallback(() => {
+    if (incompleteId) {
+      removeStudioDraft(incompleteId);
+    }
     setPhase("upload");
     setAnalysis(null);
     setImages([]);
     setPreviews([]);
     setGeneratedOutput(null);
     setIncompleteId(null);
-  }, []);
+  }, [incompleteId]);
 
   useSwipeBack("/home");
 
