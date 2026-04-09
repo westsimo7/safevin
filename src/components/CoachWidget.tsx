@@ -107,16 +107,17 @@ const CoachWidget = ({ open, onClose }: CoachWidgetProps) => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.message) {
-        setTimeout(() => sendMessage(detail.message), 300);
+        const eventImages = detail?.images || [];
+        setTimeout(() => sendMessage(detail.message, eventImages), 300);
       }
     };
     window.addEventListener("open-coach", handler);
     return () => window.removeEventListener("open-coach", handler);
   }, [messages, isLoading]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
-    const userMsg: Msg = { role: "user", content: text.trim() };
+    const userMsg: Msg = { role: "user", content: text.trim(), images: attachedImages?.length ? attachedImages : undefined };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
