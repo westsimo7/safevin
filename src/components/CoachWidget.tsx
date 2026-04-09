@@ -3,7 +3,7 @@ import { X, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 
 const SUGGESTED_QUESTIONS = [
   "Come posso migliorare il mio ultimo annuncio?",
@@ -27,13 +27,20 @@ async function streamChat({
   onDone: () => void;
   onError: (msg: string) => void;
 }) {
+  // Extract images from the first user message if present
+  const firstUserMsg = messages.find(m => m.role === "user" && m.images?.length);
+  const images = firstUserMsg?.images || [];
+  
+  // Send messages without the images field to keep payload clean for subsequent messages
+  const cleanMessages = messages.map(({ images: _img, ...rest }) => rest);
+  
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages: cleanMessages, images }),
   });
 
   if (!resp.ok) {
