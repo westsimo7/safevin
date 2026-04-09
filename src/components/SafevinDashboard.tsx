@@ -143,29 +143,6 @@ const SafevinHome = () => {
               ))}
             </motion.div>
 
-            <motion.div
-              className="flex items-center justify-center px-2 sm:px-0"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ ...spring, delay: 1.2 }}
-            >
-              <Button
-                variant="outline"
-                size="lg"
-                className="h-auto py-3.5 sm:py-4 px-6 sm:px-8 border-border/50 hover:border-primary/40 hover:bg-primary/5 transition-all group w-full sm:w-auto"
-                onClick={() => navigate("/about/studio")}
-              >
-                <div className="flex items-center gap-2.5">
-                  <PenTool className="w-4 h-4 text-primary" />
-                  <div className="text-left">
-                    <span className="text-[10px] sm:text-xs text-muted-foreground block leading-none mb-0.5">
-                      SAFE<span className="text-primary">ViN</span>
-                    </span>
-                    <span className="font-bold text-foreground text-sm">Studio</span>
-                  </div>
-                </div>
-              </Button>
-            </motion.div>
 
             <motion.div
               className="flex items-center justify-center gap-2 mt-10 sm:mt-14 mb-8 text-muted-foreground"
