@@ -176,12 +176,9 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
               onClick={() => {
                 setImproveOpen(false);
                 const reportSummary = verdicts.map(v => `${v.icon} ${v.label}: ${v.ok ? "OK" : "Da migliorare"} — ${v.verdict}`).join("\n");
-                window.dispatchEvent(new CustomEvent("open-coach", {
-                  detail: {
-                    message: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`,
-                    images: previews || [],
-                  },
-                }));
+                if (onSaveIncompleteAndGoCoach) {
+                  onSaveIncompleteAndGoCoach(reportSummary, previews || []);
+                }
               }}
             >
               <span className="font-semibold text-foreground text-sm block">Approfondisci con il Coach</span>
