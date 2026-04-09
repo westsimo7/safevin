@@ -11,7 +11,7 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages } = await req.json();
+    const { messages, images } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -117,6 +117,30 @@ ${studioContext || "Nessuno Studio."}
 
 OBIETTIVO FINALE: Trasformare ogni annuncio in più click, più interesse, più offerte, più vendite rapide. Sei responsabile del risultato.`;
 
+    // Build messages with optional image support
+    const apiMessages: any[] = [
+      { role: "system", content: systemPrompt },
+    ];
+
+    // If images are provided, attach them to the first user message as multimodal content
+    const hasImages = Array.isArray(images) && images.length > 0;
+    
+    for (const msg of messages) {
+      if (hasImages && msg === messages[0] && msg.role === "user") {
+        // First user message gets images attached
+        const content: any[] = [
+          { type: "text", text: msg.content },
+          ...images.map((img: string) => ({
+            type: "image_url",
+            image_url: { url: img },
+          })),
+        ];
+        apiMessages.push({ role: "user", content });
+      } else {
+        apiMessages.push({ role: msg.role, content: msg.content });
+      }
+    }
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -125,10 +149,7 @@ OBIETTIVO FINALE: Trasformare ogni annuncio in più click, più interesse, più 
       },
       body: JSON.stringify({
         model: "openai/gpt-5.2",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
+        messages: apiMessages,
         stream: true,
       }),
     });
