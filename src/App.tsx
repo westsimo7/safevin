@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import AboutStudio from "./pages/AboutStudio";
 import Coach from "./pages/Coach";
+import IncompleteCreations from "./pages/IncompletCreations";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -45,6 +46,8 @@ const AnimatedRoutes = () => {
           <Route path="/coach" element={
             <PageTransition direction="up"><Coach /></PageTransition>
           } />
+          <Route path="/incomplete" element={
+            <PageTransition direction="right"><IncompleteCreations /></PageTransition>
           <Route path="/about/studio" element={
             <PageTransition direction="up"><AboutStudio /></PageTransition>
           } />
