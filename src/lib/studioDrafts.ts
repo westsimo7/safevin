@@ -40,7 +40,19 @@ export const readStudioDrafts = (): StudioDraft[] => {
 
 export const writeStudioDrafts = (drafts: StudioDraft[]) => {
   if (!canUseStorage()) return;
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(drafts));
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(drafts));
+  } catch (e) {
+    console.warn("localStorage quota exceeded, pruning old drafts…", e);
+    try {
+      // Keep only the 2 most recent drafts and retry
+      const pruned = drafts.slice(0, 2);
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(pruned));
+    } catch (e2) {
+      console.warn("localStorage write failed even after pruning:", e2);
+      return; // silently fail — don't break the flow
+    }
+  }
   emitChange();
 };
 
