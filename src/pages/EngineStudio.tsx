@@ -67,6 +67,34 @@ const EngineStudio = () => {
     });
   }, [navigate]);
 
+  const handleSaveIncompleteAndGoCoach = useCallback(async (reportSummary: string, images: string[]) => {
+    // Save the current creation as incomplete
+    try {
+      await supabase.from("studio_creations").insert([{
+        first_image_url: previews[0] || null,
+        categoria: analysis?.category || "",
+        images: previews as any,
+        questions_answers: [] as any,
+        output: null,
+        origin: "studio",
+        status: "incomplete",
+        incomplete_phase: phase,
+        incomplete_data: {
+          analysis,
+          previews,
+        } as any,
+      }]);
+    } catch (err) {
+      console.error("Failed to save incomplete creation:", err);
+    }
+
+    // Navigate to Coach with photos and report
+    const message = `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`;
+    navigate("/coach", {
+      state: { message, images },
+    });
+  }, [navigate, previews, analysis, phase]);
+
   const handleMissingPhotosContinue = useCallback(() => {
     setPhase("input");
   }, []);
@@ -161,6 +189,7 @@ const EngineStudio = () => {
             onContinue={handleMissingPhotosContinue}
             onBack={() => setPhase("recognition")}
             onAskCoach={handleAskCoach}
+            onSaveIncompleteAndGoCoach={handleSaveIncompleteAndGoCoach}
           />
         )}
 
