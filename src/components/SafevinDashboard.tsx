@@ -1,11 +1,9 @@
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, ArrowRight, PenTool, Sparkles, MessageCircle, ShieldCheck, Clock } from "lucide-react";
+import { ArrowRight, PenTool, Sparkles, ShieldCheck, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { supabase } from "@/integrations/supabase/client";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
