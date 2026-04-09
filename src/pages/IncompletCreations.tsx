@@ -132,6 +132,13 @@ const IncompleteCreations = () => {
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors flex-shrink-0" />
                 <button
+                  className="p-1.5 rounded-full text-muted-foreground/50 hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                  onClick={(e) => { e.stopPropagation(); handleCoachFeedback(item); }}
+                  title="Feedback dal Coach"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                </button>
+                <button
                   className="p-1.5 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
                   onClick={(e) => { e.stopPropagation(); setDeleteTarget({ id: item.id }); }}
                 >
