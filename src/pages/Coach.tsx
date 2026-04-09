@@ -83,13 +83,21 @@ const Coach = () => {
   // Auto-send initial message from Studio if provided via location state
   useEffect(() => {
     if (initRef.current) return;
-    const state = location.state as { message?: string; images?: string[] } | null;
-    if (state?.message) {
+    const state = location.state as { message?: string; images?: string[]; studioReport?: string } | null;
+    if (state?.studioReport && state?.images?.length) {
+      initRef.current = true;
+      const imgs = state.images;
+      setStudioImages(imgs);
+      // Coach speaks first — send a hidden system context and get the coach's intro
+      setTimeout(() => triggerCoachIntro(state.studioReport!, imgs), 300);
+    } else if (state?.message) {
       initRef.current = true;
       const imgs = state.images || [];
       setStudioImages(imgs);
       setTimeout(() => sendMessage(state.message!, imgs), 300);
     }
+    // Clear location state
+    window.history.replaceState({}, document.title);
   }, [location.state]);
 
   const sendMessage = async (text: string, attachedImages?: string[]) => {
