@@ -32,6 +32,8 @@ function createThumbnail(dataUrl: string): string {
 
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
+
+type ResumeState = {
   resumeFrom?: string;
   resumeData?: { analysis: ProductAnalysis; previews: string[] };
   incompleteId?: string;
