@@ -209,6 +209,13 @@ const CoachWidget = ({ open, onClose }: CoachWidgetProps) => {
                   : "bg-muted/40 border border-border/30 rounded-bl-sm"
               }`}
             >
+              {msg.images && msg.images.length > 0 && (
+                <div className="flex gap-1 mb-2 overflow-x-auto">
+                  {msg.images.map((img, idx) => (
+                    <img key={idx} src={img} alt={`Foto ${idx + 1}`} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                  ))}
+                </div>
+              )}
               {msg.role === "assistant" ? (
                 <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
