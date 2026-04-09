@@ -12,7 +12,24 @@ import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInp
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
 import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
 
-type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
+function createThumbnail(dataUrl: string): string {
+  // Return a truncated version — just keep first 200 chars as identifier
+  // The actual thumbnail will be the first_image_url shown in incomplete list
+  try {
+    const canvas = document.createElement("canvas");
+    const img = new Image();
+    img.src = dataUrl;
+    canvas.width = 80;
+    canvas.height = 80;
+    const ctx = canvas.getContext("2d");
+    if (ctx) {
+      ctx.drawImage(img, 0, 0, 80, 80);
+      return canvas.toDataURL("image/jpeg", 0.4);
+    }
+  } catch {}
+  return dataUrl.substring(0, 200);
+}
+
 
 type ResumeState = {
   resumeFrom?: string;
