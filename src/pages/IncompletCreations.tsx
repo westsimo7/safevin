@@ -4,7 +4,7 @@ import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Badge } from "@/components/ui/badge";
-import { PenTool, Trash2, Clock, ArrowRight } from "lucide-react";
+import { PenTool, Trash2, Clock, ArrowRight, MessageCircle } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -68,6 +68,17 @@ const IncompleteCreations = () => {
     });
   };
 
+  const handleCoachFeedback = (item: StudioDraft) => {
+    const analysis = item.incomplete_data?.analysis;
+    const previews = item.incomplete_data?.previews || [];
+    const report = analysis
+      ? `Categoria: ${analysis.category || "N/D"}\nBrand: ${analysis.brand || "N/D"}\nCondizioni: ${analysis.conditions || "N/D"}\nColore: ${analysis.color || "N/D"}`
+      : "Nessun resoconto disponibile";
+    navigate("/coach", {
+      state: { studioReport: report, images: previews },
+    });
+  };
+
   useSwipeBack("/home");
 
   return (
@@ -120,6 +131,13 @@ const IncompleteCreations = () => {
                   </div>
                 </div>
                 <ArrowRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-primary transition-colors flex-shrink-0" />
+                <button
+                  className="p-1.5 rounded-full text-muted-foreground/50 hover:text-primary hover:bg-primary/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+                  onClick={(e) => { e.stopPropagation(); handleCoachFeedback(item); }}
+                  title="Feedback dal Coach"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                </button>
                 <button
                   className="p-1.5 rounded-full text-muted-foreground/50 hover:text-destructive hover:bg-destructive/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
                   onClick={(e) => { e.stopPropagation(); setDeleteTarget({ id: item.id }); }}

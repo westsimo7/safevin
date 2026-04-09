@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import AppNavbar from "@/components/AppNavbar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
+import { saveCoachMessages, loadCoachMessages, saveCoachImages, loadCoachImages, clearCoachChat } from "@/lib/coachStore";
 
 type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 
@@ -67,12 +68,16 @@ async function streamChat({
 const Coach = () => {
   useSwipeBack("/home");
   const location = useLocation();
-  const [messages, setMessages] = useState<Msg[]>([]);
+  const [messages, setMessages] = useState<Msg[]>(() => loadCoachMessages());
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [studioImages, setStudioImages] = useState<string[]>([]);
+  const [studioImages, setStudioImages] = useState<string[]>(() => loadCoachImages());
   const scrollRef = useRef<HTMLDivElement>(null);
   const initRef = useRef(false);
+
+  // Persist messages on change
+  useEffect(() => { saveCoachMessages(messages); }, [messages]);
+  useEffect(() => { saveCoachImages(studioImages); }, [studioImages]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -88,22 +93,18 @@ const Coach = () => {
       initRef.current = true;
       const imgs = state.images;
       setStudioImages(imgs);
-      // Coach speaks first — send a hidden system context and get the coach's intro
       setTimeout(() => triggerCoachIntro(state.studioReport!, imgs), 300);
     } else if (state?.message) {
       initRef.current = true;
       const imgs = state.images || [];
-      setStudioImages(imgs);
+      if (imgs.length) setStudioImages(imgs);
       setTimeout(() => sendMessage(state.message!, imgs), 300);
     }
-    // Clear location state
     window.history.replaceState({}, document.title);
   }, [location.state]);
 
-  // Coach speaks first with studio photo context
   const triggerCoachIntro = async (report: string, imgs: string[]) => {
     setIsLoading(true);
-    // Send context as a hidden user message so the coach can analyze and respond
     const contextMsg: Msg = {
       role: "user",
       content: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${report}\n\nHo allegato le foto del mio annuncio. Analizza le foto e il resoconto, poi presentami un recap di quello che hai trovato e chiedimi se voglio procedere con i feedback migliorativi.`,
@@ -129,17 +130,17 @@ const Coach = () => {
         onDelta: (chunk) => upsertAssistant(chunk),
         onDone: () => setIsLoading(false),
         onError: (err) => {
-          setMessages([{ role: "assistant", content: `⚠️ ${err}` }]);
+          setMessages((prev) => [...prev, { role: "assistant", content: `⚠️ ${err}` }]);
           setIsLoading(false);
         },
       });
     } catch {
-      setMessages([{ role: "assistant", content: "⚠️ Errore di connessione." }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "⚠️ Errore di connessione." }]);
       setIsLoading(false);
     }
   };
 
-  const sendMessage = async (text: string, attachedImages?: string[]) => {
+  const sendMessage = useCallback(async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
     const imgs = attachedImages?.length ? attachedImages : undefined;
     const userMsg: Msg = { role: "user", content: text.trim(), images: imgs };
@@ -148,7 +149,6 @@ const Coach = () => {
     setInput("");
     setIsLoading(true);
 
-    // Collect all images from the conversation for the API
     const allImages = studioImages.length > 0 ? studioImages : [];
 
     let assistantSoFar = "";
@@ -178,7 +178,7 @@ const Coach = () => {
       setMessages((prev) => [...prev, { role: "assistant", content: "⚠️ Errore di connessione." }]);
       setIsLoading(false);
     }
-  };
+  }, [messages, isLoading, studioImages]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -187,17 +187,30 @@ const Coach = () => {
     }
   };
 
+  const handleClearChat = () => {
+    clearCoachChat();
+    setMessages([]);
+    setStudioImages([]);
+  };
+
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
       <main className="flex-1 flex flex-col overflow-hidden w-full px-4 sm:px-6 lg:px-64 xl:px-96">
         {/* Header */}
-        <div className="py-4 sm:py-6 shrink-0 text-center">
-          <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 text-[11px] sm:text-xs">
-            SafeVin Coach
-          </Badge>
-          <h1 className="text-xl sm:text-2xl font-bold">Il tuo assistente di vendita</h1>
+        <div className="py-4 sm:py-6 shrink-0 flex items-center justify-between">
+          <div className="flex-1 text-center">
+            <Badge className="bg-primary/10 text-primary border-primary/20 mb-2 text-[11px] sm:text-xs">
+              SafeVin Coach
+            </Badge>
+            <h1 className="text-xl sm:text-2xl font-bold">Il tuo assistente di vendita</h1>
+          </div>
+          {messages.length > 0 && (
+            <Button variant="ghost" size="sm" className="shrink-0 text-muted-foreground hover:text-destructive" onClick={handleClearChat}>
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
         </div>
 
         {/* Pinned studio photos */}
