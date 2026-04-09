@@ -174,9 +174,11 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
               className="w-full text-left rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors p-4"
               onClick={() => {
                 setImproveOpen(false);
+                const reportSummary = verdicts.map(v => `${v.icon} ${v.label}: ${v.ok ? "OK" : "Da migliorare"} — ${v.verdict}`).join("\n");
                 window.dispatchEvent(new CustomEvent("open-coach", {
                   detail: {
-                    message: "Ho bisogno di consigli pratici per migliorare le foto del mio annuncio. Aiutami a risolvere i problemi e completare le info mancanti.",
+                    message: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`,
+                    images: previews || [],
                   },
                 }));
               }}

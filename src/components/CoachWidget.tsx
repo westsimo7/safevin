@@ -3,7 +3,7 @@ import { X, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Msg = { role: "user" | "assistant"; content: string; images?: string[] };
 
 const SUGGESTED_QUESTIONS = [
   "Come posso migliorare il mio ultimo annuncio?",
@@ -27,13 +27,20 @@ async function streamChat({
   onDone: () => void;
   onError: (msg: string) => void;
 }) {
+  // Extract images from the first user message if present
+  const firstUserMsg = messages.find(m => m.role === "user" && m.images?.length);
+  const images = firstUserMsg?.images || [];
+  
+  // Send messages without the images field to keep payload clean for subsequent messages
+  const cleanMessages = messages.map(({ images: _img, ...rest }) => rest);
+  
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages: cleanMessages, images }),
   });
 
   if (!resp.ok) {
@@ -100,16 +107,17 @@ const CoachWidget = ({ open, onClose }: CoachWidgetProps) => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.message) {
-        setTimeout(() => sendMessage(detail.message), 300);
+        const eventImages = detail?.images || [];
+        setTimeout(() => sendMessage(detail.message, eventImages), 300);
       }
     };
     window.addEventListener("open-coach", handler);
     return () => window.removeEventListener("open-coach", handler);
   }, [messages, isLoading]);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
-    const userMsg: Msg = { role: "user", content: text.trim() };
+    const userMsg: Msg = { role: "user", content: text.trim(), images: attachedImages?.length ? attachedImages : undefined };
     const newMessages = [...messages, userMsg];
     setMessages(newMessages);
     setInput("");
@@ -201,6 +209,13 @@ const CoachWidget = ({ open, onClose }: CoachWidgetProps) => {
                   : "bg-muted/40 border border-border/30 rounded-bl-sm"
               }`}
             >
+              {msg.images && msg.images.length > 0 && (
+                <div className="flex gap-1 mb-2 overflow-x-auto">
+                  {msg.images.map((img, idx) => (
+                    <img key={idx} src={img} alt={`Foto ${idx + 1}`} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                  ))}
+                </div>
+              )}
               {msg.role === "assistant" ? (
                 <div className="prose prose-sm prose-invert max-w-none [&_p]:mb-1.5 [&_p]:text-sm [&_ul]:text-xs [&_li]:text-foreground/80 [&_strong]:text-primary [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1">
                   <ReactMarkdown>{msg.content}</ReactMarkdown>
