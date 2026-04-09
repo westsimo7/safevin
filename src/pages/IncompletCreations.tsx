@@ -68,6 +68,17 @@ const IncompleteCreations = () => {
     });
   };
 
+  const handleCoachFeedback = (item: StudioDraft) => {
+    const analysis = item.incomplete_data?.analysis;
+    const previews = item.incomplete_data?.previews || [];
+    const report = analysis
+      ? `Categoria: ${analysis.category || "N/D"}\nBrand: ${analysis.brand || "N/D"}\nCondizioni: ${analysis.conditions || "N/D"}\nColore: ${analysis.color || "N/D"}`
+      : "Nessun resoconto disponibile";
+    navigate("/coach", {
+      state: { studioReport: report, images: previews },
+    });
+  };
+
   useSwipeBack("/home");
 
   return (
