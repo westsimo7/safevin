@@ -200,9 +200,21 @@ const Coach = () => {
           <h1 className="text-xl sm:text-2xl font-bold">Il tuo assistente di vendita</h1>
         </div>
 
+        {/* Pinned studio photos */}
+        {studioImages.length > 0 && (
+          <div className="shrink-0 pb-2 border-b border-border/30 mb-2">
+            <p className="text-[10px] text-muted-foreground mb-1.5">📷 Foto annuncio</p>
+            <div className="flex gap-1.5 overflow-x-auto">
+              {studioImages.map((img, idx) => (
+                <img key={idx} src={img} alt={`Foto ${idx + 1}`} className="w-14 h-14 rounded-lg object-cover shrink-0 border border-border/30" />
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Messages area */}
         <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-3 min-h-0">
-          {messages.length === 0 && !isLoading && (
+          {messages.length === 0 && !isLoading && studioImages.length === 0 && (
             <div className="flex-1 flex items-center justify-center">
               <p className="text-sm text-muted-foreground">Scrivi un messaggio per iniziare</p>
             </div>
