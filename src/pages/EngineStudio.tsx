@@ -188,9 +188,8 @@ const EngineStudio = () => {
     // Mark that we already saved so cleanup doesn't duplicate
     outputSavedRef.current = true;
 
-    const message = `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${reportSummary}\n\nHo allegato le foto del mio annuncio. Vuoi procedere con i feedback migliorativi?`;
     navigate("/coach", {
-      state: { message, images: coachImages },
+      state: { studioReport: reportSummary, images: coachImages },
     });
   }, [navigate, previews, analysis, phase, incompleteId]);
 

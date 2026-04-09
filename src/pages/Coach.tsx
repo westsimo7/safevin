@@ -83,14 +83,61 @@ const Coach = () => {
   // Auto-send initial message from Studio if provided via location state
   useEffect(() => {
     if (initRef.current) return;
-    const state = location.state as { message?: string; images?: string[] } | null;
-    if (state?.message) {
+    const state = location.state as { message?: string; images?: string[]; studioReport?: string } | null;
+    if (state?.studioReport && state?.images?.length) {
+      initRef.current = true;
+      const imgs = state.images;
+      setStudioImages(imgs);
+      // Coach speaks first — send a hidden system context and get the coach's intro
+      setTimeout(() => triggerCoachIntro(state.studioReport!, imgs), 300);
+    } else if (state?.message) {
       initRef.current = true;
       const imgs = state.images || [];
       setStudioImages(imgs);
       setTimeout(() => sendMessage(state.message!, imgs), 300);
     }
+    // Clear location state
+    window.history.replaceState({}, document.title);
   }, [location.state]);
+
+  // Coach speaks first with studio photo context
+  const triggerCoachIntro = async (report: string, imgs: string[]) => {
+    setIsLoading(true);
+    // Send context as a hidden user message so the coach can analyze and respond
+    const contextMsg: Msg = {
+      role: "user",
+      content: `[STUDIO PHOTO REVIEW]\n\nResoconto qualità foto:\n${report}\n\nHo allegato le foto del mio annuncio. Analizza le foto e il resoconto, poi presentami un recap di quello che hai trovato e chiedimi se voglio procedere con i feedback migliorativi.`,
+      images: imgs,
+    };
+
+    let assistantSoFar = "";
+    const upsertAssistant = (chunk: string) => {
+      assistantSoFar += chunk;
+      setMessages((prev) => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    try {
+      await streamChat({
+        messages: [contextMsg],
+        images: imgs,
+        onDelta: (chunk) => upsertAssistant(chunk),
+        onDone: () => setIsLoading(false),
+        onError: (err) => {
+          setMessages([{ role: "assistant", content: `⚠️ ${err}` }]);
+          setIsLoading(false);
+        },
+      });
+    } catch {
+      setMessages([{ role: "assistant", content: "⚠️ Errore di connessione." }]);
+      setIsLoading(false);
+    }
+  };
 
   const sendMessage = async (text: string, attachedImages?: string[]) => {
     if (!text.trim() || isLoading) return;
