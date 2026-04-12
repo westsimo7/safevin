@@ -91,6 +91,7 @@ const HeroSection = () => {
         <FloatingResults />
 
         {/* Description */}
+        <motion.p
           ref={descRef}
           className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2 sm:px-0"
           initial={{ opacity: 0 }}
