@@ -47,7 +47,11 @@ const FloatingResults = () => {
               <motion.div
                 key={i}
                 className="flex-shrink-0 w-[120px] sm:w-[150px] md:w-[160px]"
-                animate={{ y: [-floatY, floatY, -floatY] }}
+                animate={{
+                  y: [-floatY, floatY, -floatY],
+                  rotate: [-1.5 + (i % 3), 1.5 - (i % 2), -1.5 + (i % 3)],
+                  scale: [1, 1.02, 1, 0.98, 1],
+                }}
                 transition={{
                   duration: floatDuration,
                   repeat: Infinity,
@@ -55,11 +59,11 @@ const FloatingResults = () => {
                   delay: (i % soldItems.length) * 0.3,
                 }}
               >
-                <div className="rounded-2xl overflow-hidden shadow-2xl border border-border/20 bg-card">
+                <div className="rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-border/20 bg-card">
                   <img
                     src={img}
                     alt="Articolo venduto"
-                    className="w-full h-[220px] sm:h-[260px] md:h-[280px] object-cover"
+                    className="w-full h-[220px] sm:h-[260px] md:h-[280px] object-cover rounded-3xl"
                     loading="lazy"
                   />
                 </div>
