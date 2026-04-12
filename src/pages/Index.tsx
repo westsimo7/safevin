@@ -1,5 +1,6 @@
 import LandingNavbar from "@/components/LandingNavbar";
 import HeroSection from "@/components/HeroSection";
+import FloatingResults from "@/components/FloatingResults";
 import ProblemSection from "@/components/ProblemSection";
 import SolutionSection from "@/components/SolutionSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
@@ -18,6 +19,7 @@ const Index = () => {
       <div className="relative z-10">
         <LandingNavbar />
         <HeroSection />
+        <FloatingResults />
         <ProblemSection />
         <SolutionSection />
         <HowItWorksSection />
