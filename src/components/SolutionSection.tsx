@@ -19,10 +19,10 @@ const SolutionSection = () => {
         </div>
 
         <div ref={studioRef} className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+          <Card className="border-amber-500/30 bg-amber-500/5 hover:border-amber-500/50 transition-all duration-300 h-full">
             <CardContent className="p-5 sm:p-6 md:p-8 flex flex-col h-full">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
-                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-3 sm:mb-4">
+                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
                 SAFEViN Art Director
