@@ -2,13 +2,12 @@ import { AlertTriangle, MessageSquare, RefreshCw, Clock, Users, Smartphone, Copy
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const problems = [
-  { icon: RefreshCw, text: "Titoli generici che non intercettano le ricerche giuste" },
-  { icon: MessageSquare, text: "Descrizioni vaghe che non rispondono ai dubbi dell'acquirente" },
-  { icon: Copy, text: "Foto che non comunicano valore né generano fiducia" },
-  { icon: Clock, text: "Prezzi posizionati male rispetto al mercato reale" },
-  { icon: Users, text: "Profili che non trasmettono affidabilità e professionalità" },
-  { icon: Smartphone, text: "Annunci non ottimizzati per la visualizzazione mobile" },
-  { icon: Send, text: "Errori strutturali invisibili che riducono visibilità e conversione" },
+  { icon: Copy, text: "Foto non ottimizzate → non attirano né convincono" },
+  { icon: RefreshCw, text: "Titolo troppo spoglio → nessuno lo trova" },
+  { icon: MessageSquare, text: "Descrizione debole → non risponde ai dubbi" },
+  { icon: Users, text: "Dettagli fondamentali mancanti → blocchi la fiducia" },
+  { icon: Clock, text: "Prezzo non competitivo → niente click, niente offerte" },
+  { icon: Send, text: "Non trasmette valore → l'utente scrolla oltre" },
 ];
 
 const ProblemSection = () => {
