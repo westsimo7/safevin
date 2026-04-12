@@ -93,7 +93,7 @@ const HeroSection = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.85 }}
         >
-          Annunci ottimizzati dall'IA per aumentare la{" "}
+          Creazione di Annunci ottimizzati per aumentare la{" "}
           <strong className="text-foreground">probabilità statistica di vendita</strong>.
         </motion.p>
 
