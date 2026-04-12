@@ -117,7 +117,7 @@ const SafevinHome = () => {
               transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
             >
               Crea annunci ottimizzati dall'AI.<br />
-              Tutto in un unico posto, potenziato dall'intelligenza artificiale.
+              Con strategie competitive su prezzi, trattative e post pubblicazione.
             </motion.p>
 
             <motion.div
