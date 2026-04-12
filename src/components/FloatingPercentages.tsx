@@ -18,7 +18,7 @@ const floatingLabels = [
 
 const FloatingPercentages = () => {
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
+    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-[1]">
       {floatingLabels.map((item, i) => {
         // Stagger start positions so they're well spread out
         const fallDuration = 25 + (i % 5) * 6;
