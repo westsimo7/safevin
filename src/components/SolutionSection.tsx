@@ -28,7 +28,7 @@ const SolutionSection = () => {
                 Vision AI
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Analizza automaticamente le tue foto: riconosce prodotto, brand, colori e valuta la qualità delle immagini per un annuncio efficace.
+                Il motore interno analizza in profondità ogni foto allegata, estrapolando dettagli chiave come brand, colori e caratteristiche del prodotto — così la creazione del tuo annuncio diventa più rapida e precisa.
               </p>
             </CardContent>
           </Card>
