@@ -18,10 +18,9 @@ const floatingLabels = [
 
 const FloatingPercentages = () => {
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0">
+    <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-[1]">
       {floatingLabels.map((item, i) => {
-        // Stagger start positions so they're well spread out
-        const fallDuration = 25 + (i % 5) * 6;
+        const fallDuration = 18 + (i % 5) * 4;
         const startDelay = i * 3;
         const floatX = 4 + (i % 4) * 5;
 
@@ -30,9 +29,9 @@ const FloatingPercentages = () => {
             key={i}
             className="absolute top-0"
             style={{ left: item.left }}
-            initial={{ y: "-5vh", opacity: 0 }}
+            initial={{ y: "-20px", opacity: 0 }}
             animate={{
-              y: ["-5vh", "500vh"],
+              y: ["-20px", "95vh"],
               opacity: [0, 0.6, 0.6, 0.6, 0],
             }}
             transition={{
