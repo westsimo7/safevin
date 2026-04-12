@@ -16,7 +16,7 @@ const doubled = [...soldItems, ...soldItems];
 
 const FloatingResults = () => {
   return (
-    <div className="relative w-full py-6 sm:py-10 overflow-hidden">
+    <div className="relative w-full py-6 sm:py-10 overflow-x-clip overflow-y-visible">
       <motion.p
         className="text-center text-[10px] sm:text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-medium mb-6 sm:mb-8"
         initial={{ opacity: 0 }}
@@ -27,7 +27,7 @@ const FloatingResults = () => {
       </motion.p>
 
       {/* Infinite horizontal scroll wrapper */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full overflow-x-clip overflow-y-visible">
         <motion.div
           className="flex gap-5 sm:gap-7 w-max"
           animate={{ x: ["0%", "-50%"] }}
