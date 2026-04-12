@@ -11,7 +11,7 @@ const SolutionSection = () => {
       <div className="container mx-auto px-5 sm:px-6 max-w-5xl">
         <div ref={headerRef} className="text-center mb-8 sm:mb-10 md:mb-14">
           <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-2.5 sm:mb-3 md:mb-4">
-            L'ecosistema <span className="text-primary">SAFEViN</span>
+            <span className="text-primary">SAFEViN</span> Engine
           </h2>
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
             Strumenti AI per creare annunci che vendono, con il supporto di un coach dedicato.
