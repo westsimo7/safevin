@@ -59,7 +59,7 @@ const FloatingResults = () => {
                   <img
                     src={img}
                     alt="Articolo venduto"
-                    className="w-full h-auto object-contain"
+                    className="w-full h-[220px] sm:h-[260px] md:h-[280px] object-cover"
                     loading="lazy"
                   />
                 </div>
