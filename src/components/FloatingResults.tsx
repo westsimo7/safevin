@@ -59,7 +59,7 @@ const FloatingResults = () => {
                   delay: (i % soldItems.length) * 0.3,
                 }}
               >
-                <div className="rounded-3xl overflow-hidden shadow-2xl shadow-primary/10 border border-border/20">
+                <div className="rounded-t-3xl rounded-b-none overflow-hidden shadow-2xl shadow-primary/10 border border-border/20">
                   <img
                     src={img}
                     alt="Articolo venduto"
