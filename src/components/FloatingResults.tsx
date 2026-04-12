@@ -18,12 +18,12 @@ const FloatingResults = () => {
   return (
     <div className="relative w-full py-6 sm:py-10 overflow-x-clip overflow-y-visible">
       <motion.p
-        className="text-center text-[10px] sm:text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-medium mb-6 sm:mb-8"
+        className="text-center text-[10px] sm:text-xs uppercase tracking-[0.3em] text-primary font-medium mb-6 sm:mb-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.2 }}
       >
-        Risultati reali
+        VENDITE VENDITE VENDITE
       </motion.p>
 
       {/* Infinite horizontal scroll wrapper */}
