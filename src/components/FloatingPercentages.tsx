@@ -18,7 +18,7 @@ const floatingLabels = [
 
 const FloatingPercentages = () => {
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
       {floatingLabels.map((item, i) => {
         const fallDuration = 18 + (i % 5) * 4;
         const floatX = 5 + (i % 4) * 6;
