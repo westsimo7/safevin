@@ -126,8 +126,8 @@ const HeroSection = () => {
                   <Zap className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-foreground">Pronto per Vinted</p>
-                  <p className="text-[11px] text-muted-foreground">Copia e pubblica subito</p>
+                  <p className="text-xs font-semibold text-foreground">Strategie competitive</p>
+                  <p className="text-[11px] text-muted-foreground">Prezzo giusto e consigli post-annuncio</p>
                 </div>
               </div>
             </div>
