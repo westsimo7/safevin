@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "luc
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
+import FloatingResults from "@/components/FloatingResults";
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
@@ -84,6 +85,9 @@ const HeroSection = () => {
             </Button>
           </Link>
         </motion.div>
+
+        {/* Floating sold items */}
+        <FloatingResults />
 
         {/* Description */}
         <motion.p
