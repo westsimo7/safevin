@@ -63,8 +63,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.5 }}
         >
-          Vendi meglio su Vinted.<br />
-          <span className="text-foreground font-semibold">SAFEViN ti mostra come.</span>
+          Vendi su Vinted, più veloce, chiaro e al prezzo giusto.
         </motion.p>
 
         {/* CTA Buttons */}
