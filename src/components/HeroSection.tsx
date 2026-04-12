@@ -100,7 +100,7 @@ const HeroSection = () => {
         {/* Studio Preview Card */}
         <div ref={cardRef} className="px-2 sm:px-0">
           <div className="inline-block p-4 sm:p-5 md:p-6 rounded-2xl bg-card border border-border/50 shadow-lg w-full max-w-xs sm:max-w-sm text-left">
-            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground text-center mb-3 sm:mb-4">SAFEViN Studio Preview</p>
+            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground text-center mb-3 sm:mb-4">SAFEViN Engine</p>
 
             <div className="space-y-3">
               <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
