@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
 import FloatingResults from "@/components/FloatingResults";
-import FloatingPercentages from "@/components/FloatingPercentages";
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
@@ -14,7 +13,6 @@ const HeroSection = () => {
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-0">
-      <FloatingPercentages />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-primary/5 rounded-full blur-[150px]" />
 

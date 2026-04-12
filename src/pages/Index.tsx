@@ -6,6 +6,7 @@ import HowItWorksSection from "@/components/HowItWorksSection";
 import PricingSection from "@/components/PricingSection";
 import DisclaimerSection from "@/components/DisclaimerSection";
 import Footer from "@/components/Footer";
+import FloatingPercentages from "@/components/FloatingPercentages";
 
 const Index = () => {
   return (
@@ -16,6 +17,7 @@ const Index = () => {
       />
       <div className="fixed inset-0 z-0 bg-background/80 backdrop-blur-sm" />
       <div className="relative z-10">
+        <FloatingPercentages />
         <LandingNavbar />
         <HeroSection />
         <ProblemSection />
