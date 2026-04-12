@@ -25,10 +25,10 @@ const SolutionSection = () => {
                 <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                Vision AI
+                SAFEViN Art Director
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Il motore interno analizza in profondità ogni foto allegata, estrapolando dettagli chiave come brand, colori e caratteristiche del prodotto — così la creazione del tuo annuncio diventa più rapida e precisa.
+                Affida le campagne visive dei tuoi articoli in vendita a SAFEViN: analizza ogni foto per garantire coerenza visiva e qualità, così il tuo annuncio comunica professionalità e attira più acquirenti.
               </p>
             </CardContent>
           </Card>
