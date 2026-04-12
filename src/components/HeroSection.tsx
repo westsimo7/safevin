@@ -3,6 +3,8 @@ import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "luc
 import { Link } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
+import FloatingResults from "@/components/FloatingResults";
+import { motion } from "framer-motion";
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
@@ -85,8 +87,10 @@ const HeroSection = () => {
           </Link>
         </motion.div>
 
+        {/* Floating sold items */}
+        <FloatingResults />
+
         {/* Description */}
-        <motion.p
           ref={descRef}
           className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2 sm:px-0"
           initial={{ opacity: 0 }}
