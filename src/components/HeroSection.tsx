@@ -108,8 +108,8 @@ const HeroSection = () => {
                   <Camera className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-foreground">Vision AI</p>
-                  <p className="text-[11px] text-muted-foreground">Analisi foto intelligente</p>
+                  <p className="text-xs font-semibold text-foreground">Studio</p>
+                  <p className="text-[11px] text-muted-foreground">Crea annunci ottimizzati</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
