@@ -30,10 +30,10 @@ const FloatingResults = () => {
       <div className="relative w-full overflow-hidden">
         <motion.div
           className="flex gap-5 sm:gap-7 w-max"
-          animate={{ x: [0, -(soldItems.length * (160 + 20))] }}
+          animate={{ x: ["0%", "-50%"] }}
           transition={{
             x: {
-              duration: 35,
+              duration: 40,
               repeat: Infinity,
               ease: "linear",
             },
