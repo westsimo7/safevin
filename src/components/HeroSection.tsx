@@ -63,7 +63,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.5 }}
         >
-          Vendi su Vinted, più veloce, chiaro e al prezzo giusto.
+          Vendi su Vinted, più <strong className="text-foreground">veloce</strong>, <strong className="text-foreground">chiaro</strong> e al <strong className="text-foreground">prezzo giusto</strong>.
         </motion.p>
 
         {/* CTA Buttons */}
