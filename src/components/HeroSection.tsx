@@ -117,8 +117,8 @@ const HeroSection = () => {
                   <PenTool className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-foreground">Annuncio completo</p>
-                  <p className="text-[11px] text-muted-foreground">Titolo, descrizione, prezzo</p>
+                  <p className="text-xs font-semibold text-foreground">Coach</p>
+                  <p className="text-[11px] text-muted-foreground">Migliora i tuoi annunci</p>
                 </div>
               </div>
               <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
