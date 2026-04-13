@@ -9,14 +9,16 @@ const steps = [
 ];
 
 const features = [
-  "Creazione annuncio guidata passo-passo con domande strutturate",
-  "Domande dinamiche adattate al prodotto identificato dalla Vision AI",
-  "Ottimizzazione con keyword intelligence integrata",
-  "Output completo pronto per il marketplace (titolo, descrizione, keyword)",
-  "Generazione titoli ottimizzati e descrizioni persuasive",
-  "Analisi foto con Vision AI per contesto e coerenza categoria",
-  "Struttura professionale calibrata per massimizzare visibilità",
-  "Salvataggio nello storico per confronto e iterazione continua",
+  "Analisi intelligente delle immagini tramite l'Engine",
+  "Valutazione sui 4 pilastri: qualità, luce, contrasto, completezza",
+  "Domande mirate sui dettagli fondamentali del prodotto",
+  "Raccolta dati precisa per un output perfettamente ottimizzato",
+  "Generazione completa: titolo, descrizione e prezzo strategico",
+  "Copy ottimizzato per aumentare visibilità e conversione",
+  "Output immediato, pronto da copiare e pubblicare",
+  "Struttura professionale già strutturata per Vinted",
+  "Storico creazioni sempre accessibile",
+  "Tutti gli annunci salvati per confronto e miglioramento continuo",
 ];
 
 const HowItWorksSection = () => {
