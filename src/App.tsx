@@ -19,6 +19,7 @@ import ArtistDirector from "./pages/ArtistDirector";
 import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import IncompleteCreations from "./pages/IncompletCreations";
+import AdminDashboard from "./pages/AdminDashboard";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -67,6 +68,9 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/pricing" element={
             <ProtectedRoute><PageTransition direction="up"><Pricing /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+            <ProtectedRoute><PageTransition direction="up"><AdminDashboard /></PageTransition></ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
