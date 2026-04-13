@@ -115,7 +115,7 @@ const SafevinHome = () => {
             </motion.p>
 
             <motion.div
-              className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
+              className="flex justify-center gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
               initial="hidden"
               animate="visible"
               variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 1.0 } } }}
