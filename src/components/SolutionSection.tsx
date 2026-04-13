@@ -47,7 +47,7 @@ const SolutionSection = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
+          <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full relative overflow-hidden">
             <CardContent className="p-5 sm:p-6 md:p-8 flex flex-col h-full">
               <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
                 <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
