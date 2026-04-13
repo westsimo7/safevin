@@ -120,8 +120,8 @@ const AppNavbar = () => {
             <Button
               variant="outline"
               size="sm"
-              disabled
-              className="text-xs h-8 px-3 cursor-not-allowed border-primary/20 text-primary/50"
+              className="text-xs h-8 px-3 border-primary/20 text-primary hover:bg-primary/5"
+              onClick={() => navigate("/pricing")}
             >
               <Crown className="w-3 h-3 mr-1" />
               Upgrade
