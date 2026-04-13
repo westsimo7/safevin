@@ -56,7 +56,7 @@ const SolutionSection = () => {
                 SAFEViN Coach
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Il tuo esperto Vinted personale. Risposte rapide e pratiche su vendita, pricing, foto e strategia per vendere più veloce.
+                Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita.
               </p>
             </CardContent>
           </Card>
