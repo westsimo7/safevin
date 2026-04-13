@@ -8,10 +8,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp } from "lucide-react";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import CreativeDirectorChat from "@/components/CreativeDirectorChat";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -21,7 +22,9 @@ const Settings = () => {
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [cdOpen, setCdOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [userPlan, setUserPlan] = useState<string | null>(null);
   const [profile, setProfile] = useState({
     nome: "",
     cognome: "",
@@ -45,6 +48,14 @@ const Settings = () => {
           email: data.email || "",
           telefono: data.telefono || "",
         });
+      }
+      // Check if user has founder role (founder sees inbox page instead) or expert/pro plan
+      const { data: isFounder } = await supabase.rpc("has_role", { _user_id: user.id, _role: "founder" as const });
+      if (isFounder) {
+        setUserPlan("founder");
+      } else {
+        // TODO: connect to real plan system - for now check role
+        setUserPlan("expert"); // Placeholder - will be replaced with real plan check
       }
     };
     loadProfile();
@@ -176,6 +187,33 @@ const Settings = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Creative Director section - visible for expert and pro plans */}
+          {(userPlan === "expert" || userPlan === "pro") && (
+            <Card>
+              <CardContent className="p-6 space-y-4">
+                <button
+                  className="w-full flex items-center justify-between hover:text-amber-500 transition-colors"
+                  onClick={() => setCdOpen(!cdOpen)}
+                >
+                  <div className="flex items-center gap-3">
+                    <Palette className="w-5 h-5 text-amber-500" />
+                    <span className="font-medium">Creative Director</span>
+                  </div>
+                  {cdOpen ? (
+                    <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                  )}
+                </button>
+                {cdOpen && (
+                  <div className="animate-fade-in">
+                    <CreativeDirectorChat />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
 
           <Button 
             variant="destructive" 
