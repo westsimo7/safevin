@@ -7,13 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Bell, Moon, Shield, User, LogOut } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp } from "lucide-react";
 
 const Settings = () => {
   const navigate = useNavigate();
   useSwipeBack("/home");
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [profile, setProfile] = useState({
+    nome: "",
+    cognome: "",
+    email: "",
+    telefono: "",
+  });
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
@@ -50,11 +58,64 @@ const Settings = () => {
           </Card>
 
           <Card>
-            <CardContent className="p-6 space-y-6">
-              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
-                <User className="w-5 h-5 text-muted-foreground" />
-                <span>Profilo Utente</span>
-              </div>
+            <CardContent className="p-6 space-y-4">
+              <button
+                className="w-full flex items-center justify-between hover:text-primary transition-colors"
+                onClick={() => setProfileOpen(!profileOpen)}
+              >
+                <div className="flex items-center gap-3">
+                  <User className="w-5 h-5 text-muted-foreground" />
+                  <span className="font-medium">Profilo Utente</span>
+                </div>
+                {profileOpen ? (
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
+
+              {profileOpen && (
+                <div className="space-y-4 pt-2 pl-8 animate-fade-in">
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Nome</Label>
+                    <Input
+                      placeholder="Il tuo nome"
+                      value={profile.nome}
+                      onChange={(e) => setProfile({ ...profile, nome: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Cognome</Label>
+                    <Input
+                      placeholder="Il tuo cognome"
+                      value={profile.cognome}
+                      onChange={(e) => setProfile({ ...profile, cognome: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Email</Label>
+                    <Input
+                      type="email"
+                      placeholder="email@esempio.com"
+                      value={profile.email}
+                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="text-xs text-muted-foreground">Telefono</Label>
+                    <Input
+                      type="tel"
+                      placeholder="+39 000 000 0000"
+                      value={profile.telefono}
+                      onChange={(e) => setProfile({ ...profile, telefono: e.target.value })}
+                    />
+                  </div>
+                  <Button size="sm" className="w-full mt-2" disabled>
+                    Salva modifiche
+                  </Button>
+                </div>
+              )}
+
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <Shield className="w-5 h-5 text-muted-foreground" />
                 <span>Privacy e Sicurezza</span>
