@@ -68,7 +68,7 @@ const plans = [
       "Salvataggio creazioni incomplete",
       "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
-      "3 annunci delegabili al team SAFEViN Creative Direction",
+      "2 annunci delegabili al team SAFEViN Creative Direction",
       "Supporto avanzato",
     ],
     limitations: [
