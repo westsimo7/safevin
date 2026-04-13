@@ -27,12 +27,6 @@ const SafevinHome = () => {
 
   const features = [
     {
-      icon: <PenTool className="w-5 h-5 text-primary" />,
-      title: "Studio",
-      desc: "Crea l'annuncio perfetto da zero con l'AI",
-      onClick: () => navigate("/engine/studio"),
-    },
-    {
       icon: <Clock className="w-5 h-5 text-primary" />,
       title: "Continua i tuoi lavori",
       desc: draftCount > 0 ? `${draftCount} lavori da riprendere` : "Riprendi gli annunci incompleti",
