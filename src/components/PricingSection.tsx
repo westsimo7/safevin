@@ -155,7 +155,7 @@ const PricingSection = () => {
                 <h3 className={`text-lg sm:text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
                   {plan.name}
                 </h3>
-                <p className="text-[13px] sm:text-sm text-muted-foreground">{plan.description}</p>
+                <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
               </div>
 
               <div className="mb-4 sm:mb-6">
