@@ -200,6 +200,8 @@ const Settings = () => {
                 <Shield className="w-5 h-5 text-muted-foreground" />
                 <span>Privacy e Sicurezza</span>
               </div>
+            </CardContent>
+          </Card>
 
           {/* Creative Director section - visible for expert and pro plans */}
           {(userPlan === "expert" || userPlan === "pro") && (
