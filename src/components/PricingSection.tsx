@@ -117,7 +117,7 @@ const PricingSection = () => {
     <section className="relative py-14 sm:py-20 md:py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="container mx-auto px-5 sm:px-6 max-w-6xl">
+      <div className="container mx-auto px-5 sm:px-6 max-w-7xl">
         <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
             Scegli il tuo piano
