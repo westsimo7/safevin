@@ -17,14 +17,6 @@ const doubled = [...soldItems, ...soldItems];
 const FloatingResults = () => {
   return (
     <div className="relative w-full py-6 sm:py-10 overflow-x-clip overflow-y-visible">
-      <motion.p
-        className="text-center text-lg sm:text-2xl uppercase tracking-[0.3em] text-primary font-black mb-6 sm:mb-8"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.2 }}
-      >
-        VENDITE VENDITE VENDITE
-      </motion.p>
 
       {/* Infinite horizontal scroll wrapper */}
       <div className="relative w-full overflow-x-clip overflow-y-visible">
