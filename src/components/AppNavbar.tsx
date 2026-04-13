@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
-import { User, Crown } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Badge } from "@/components/ui/badge";
 
 const navLinks = [
   { to: "/home", label: "Home", disabled: false },
@@ -11,10 +12,67 @@ const navLinks = [
   { to: "/coach", label: "Coach", disabled: true },
 ];
 
+type MenuItem = {
+  label: string;
+  icon: React.ElementType;
+  action?: () => void;
+  badge?: string;
+  badgeColor?: string;
+};
+
+type MenuSection = {
+  title?: string;
+  items: MenuItem[];
+};
+
 const AppNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+
+  const menuSections: MenuSection[] = [
+    {
+      title: "Account",
+      items: [
+        { label: "Profilo", icon: User, action: () => { setOpen(false); navigate("/settings"); } },
+        { label: "Impostazioni", icon: Settings, action: () => { setOpen(false); navigate("/settings"); } },
+      ],
+    },
+    {
+      title: "Abbonamento",
+      items: [
+        { label: "Piano attuale", icon: Sparkles, badge: "Starter", badgeColor: "bg-primary/10 text-primary border-primary/20" },
+        { label: "Upgrade", icon: Crown, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+      ],
+    },
+    {
+      title: "Pagamenti",
+      items: [
+        { label: "Metodo di pagamento", icon: CreditCard },
+        { label: "Fatture e ricevute", icon: Receipt },
+      ],
+    },
+    {
+      title: "Servizi",
+      items: [
+        { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+      ],
+    },
+    {
+      title: "Preferenze",
+      items: [
+        { label: "Notifiche", icon: Bell },
+        { label: "Sicurezza e privacy", icon: Shield },
+      ],
+    },
+    {
+      title: "Supporto",
+      items: [
+        { label: "Centro assistenza", icon: HelpCircle },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -68,61 +126,76 @@ const AppNavbar = () => {
               Upgrade
             </Button>
 
-            <Popover>
+            <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
                   <User className="w-4 h-4 text-muted-foreground" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-72 p-4" align="end">
-                <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border/50">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 flex items-center justify-center">
-                    <User className="w-6 h-6 text-primary" />
+              <PopoverContent className="w-72 p-0" align="end">
+                {/* Profile header */}
+                <div className="flex items-center gap-3 p-4 border-b border-border/50">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 border-2 border-primary/30 flex items-center justify-center">
+                    <User className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold truncate">Utente SafeViN</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Piano: Starter</p>
-                    <p className="text-xs text-muted-foreground">Crediti: ??? / ??? / ???</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">utente@email.com</p>
                   </div>
                 </div>
-                <div className="space-y-0.5">
-                  {[
-                    { label: "Impostazioni", action: () => navigate("/settings") },
-                    { label: "Artist Director", action: () => navigate("/artist-director") },
-                    { label: "Billing", action: undefined },
-                    { label: "Metodo di pagamento", action: undefined },
-                    { label: "Fatture", action: undefined },
-                    { label: "Piano attuale", action: undefined },
-                    { label: "Sicurezza", action: undefined },
-                    { label: "Notifiche", action: undefined },
-                    { label: "Assistenza", action: undefined },
-                  ].map(item => (
-                    <button
-                      key={item.label}
-                      onClick={item.action}
-                      disabled={!item.action}
-                      className={`w-full text-left text-sm py-2 px-3 rounded-lg transition-colors ${
-                        item.action
-                          ? "text-foreground/80 hover:bg-muted/50 hover:text-foreground"
-                          : "text-muted-foreground/50 cursor-not-allowed"
-                      }`}
-                    >
-                      {item.label}
-                      {!item.action && <span className="text-[10px] ml-2 text-muted-foreground/40">coming soon</span>}
-                    </button>
+
+                {/* Menu sections */}
+                <div className="max-h-[360px] overflow-y-auto scrollbar-hide">
+                  {menuSections.map((section, sIdx) => (
+                    <div key={sIdx}>
+                      {section.title && (
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold px-4 pt-3 pb-1">
+                          {section.title}
+                        </p>
+                      )}
+                      {section.items.map(item => (
+                        <button
+                          key={item.label}
+                          onClick={item.action}
+                          disabled={!item.action}
+                          className={`w-full flex items-center gap-3 text-sm py-2.5 px-4 transition-colors ${
+                            item.action
+                              ? "text-foreground/80 hover:bg-muted/50 hover:text-foreground"
+                              : "text-muted-foreground/50 cursor-not-allowed"
+                          }`}
+                        >
+                          <item.icon className="w-4 h-4 shrink-0" />
+                          <span className="flex-1 text-left">{item.label}</span>
+                          {item.badge && (
+                            <Badge className={`text-[9px] px-1.5 py-0 ${item.badgeColor || ""}`}>
+                              {item.badge}
+                            </Badge>
+                          )}
+                          {!item.action && !item.badge && (
+                            <span className="text-[9px] text-muted-foreground/40">soon</span>
+                          )}
+                          {item.action && <ChevronRight className="w-3 h-3 text-muted-foreground/30" />}
+                        </button>
+                      ))}
+                      {sIdx < menuSections.length - 1 && (
+                        <div className="border-b border-border/30 mx-3 my-1" />
+                      )}
+                    </div>
                   ))}
-                  <div className="pt-2 mt-2 border-t border-border/50">
-                    <button className="w-full text-left text-sm py-2 px-3 rounded-lg text-destructive/70 hover:bg-destructive/5 hover:text-destructive transition-colors">
-                      Esci
-                    </button>
-                  </div>
+                </div>
+
+                {/* Logout */}
+                <div className="border-t border-border/50 p-2">
+                  <button className="w-full flex items-center gap-3 text-sm py-2.5 px-4 rounded-lg text-destructive/70 hover:bg-destructive/5 hover:text-destructive transition-colors">
+                    <LogOut className="w-4 h-4" />
+                    <span>Esci</span>
+                  </button>
                 </div>
               </PopoverContent>
             </Popover>
           </div>
         </div>
       </header>
-
     </>
   );
 };
