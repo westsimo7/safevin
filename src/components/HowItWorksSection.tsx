@@ -58,7 +58,7 @@ const HowItWorksSection = () => {
             Non è opinione. <span className="text-primary">È statistica.</span>
             </h2>
             <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-2xl mx-auto px-2 sm:px-0">
-              Ecco nel dettaglio cosa fa SAFEViN Studio per te.
+              Ogni dettaglio non trascurato, è una possibilità in più di vendita.
             </p>
           </div>
 
