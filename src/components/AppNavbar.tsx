@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -29,7 +31,26 @@ const AppNavbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
+  const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("nome, cognome, email")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) setProfileData(data);
+      });
+  }, [user]);
+
+  const displayName = profileData?.nome
+    ? `${profileData.nome} ${profileData.cognome}`.trim()
+    : user?.email || "Utente SafeViN";
+  const displayEmail = profileData?.email || user?.email || "";
 
   const menuSections: MenuSection[] = [
     {
@@ -140,8 +161,8 @@ const AppNavbar = () => {
                     <User className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-bold truncate">Utente SafeViN</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">utente@email.com</p>
+                    <p className="text-sm font-bold truncate">{displayName}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{displayEmail}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></p>
                   </div>
                 </div>
@@ -188,7 +209,10 @@ const AppNavbar = () => {
 
                 {/* Logout */}
                 <div className="border-t border-border/50 p-2">
-                  <button className="w-full flex items-center gap-3 text-sm py-2.5 px-4 rounded-lg text-destructive/70 hover:bg-destructive/5 hover:text-destructive transition-colors">
+                  <button
+                    className="w-full flex items-center gap-3 text-sm py-2.5 px-4 rounded-lg text-destructive/70 hover:bg-destructive/5 hover:text-destructive transition-colors"
+                    onClick={async () => { setOpen(false); await signOut(); navigate("/"); }}
+                  >
                     <LogOut className="w-4 h-4" />
                     <span>Esci</span>
                   </button>

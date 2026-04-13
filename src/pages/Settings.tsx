@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
@@ -9,19 +9,73 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { toast } = useToast();
   useSwipeBack("/home");
   const [notifications, setNotifications] = useState(true);
   const [darkMode, setDarkMode] = useState(true);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [profile, setProfile] = useState({
     nome: "",
     cognome: "",
     email: "",
     telefono: "",
   });
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("nome, cognome, email, telefono")
+        .eq("user_id", user.id)
+        .single();
+      if (data) {
+        setProfile({
+          nome: data.nome || "",
+          cognome: data.cognome || "",
+          email: data.email || "",
+          telefono: data.telefono || "",
+        });
+      }
+    };
+    loadProfile();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          nome: profile.nome,
+          cognome: profile.cognome,
+          telefono: profile.telefono,
+        })
+        .eq("user_id", user.id);
+      if (error) throw error;
+      toast({ title: "Salvato", description: "Profilo aggiornato con successo." });
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
@@ -96,9 +150,9 @@ const Settings = () => {
                     <Label className="text-xs text-muted-foreground">Email</Label>
                     <Input
                       type="email"
-                      placeholder="email@esempio.com"
                       value={profile.email}
-                      onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                      disabled
+                      className="opacity-60"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -110,8 +164,8 @@ const Settings = () => {
                       onChange={(e) => setProfile({ ...profile, telefono: e.target.value })}
                     />
                   </div>
-                  <Button size="sm" className="w-full mt-2" disabled>
-                    Salva modifiche
+                  <Button size="sm" className="w-full mt-2" onClick={handleSave} disabled={saving}>
+                    {saving ? "Salvataggio..." : "Salva modifiche"}
                   </Button>
                 </div>
               )}
@@ -126,7 +180,7 @@ const Settings = () => {
           <Button 
             variant="destructive" 
             className="w-full gap-2"
-            onClick={() => navigate("/")}
+            onClick={handleSignOut}
           >
             <LogOut className="w-4 h-4" />
             Disconnetti
