@@ -56,6 +56,9 @@ const AnimatedRoutes = () => {
           <Route path="/settings" element={
             <PageTransition direction="up"><Settings /></PageTransition>
           } />
+          <Route path="/artist-director" element={
+            <PageTransition direction="up"><ArtistDirector /></PageTransition>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
