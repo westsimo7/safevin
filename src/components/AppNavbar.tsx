@@ -71,13 +71,13 @@ const AppNavbar = () => {
         { label: "Impostazioni", icon: Settings, action: () => { setOpen(false); navigate("/settings"); } },
       ],
     },
-    {
+    ...(isFounder ? [] : [{
       title: "Abbonamento",
       items: [
         { label: "Piano attuale", icon: Sparkles, badge: "Starter", badgeColor: "bg-primary/10 text-primary border-primary/20" },
         { label: "Upgrade", icon: Crown, action: () => { setOpen(false); navigate("/pricing"); }, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
-    },
+    }]),
     {
       title: "Pagamenti",
       items: [
@@ -174,7 +174,12 @@ const AppNavbar = () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold truncate">{displayName}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">{displayEmail}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></p>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      {isFounder
+                        ? <>Piano: <span className="font-semibold text-amber-500">Founder</span> · Annunci: <span className="font-semibold text-amber-500">∞</span></>
+                        : <>Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></>
+                      }
+                    </p>
                   </div>
                 </div>
 
