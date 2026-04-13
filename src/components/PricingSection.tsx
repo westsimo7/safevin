@@ -1,8 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Check, Zap, Crown, Rocket } from "lucide-react";
+import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const plans = [
+  {
+    name: "Free",
+    price: "0",
+    period: "",
+    description: "Prova gratis",
+    icon: Gift,
+    features: [
+      "2 annunci creabili",
+      "Storico sui 2 annunci",
+      "Prezzo strategico",
+    ],
+    limitations: [
+      "Salvataggio creazioni incomplete",
+      "Assistenza h24",
+      "Accesso alla SAFEViN Creative Direction",
+      "3 annunci delegabili al team SAFEViN Creative Direction",
+      "Supporto avanzato",
+      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+      "Collaborazioni con il team di SAFEViN",
+      "Coupon sconto personali",
+      "Accesso prioritario alle nuove funzionalità",
+    ],
+    cta: "Prova gratis",
+    popular: false,
+    variant: "glass" as const,
+  },
   {
     name: "Starter",
     price: "8,99",
