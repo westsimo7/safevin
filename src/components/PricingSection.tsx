@@ -160,7 +160,7 @@ const PricingSection = () => {
             <div
               key={index}
               data-reveal
-              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 ${
+              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 min-w-[280px] sm:min-w-[300px] lg:min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${
                 plan.popular
                   ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
                   : "bg-card/50 border border-border/50 hover:border-border"
