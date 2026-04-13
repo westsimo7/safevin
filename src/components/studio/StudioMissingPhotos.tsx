@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench } from "lucide-react";
 import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
