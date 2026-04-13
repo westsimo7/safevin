@@ -85,7 +85,7 @@ const plans = [
     name: "Expert",
     price: "34,99",
     period: "/mese",
-    description: "Per venditori professionisti",
+    description: "Per massimizzare ogni annuncio\nEcosistema completo per veri expert",
     icon: Rocket,
     features: [
       "60 annunci creabili",
