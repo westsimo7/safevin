@@ -88,6 +88,7 @@ const AppNavbar = () => {
                 <div className="space-y-0.5">
                   {[
                     { label: "Impostazioni", action: () => navigate("/settings") },
+                    { label: "Artist Director", action: () => navigate("/artist-director") },
                     { label: "Billing", action: undefined },
                     { label: "Metodo di pagamento", action: undefined },
                     { label: "Fatture", action: undefined },
