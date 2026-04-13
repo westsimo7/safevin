@@ -59,7 +59,7 @@ const plans = [
     name: "Pro",
     price: "14,99",
     period: "/mese",
-    description: "Per chi vende con metodo",
+    description: "Per vendere con costanza\nPiù visibilità, più conversioni",
     icon: Crown,
     features: [
       "25 annunci creabili",
