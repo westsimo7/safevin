@@ -1,8 +1,34 @@
 import { Button } from "@/components/ui/button";
-import { Check, Zap, Crown, Rocket } from "lucide-react";
+import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const plans = [
+  {
+    name: "Free",
+    price: "0",
+    period: "",
+    description: "Prova gratis",
+    icon: Gift,
+    features: [
+      "2 annunci creabili",
+      "Storico sui 2 annunci",
+      "Prezzo strategico",
+    ],
+    limitations: [
+      "Salvataggio creazioni incomplete",
+      "Assistenza h24",
+      "Accesso alla SAFEViN Creative Direction",
+      "3 annunci delegabili al team SAFEViN Creative Direction",
+      "Supporto avanzato",
+      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+      "Collaborazioni con il team di SAFEViN",
+      "Coupon sconto personali",
+      "Accesso prioritario alle nuove funzionalità",
+    ],
+    cta: "Prova gratis",
+    popular: false,
+    variant: "glass" as const,
+  },
   {
     name: "Starter",
     price: "8,99",
@@ -91,7 +117,7 @@ const PricingSection = () => {
     <section className="relative py-14 sm:py-20 md:py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
-      <div className="container mx-auto px-5 sm:px-6 max-w-6xl">
+      <div className="container mx-auto px-5 sm:px-6 max-w-7xl">
         <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
             Scegli il tuo piano
@@ -101,7 +127,7 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
           {plans.map((plan, index) => (
             <div
               key={index}
