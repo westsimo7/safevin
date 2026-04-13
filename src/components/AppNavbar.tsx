@@ -71,6 +71,8 @@ const AppNavbar = () => {
         { label: "Impostazioni", icon: Settings, action: () => { setOpen(false); navigate("/settings"); } },
         { label: "Metodo di pagamento", icon: CreditCard },
         { label: "Fatture e ricevute", icon: Receipt },
+        { label: "Notifiche", icon: Bell },
+        { label: "Sicurezza e privacy", icon: Shield },
       ],
     },
     ...(isFounder ? [] : [{
@@ -84,13 +86,6 @@ const AppNavbar = () => {
       title: "Servizi",
       items: [
         { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Pro", badgeColor: "bg-primary/10 text-primary border-primary/20" },
-      ],
-    },
-    {
-      title: "Preferenze",
-      items: [
-        { label: "Notifiche", icon: Bell },
-        { label: "Sicurezza e privacy", icon: Shield },
       ],
     },
     {
