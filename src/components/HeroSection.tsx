@@ -103,42 +103,6 @@ const HeroSection = () => {
           <strong className="text-foreground">probabilità statistica di vendita</strong>.
         </motion.p>
 
-        {/* Studio Preview Card */}
-        <div ref={cardRef} className="px-2 sm:px-0">
-          <div className="inline-block p-4 sm:p-5 md:p-6 rounded-2xl bg-card border border-border/50 shadow-lg w-full max-w-xs sm:max-w-sm text-left">
-            <p className="text-[10px] sm:text-xs uppercase tracking-widest text-muted-foreground text-center mb-3 sm:mb-4">SAFEViN Engine</p>
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Camera className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Studio</p>
-                  <p className="text-[11px] text-muted-foreground">Crea annunci ottimizzati</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <PenTool className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Coach</p>
-                  <p className="text-[11px] text-muted-foreground">Migliora i tuoi annunci</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-primary/5 border border-primary/20">
-                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Zap className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-foreground">Strategie competitive</p>
-                  <p className="text-[11px] text-muted-foreground">Prezzo giusto e consigli post-annuncio</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
