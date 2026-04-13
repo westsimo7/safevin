@@ -32,6 +32,7 @@ export type Database = {
           taglia: string
           tempo_caricamento: string
           titolo: string
+          user_id: string | null
         }
         Insert: {
           analysis_result: Json
@@ -50,6 +51,7 @@ export type Database = {
           taglia?: string
           tempo_caricamento?: string
           titolo?: string
+          user_id?: string | null
         }
         Update: {
           analysis_result?: Json
@@ -68,6 +70,7 @@ export type Database = {
           taglia?: string
           tempo_caricamento?: string
           titolo?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -78,6 +81,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          cognome: string
+          created_at: string
+          email: string
+          id: string
+          nome: string
+          telefono: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cognome?: string
+          created_at?: string
+          email?: string
+          id?: string
+          nome?: string
+          telefono?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cognome?: string
+          created_at?: string
+          email?: string
+          id?: string
+          nome?: string
+          telefono?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       studio_creations: {
         Row: {
@@ -97,6 +133,7 @@ export type Database = {
           structural_blocks: Json | null
           studio_version: string
           titolo_generato: string | null
+          user_id: string | null
           vision_report: string | null
         }
         Insert: {
@@ -116,6 +153,7 @@ export type Database = {
           structural_blocks?: Json | null
           studio_version?: string
           titolo_generato?: string | null
+          user_id?: string | null
           vision_report?: string | null
         }
         Update: {
@@ -135,6 +173,7 @@ export type Database = {
           structural_blocks?: Json | null
           studio_version?: string
           titolo_generato?: string | null
+          user_id?: string | null
           vision_report?: string | null
         }
         Relationships: []
