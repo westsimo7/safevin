@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 
 const steps = [
-  { icon: Upload, number: "01", title: "Carica le foto", description: "Carica le foto del tuo prodotto e l'AI le analizza automaticamente." },
+  { icon: Upload, number: "01", title: "Carica le foto", description: "Carica le foto del prodotto e verranno estrapolate le informazioni base e i dettagli per velocizzare la creazione dell'annuncio." },
   { icon: PenTool, number: "02", title: "Aggiungi le info chiave", description: "Solo tu conosci i dettagli fondamentali: rispondi a poche domande per un annuncio iper-specifico e completo in pochi minuti." },
   { icon: Copy, number: "03", title: "Copia e pubblica", description: "Ricevi titolo, descrizione e prezzo ottimizzati. Copia e pubblica su Vinted." },
 ];
