@@ -19,7 +19,7 @@ const BottomBar = () => {
   const navItems = [
     { to: "/home", label: "Home", icon: Home },
     { to: "/storico", label: "Storico", icon: Clock },
-    { to: "/coach", label: "Coach", icon: MessageCircle },
+    { to: "#", label: "Coach", icon: MessageCircle, disabled: true },
   ];
 
   return (
