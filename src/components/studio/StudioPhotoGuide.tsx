@@ -146,7 +146,7 @@ const StudioPhotoGuide = () => {
     <>
       <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 space-y-2 h-full flex flex-col">
         <p className="text-xs font-semibold text-primary shrink-0">
-          📸 Per un output massimizzato, segui quest'ordine:
+          📸 L'ordine che rende le tue immagini complete
         </p>
 
         <div
