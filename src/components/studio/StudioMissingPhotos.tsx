@@ -172,15 +172,10 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
           </DialogHeader>
           <div className="space-y-3 pt-2 overflow-hidden">
             <button
-              className="w-full text-left rounded-lg border border-border/50 bg-muted/30 hover:bg-muted/50 transition-colors p-4"
-              onClick={() => {
-                setImproveOpen(false);
-                const reportSummary = verdicts.map(v => `${v.icon} ${v.label}: ${v.ok ? "OK" : "Da migliorare"} — ${v.verdict}`).join("\n");
-                if (onSaveIncompleteAndGoCoach) {
-                  onSaveIncompleteAndGoCoach(reportSummary, previews || []);
-                }
-              }}
+              className="w-full text-left rounded-lg border border-border/50 bg-muted/20 p-4 cursor-not-allowed opacity-60 relative"
+              disabled
             >
+              <span className="absolute -top-2 -right-2 text-[8px] font-bold text-destructive uppercase">soon</span>
               <span className="font-semibold text-foreground text-sm block">Approfondisci con il Coach</span>
               <span className="text-xs text-muted-foreground mt-1 block">
                 Ricevi consigli pratici per risolvere o completare le info mancanti
