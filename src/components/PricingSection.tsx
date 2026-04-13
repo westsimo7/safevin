@@ -39,7 +39,7 @@ const plans = [
     ],
     limitations: [
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma",
-      "Collaborazioni con il team di SAFEViN",
+      "Collaborazioni con il team di SAFEViN con commissioni",
       "Coupon sconto personali",
       "Accesso prioritario alle nuove funzionalità",
     ],
