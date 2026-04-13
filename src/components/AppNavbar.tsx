@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,7 @@ const AppNavbar = () => {
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
+  const [isFounder, setIsFounder] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -45,6 +46,10 @@ const AppNavbar = () => {
       .then(({ data }) => {
         if (data) setProfileData(data);
       });
+    // Check founder role
+    supabase.rpc("has_role", { _user_id: user.id, _role: "founder" }).then(({ data }) => {
+      setIsFounder(data === true);
+    });
   }, [user]);
 
   const displayName = profileData?.nome
@@ -53,6 +58,12 @@ const AppNavbar = () => {
   const displayEmail = profileData?.email || user?.email || "";
 
   const menuSections: MenuSection[] = [
+    ...(isFounder ? [{
+      title: "Founder",
+      items: [
+        { label: "Dashboard Admin", icon: LayoutDashboard, action: () => { setOpen(false); navigate("/admin"); }, badge: "Founder", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+      ],
+    }] : []),
     {
       title: "Account",
       items: [
@@ -64,7 +75,7 @@ const AppNavbar = () => {
       title: "Abbonamento",
       items: [
         { label: "Piano attuale", icon: Sparkles, badge: "Starter", badgeColor: "bg-primary/10 text-primary border-primary/20" },
-        { label: "Upgrade", icon: Crown, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Upgrade", icon: Crown, action: () => { setOpen(false); navigate("/pricing"); }, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     },
     {
