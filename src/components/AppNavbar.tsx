@@ -69,6 +69,8 @@ const AppNavbar = () => {
       items: [
         { label: "Profilo", icon: User, action: () => { setOpen(false); navigate("/settings"); } },
         { label: "Impostazioni", icon: Settings, action: () => { setOpen(false); navigate("/settings"); } },
+        { label: "Metodo di pagamento", icon: CreditCard },
+        { label: "Fatture e ricevute", icon: Receipt },
       ],
     },
     ...(isFounder ? [] : [{
@@ -78,13 +80,6 @@ const AppNavbar = () => {
         { label: "Upgrade", icon: Crown, action: () => { setOpen(false); navigate("/pricing"); }, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     }]),
-    {
-      title: "Pagamenti",
-      items: [
-        { label: "Metodo di pagamento", icon: CreditCard },
-        { label: "Fatture e ricevute", icon: Receipt },
-      ],
-    },
     {
       title: "Servizi",
       items: [
