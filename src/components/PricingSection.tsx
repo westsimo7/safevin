@@ -62,7 +62,7 @@ const plans = [
       "Accesso alla SAFEViN Creative Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Creative Direction + 2 gratis",
       "Supporto prioritario avanzato",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma",
+      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
       "Accesso prioritario alle nuove funzionalità",
