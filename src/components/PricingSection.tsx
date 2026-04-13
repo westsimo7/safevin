@@ -1,6 +1,8 @@
+import { useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const plans = [
   {
@@ -113,6 +115,23 @@ const PricingSection = () => {
   const gridRef = useStaggerReveal({ direction: "up", stagger: 0.15, distance: 60 });
   const footerRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.6, distance: 20 });
 
+  const isMobile = useIsMobile();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const popularIndex = plans.findIndex(p => p.popular);
+
+  useEffect(() => {
+    if (isMobile && scrollContainerRef.current && popularIndex >= 0) {
+      const container = scrollContainerRef.current;
+      const cards = container.children;
+      if (cards[popularIndex]) {
+        const card = cards[popularIndex] as HTMLElement;
+        // Center the popular card in view
+        const scrollLeft = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
+        container.scrollTo({ left: scrollLeft, behavior: "instant" });
+      }
+    }
+  }, [isMobile, popularIndex]);
+
   return (
     <section className="relative py-14 sm:py-20 md:py-24 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
@@ -127,12 +146,21 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
+        {/* Mobile/Tablet: horizontal scroll, Desktop: grid */}
+        <div
+          ref={(el) => {
+            scrollContainerRef.current = el;
+            if (gridRef && typeof gridRef === 'object' && 'current' in gridRef) {
+              (gridRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+            }
+          }}
+          className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-hide pb-4 lg:pb-0 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+        >
           {plans.map((plan, index) => (
             <div
               key={index}
               data-reveal
-              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 ${
+              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 min-w-[280px] sm:min-w-[300px] lg:min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${
                 plan.popular
                   ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
                   : "bg-card/50 border border-border/50 hover:border-border"
