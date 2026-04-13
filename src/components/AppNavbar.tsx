@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -34,6 +34,7 @@ const AppNavbar = () => {
   const { user, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
+  const [isFounder, setIsFounder] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -45,6 +46,10 @@ const AppNavbar = () => {
       .then(({ data }) => {
         if (data) setProfileData(data);
       });
+    // Check founder role
+    supabase.rpc("has_role", { _user_id: user.id, _role: "founder" }).then(({ data }) => {
+      setIsFounder(data === true);
+    });
   }, [user]);
 
   const displayName = profileData?.nome
