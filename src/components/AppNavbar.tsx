@@ -141,6 +141,7 @@ const AppNavbar = () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold truncate">Utente SafeViN</p>
                     <p className="text-xs text-muted-foreground mt-0.5">utente@email.com</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></p>
                   </div>
                 </div>
 
