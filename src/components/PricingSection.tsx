@@ -5,19 +5,19 @@ import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 const plans = [
   {
     name: "Starter",
-    price: "0",
-    period: "3 giorni",
+    price: "8,99",
+    period: "/mese",
     description: "Scopri il metodo SafeViN senza impegno",
     icon: Zap,
     features: [
-      "1 Studio export",
+      "10 annunci creabili",
       "Storico ultime 3 sessioni",
-      "Coach base",
+      "Prezzo strategico",
+      "Salvataggio creazioni incomplete",
+      "Assistenza h24",
     ],
-    limitations: [
-      "Nessun accesso avanzato",
-    ],
-    cta: "Inizia gratuitamente",
+    limitations: [],
+    cta: "Inizia ora",
     popular: false,
     variant: "glass" as const,
   },
