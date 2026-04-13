@@ -149,15 +149,17 @@ const AppNavbar = () => {
 
           {/* Right side */}
           <div className="flex items-center gap-1.5 sm:gap-2 ml-auto lg:mr-16">
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-xs h-8 px-3 border-primary/20 text-primary hover:bg-primary/5"
-              onClick={() => navigate("/pricing")}
-            >
-              <Crown className="w-3 h-3 mr-1" />
-              Upgrade
-            </Button>
+            {!isFounder && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs h-8 px-3 border-primary/20 text-primary hover:bg-primary/5"
+                onClick={() => navigate("/pricing")}
+              >
+                <Crown className="w-3 h-3 mr-1" />
+                Upgrade
+              </Button>
+            )}
 
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
