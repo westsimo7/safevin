@@ -6,9 +6,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const navLinks = [
-  { to: "/home", label: "Home" },
-  { to: "/storico", label: "Storico" },
-  { to: "/coach", label: "Coach" },
+  { to: "/home", label: "Home", disabled: false },
+  { to: "/storico", label: "Storico", disabled: false },
+  { to: "/coach", label: "Coach", disabled: true },
 ];
 
 const AppNavbar = () => {
@@ -32,18 +32,24 @@ const AppNavbar = () => {
           {!isMobile && (
             <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-6">
               {navLinks.map(link => {
-                const isActive = location.pathname === link.to || location.pathname.startsWith(link.to + "/");
+                const isActive = !link.disabled && (location.pathname === link.to || location.pathname.startsWith(link.to + "/"));
                 return (
                   <Link
                     key={link.to}
                     to={link.to}
-                    className={`text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
-                      isActive
-                        ? "text-foreground bg-muted/50"
-                        : "text-muted-foreground hover:text-foreground"
+                    className={`relative text-sm font-medium px-3 py-1.5 rounded-full transition-colors ${
+                      link.disabled
+                        ? "text-muted-foreground/40 cursor-not-allowed"
+                        : isActive
+                          ? "text-foreground bg-muted/50"
+                          : "text-muted-foreground hover:text-foreground"
                     }`}
+                    onClick={link.disabled ? (e) => e.preventDefault() : undefined}
                   >
                     {link.label}
+                    {link.disabled && (
+                      <span className="absolute -top-2 -right-3 text-[8px] font-bold text-destructive uppercase">soon</span>
+                    )}
                   </Link>
                 );
               })}
