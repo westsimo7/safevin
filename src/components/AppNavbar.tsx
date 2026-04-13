@@ -58,6 +58,12 @@ const AppNavbar = () => {
   const displayEmail = profileData?.email || user?.email || "";
 
   const menuSections: MenuSection[] = [
+    ...(isFounder ? [{
+      title: "Founder",
+      items: [
+        { label: "Dashboard Admin", icon: LayoutDashboard, action: () => { setOpen(false); navigate("/admin"); }, badge: "Founder", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+      ],
+    }] : []),
     {
       title: "Account",
       items: [
@@ -69,7 +75,7 @@ const AppNavbar = () => {
       title: "Abbonamento",
       items: [
         { label: "Piano attuale", icon: Sparkles, badge: "Starter", badgeColor: "bg-primary/10 text-primary border-primary/20" },
-        { label: "Upgrade", icon: Crown, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Upgrade", icon: Crown, action: () => { setOpen(false); navigate("/pricing"); }, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     },
     {
