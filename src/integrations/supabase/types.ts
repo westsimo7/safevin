@@ -82,6 +82,65 @@ export type Database = {
           },
         ]
       }
+      creative_director_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      creative_director_messages: {
+        Row: {
+          content: string | null
+          conversation_id: string
+          created_at: string
+          id: string
+          image_url: string | null
+          sender_id: string
+        }
+        Insert: {
+          content?: string | null
+          conversation_id: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          sender_id: string
+        }
+        Update: {
+          content?: string | null
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "creative_director_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "creative_director_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           cognome: string
@@ -178,6 +237,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_credits: {
+        Row: {
+          created_at: string
+          credits_total: number
+          credits_used: number
+          id: string
+          period_end: string
+          period_start: string
+          plan_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits_total?: number
+          credits_used?: number
+          id?: string
+          period_end?: string
+          period_start?: string
+          plan_type?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits_total?: number
+          credits_used?: number
+          id?: string
+          period_end?: string
+          period_start?: string
+          plan_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -204,6 +296,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      complete_creative_director_job: {
+        Args: { p_conversation_id: string }
+        Returns: boolean
+      }
       get_all_users_admin: {
         Args: never
         Returns: {
