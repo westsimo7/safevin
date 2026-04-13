@@ -110,8 +110,7 @@ const SafevinHome = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
             >
-              Crea annunci ottimizzati in pochi minuti.<br />
-              Con strategie competitive su prezzi, trattative e post pubblicazione.
+              <span className="font-bold text-foreground">Crea annunci ottimizzati in pochi minuti.</span>
             </motion.p>
 
             <motion.div
