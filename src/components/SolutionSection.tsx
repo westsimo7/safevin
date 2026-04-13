@@ -56,7 +56,7 @@ const SolutionSection = () => {
                 SAFEViN Coach
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita.
+                Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita. Ti guida su foto, titoli, descrizioni e strategie di vendita.
               </p>
             </CardContent>
           </Card>
