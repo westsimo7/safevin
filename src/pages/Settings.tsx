@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette } from "lucide-react";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -182,11 +182,24 @@ const Settings = () => {
               )}
 
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+                <CreditCard className="w-5 h-5 text-muted-foreground" />
+                <span>Metodo di pagamento</span>
+              </div>
+
+              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+                <Receipt className="w-5 h-5 text-muted-foreground" />
+                <span>Fatture e ricevute</span>
+              </div>
+
+              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+                <Bell className="w-5 h-5 text-muted-foreground" />
+                <span>Notifiche</span>
+              </div>
+
+              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <Shield className="w-5 h-5 text-muted-foreground" />
                 <span>Privacy e Sicurezza</span>
               </div>
-            </CardContent>
-          </Card>
 
           {/* Creative Director section - visible for expert and pro plans */}
           {(userPlan === "expert" || userPlan === "pro") && (
