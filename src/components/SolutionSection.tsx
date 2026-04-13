@@ -39,7 +39,7 @@ const SolutionSection = () => {
                 <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                SAFEViN Art Director
+                SAFEViN Artist Director
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
                 Affida le campagne visive dei tuoi articoli in vendita a SAFEViN: analizza ogni foto per garantire coerenza visiva e qualità, così il tuo annuncio comunica professionalità e attira più acquirenti.
