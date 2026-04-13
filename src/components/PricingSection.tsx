@@ -127,7 +127,7 @@ const PricingSection = () => {
           </p>
         </div>
 
-        <div ref={gridRef} className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
+        <div ref={gridRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
           {plans.map((plan, index) => (
             <div
               key={index}
