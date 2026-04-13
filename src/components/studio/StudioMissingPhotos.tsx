@@ -98,6 +98,7 @@ function buildCriteriaVerdicts(
 }
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onSaveIncompleteAndGoCoach }: StudioMissingPhotosProps) => {
+  const navigate = useNavigate();
   const [improveOpen, setImproveOpen] = useState(false);
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
