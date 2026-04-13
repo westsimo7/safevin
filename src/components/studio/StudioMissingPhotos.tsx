@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench } from "lucide-react";
 import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
@@ -97,6 +98,7 @@ function buildCriteriaVerdicts(
 }
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onSaveIncompleteAndGoCoach }: StudioMissingPhotosProps) => {
+  const navigate = useNavigate();
   const [improveOpen, setImproveOpen] = useState(false);
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
@@ -186,18 +188,14 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
               className="w-full text-left rounded-lg border border-amber-500/30 hover:bg-amber-500/5 hover:border-amber-500/50 transition-colors p-4"
               onClick={() => {
                 setImproveOpen(false);
-                window.dispatchEvent(new CustomEvent("open-coach", {
-                  detail: {
-                    message: "Vorrei usare SafeVin Creative Director per ottimizzare le mie foto professionalmente.",
-                  },
-                }));
+                navigate("/artist-director");
               }}
             >
               <div className="flex items-center gap-2 flex-wrap">
                 <Crown className="w-4 h-4 text-amber-600 shrink-0" />
-                <span className="font-semibold text-amber-600 text-sm">SafeVin Creative Director</span>
+                <span className="font-semibold text-amber-600 text-sm">SafeVin Artist Director</span>
                 <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-1.5 py-0">
-                  Premium
+                  Expert
                 </Badge>
               </div>
               <span className="text-xs text-muted-foreground mt-1 block">

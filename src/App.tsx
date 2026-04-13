@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import AboutStudio from "./pages/AboutStudio";
 import Coach from "./pages/Coach";
+import ArtistDirector from "./pages/ArtistDirector";
 import IncompleteCreations from "./pages/IncompletCreations";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
@@ -54,6 +55,9 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/settings" element={
             <PageTransition direction="up"><Settings /></PageTransition>
+          } />
+          <Route path="/artist-director" element={
+            <PageTransition direction="up"><ArtistDirector /></PageTransition>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
