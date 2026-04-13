@@ -33,7 +33,7 @@ const plans = [
     name: "Starter",
     price: "8,99",
     period: "/mese",
-    description: "Scopri il metodo SafeViN senza impegno",
+    description: "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
     icon: Zap,
     features: [
       "10 annunci creabili",
