@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import AboutStudio from "./pages/AboutStudio";
 import Coach from "./pages/Coach";
+import ArtistDirector from "./pages/ArtistDirector";
 import IncompleteCreations from "./pages/IncompletCreations";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
