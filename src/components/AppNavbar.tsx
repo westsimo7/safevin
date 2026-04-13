@@ -88,8 +88,7 @@ const AppNavbar = () => {
     {
       title: "Servizi",
       items: [
-        { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
-        { label: "Creative Director", icon: Crown, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Pro", badgeColor: "bg-primary/10 text-primary border-primary/20" },
       ],
     },
     {
@@ -182,6 +181,11 @@ const AppNavbar = () => {
                         : <>Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></>
                       }
                     </p>
+                    {!isFounder && (
+                      <p className="text-[10px] text-muted-foreground/60 mt-0.5">
+                        Pro: 2 campagne · Expert: 6 campagne
+                      </p>
+                    )}
                   </div>
                 </div>
 
