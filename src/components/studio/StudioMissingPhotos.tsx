@@ -188,7 +188,7 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
               className="w-full text-left rounded-lg border border-amber-500/30 hover:bg-amber-500/5 hover:border-amber-500/50 transition-colors p-4"
               onClick={() => {
                 setImproveOpen(false);
-                window.location.href = "/artist-director";
+                navigate("/artist-director");
               }}
             >
               <div className="flex items-center gap-2 flex-wrap">
