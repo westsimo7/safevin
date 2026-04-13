@@ -55,6 +55,7 @@ const EngineAudit = () => {
 
   const saveToHistory = async (data: AuditData, result: AuditResultData, origin: string, studioCreationId?: string) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
       await supabase.from("analyses").insert([{
         titolo: data.titolo || "",
         descrizione: data.descrizione || "",
@@ -66,6 +67,7 @@ const EngineAudit = () => {
         analysis_result: result as any,
         analysis_type: "full",
         origin,
+        user_id: user?.id,
         ...(studioCreationId ? { studio_creation_id: studioCreationId } : {}),
       }]);
     } catch (err) {

@@ -98,11 +98,13 @@ const EngineImageAnalysis = () => {
           firstImageUrl = urlData.publicUrl;
         }
 
+        const { data: { user } } = await supabase.auth.getUser();
         await supabase.from("analyses").insert([{
           titolo: `Analisi ${images.length} immagini`,
           analysis_result: { photoReports: data.photoReports } as any,
           first_image_url: firstImageUrl,
           analysis_type: "image_only",
+          user_id: user?.id,
         }]);
       }
     } catch (err: any) {

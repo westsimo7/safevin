@@ -153,6 +153,7 @@ const EngineStudio = () => {
 
   const saveStudioCreation = async (output: StudioGeneratedOutput) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
       await supabase.from("studio_creations").insert([{
         titolo_generato: output.title || null,
         first_image_url: previews[0] || null,
@@ -161,6 +162,7 @@ const EngineStudio = () => {
         questions_answers: [] as any,
         output: output as any,
         origin: "studio",
+        user_id: user?.id,
       }]);
       if (incompleteId) {
         removeStudioDraft(incompleteId);
