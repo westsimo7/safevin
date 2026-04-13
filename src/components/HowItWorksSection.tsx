@@ -55,7 +55,7 @@ const HowItWorksSection = () => {
         <div className="border-t border-border/50 pt-10 sm:pt-12 md:pt-16">
           <div ref={blocksHeaderRef} className="text-center mb-8 sm:mb-10 md:mb-12">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
-              Non opinioni. <span className="text-primary">Dati e metodo.</span>
+            Non è opinione. <span className="text-primary">È statistica.</span>
             </h2>
             <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-2xl mx-auto px-2 sm:px-0">
               Ecco nel dettaglio cosa fa SAFEViN Studio per te.
