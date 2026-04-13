@@ -57,6 +57,7 @@ const AppNavbar = () => {
       title: "Servizi",
       items: [
         { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Creative Director", icon: Crown, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     },
     {
