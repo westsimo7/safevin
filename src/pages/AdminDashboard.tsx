@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { Users, BarChart3, Shield, MessageSquare } from "lucide-react";
+import { Users, BarChart3, Shield, MessageSquare, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AdminUser {
@@ -121,11 +121,20 @@ const AdminDashboard = () => {
 
           {/* Creative Director Inbox button */}
           <Button
-            className="w-full mb-6 bg-amber-500 hover:bg-amber-600 text-white gap-2"
+            className="w-full mb-3 bg-amber-500 hover:bg-amber-600 text-white gap-2"
             onClick={() => navigate("/admin/inbox")}
           >
             <MessageSquare className="w-4 h-4" />
             Creative Director — Inbox
+          </Button>
+
+          {/* Upgrade Inbox button */}
+          <Button
+            className="w-full mb-6 bg-primary hover:bg-primary/90 text-primary-foreground gap-2"
+            onClick={() => navigate("/admin/upgrade-inbox")}
+          >
+            <Rocket className="w-4 h-4" />
+            Upgrade — Inbox
           </Button>
 
           {/* Users table */}
