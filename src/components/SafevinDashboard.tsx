@@ -88,21 +88,7 @@ const SafevinHome = () => {
               </motion.span>
             </motion.h1>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.5, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ ...spring, delay: 0.7 }}
-            >
-              <Button
-                variant="neon"
-                size="lg"
-                className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto"
-                onClick={() => navigate("/engine/studio")}
-              >
-                Crea il tuo annuncio
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </motion.div>
+            
 
             <motion.p
               className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
@@ -136,6 +122,21 @@ const SafevinHome = () => {
               ))}
             </motion.div>
 
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5, y: 30 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ ...spring, delay: 1.1 }}
+            >
+              <Button
+                variant="neon"
+                size="lg"
+                className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto"
+                onClick={() => navigate("/engine/studio")}
+              >
+                Crea il tuo annuncio
+                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </motion.div>
 
             <motion.div
               className="flex items-center justify-center gap-2 mt-10 sm:mt-14 mb-8 text-muted-foreground"
