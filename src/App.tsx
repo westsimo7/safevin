@@ -23,6 +23,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import FounderInbox from "./pages/FounderInbox";
 import Upgrade from "./pages/Upgrade";
 import UpgradeInbox from "./pages/UpgradeInbox";
+import Support from "./pages/Support";
+import SupportInbox from "./pages/SupportInbox";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -83,6 +85,12 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/upgrade" element={
             <ProtectedRoute><PageTransition direction="up"><Upgrade /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/support" element={
+            <ProtectedRoute><PageTransition direction="up"><Support /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/admin/support-inbox" element={
+            <ProtectedRoute><PageTransition direction="left"><SupportInbox /></PageTransition></ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
