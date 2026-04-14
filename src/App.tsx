@@ -21,6 +21,8 @@ import Auth from "./pages/Auth";
 import IncompleteCreations from "./pages/IncompletCreations";
 import AdminDashboard from "./pages/AdminDashboard";
 import FounderInbox from "./pages/FounderInbox";
+import Upgrade from "./pages/Upgrade";
+import UpgradeInbox from "./pages/UpgradeInbox";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -75,6 +77,12 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/admin/inbox" element={
             <ProtectedRoute><PageTransition direction="left"><FounderInbox /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/admin/upgrade-inbox" element={
+            <ProtectedRoute><PageTransition direction="left"><UpgradeInbox /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/upgrade" element={
+            <ProtectedRoute><PageTransition direction="up"><Upgrade /></PageTransition></ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>
