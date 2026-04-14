@@ -1,48 +1,90 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
+import { toast } from "sonner";
 
 const LandingNavbar = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      navigate("/home");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) {
+      toast.error("Errore con Google login");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="w-full h-14 sm:h-16 flex items-center justify-between px-4 sm:px-6">
-        {/* CTA Button */}
         <Link to="/home" className="lg:ml-16">
           <Button variant="neon" size="sm" className="h-9 px-4 text-sm font-bold">
             Prova gratis
           </Button>
         </Link>
 
-        {/* Profile icon - flush right */}
         <div className="lg:mr-16">
-        <Popover>
-          <PopoverTrigger asChild>
-            <button className="w-9 h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
-              <User className="w-4 h-4 text-muted-foreground" />
-            </button>
-          </PopoverTrigger>
-          <PopoverContent className="w-64 p-4" align="end">
-            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-border/50">
-              <div className="w-12 h-12 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center">
-                <User className="w-5 h-5 text-muted-foreground" />
+          <Popover>
+            <PopoverTrigger asChild>
+              <button className="w-9 h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
+                <User className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72 p-4" align="end">
+              <form onSubmit={handleLogin} className="space-y-3">
+                <Input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading ? "Accesso..." : "Login"}
+                </Button>
+              </form>
+
+              <div className="mt-3 text-center">
+                <Link to="/auth" className="text-sm text-primary hover:underline">
+                  Registrati
+                </Link>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">Utente</p>
-                <p className="text-xs text-muted-foreground">Crediti: ??? / ??? / ???</p>
+
+              <div className="mt-3">
+                <Button variant="outline" className="w-full" onClick={handleGoogleLogin}>
+                  Accedi con Google
+                </Button>
               </div>
-            </div>
-            <div className="space-y-1 text-sm text-muted-foreground">
-              <p className="py-1.5 px-2 rounded hover:bg-muted/50 cursor-pointer">Login</p>
-              <p className="py-1.5 px-2 rounded hover:bg-muted/50 cursor-pointer">Registrati</p>
-              <div className="my-1 h-px bg-border/50" />
-              <p className="py-1.5 px-2 rounded hover:bg-muted/50 cursor-not-allowed opacity-50">Impostazioni</p>
-              <p className="py-1.5 px-2 rounded hover:bg-muted/50 cursor-not-allowed opacity-50">Billing</p>
-              <p className="py-1.5 px-2 rounded hover:bg-muted/50 cursor-not-allowed opacity-50">Assistenza</p>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
     </header>
