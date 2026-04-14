@@ -88,7 +88,7 @@ const AppNavbar = () => {
     {
       title: "Supporto",
       items: [
-        { label: "Centro assistenza", icon: HelpCircle },
+        { label: "Centro assistenza", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
       ],
     },
   ];
