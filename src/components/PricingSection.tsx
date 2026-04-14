@@ -96,7 +96,7 @@ const plans = [
       "Salvataggio creazioni incomplete",
       "Assistenza h24 prioritaria",
       "Accesso alla SAFEViN Creative Direction prioritaria",
-      "6 annunci delegabili al team SAFEViN Creative Direction + 2 gratis",
+      "6 annunci delegabili al team SAFEViN Creative Direction",
       "Supporto prioritario avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
