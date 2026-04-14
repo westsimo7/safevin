@@ -177,7 +177,7 @@ const AppNavbar = () => {
                 </div>
 
                 {/* Menu sections */}
-                <div className="max-h-[360px] overflow-y-auto scrollbar-hide">
+                <div>
                   {menuSections.map((section, sIdx) => (
                     <div key={sIdx}>
                       {section.title && (
