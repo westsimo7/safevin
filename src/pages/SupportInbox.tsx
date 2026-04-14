@@ -30,7 +30,6 @@ interface Message {
 }
 
 const SupportInbox = () => {
-  const navigate = (await import("react-router-dom")).useNavigate();
   const { user } = useAuth();
   useSwipeBack("/admin");
   const [conversations, setConversations] = useState<ConversationWithUser[]>([]);
