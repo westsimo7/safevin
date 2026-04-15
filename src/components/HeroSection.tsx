@@ -13,7 +13,7 @@ const HeroSection = () => {
   const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-16 sm:pt-12">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-6">
       <FloatingPercentages />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-primary/5 rounded-full blur-[150px]" />
