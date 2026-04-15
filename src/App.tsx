@@ -25,6 +25,8 @@ import Upgrade from "./pages/Upgrade";
 import UpgradeInbox from "./pages/UpgradeInbox";
 import Support from "./pages/Support";
 import SupportInbox from "./pages/SupportInbox";
+import Collaboration from "./pages/Collaboration";
+import CollaborationInbox from "./pages/CollaborationInbox";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -91,6 +93,12 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/admin/support-inbox" element={
             <ProtectedRoute><PageTransition direction="left"><SupportInbox /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/collaboration" element={
+            <ProtectedRoute><PageTransition direction="up"><Collaboration /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/admin/collaboration-inbox" element={
+            <ProtectedRoute><PageTransition direction="left"><CollaborationInbox /></PageTransition></ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>

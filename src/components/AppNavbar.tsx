@@ -3,7 +3,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -83,6 +83,7 @@ const AppNavbar = () => {
       items: [
         { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Pro", badgeColor: "bg-primary/10 text-primary border-primary/20" },
         { label: "Upgrade", icon: Rocket, action: () => { setOpen(false); navigate("/upgrade"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Collaborazioni", icon: Handshake, action: () => { setOpen(false); navigate("/collaboration"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     },
     {
