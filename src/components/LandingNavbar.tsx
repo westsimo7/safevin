@@ -32,7 +32,10 @@ const LandingNavbar = () => {
     });
     if (result.error) {
       toast.error("Errore con Google login");
+      return;
     }
+    if (result.redirected) return;
+    navigate("/home");
   };
 
   return (
