@@ -1,69 +1,68 @@
-import { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 
 const soldItems = [
   "/images/sold-1.jpg",
   "/images/sold-2.jpg",
   "/images/sold-3.jpg",
+  "/images/sold-4.jpg",
+  "/images/sold-5.jpg",
+  "/images/sold-6.jpg",
+  "/images/sold-7.jpg",
+  "/images/sold-8.jpg",
 ];
 
+// Double the array for seamless infinite scroll
+const doubled = [...soldItems, ...soldItems];
+
 const FloatingResults = () => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const animRef = useRef<number>(0);
-  const posRef = useRef(0);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const speed = 0.5; // px per frame
-
-    const tick = () => {
-      posRef.current += speed;
-      // Reset seamlessly when we've scrolled past the first set
-      const halfWidth = el.scrollWidth / 2;
-      if (posRef.current >= halfWidth) {
-        posRef.current -= halfWidth;
-      }
-      el.style.transform = `translate3d(-${posRef.current}px, 0, 0)`;
-      animRef.current = requestAnimationFrame(tick);
-    };
-
-    animRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animRef.current);
-  }, []);
-
-  // Triple the items for seamless loop
-  const tripled = [...soldItems, ...soldItems, ...soldItems];
-
   return (
-    <div className="relative w-full py-6 sm:py-10 overflow-hidden">
-      <div className="relative w-full overflow-hidden">
-        <div
-          ref={scrollRef}
-          className="flex gap-4 sm:gap-6 w-max will-change-transform"
-          style={{ backfaceVisibility: "hidden" }}
+    <div className="relative w-full py-6 sm:py-10 overflow-x-clip overflow-y-visible">
+
+      {/* Infinite horizontal scroll wrapper */}
+      <div className="relative w-full overflow-x-clip overflow-y-visible">
+        <motion.div
+          className="flex gap-5 sm:gap-7 w-max"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            x: {
+              duration: 40,
+              repeat: Infinity,
+              ease: "linear",
+            },
+          }}
         >
-          {tripled.map((img, i) => (
-            <div
-              key={i}
-              className="flex-shrink-0 w-[110px] sm:w-[140px] md:w-[160px] animate-float"
-              style={{
-                animationDelay: `${(i % soldItems.length) * 0.4}s`,
-                animationDuration: `${3 + (i % 3) * 0.5}s`,
-              }}
-            >
-              <div className="rounded-t-2xl rounded-b-lg overflow-hidden shadow-2xl shadow-primary/10 border border-border/20">
-                <img
-                  src={img}
-                  alt="Articolo venduto"
-                  className="w-full h-auto object-cover aspect-[3/4]"
-                  loading="lazy"
-                  draggable={false}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+          {doubled.map((img, i) => {
+            const floatY = 6 + (i % 3) * 4;
+            const floatDuration = 3 + (i % 4) * 0.6;
+
+            return (
+              <motion.div
+                key={i}
+                className="flex-shrink-0 w-[120px] sm:w-[150px] md:w-[160px]"
+                animate={{
+                  y: [-floatY, floatY, -floatY],
+                  rotate: [-1.5 + (i % 3), 1.5 - (i % 2), -1.5 + (i % 3)],
+                  scale: [1, 1.02, 1, 0.98, 1],
+                }}
+                transition={{
+                  duration: floatDuration,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: (i % soldItems.length) * 0.3,
+                }}
+              >
+                <div className="rounded-t-3xl rounded-b-lg overflow-hidden shadow-2xl shadow-primary/10 border border-border/20">
+                  <img
+                    src={img}
+                    alt="Articolo venduto"
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
     </div>
   );
