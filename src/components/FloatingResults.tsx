@@ -9,6 +9,9 @@ const soldItems = [
   "/images/sold-6.jpg",
   "/images/sold-7.jpg",
   "/images/sold-8.jpg",
+  "/images/sold-9.jpg",
+  "/images/sold-10.jpg",
+  "/images/sold-11.jpg",
 ];
 
 // Double the array for seamless infinite scroll
