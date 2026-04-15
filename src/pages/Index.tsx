@@ -1,3 +1,5 @@
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import LandingNavbar from "@/components/LandingNavbar";
 import HeroSection from "@/components/HeroSection";
 import ProblemSection from "@/components/ProblemSection";
@@ -9,6 +11,12 @@ import Footer from "@/components/Footer";
 
 
 const Index = () => {
+  const { user, loading } = useAuth();
+
+  if (!loading && user) {
+    return <Navigate to="/home" replace />;
+  }
+
   return (
     <main className="min-h-screen bg-background overflow-x-hidden relative">
       <div
