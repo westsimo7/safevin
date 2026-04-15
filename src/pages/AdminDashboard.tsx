@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { Users, BarChart3, Shield, MessageSquare, Rocket, HelpCircle } from "lucide-react";
+import { Users, BarChart3, Shield, MessageSquare, Rocket, HelpCircle, Handshake } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AdminUser {
@@ -135,6 +135,15 @@ const AdminDashboard = () => {
           >
             <Rocket className="w-4 h-4" />
             Upgrade — Inbox
+          </Button>
+
+          {/* Collaboration Inbox button */}
+          <Button
+            className="w-full mb-3 bg-amber-500/80 hover:bg-amber-500 text-white gap-2"
+            onClick={() => navigate("/admin/collaboration-inbox")}
+          >
+            <Handshake className="w-4 h-4" />
+            Collaborazioni — Inbox
           </Button>
 
           {/* Support Inbox button */}
