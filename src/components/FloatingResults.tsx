@@ -16,7 +16,7 @@ const doubled = [...soldItems, ...soldItems];
 
 const FloatingResults = () => {
   return (
-    <div className="relative w-full py-6 sm:py-10 overflow-x-clip overflow-y-visible">
+    <div className="relative w-screen left-1/2 -translate-x-1/2 py-6 sm:py-10 overflow-x-clip overflow-y-visible">
       <div className="relative w-full overflow-x-clip overflow-y-visible">
         <div
           className="flex gap-5 sm:gap-7 w-max will-change-transform animate-[scroll-left_60s_linear_infinite]"
