@@ -1,17 +1,12 @@
 import { AlertTriangle } from "lucide-react";
-import { motion } from "framer-motion";
-import { useScrollScale } from "@/hooks/useScrollTrigger";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const DisclaimerSection = () => {
-  const anim = useScrollScale();
+  const ref = useScrollReveal({ direction: "up", duration: 0.7, distance: 30 });
 
   return (
     <section className="py-8 sm:py-12 bg-background">
-      <motion.div
-        ref={anim.ref}
-        className="container mx-auto px-5 sm:px-6 max-w-3xl"
-        style={{ scale: anim.scale, opacity: anim.opacity }}
-      >
+      <div ref={ref} className="container mx-auto px-5 sm:px-6 max-w-3xl">
         <div className="p-4 sm:p-6 rounded-2xl border border-border/50 bg-card/50">
           <div className="flex items-start gap-2.5 sm:gap-3">
             <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
@@ -26,7 +21,7 @@ const DisclaimerSection = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

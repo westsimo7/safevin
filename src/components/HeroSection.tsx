@@ -1,50 +1,33 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, LayoutDashboard } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useRef } from "react";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { motion } from "framer-motion";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
 const HeroSection = () => {
-  const sectionRef = useRef<HTMLDivElement>(null!);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"],
-  });
-
-  const smoothProgress = useSpring(scrollYProgress, { stiffness: 100, damping: 30 });
-
-  // Parallax: logo moves up slower, subtitle faster
-  const logoY = useTransform(smoothProgress, [0, 1], [0, -60]);
-  const logoScale = useTransform(smoothProgress, [0, 0.5], [1, 0.9]);
-  const logoOpacity = useTransform(smoothProgress, [0, 0.6], [1, 0]);
-  const subtitleY = useTransform(smoothProgress, [0, 1], [0, -40]);
-  const ctaY = useTransform(smoothProgress, [0, 1], [0, -20]);
-  const ctaOpacity = useTransform(smoothProgress, [0, 0.5], [1, 0]);
-  const descY = useTransform(smoothProgress, [0, 1], [0, 30]);
-  const bgScale = useTransform(smoothProgress, [0, 1], [1, 1.15]);
+  const descRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.8 });
+  const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
 
   return (
-    <section ref={sectionRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-6">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-6">
       <FloatingPercentages />
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30"
-        style={{ scale: bgScale }}
-      />
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[500px] sm:w-[800px] h-[300px] sm:h-[400px] bg-primary/5 rounded-full blur-[150px]" />
 
       <div className="relative z-10 container mx-auto px-4 sm:px-6 text-center max-w-4xl">
+        {/* Badge */}
+
         {/* LOGO */}
         <motion.div
           className="mb-3 sm:mb-6"
           initial={{ opacity: 0, rotateX: 50, y: 60, scale: 0.5 }}
           animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.2, stiffness: 60 }}
-          style={{ perspective: "800px", y: logoY, scale: logoScale, opacity: logoOpacity }}
+          style={{ perspective: "800px" }}
         >
           <h1 className="text-[5.5rem] sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] select-none">
             <span
@@ -82,7 +65,6 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.5 }}
-          style={{ y: subtitleY }}
         >
           Vendi su Vinted, più <strong className="text-foreground">veloce</strong>, <strong className="text-foreground">chiaro</strong> e al <strong className="text-foreground">prezzo giusto</strong>.
         </motion.p>
@@ -93,7 +75,6 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 40, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.65 }}
-          style={{ y: ctaY, opacity: ctaOpacity }}
         >
           <Button variant="neon" size="lg" className="group w-full sm:w-auto cursor-not-allowed opacity-70 h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12" disabled>
             Prova gratis
@@ -112,15 +93,16 @@ const HeroSection = () => {
 
         {/* Description */}
         <motion.p
+          ref={descRef}
           className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2 sm:px-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.85 }}
-          style={{ y: descY }}
         >
           Creazione di Annunci ottimizzati in pochi minuti per aumentare la{" "}
           <strong className="text-foreground">probabilità statistica di vendita</strong>.
         </motion.p>
+
       </div>
     </section>
   );

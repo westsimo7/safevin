@@ -1,9 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
+import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { motion } from "framer-motion";
-import { useScrollTrigger } from "@/hooks/useScrollTrigger";
 
 const plans = [
   {
@@ -112,8 +111,9 @@ const plans = [
 ];
 
 const PricingSection = () => {
-  const header = useScrollTrigger();
-  const footer = useScrollTrigger();
+  const headerRef = useScrollReveal({ direction: "up", duration: 0.7 });
+  const gridRef = useStaggerReveal({ direction: "up", stagger: 0.15, distance: 60 });
+  const footerRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.6, distance: 20 });
 
   const isMobile = useIsMobile();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -125,6 +125,7 @@ const PricingSection = () => {
       const cards = container.children;
       if (cards[popularIndex]) {
         const card = cards[popularIndex] as HTMLElement;
+        // Center the popular card in view
         const scrollLeft = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
         container.scrollTo({ left: scrollLeft, behavior: "instant" });
       }
@@ -136,39 +137,34 @@ const PricingSection = () => {
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="container mx-auto px-5 sm:px-6 max-w-7xl">
-        <motion.div
-          ref={header.ref}
-          className="text-center mb-8 sm:mb-12 md:mb-16"
-          style={{ opacity: header.opacity, y: header.y }}
-        >
+        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
             Scegli il tuo piano
           </h2>
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
             Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.
           </p>
-        </motion.div>
+        </div>
 
+        {/* Mobile/Tablet: horizontal scroll, Desktop: grid */}
         <div
-          ref={scrollContainerRef}
+          ref={(el) => {
+            scrollContainerRef.current = el;
+            if (gridRef && typeof gridRef === 'object' && 'current' in gridRef) {
+              (gridRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+            }
+          }}
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-hide pb-4 lg:pb-0 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
           {plans.map((plan, index) => (
-            <motion.div
+            <div
               key={index}
+              data-reveal
               className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${
                 plan.popular
                   ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
                   : "bg-card/50 border border-border/50 hover:border-border"
               }`}
-              initial={{ opacity: 0, y: 80, scale: 0.9 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, margin: "-60px" }}
-              transition={{
-                duration: 0.6,
-                delay: index * 0.12,
-                ease: [0.16, 1, 0.3, 1],
-              }}
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
@@ -219,19 +215,15 @@ const PricingSection = () => {
               <Button variant={plan.variant} className="w-full h-11 sm:h-auto text-sm" size="lg" disabled>
                 {plan.cta}
               </Button>
-            </motion.div>
+            </div>
           ))}
         </div>
 
-        <motion.div
-          ref={footer.ref}
-          className="mt-8 sm:mt-12 text-center"
-          style={{ opacity: footer.opacity, y: footer.y }}
-        >
+        <div ref={footerRef} className="mt-8 sm:mt-12 text-center">
           <p className="text-muted-foreground text-[13px] sm:text-sm">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
