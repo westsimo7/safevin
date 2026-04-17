@@ -41,7 +41,7 @@ const Settings = () => {
       if (!user) return;
       const { data } = await supabase
         .from("profiles")
-        .select("nome, cognome, email, telefono")
+        .select("nome, cognome, email, telefono, avatar_url")
         .eq("user_id", user.id)
         .single();
       if (data) {
@@ -50,6 +50,7 @@ const Settings = () => {
           cognome: data.cognome || "",
           email: data.email || "",
           telefono: data.telefono || "",
+          avatar_url: (data as any).avatar_url || "",
         });
       }
       // Check if user has founder role (founder sees inbox page instead) or expert/pro plan
