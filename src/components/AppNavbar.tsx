@@ -67,7 +67,7 @@ const AppNavbar = () => {
     {
       title: "Account",
       items: [
-        { label: "Profilo", icon: User, action: () => { setOpen(false); navigate("/settings"); } },
+        { label: "Profilo", icon: User, action: () => { setOpen(false); navigate("/profile"); } },
         { label: "Impostazioni", icon: Settings, action: () => { setOpen(false); navigate("/settings"); } },
       ],
     },
