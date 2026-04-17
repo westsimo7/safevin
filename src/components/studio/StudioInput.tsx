@@ -105,6 +105,15 @@ const STYLE_OPTIONS = [
   { value: "casual", label: "Casual" },
   { value: "streetwear", label: "Streetwear" },
   { value: "elegante", label: "Elegante" },
+  { value: "sportwear", label: "Sportwear" },
+  { value: "minimal", label: "Minimal" },
+  { value: "y2k", label: "Y2K" },
+  { value: "techwear", label: "Techwear" },
+  { value: "old_money", label: "Old money" },
+  { value: "workwear", label: "Workwear" },
+  { value: "grunge", label: "Grunge" },
+  { value: "preppy", label: "Preppy" },
+  { value: "luxury", label: "Luxury" },
 ];
 
 const FIT_OPTIONS = [
