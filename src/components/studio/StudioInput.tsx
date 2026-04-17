@@ -213,7 +213,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
             <div className="flex items-center gap-3 overflow-hidden">
               <Label className="text-sm font-medium shrink-0">Tipologia prodotto *</Label>
               <div className="flex-1 overflow-hidden relative h-4">
-                <div className="absolute whitespace-nowrap text-[11px] text-amber-500 animate-[marquee_12s_linear_infinite]">
+                <div className="absolute whitespace-nowrap text-[11px] text-amber-500 animate-[scroll-left_14s_linear_infinite]">
                   ⚠ Controlla se la categoria è giusta, l'IA potrebbe confondersi · ⚠ Controlla se la categoria è giusta, l'IA potrebbe confondersi ·
                 </div>
               </div>
