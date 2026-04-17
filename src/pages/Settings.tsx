@@ -21,7 +21,21 @@ const Settings = () => {
   const { toast } = useToast();
   useSwipeBack("/home");
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("safevin-theme") !== "light";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (darkMode) {
+      root.classList.remove("light");
+      localStorage.setItem("safevin-theme", "dark");
+    } else {
+      root.classList.add("light");
+      localStorage.setItem("safevin-theme", "light");
+    }
+  }, [darkMode]);
   const [profileOpen, setProfileOpen] = useState(false);
   const [cdOpen, setCdOpen] = useState(false);
   const [saving, setSaving] = useState(false);
