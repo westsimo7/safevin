@@ -29,6 +29,8 @@ import SupportInbox from "./pages/SupportInbox";
 import Collaboration from "./pages/Collaboration";
 import CollaborationInbox from "./pages/CollaborationInbox";
 import Privacy from "./pages/Privacy";
+import Cookies from "./pages/Cookies";
+import CookieBanner from "./components/CookieBanner";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -106,10 +108,12 @@ const AnimatedRoutes = () => {
             <ProtectedRoute><PageTransition direction="left"><CollaborationInbox /></PageTransition></ProtectedRoute>
           } />
           <Route path="/privacy" element={<PageTransition direction="up"><Privacy /></PageTransition>} />
+          <Route path="/cookies" element={<PageTransition direction="up"><Cookies /></PageTransition>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
       {!isLanding && !isAuth && <BottomBar />}
+      <CookieBanner />
     </div>
   );
 };
