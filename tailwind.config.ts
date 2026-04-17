@@ -98,8 +98,8 @@ export default {
           "50%": { boxShadow: "0 0 40px hsl(174 65% 34% / 0.5)" },
         },
         "pro-glow": {
-          "0%, 100%": { boxShadow: "0 0 0 hsl(var(--primary) / 0)" },
-          "50%": { boxShadow: "0 0 60px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.5)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 0 8px hsl(var(--primary) / 0.15)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.5), 0 0 14px hsl(var(--primary) / 0.3)" },
         },
         "fade-in": {
           from: { opacity: "0", transform: "translateY(20px)" },
