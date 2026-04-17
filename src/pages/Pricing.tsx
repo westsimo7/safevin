@@ -202,7 +202,6 @@ const Pricing = () => {
           </p>
         </div>
       </main>
-      <BottomBar />
     </div>
   );
 };
