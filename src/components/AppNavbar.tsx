@@ -139,12 +139,12 @@ const AppNavbar = () => {
             <Button
               variant="outline"
               size="sm"
-              className="h-8 px-2 sm:px-3 border-amber-500/40 text-amber-500 hover:bg-amber-500/10 hover:text-amber-500 hover:border-amber-500/60"
+              className="h-8 px-2.5 sm:px-3 border-amber-500/40 text-amber-500 hover:bg-amber-500/10 hover:text-amber-500 hover:border-amber-500/60"
               onClick={() => navigate("/pricing")}
               aria-label="Upgrade"
             >
-              <Crown className="w-3.5 h-3.5 sm:mr-1" />
-              <span className="hidden sm:inline text-xs">Upgrade</span>
+              <Crown className="w-3.5 h-3.5 mr-1" />
+              <span className="text-xs">Upgrade</span>
             </Button>
 
             <Popover open={open} onOpenChange={setOpen}>
