@@ -187,10 +187,10 @@ const Pricing = () => {
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                          isCurrent ? "bg-amber-500/10" : plan.popular ? "bg-primary/10" : "bg-muted"
+                          isCurrent ? "bg-amber-500/10" : plan.name === "Expert" ? "bg-blue-500/10" : plan.popular ? "bg-primary/10" : "bg-muted"
                         }`}>
                           <Check className={`w-2.5 h-2.5 ${
-                            isCurrent ? "text-amber-500" : plan.popular ? "text-primary" : "text-muted-foreground"
+                            isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-muted-foreground"
                           }`} />
                         </div>
                         <span className="text-foreground/80 text-xs">{feature}</span>
