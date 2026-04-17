@@ -20,7 +20,7 @@ const Footer = () => {
             <a href="/pricing" className="hover:text-foreground transition-colors py-1">Piani</a>
             <a href="/privacy" className="hover:text-foreground transition-colors py-1">Privacy</a>
             <a href="/cookies" className="hover:text-foreground transition-colors py-1">Cookie</a>
-            <a href="#" className="hover:text-foreground transition-colors py-1">Termini</a>
+            <a href="/terms" className="hover:text-foreground transition-colors py-1">Termini</a>
           </nav>
           
           <p className="text-[13px] sm:text-sm text-muted-foreground">
