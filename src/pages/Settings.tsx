@@ -176,87 +176,13 @@ const Settings = () => {
           <Card>
             <CardContent className="p-6 space-y-4">
               <button
-                className="w-full flex items-center justify-between hover:text-primary transition-colors"
-                onClick={() => setProfileOpen(!profileOpen)}
+                className="w-full flex items-center gap-3 hover:text-primary transition-colors text-left"
+                onClick={() => navigate("/profile")}
               >
-                <div className="flex items-center gap-3">
-                  <User className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Profilo Utente</span>
-                </div>
-                {profileOpen ? (
-                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                )}
+                <User className="w-5 h-5 text-muted-foreground" />
+                <span className="font-medium flex-1">Profilo Utente</span>
+                <ChevronDown className="w-4 h-4 -rotate-90 text-muted-foreground" />
               </button>
-
-              {profileOpen && (
-                <div className="space-y-4 pt-2 pl-8 animate-fade-in">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="w-16 h-16 border border-border">
-                      <AvatarImage src={profile.avatar_url || undefined} alt="Foto profilo" />
-                      <AvatarFallback className="bg-muted">
-                        <User className="w-6 h-6 text-muted-foreground" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="avatar-upload"
-                        className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-xs font-medium transition-colors"
-                      >
-                        <Camera className="w-3.5 h-3.5" />
-                        {uploadingAvatar ? "Caricamento..." : profile.avatar_url ? "Cambia foto" : "Carica foto"}
-                      </Label>
-                      <input
-                        id="avatar-upload"
-                        type="file"
-                        accept="image/*"
-                        className="hidden"
-                        onChange={handleAvatarUpload}
-                        disabled={uploadingAvatar}
-                      />
-                      <p className="text-[11px] text-muted-foreground mt-1.5">JPG o PNG, max 5MB</p>
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Nome</Label>
-                    <Input
-                      placeholder="Il tuo nome"
-                      value={profile.nome}
-                      onChange={(e) => setProfile({ ...profile, nome: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Cognome</Label>
-                    <Input
-                      placeholder="Il tuo cognome"
-                      value={profile.cognome}
-                      onChange={(e) => setProfile({ ...profile, cognome: e.target.value })}
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Email</Label>
-                    <Input
-                      type="email"
-                      value={profile.email}
-                      disabled
-                      className="opacity-60"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs text-muted-foreground">Telefono</Label>
-                    <Input
-                      type="tel"
-                      placeholder="+39 000 000 0000"
-                      value={profile.telefono}
-                      onChange={(e) => setProfile({ ...profile, telefono: e.target.value })}
-                    />
-                  </div>
-                  <Button size="sm" className="w-full mt-2" onClick={handleSave} disabled={saving}>
-                    {saving ? "Salvataggio..." : "Salva modifiche"}
-                  </Button>
-                </div>
-              )}
 
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <CreditCard className="w-5 h-5 text-muted-foreground" />
