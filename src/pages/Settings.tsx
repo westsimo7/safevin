@@ -178,6 +178,32 @@ const Settings = () => {
 
               {profileOpen && (
                 <div className="space-y-4 pt-2 pl-8 animate-fade-in">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="w-16 h-16 border border-border">
+                      <AvatarImage src={profile.avatar_url || undefined} alt="Foto profilo" />
+                      <AvatarFallback className="bg-muted">
+                        <User className="w-6 h-6 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <Label
+                        htmlFor="avatar-upload"
+                        className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-xs font-medium transition-colors"
+                      >
+                        <Camera className="w-3.5 h-3.5" />
+                        {uploadingAvatar ? "Caricamento..." : profile.avatar_url ? "Cambia foto" : "Carica foto"}
+                      </Label>
+                      <input
+                        id="avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarUpload}
+                        disabled={uploadingAvatar}
+                      />
+                      <p className="text-[11px] text-muted-foreground mt-1.5">JPG o PNG, max 5MB</p>
+                    </div>
+                  </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">Nome</Label>
                     <Input
