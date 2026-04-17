@@ -168,7 +168,7 @@ const Pricing = () => {
                     }`}>
                       {plan.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground">{plan.description}</p>
+                    <p className="text-xs text-muted-foreground whitespace-pre-line">{plan.description}</p>
                   </div>
 
                   <div className="mb-4">
