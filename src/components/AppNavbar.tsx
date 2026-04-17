@@ -140,11 +140,12 @@ const AppNavbar = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs h-8 px-3 border-primary/20 text-primary hover:bg-primary/5"
+                className="h-8 px-2 sm:px-3 border-amber-500/40 text-amber-500 hover:bg-amber-500/10 hover:text-amber-500 hover:border-amber-500/60"
                 onClick={() => navigate("/pricing")}
+                aria-label="Upgrade"
               >
-                <Crown className="w-3 h-3 mr-1" />
-                Upgrade
+                <Crown className="w-3.5 h-3.5 sm:mr-1" />
+                <span className="hidden sm:inline text-xs">Upgrade</span>
               </Button>
             )}
 
