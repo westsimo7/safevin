@@ -97,6 +97,10 @@ export default {
           "0%, 100%": { boxShadow: "0 0 20px hsl(174 65% 34% / 0.3)" },
           "50%": { boxShadow: "0 0 40px hsl(174 65% 34% / 0.5)" },
         },
+        "pro-glow": {
+          "0%, 100%": { boxShadow: "0 0 24px hsl(var(--primary) / 0.35), 0 0 8px hsl(var(--primary) / 0.25)" },
+          "50%": { boxShadow: "0 0 56px hsl(var(--primary) / 0.65), 0 0 18px hsl(var(--primary) / 0.45)" },
+        },
         "fade-in": {
           from: { opacity: "0", transform: "translateY(20px)" },
           to: { opacity: "1", transform: "translateY(0)" },
@@ -107,6 +111,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "pro-glow": "pro-glow 2.4s ease-in-out infinite",
         "fade-in": "fade-in 0.6s ease-out forwards",
       },
     },
