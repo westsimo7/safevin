@@ -209,13 +209,20 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
               </SelectContent>
             </Select>
           </div>
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Tipologia prodotto *</Label>
+          <div className="space-y-2 rounded-lg border-2 border-amber-500/60 bg-amber-500/5 shadow-[0_0_14px_-3px_hsl(45_95%_55%/0.5)] p-3">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <Label className="text-sm font-medium shrink-0">Tipologia prodotto *</Label>
+              <div className="flex-1 overflow-hidden relative h-4">
+                <div className="absolute whitespace-nowrap text-[11px] text-amber-500 animate-[marquee_12s_linear_infinite]">
+                  ⚠ Controlla se la categoria è giusta, l'IA potrebbe confondersi · ⚠ Controlla se la categoria è giusta, l'IA potrebbe confondersi ·
+                </div>
+              </div>
+            </div>
             <Input
               value={productType}
               onChange={e => setProductType(e.target.value)}
               placeholder="Es: Felpa con cappuccio, Giacca bomber, Jeans skinny..."
-              className="text-sm"
+              className="text-sm border-amber-500/40 focus-visible:ring-amber-500/40"
             />
           </div>
 
