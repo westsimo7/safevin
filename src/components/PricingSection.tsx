@@ -21,7 +21,6 @@ const plans = [
       "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -47,7 +46,6 @@ const plans = [
     limitations: [
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -71,7 +69,6 @@ const plans = [
       "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "2 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
     ],
     limitations: [
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -97,7 +94,6 @@ const plans = [
       "Assistenza h24 prioritaria",
       "Accesso alla SAFEViN Creative Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto prioritario avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -156,67 +152,90 @@ const PricingSection = () => {
           }}
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-hide pb-4 lg:pb-0 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
-          {plans.map((plan, index) => (
-            <div
-              key={index}
-              data-reveal
-              className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${
-                plan.popular
-                  ? "bg-card border-2 border-primary/50 shadow-lg shadow-primary/10"
-                  : "bg-card/50 border border-border/50 hover:border-border"
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                    Il più venduto
+          {plans.map((plan, index) => {
+            const isStarter = plan.name === "Starter";
+            const isExpert = plan.name === "Expert";
+
+            const accent = isStarter
+              ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500", badgeBg: "bg-orange-500", badgeShadow: "shadow-orange-500/30" }
+              : isExpert
+                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500", badgeBg: "bg-blue-500", badgeShadow: "shadow-blue-500/30" }
+                : plan.popular
+                  ? { border: "border-primary/50", shadow: "shadow-primary/10", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary", badgeBg: "bg-primary", badgeShadow: "shadow-primary/30" }
+                  : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground", badgeBg: "", badgeShadow: "" };
+
+            const cardBorder = (isStarter || isExpert || plan.popular)
+              ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
+              : `border ${accent.border} bg-card/50 hover:border-border`;
+
+            return (
+              <div
+                key={index}
+                data-reveal
+                className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder}`}
+              >
+                {isStarter && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
+                      Per Iniziare
+                    </div>
                   </div>
-                </div>
-              )}
-
-              <div className="mb-4 sm:mb-6">
-                <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${
-                  plan.popular ? "bg-primary/20" : "bg-muted"
-                }`}>
-                  <plan.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
-                </div>
-                <h3 className={`text-lg sm:text-xl font-bold mb-1 ${plan.popular ? "text-primary" : "text-foreground"}`}>
-                  {plan.name}
-                </h3>
-                <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
-              </div>
-
-              <div className="mb-4 sm:mb-6">
-                <span className="text-3xl sm:text-4xl font-bold text-foreground">€{plan.price}</span>
-                <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
-              </div>
-
-              <ul className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6 flex-grow">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                      plan.popular ? "bg-primary/10" : "bg-muted"
-                    }`}>
-                      <Check className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${plan.popular ? "text-primary" : "text-muted-foreground"}`} />
+                )}
+                {plan.popular && !isStarter && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                      Il più venduto
                     </div>
-                    <span className="text-foreground/80 text-[13px] sm:text-sm">{feature}</span>
-                  </li>
-                ))}
-                {plan.limitations.map((limitation, i) => (
-                  <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
-                    <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
-                      <span className="text-[10px] sm:text-xs text-muted-foreground">–</span>
+                  </div>
+                )}
+                {isExpert && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
+                      Per gli esperti
                     </div>
-                    <span className="text-muted-foreground text-[13px] sm:text-sm line-through">{limitation}</span>
-                  </li>
-                ))}
-              </ul>
+                  </div>
+                )}
 
-              <Button variant={plan.variant} className="w-full h-11 sm:h-auto text-sm" size="lg" disabled>
-                {plan.cta}
-              </Button>
-            </div>
-          ))}
+                <div className="mb-4 sm:mb-6">
+                  <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${accent.bg}`}>
+                    <plan.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${accent.text}`} />
+                  </div>
+                  <h3 className={`text-lg sm:text-xl font-bold mb-1 ${accent.text}`}>
+                    {plan.name}
+                  </h3>
+                  <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
+                </div>
+
+                <div className="mb-4 sm:mb-6">
+                  <span className="text-3xl sm:text-4xl font-bold text-foreground">€{plan.price}</span>
+                  <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
+                </div>
+
+                <ul className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6 flex-grow">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
+                        <Check className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${accent.text}`} />
+                      </div>
+                      <span className="text-foreground/80 text-[13px] sm:text-sm">{feature}</span>
+                    </li>
+                  ))}
+                  {plan.limitations.map((limitation, i) => (
+                    <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
+                      <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                        <span className="text-[10px] sm:text-xs text-muted-foreground">–</span>
+                      </div>
+                      <span className="text-muted-foreground text-[13px] sm:text-sm line-through">{limitation}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button variant={plan.variant} className="w-full h-11 sm:h-auto text-sm" size="lg" disabled>
+                  {plan.cta}
+                </Button>
+              </div>
+            );
+          })}
         </div>
 
         <div ref={footerRef} className="mt-8 sm:mt-12 text-center">
