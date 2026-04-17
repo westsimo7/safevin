@@ -100,11 +100,21 @@ function buildCriteriaVerdicts(
 
 const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue, onBack, onSaveIncompleteAndGoCoach }: StudioMissingPhotosProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [improveOpen, setImproveOpen] = useState(false);
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const [readKeys, setReadKeys] = useState<Set<string>>(new Set());
   const verdicts = buildCriteriaVerdicts(photoQuality || [], missingPhotos || []);
   const filteredMissing = (missingPhotos || []).filter(p => p.type !== "worn" && p.type !== "has_worn");
   const photosWithIssues = (photoQuality || []).filter(pq => pq.issues.length > 0);
   const hasIssues = filteredMissing.length > 0 || photosWithIssues.length > 0 || verdicts.some(v => !v.ok);
+
+  const openVerdict = (key: string) => {
+    setOpenKey(key);
+    setReadKeys(prev => new Set(prev).add(key));
+  };
+
+  const activeVerdict = verdicts.find(v => v.key === openKey);
 
   return (
     <div className="flex flex-col h-full animate-fade-in overflow-hidden">
@@ -122,23 +132,80 @@ const StudioMissingPhotos = ({ missingPhotos, photoQuality, previews, onContinue
 
       {/* Criteria cards - scrollable */}
       <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide space-y-2 py-2">
-        {verdicts.map((v) => (
-          <Card key={v.key} className="border-border/50">
-            <CardContent className="p-3">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">{v.icon}</span>
-                {v.ok ? (
-                  <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
-                ) : (
-                  <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0" />
-                )}
-                <h3 className="text-sm font-semibold text-foreground font-heading">{v.label}</h3>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed pl-[30px]">{v.verdict}</p>
-            </CardContent>
-          </Card>
-        ))}
+        {verdicts.map((v) => {
+          const isRead = readKeys.has(v.key);
+          if (isMobile) {
+            return (
+              <button
+                key={v.key}
+                onClick={() => openVerdict(v.key)}
+                className={`w-full text-left rounded-lg border transition-all p-3 ${
+                  isRead
+                    ? "border-primary/60 bg-primary/10 shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
+                    : "border-border/50 bg-card"
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-base">{v.icon}</span>
+                  {v.ok ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0" />
+                  )}
+                  <h3 className="text-sm font-semibold text-foreground font-heading flex-1">{v.label}</h3>
+                  <ChevronRight className="w-4 h-4 text-primary shrink-0" />
+                </div>
+                <p className="text-[11px] text-primary pl-[30px] font-medium">
+                  {isRead ? "Letto · tocca per rivedere" : "schiaccia per leggere il resoconto"}
+                </p>
+              </button>
+            );
+          }
+          return (
+            <Card key={v.key} className="border-border/50">
+              <CardContent className="p-3">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-base">{v.icon}</span>
+                  {v.ok ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-3.5 h-3.5 text-destructive shrink-0" />
+                  )}
+                  <h3 className="text-sm font-semibold text-foreground font-heading">{v.label}</h3>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed pl-[30px]">{v.verdict}</p>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
+
+      {/* Mobile verdict dialog */}
+      <Dialog open={!!openKey && isMobile} onOpenChange={(o) => !o && setOpenKey(null)}>
+        <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-md mx-auto">
+          {activeVerdict && (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-heading flex items-center gap-2">
+                  <span className="text-xl">{activeVerdict.icon}</span>
+                  {activeVerdict.ok ? (
+                    <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-destructive shrink-0" />
+                  )}
+                  {activeVerdict.label}
+                </DialogTitle>
+                <DialogDescription className="text-sm text-foreground leading-relaxed pt-2">
+                  {activeVerdict.verdict}
+                </DialogDescription>
+              </DialogHeader>
+              <Button variant="neon" size="sm" className="w-full mt-2" onClick={() => setOpenKey(null)}>
+                Ho capito
+              </Button>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* CTAs */}
       <div className="shrink-0 space-y-2 pt-2">
