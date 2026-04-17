@@ -24,7 +24,6 @@ const plans = [
       "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -49,7 +48,6 @@ const plans = [
     limitations: [
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -72,7 +70,7 @@ const plans = [
       "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "2 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto avanzato",
+      
     ],
     limitations: [
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -97,7 +95,7 @@ const plans = [
       "Assistenza h24 prioritaria",
       "Accesso alla SAFEViN Creative Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Creative Direction",
-      "Supporto prioritario avanzato",
+      
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
