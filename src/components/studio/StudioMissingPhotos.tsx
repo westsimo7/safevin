@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench } from "lucide-react";
+import { Camera, ArrowRight, Sparkles, Crown, CheckCircle2, AlertTriangle, Wrench, ChevronRight, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import PageTitle from "@/components/PageTitle";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
