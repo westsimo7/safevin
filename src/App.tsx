@@ -28,6 +28,7 @@ import Support from "./pages/Support";
 import SupportInbox from "./pages/SupportInbox";
 import Collaboration from "./pages/Collaboration";
 import CollaborationInbox from "./pages/CollaborationInbox";
+import Privacy from "./pages/Privacy";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
 
@@ -104,6 +105,7 @@ const AnimatedRoutes = () => {
           <Route path="/admin/collaboration-inbox" element={
             <ProtectedRoute><PageTransition direction="left"><CollaborationInbox /></PageTransition></ProtectedRoute>
           } />
+          <Route path="/privacy" element={<PageTransition direction="up"><Privacy /></PageTransition>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
