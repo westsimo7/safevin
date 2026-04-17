@@ -233,12 +233,16 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Fit *</Label>
-            <Input
-              value={fit}
-              onChange={e => setFit(e.target.value)}
-              placeholder="Es: Oversize, Slim fit, Regular..."
-              className="text-sm"
-            />
+            <Select value={fit} onValueChange={setFit}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona fit" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIT_OPTIONS.map(f => (
+                  <SelectItem key={f} value={f}>{f}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
