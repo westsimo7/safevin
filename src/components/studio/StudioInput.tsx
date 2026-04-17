@@ -107,6 +107,11 @@ const STYLE_OPTIONS = [
   { value: "elegante", label: "Elegante" },
 ];
 
+const FIT_OPTIONS = [
+  "Slim fit", "Regular fit", "Oversize fit", "Boxy fit", "Relaxed fit",
+  "Skinny fit", "Straight fit", "Tapered fit", "Cropped fit", "Wide fit",
+];
+
 const MATERIAL_OPTIONS = [
   "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
   "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
