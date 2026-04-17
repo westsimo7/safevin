@@ -98,8 +98,8 @@ export default {
           "50%": { boxShadow: "0 0 40px hsl(174 65% 34% / 0.5)" },
         },
         "pro-glow": {
-          "0%, 30%, 100%": { boxShadow: "0 0 0 hsl(var(--primary) / 0)" },
-          "65%": { boxShadow: "0 0 60px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.5)" },
+          "0%, 100%": { boxShadow: "0 0 0 hsl(var(--primary) / 0)" },
+          "50%": { boxShadow: "0 0 60px hsl(var(--primary) / 0.7), 0 0 20px hsl(var(--primary) / 0.5)" },
         },
         "fade-in": {
           from: { opacity: "0", transform: "translateY(20px)" },
@@ -111,7 +111,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "float": "float 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
-        "pro-glow": "pro-glow 24s ease-in-out infinite",
+        "pro-glow": "pro-glow 8s ease-in-out infinite",
         "fade-in": "fade-in 0.6s ease-out forwards",
       },
     },
