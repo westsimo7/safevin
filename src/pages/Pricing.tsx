@@ -127,10 +127,10 @@ const Pricing = () => {
                   }`}
                 >
                   {isCurrent && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/30 text-[10px] px-2.5">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <div className="px-3 py-1 rounded-full bg-amber-500 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-amber-500/30">
                         Piano attuale
-                      </Badge>
+                      </div>
                     </div>
                   )}
                   {plan.popular && !isCurrent && (
