@@ -153,8 +153,7 @@ const PricingSection = () => {
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-hide pb-4 lg:pb-0 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
           {plans.map((plan, index) => {
-            const isStarter = plan.name === "Starter";
-            const isExpert = plan.name === "Expert";
+
 
             const accent = plan.popular
               ? { border: "border-primary/50", shadow: "shadow-primary/10", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
