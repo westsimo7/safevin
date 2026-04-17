@@ -133,9 +133,11 @@ const Pricing = () => {
                   className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${
                     isCurrent
                       ? "border-2 border-amber-500/60 bg-card shadow-lg shadow-amber-500/10"
-                      : plan.popular
-                        ? "border-2 border-primary/50 bg-card shadow-lg shadow-primary/10"
-                        : "border border-border/50 bg-card/50 hover:border-border"
+                      : plan.name === "Expert"
+                        ? "border-2 border-blue-500/60 bg-card shadow-lg shadow-blue-500/10"
+                        : plan.popular
+                          ? "border-2 border-primary/50 bg-card shadow-lg shadow-primary/10"
+                          : "border border-border/50 bg-card/50 hover:border-border"
                   }`}
                 >
                   {isCurrent && (
@@ -152,17 +154,24 @@ const Pricing = () => {
                       </div>
                     </div>
                   )}
+                  {plan.name === "Expert" && !isCurrent && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
+                        Per gli esperti
+                      </div>
+                    </div>
+                  )}
 
                   <div className="mb-4">
                     <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${
-                      isCurrent ? "bg-amber-500/20" : plan.popular ? "bg-primary/20" : "bg-muted"
+                      isCurrent ? "bg-amber-500/20" : plan.name === "Expert" ? "bg-blue-500/20" : plan.popular ? "bg-primary/20" : "bg-muted"
                     }`}>
                       <plan.icon className={`w-4 h-4 ${
-                        isCurrent ? "text-amber-500" : plan.popular ? "text-primary" : "text-muted-foreground"
+                        isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-muted-foreground"
                       }`} />
                     </div>
                     <h3 className={`text-lg font-bold mb-1 ${
-                      isCurrent ? "text-amber-500" : plan.popular ? "text-primary" : "text-foreground"
+                      isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-foreground"
                     }`}>
                       {plan.name}
                     </h3>
@@ -178,10 +187,10 @@ const Pricing = () => {
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2">
                         <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                          isCurrent ? "bg-amber-500/10" : plan.popular ? "bg-primary/10" : "bg-muted"
+                          isCurrent ? "bg-amber-500/10" : plan.name === "Expert" ? "bg-blue-500/10" : plan.popular ? "bg-primary/10" : "bg-muted"
                         }`}>
                           <Check className={`w-2.5 h-2.5 ${
-                            isCurrent ? "text-amber-500" : plan.popular ? "text-primary" : "text-muted-foreground"
+                            isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-muted-foreground"
                           }`} />
                         </div>
                         <span className="text-foreground/80 text-xs">{feature}</span>
