@@ -140,26 +140,25 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
       </Card>
 
       {/* Mobile: CTA buttons */}
-      <div className="flex flex-col gap-2 mb-2 sm:hidden shrink-0">
-        
+      <div className="flex flex-row gap-2 mb-2 sm:hidden shrink-0">
         <Button
           variant="outline"
-          className="w-full border-primary/30 text-primary"
+          className={`border-primary/30 text-primary ${previews.length > 0 ? "flex-1 min-w-0 px-2" : "w-full"}`}
           onClick={() => fileInputRef.current?.click()}
         >
-          <Camera className="w-4 h-4 mr-2" />
-          Carica foto prodotto
-          {images.length > 0 && <Badge variant="outline" className="ml-2 text-[10px]">{images.length}</Badge>}
+          <Camera className="w-4 h-4 mr-1.5 shrink-0" />
+          <span className="truncate">Carica foto</span>
+          {images.length > 0 && <Badge variant="outline" className="ml-1.5 text-[10px] shrink-0">{images.length}</Badge>}
         </Button>
 
         {previews.length > 0 && (
           <Button
             variant="outline"
-            className="w-full border-border/50"
+            className="flex-1 min-w-0 px-2 border-border/50"
             onClick={() => { setGalleryIndex(0); setGalleryOpen(true); }}
           >
-            <Eye className="w-4 h-4 mr-2" />
-            Visualizza foto allegate ({previews.length})
+            <Eye className="w-4 h-4 mr-1.5 shrink-0" />
+            <span className="truncate">Allegate ({previews.length})</span>
           </Button>
         )}
       </div>
