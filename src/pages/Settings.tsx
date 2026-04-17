@@ -175,15 +175,6 @@ const Settings = () => {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <button
-                className="w-full flex items-center gap-3 hover:text-primary transition-colors text-left"
-                onClick={() => navigate("/profile")}
-              >
-                <User className="w-5 h-5 text-muted-foreground" />
-                <span className="font-medium flex-1">Profilo Utente</span>
-                <ChevronDown className="w-4 h-4 -rotate-90 text-muted-foreground" />
-              </button>
-
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <CreditCard className="w-5 h-5 text-muted-foreground" />
                 <span>Metodo di pagamento</span>
