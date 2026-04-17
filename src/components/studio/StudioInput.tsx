@@ -107,6 +107,11 @@ const STYLE_OPTIONS = [
   { value: "elegante", label: "Elegante" },
 ];
 
+const FIT_OPTIONS = [
+  "Slim fit", "Regular fit", "Oversize fit", "Boxy fit", "Relaxed fit",
+  "Skinny fit", "Straight fit", "Tapered fit", "Cropped fit", "Wide fit",
+];
+
 const MATERIAL_OPTIONS = [
   "Acrilico", "Alpaca", "Camoscio", "Canvas", "Cashmere", "Chiffon", "Cotone",
   "Denim", "Elastane", "Feltro", "Finta pelliccia", "Flanella", "Juta", "Lana",
@@ -228,12 +233,16 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">Fit *</Label>
-            <Input
-              value={fit}
-              onChange={e => setFit(e.target.value)}
-              placeholder="Es: Oversize, Slim fit, Regular..."
-              className="text-sm"
-            />
+            <Select value={fit} onValueChange={setFit}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona fit" />
+              </SelectTrigger>
+              <SelectContent>
+                {FIT_OPTIONS.map(f => (
+                  <SelectItem key={f} value={f}>{f}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
