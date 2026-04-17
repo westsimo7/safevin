@@ -28,7 +28,7 @@ const SolutionSection = () => {
                 SAFEViN Studio
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Costruzione strategica dell'annuncio analizzando le foto con un resoconto sui 4 pilastri fondamentali per la conversione, seguita da domande determinanti per la qualità dell'annuncio finale, creato con una struttura ben studiata. Si chiude con consigli di prezzo strategico/avanzato per ricevere offerte e chiudere al prezzo desiderato, più consigli extra di vendita.
+                Costruzione strategica dell'annuncio tramite analisi foto sui 4 pilastri chiave per la conversione, seguita da domande mirate per migliorare la qualità finale. Output strutturato con prezzo strategico per favorire offerte e chiusura, più consigli extra di vendita.
               </p>
             </CardContent>
           </Card>
