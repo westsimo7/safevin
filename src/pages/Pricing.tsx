@@ -127,34 +127,52 @@ const Pricing = () => {
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {plans.map((plan) => {
               const isCurrent = plan.name === currentPlan;
+              const isStarter = plan.name === "Starter";
+              const isExpert = plan.name === "Expert";
+
+              // Accent palette per plan (independent from current state)
+              const accent = isStarter
+                ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500", badgeBg: "bg-orange-500", badgeText: "text-white", badgeShadow: "shadow-orange-500/30" }
+                : isExpert
+                  ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500", badgeBg: "bg-blue-500", badgeText: "text-white", badgeShadow: "shadow-blue-500/30" }
+                  : plan.popular
+                    ? { border: "border-primary/50", shadow: "shadow-primary/10", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary", badgeBg: "bg-primary", badgeText: "text-primary-foreground", badgeShadow: "shadow-primary/30" }
+                    : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground", badgeBg: "", badgeText: "", badgeShadow: "" };
+
+              // Current plan: yellow border overrides, but keep accent fill colors
+              const cardBorder = isCurrent
+                ? "border-2 border-yellow-400 bg-card shadow-lg shadow-yellow-400/20"
+                : (accent.border.includes("border-2") || isExpert || isStarter || plan.popular)
+                  ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
+                  : `border ${accent.border} bg-card/50 hover:border-border`;
+
               return (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${
-                    isCurrent
-                      ? "border-2 border-amber-500/60 bg-card shadow-lg shadow-amber-500/10"
-                      : plan.name === "Expert"
-                        ? "border-2 border-blue-500/60 bg-card shadow-lg shadow-blue-500/10"
-                        : plan.popular
-                          ? "border-2 border-primary/50 bg-card shadow-lg shadow-primary/10"
-                          : "border border-border/50 bg-card/50 hover:border-border"
-                  }`}
+                  className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
                 >
                   {isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                      <div className="px-3 py-1 rounded-full bg-amber-500 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-amber-500/30">
+                      <div className="px-3 py-1 rounded-full bg-yellow-400 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-yellow-400/30">
                         Piano attuale
                       </div>
                     </div>
                   )}
-                  {plan.popular && !isCurrent && (
+                  {isStarter && !isCurrent && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
+                        Per Iniziare
+                      </div>
+                    </div>
+                  )}
+                  {plan.popular && !isCurrent && !isStarter && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                       <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
                         Il più venduto
                       </div>
                     </div>
                   )}
-                  {plan.name === "Expert" && !isCurrent && (
+                  {isExpert && !isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                       <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
                         Per gli esperti
@@ -163,16 +181,10 @@ const Pricing = () => {
                   )}
 
                   <div className="mb-4">
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${
-                      isCurrent ? "bg-amber-500/20" : plan.name === "Expert" ? "bg-blue-500/20" : plan.popular ? "bg-primary/20" : "bg-muted"
-                    }`}>
-                      <plan.icon className={`w-4 h-4 ${
-                        isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-muted-foreground"
-                      }`} />
+                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${accent.bg}`}>
+                      <plan.icon className={`w-4 h-4 ${accent.text}`} />
                     </div>
-                    <h3 className={`text-lg font-bold mb-1 ${
-                      isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-foreground"
-                    }`}>
+                    <h3 className={`text-lg font-bold mb-1 ${accent.text}`}>
                       {plan.name}
                     </h3>
                     <p className="text-xs text-muted-foreground whitespace-pre-line">{plan.description}</p>
@@ -186,12 +198,8 @@ const Pricing = () => {
                   <ul className="space-y-2 mb-5 flex-grow">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                          isCurrent ? "bg-amber-500/10" : plan.name === "Expert" ? "bg-blue-500/10" : plan.popular ? "bg-primary/10" : "bg-muted"
-                        }`}>
-                          <Check className={`w-2.5 h-2.5 ${
-                            isCurrent ? "text-amber-500" : plan.name === "Expert" ? "text-blue-500" : plan.popular ? "text-primary" : "text-muted-foreground"
-                          }`} />
+                        <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
+                          <Check className={`w-2.5 h-2.5 ${accent.text}`} />
                         </div>
                         <span className="text-foreground/80 text-xs">{feature}</span>
                       </li>
