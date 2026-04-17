@@ -12,7 +12,7 @@ const plans = [
     name: "Free",
     price: "0",
     period: "",
-    description: "Prova gratis",
+    description: "Prova gratis con mano e guarda tu stesso se fa per te",
     icon: Gift,
     features: [
       "2 annunci creabili",
