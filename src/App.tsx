@@ -71,6 +71,9 @@ const AnimatedRoutes = () => {
           <Route path="/settings" element={
             <ProtectedRoute><PageTransition direction="up"><Settings /></PageTransition></ProtectedRoute>
           } />
+          <Route path="/profile" element={
+            <ProtectedRoute><PageTransition direction="up"><Profile /></PageTransition></ProtectedRoute>
+          } />
           <Route path="/artist-director" element={
             <ProtectedRoute><PageTransition direction="up"><ArtistDirector /></PageTransition></ProtectedRoute>
           } />
