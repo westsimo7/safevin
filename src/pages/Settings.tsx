@@ -87,6 +87,39 @@ const Settings = () => {
     }
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File troppo grande", description: "Massimo 5MB.", variant: "destructive" });
+      return;
+    }
+    setUploadingAvatar(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Non autenticato");
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/avatar.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = `${pub.publicUrl}?t=${Date.now()}`;
+      const { error: updErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: url } as any)
+        .eq("user_id", user.id);
+      if (updErr) throw updErr;
+      setProfile((p) => ({ ...p, avatar_url: url }));
+      toast({ title: "Foto profilo aggiornata" });
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/");
