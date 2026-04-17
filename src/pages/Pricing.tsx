@@ -196,6 +196,7 @@ const Pricing = () => {
                 </div>
               );
             })}
+            </div>
           </div>
 
           <p className="text-center text-muted-foreground text-xs mt-8">
