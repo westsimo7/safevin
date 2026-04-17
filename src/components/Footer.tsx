@@ -16,7 +16,7 @@ const Footer = () => {
           </div>
           
           <nav className="flex items-center gap-4 sm:gap-6 text-[13px] sm:text-sm text-muted-foreground">
-            <a href="#" className="hover:text-foreground transition-colors py-1">Il metodo</a>
+            
             <a href="#" className="hover:text-foreground transition-colors py-1">Piani</a>
             <a href="/privacy" className="hover:text-foreground transition-colors py-1">Privacy</a>
             <a href="#" className="hover:text-foreground transition-colors py-1">Termini</a>
