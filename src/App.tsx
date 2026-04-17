@@ -13,6 +13,7 @@ import Storico from "./pages/Storico";
 import StudioDetailPage from "./pages/StudioDetail";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import AboutStudio from "./pages/AboutStudio";
 import Coach from "./pages/Coach";
 import ArtistDirector from "./pages/ArtistDirector";
@@ -69,6 +70,9 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/settings" element={
             <ProtectedRoute><PageTransition direction="up"><Settings /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/profile" element={
+            <ProtectedRoute><PageTransition direction="up"><Profile /></PageTransition></ProtectedRoute>
           } />
           <Route path="/artist-director" element={
             <ProtectedRoute><PageTransition direction="up"><ArtistDirector /></PageTransition></ProtectedRoute>
