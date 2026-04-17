@@ -1,6 +1,5 @@
 import { Construction } from "lucide-react";
 import AppNavbar from "@/components/AppNavbar";
-import BottomBar from "@/components/BottomBar";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 
 const Coach = () => {
@@ -23,7 +22,6 @@ const Coach = () => {
           Data di rilascio da definire
         </p>
       </main>
-      <BottomBar />
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import AppNavbar from "@/components/AppNavbar";
-import BottomBar from "@/components/BottomBar";
 import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
@@ -203,7 +202,6 @@ const Pricing = () => {
           </p>
         </div>
       </main>
-      <BottomBar />
     </div>
   );
 };
