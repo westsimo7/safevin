@@ -62,6 +62,46 @@
     --sidebar-border: 200 8% 22%;
     --sidebar-ring: 174 65% 34%;
   }
+
+  /* Light theme overrides — opt-in via <html class="light"> */
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 200 15% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 200 15% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 15% 12%;
+
+    --primary: 174 65% 34%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 200 15% 94%;
+    --secondary-foreground: 200 15% 18%;
+
+    --muted: 200 15% 94%;
+    --muted-foreground: 200 10% 40%;
+
+    --accent: 174 50% 46%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 200 15% 88%;
+    --input: 200 15% 88%;
+    --ring: 174 65% 34%;
+
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 200 15% 18%;
+    --sidebar-primary: 174 65% 34%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 200 15% 94%;
+    --sidebar-accent-foreground: 174 65% 34%;
+    --sidebar-border: 200 15% 88%;
+    --sidebar-ring: 174 65% 34%;
+  }
 }
 
 @layer base {
