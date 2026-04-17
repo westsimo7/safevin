@@ -1,5 +1,6 @@
 import { Shield } from "lucide-react";
 import PageTitle from "@/components/PageTitle";
+import LandingNavbar from "@/components/LandingNavbar";
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="space-y-2">
@@ -19,9 +20,10 @@ const Bullet = ({ children }: { children: React.ReactNode }) => (
 
 const Privacy = () => {
   return (
-    <div className="flex-1 overflow-y-auto bg-background">
-      <PageTitle title="Privacy Policy" />
+    <main className="min-h-screen bg-background overflow-x-hidden">
+      <LandingNavbar />
       <div className="container mx-auto px-5 sm:px-6 max-w-3xl py-6 sm:py-10 space-y-6">
+        <PageTitle title="Privacy Policy" backTo="/" />
         <div className="flex items-center gap-2.5">
           <Shield className="w-5 h-5 text-primary" />
           <div>
