@@ -8,7 +8,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt } from "lucide-react";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -25,11 +26,13 @@ const Settings = () => {
   const [cdOpen, setCdOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [profile, setProfile] = useState({
     nome: "",
     cognome: "",
     email: "",
     telefono: "",
+    avatar_url: "",
   });
 
   useEffect(() => {
@@ -38,7 +41,7 @@ const Settings = () => {
       if (!user) return;
       const { data } = await supabase
         .from("profiles")
-        .select("nome, cognome, email, telefono")
+        .select("nome, cognome, email, telefono, avatar_url")
         .eq("user_id", user.id)
         .single();
       if (data) {
@@ -47,6 +50,7 @@ const Settings = () => {
           cognome: data.cognome || "",
           email: data.email || "",
           telefono: data.telefono || "",
+          avatar_url: (data as any).avatar_url || "",
         });
       }
       // Check if user has founder role (founder sees inbox page instead) or expert/pro plan
@@ -80,6 +84,39 @@ const Settings = () => {
       toast({ title: "Errore", description: err.message, variant: "destructive" });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "File troppo grande", description: "Massimo 5MB.", variant: "destructive" });
+      return;
+    }
+    setUploadingAvatar(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Non autenticato");
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/avatar.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("avatars").getPublicUrl(path);
+      const url = `${pub.publicUrl}?t=${Date.now()}`;
+      const { error: updErr } = await supabase
+        .from("profiles")
+        .update({ avatar_url: url } as any)
+        .eq("user_id", user.id);
+      if (updErr) throw updErr;
+      setProfile((p) => ({ ...p, avatar_url: url }));
+      toast({ title: "Foto profilo aggiornata" });
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setUploadingAvatar(false);
     }
   };
 
@@ -141,6 +178,32 @@ const Settings = () => {
 
               {profileOpen && (
                 <div className="space-y-4 pt-2 pl-8 animate-fade-in">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="w-16 h-16 border border-border">
+                      <AvatarImage src={profile.avatar_url || undefined} alt="Foto profilo" />
+                      <AvatarFallback className="bg-muted">
+                        <User className="w-6 h-6 text-muted-foreground" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <Label
+                        htmlFor="avatar-upload"
+                        className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-xs font-medium transition-colors"
+                      >
+                        <Camera className="w-3.5 h-3.5" />
+                        {uploadingAvatar ? "Caricamento..." : profile.avatar_url ? "Cambia foto" : "Carica foto"}
+                      </Label>
+                      <input
+                        id="avatar-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarUpload}
+                        disabled={uploadingAvatar}
+                      />
+                      <p className="text-[11px] text-muted-foreground mt-1.5">JPG o PNG, max 5MB</p>
+                    </div>
+                  </div>
                   <div className="space-y-1.5">
                     <Label className="text-xs text-muted-foreground">Nome</Label>
                     <Input
