@@ -111,13 +111,14 @@ const Pricing = () => {
             className="text-center"
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          <div className="-mx-4 sm:mx-0 mt-6">
+            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {plans.map((plan) => {
               const isCurrent = plan.name === currentPlan;
               return (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 ${
+                  className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${
                     isCurrent
                       ? "border-2 border-amber-500/60 bg-card shadow-lg shadow-amber-500/10"
                       : plan.popular
