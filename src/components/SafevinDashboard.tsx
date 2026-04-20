@@ -138,15 +138,6 @@ const SafevinHome = () => {
               </Button>
             </motion.div>
 
-            <motion.div
-              className="flex items-center justify-center gap-2 mt-10 sm:mt-14 mb-8 text-muted-foreground"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.4 }}
-            >
-              <ShieldCheck className="w-4 h-4 text-primary/60" />
-              <span className="text-xs">AI-powered • Dati sicuri • Risultati in secondi</span>
-            </motion.div>
           </div>
         </div>
       </main>
