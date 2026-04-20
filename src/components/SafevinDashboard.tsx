@@ -130,11 +130,11 @@ const SafevinHome = () => {
               <Button
                 variant="neon"
                 size="lg"
-                className="text-base sm:text-lg px-8 sm:px-12 py-5 sm:py-6 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto"
+                className="text-lg sm:text-xl px-10 sm:px-16 py-6 sm:py-8 h-auto group animate-pulse-glow mb-4 sm:mb-6 w-full sm:w-auto font-bold"
                 onClick={() => navigate("/engine/studio")}
               >
                 Crea il tuo annuncio
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
 
