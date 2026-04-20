@@ -149,7 +149,7 @@ const Pricing = () => {
               return (
                 <div
                   key={plan.name}
-                  className={`relative flex flex-col p-5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
+                  className={`relative flex flex-col p-3.5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
                 >
                   {isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
@@ -180,44 +180,43 @@ const Pricing = () => {
                     </div>
                   )}
 
-                  <div className="mb-4">
-                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 ${accent.bg}`}>
+                  <div className="mb-2.5">
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 ${accent.bg}`}>
                       <plan.icon className={`w-4 h-4 ${accent.text}`} />
                     </div>
-                    <h3 className={`text-lg font-bold mb-1 ${accent.text}`}>
+                    <h3 className={`text-base font-bold mb-0.5 ${accent.text}`}>
                       {plan.name}
                     </h3>
-                    <p className="text-xs text-muted-foreground whitespace-pre-line">{plan.description}</p>
+                    <p className="text-[11px] leading-snug text-muted-foreground whitespace-pre-line">{plan.description}</p>
                   </div>
 
-                  <div className="mb-4">
-                    <span className="text-3xl font-bold text-foreground">€{plan.price}</span>
-                    <span className="text-muted-foreground text-sm">{plan.period}</span>
+                  <div className="mb-2.5">
+                    <span className="text-2xl font-bold text-foreground">€{plan.price}</span>
+                    <span className="text-muted-foreground text-xs">{plan.period}</span>
                   </div>
 
-                  <ul className="space-y-2 mb-5 flex-grow">
+                  <ul className="space-y-1.5 mb-3 flex-grow">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
-                          <Check className={`w-2.5 h-2.5 ${accent.text}`} />
+                      <li key={i} className="flex items-start gap-1.5">
+                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
+                          <Check className={`w-2 h-2 ${accent.text}`} />
                         </div>
-                        <span className="text-foreground/80 text-xs">{feature}</span>
+                        <span className="text-foreground/80 text-[11px] leading-snug">{feature}</span>
                       </li>
                     ))}
                     {plan.limitations.map((limitation, i) => (
-                      <li key={`lim-${i}`} className="flex items-start gap-2 opacity-40">
-                        <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                      <li key={`lim-${i}`} className="flex items-start gap-1.5 opacity-40">
+                        <div className="w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
                           <span className="text-[9px] text-muted-foreground">–</span>
                         </div>
-                        <span className="text-muted-foreground text-xs line-through">{limitation}</span>
+                        <span className="text-muted-foreground text-[11px] leading-snug line-through">{limitation}</span>
                       </li>
                     ))}
                   </ul>
 
                   <Button
                     variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
-                    className="w-full text-sm"
-                    size="lg"
+                    className="w-full text-xs h-9"
                     disabled={isCurrent}
                   >
                     {isCurrent ? "Piano attuale" : plan.cta}
@@ -228,7 +227,7 @@ const Pricing = () => {
             </div>
           </div>
 
-          <p className="text-center text-muted-foreground text-xs mt-8">
+          <p className="text-center text-muted-foreground text-xs mt-5">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
         </div>
