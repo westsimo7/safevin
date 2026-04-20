@@ -53,7 +53,7 @@ const SafevinHome = () => {
             </motion.div>
 
             <motion.h1
-              className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tighter mb-4 sm:mb-6 overflow-hidden"
+              className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-4 sm:mb-6 overflow-hidden leading-[0.9]"
               initial="hidden"
               animate="visible"
             >
