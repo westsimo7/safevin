@@ -90,20 +90,11 @@ const SafevinHome = () => {
 
             
 
-            <motion.p
-              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.85, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="font-bold text-foreground">Crea annunci ottimizzati in pochi minuti.</span>
-            </motion.p>
-
             <motion.div
-              className="flex justify-center gap-3 sm:gap-4 mb-10 sm:mb-14 px-1 sm:px-0"
+              className="flex justify-center gap-3 sm:gap-4 mb-6 sm:mb-8 px-1 sm:px-0"
               initial="hidden"
               animate="visible"
-              variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 1.0 } } }}
+              variants={{ visible: { transition: { staggerChildren: 0.12, delayChildren: 0.85 } } }}
             >
               {features.map((feat, i) => (
                 <motion.div
@@ -121,6 +112,15 @@ const SafevinHome = () => {
                 </motion.div>
               ))}
             </motion.div>
+
+            <motion.p
+              className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto mb-10 sm:mb-14 leading-relaxed px-2 sm:px-0"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <span className="font-bold text-foreground">Crea annunci ottimizzati in pochi minuti.</span>
+            </motion.p>
 
             <motion.div
               initial={{ opacity: 0, scale: 0.5, y: 30 }}
