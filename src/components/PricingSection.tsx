@@ -150,7 +150,7 @@ const PricingSection = () => {
               (gridRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
             }
           }}
-          className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory scrollbar-hide pb-4 lg:pb-0 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+          className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
           {plans.map((plan, index) => {
             const isStarter = plan.name === "Starter";
