@@ -129,12 +129,12 @@ const PricingSection = () => {
   }, [isMobile, popularIndex]);
 
   return (
-    <section className="relative py-14 sm:py-20 md:py-24 bg-card/20 overflow-hidden" id="pricing">
+    <section className="relative py-8 sm:py-12 md:py-16 bg-card/20 overflow-hidden" id="pricing">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
       <div className="container mx-auto px-5 sm:px-6 max-w-7xl">
-        <div ref={headerRef} className="text-center mb-8 sm:mb-12 md:mb-16">
-          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2.5 sm:mb-4">
+        <div ref={headerRef} className="text-center mb-5 sm:mb-8 md:mb-10">
+          <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1.5 sm:mb-3">
             Scegli il tuo piano
           </h2>
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
@@ -172,7 +172,7 @@ const PricingSection = () => {
               <div
                 key={index}
                 data-reveal
-                className={`relative flex flex-col p-5 sm:p-6 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
+                className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
               >
                 {isStarter && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
@@ -196,8 +196,8 @@ const PricingSection = () => {
                   </div>
                 )}
 
-                <div className="mb-4 sm:mb-6">
-                  <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-3 sm:mb-4 ${accent.bg}`}>
+                <div className="mb-3 sm:mb-4">
+                  <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 ${accent.bg}`}>
                     <plan.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${accent.text}`} />
                   </div>
                   <h3 className={`text-lg sm:text-xl font-bold mb-1 ${accent.text}`}>
@@ -206,31 +206,31 @@ const PricingSection = () => {
                   <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
                 </div>
 
-                <div className="mb-4 sm:mb-6">
-                  <span className="text-3xl sm:text-4xl font-bold text-foreground">€{plan.price}</span>
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-2xl sm:text-3xl font-bold text-foreground">€{plan.price}</span>
                   <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
                 </div>
 
-                <ul className="space-y-2.5 sm:space-y-3 mb-5 sm:mb-6 flex-grow">
+                <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5 flex-grow">
                   {plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <div className={`w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
-                        <Check className={`w-2.5 h-2.5 sm:w-3 sm:h-3 ${accent.text}`} />
+                      <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
+                        <Check className={`w-2.5 h-2.5 ${accent.text}`} />
                       </div>
-                      <span className="text-foreground/80 text-[13px] sm:text-sm">{feature}</span>
+                      <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{feature}</span>
                     </li>
                   ))}
                   {plan.limitations.map((limitation, i) => (
                     <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
-                      <div className="w-4.5 h-4.5 sm:w-5 sm:h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
-                        <span className="text-[10px] sm:text-xs text-muted-foreground">–</span>
+                      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                        <span className="text-[10px] text-muted-foreground">–</span>
                       </div>
-                      <span className="text-muted-foreground text-[13px] sm:text-sm line-through">{limitation}</span>
+                      <span className="text-muted-foreground text-[12.5px] sm:text-[13px] leading-snug line-through">{limitation}</span>
                     </li>
                   ))}
                 </ul>
 
-                <Button variant={plan.variant} className="w-full h-11 sm:h-auto text-sm" size="lg" disabled>
+                <Button variant={plan.variant} className="w-full h-10 sm:h-11 text-sm" disabled>
                   {plan.cta}
                 </Button>
               </div>
@@ -238,7 +238,7 @@ const PricingSection = () => {
           })}
         </div>
 
-        <div ref={footerRef} className="mt-8 sm:mt-12 text-center">
+        <div ref={footerRef} className="mt-5 sm:mt-8 text-center">
           <p className="text-muted-foreground text-[13px] sm:text-sm">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
