@@ -3,9 +3,13 @@ import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
-
-const currentPlan = "Starter"; // will be dynamic later
+import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { usePlan } from "@/hooks/usePlan";
+import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
