@@ -417,32 +417,47 @@ export type Database = {
       user_credits: {
         Row: {
           created_at: string
+          creative_director_used: number
           credits_total: number
           credits_used: number
+          current_period_end: string
+          current_period_start: string
           id: string
           period_end: string
           period_start: string
+          plan: Database["public"]["Enums"]["subscription_plan"]
           plan_type: string
+          studio_used: number
           user_id: string
         }
         Insert: {
           created_at?: string
+          creative_director_used?: number
           credits_total?: number
           credits_used?: number
+          current_period_end?: string
+          current_period_start?: string
           id?: string
           period_end?: string
           period_start?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
           plan_type?: string
+          studio_used?: number
           user_id: string
         }
         Update: {
           created_at?: string
+          creative_director_used?: number
           credits_total?: number
           credits_used?: number
+          current_period_end?: string
+          current_period_start?: string
           id?: string
           period_end?: string
           period_start?: string
+          plan?: Database["public"]["Enums"]["subscription_plan"]
           plan_type?: string
+          studio_used?: number
           user_id?: string
         }
         Relationships: []
@@ -477,20 +492,55 @@ export type Database = {
         Args: { p_conversation_id: string }
         Returns: boolean
       }
+      consume_feature_credit: { Args: { p_feature: string }; Returns: Json }
+      ensure_user_credits: {
+        Args: { p_user_id: string }
+        Returns: {
+          created_at: string
+          creative_director_used: number
+          credits_total: number
+          credits_used: number
+          current_period_end: string
+          current_period_start: string
+          id: string
+          period_end: string
+          period_start: string
+          plan: Database["public"]["Enums"]["subscription_plan"]
+          plan_type: string
+          studio_used: number
+          user_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_credits"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       get_all_users_admin: {
         Args: never
         Returns: {
           analysis_count: number
+          cd_limit: number
+          cd_used: number
           cognome: string
           created_at: string
           email: string
           nome: string
+          plan: string
           role: string
           studio_count: number
+          studio_limit: number
+          studio_used: number
           telefono: string
           user_id: string
         }[]
       }
+      get_plan_limits: {
+        Args: { p_plan: Database["public"]["Enums"]["subscription_plan"] }
+        Returns: Json
+      }
+      get_user_plan: { Args: never; Returns: Json }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -498,9 +548,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_user_plan: {
+        Args: {
+          p_new_plan: Database["public"]["Enums"]["subscription_plan"]
+          p_target_user: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "founder" | "admin" | "user"
+      subscription_plan: "free" | "starter" | "pro" | "expert"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -629,6 +687,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["founder", "admin", "user"],
+      subscription_plan: ["free", "starter", "pro", "expert"],
     },
   },
 } as const
