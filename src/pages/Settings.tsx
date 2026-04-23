@@ -50,6 +50,13 @@ const Settings = () => {
     avatar_url: "",
   });
 
+  // Piano reale via hook
+  const { state: planState } = usePlan();
+  useEffect(() => {
+    if (!planState) return;
+    setUserPlan(planState.isFounder ? "founder" : planState.plan);
+  }, [planState]);
+
   useEffect(() => {
     const loadProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser();
