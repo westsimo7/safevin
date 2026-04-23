@@ -12,11 +12,11 @@ const log = (step: string, details?: unknown) => {
   console.log(`[check-subscription] ${step}${details ? " - " + JSON.stringify(details) : ""}`);
 };
 
-// Map Stripe lookup_key -> internal plan id
-const PLAN_BY_LOOKUP: Record<string, "starter" | "pro" | "expert"> = {
-  safevin_starter_monthly: "starter",
-  safevin_pro_monthly: "pro",
-  safevin_expert_monthly: "expert",
+// Map Stripe product name -> internal plan id
+const PLAN_BY_PRODUCT_NAME: Record<string, "starter" | "pro" | "expert"> = {
+  "SAFEViN Starter": "starter",
+  "SAFEViN Pro": "pro",
+  "SAFEViN Expert": "expert",
 };
 
 serve(async (req) => {
@@ -64,7 +64,7 @@ serve(async (req) => {
       customer: customerId,
       status: "active",
       limit: 1,
-      expand: ["data.items.data.price"],
+      expand: ["data.items.data.price.product"],
     });
 
     let plan: "free" | "starter" | "pro" | "expert" = "free";
@@ -75,11 +75,12 @@ serve(async (req) => {
       const sub = subs.data[0];
       subscribed = true;
       subscriptionEnd = new Date(sub.current_period_end * 1000).toISOString();
-      const lookupKey = sub.items.data[0]?.price?.lookup_key as string | undefined;
-      if (lookupKey && PLAN_BY_LOOKUP[lookupKey]) {
-        plan = PLAN_BY_LOOKUP[lookupKey];
+      const product = sub.items.data[0]?.price?.product as { name?: string } | undefined;
+      const productName = product?.name;
+      if (productName && PLAN_BY_PRODUCT_NAME[productName]) {
+        plan = PLAN_BY_PRODUCT_NAME[productName];
       }
-      log("active sub", { subId: sub.id, lookupKey, plan });
+      log("active sub", { subId: sub.id, productName, plan });
     }
 
     await supabaseAdmin.rpc("sync_user_plan_from_payment", {
