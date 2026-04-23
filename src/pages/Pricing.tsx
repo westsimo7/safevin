@@ -299,9 +299,16 @@ const Pricing = () => {
                   <Button
                     variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
                     className="w-full text-xs h-9"
-                    disabled={isCurrent}
+                    disabled={isCurrent || planKey === "free" || loadingPlan !== null}
+                    onClick={() => handleCheckout(planKey)}
                   >
-                    {isCurrent ? "Piano attuale" : plan.cta}
+                    {loadingPlan === planKey ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : isCurrent ? (
+                      "Piano attuale"
+                    ) : (
+                      plan.cta
+                    )}
                   </Button>
                 </div>
               );
@@ -309,6 +316,14 @@ const Pricing = () => {
             </div>
           </div>
 
+          {currentPlanKey !== "free" && (
+            <div className="flex justify-center mt-5">
+              <Button variant="outline" size="sm" onClick={handleManage} disabled={portalLoading}>
+                {portalLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : null}
+                Gestisci abbonamento
+              </Button>
+            </div>
+          )}
           <p className="text-center text-muted-foreground text-xs mt-5">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
