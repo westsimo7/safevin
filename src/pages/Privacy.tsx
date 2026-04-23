@@ -30,7 +30,7 @@ const Privacy = () => {
             <h1 className="text-xl sm:text-2xl font-bold text-foreground font-poppins">
               Privacy Policy – SAFEViN
             </h1>
-            <p className="text-xs text-muted-foreground mt-0.5">Ultimo aggiornamento: 17 Aprile 2026</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Ultimo aggiornamento: 23 Aprile 2026</p>
           </div>
         </div>
 
