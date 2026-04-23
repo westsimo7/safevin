@@ -3,9 +3,13 @@ import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
-
-const currentPlan = "Starter"; // will be dynamic later
+import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { usePlan } from "@/hooks/usePlan";
+import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
@@ -107,8 +111,85 @@ const plans = [
   },
 ];
 
+type PlanKey = "free" | "starter" | "pro" | "expert";
+const PLAN_LABEL_TO_KEY: Record<string, PlanKey> = {
+  Free: "free",
+  Starter: "starter",
+  Pro: "pro",
+  Expert: "expert",
+};
+
 const Pricing = () => {
   useSwipeBack("/home");
+  const { user } = useAuth();
+  const { state: planState, refresh: refreshPlan } = usePlan();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const currentPlanKey: PlanKey = planState?.plan ?? "free";
+
+  // After Stripe redirect, refresh subscription state
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (!status) return;
+    if (status === "success") {
+      toast({ title: "Pagamento completato", description: "Stiamo aggiornando il tuo piano…" });
+      (async () => {
+        try {
+          await supabase.functions.invoke("check-subscription");
+          await refreshPlan();
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    } else if (status === "cancel") {
+      toast({ title: "Pagamento annullato", variant: "destructive" });
+    }
+    searchParams.delete("status");
+    setSearchParams(searchParams, { replace: true });
+  }, [searchParams, setSearchParams, refreshPlan]);
+
+  // On mount, refresh subscription from Stripe to keep DB in sync
+  useEffect(() => {
+    if (!user) return;
+    supabase.functions.invoke("check-subscription").then(() => refreshPlan()).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const handleCheckout = async (planKey: PlanKey) => {
+    if (!user) {
+      toast({ title: "Accedi per continuare", description: "Devi essere registrato per attivare un piano." });
+      return;
+    }
+    if (planKey === "free") return;
+    setLoadingPlan(planKey);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan: planKey },
+      });
+      if (error) throw error;
+      if (data?.url) window.open(data.url, "_blank");
+      else throw new Error("Nessun URL di checkout ricevuto");
+    } catch (e: any) {
+      toast({ title: "Errore", description: e.message ?? "Impossibile avviare il pagamento", variant: "destructive" });
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
+  const handleManage = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) window.open(data.url, "_blank");
+    } catch (e: any) {
+      toast({ title: "Errore", description: e.message ?? "Impossibile aprire la gestione abbonamento", variant: "destructive" });
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
@@ -126,7 +207,8 @@ const Pricing = () => {
           <div className="-mx-4 sm:mx-0 mt-6">
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {plans.map((plan) => {
-              const isCurrent = plan.name === currentPlan;
+              const planKey = PLAN_LABEL_TO_KEY[plan.name];
+              const isCurrent = planKey === currentPlanKey;
               const isStarter = plan.name === "Starter";
               const isExpert = plan.name === "Expert";
 
@@ -217,9 +299,16 @@ const Pricing = () => {
                   <Button
                     variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
                     className="w-full text-xs h-9"
-                    disabled={isCurrent}
+                    disabled={isCurrent || planKey === "free" || loadingPlan !== null}
+                    onClick={() => handleCheckout(planKey)}
                   >
-                    {isCurrent ? "Piano attuale" : plan.cta}
+                    {loadingPlan === planKey ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : isCurrent ? (
+                      "Piano attuale"
+                    ) : (
+                      plan.cta
+                    )}
                   </Button>
                 </div>
               );
@@ -227,6 +316,14 @@ const Pricing = () => {
             </div>
           </div>
 
+          {currentPlanKey !== "free" && (
+            <div className="flex justify-center mt-5">
+              <Button variant="outline" size="sm" onClick={handleManage} disabled={portalLoading}>
+                {portalLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin mr-2" /> : null}
+                Gestisci abbonamento
+              </Button>
+            </div>
+          )}
           <p className="text-center text-muted-foreground text-xs mt-5">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
