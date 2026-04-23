@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import CreativeDirectorChat from "@/components/CreativeDirectorChat";
+import { usePlan } from "@/hooks/usePlan";
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -67,14 +68,18 @@ const Settings = () => {
           avatar_url: (data as any).avatar_url || "",
         });
       }
-      // Check if user has founder role (founder sees inbox page instead) or expert/pro plan
-      const { data: isFounder } = await supabase.rpc("has_role", { _user_id: user.id, _role: "founder" as const });
-      if (isFounder) {
-        setUserPlan("founder");
-      } else {
-        // TODO: connect to real plan system - for now check role
-        setUserPlan("expert"); // Placeholder - will be replaced with real plan check
-      }
+    };
+    loadProfile();
+  }, []);
+
+  // Piano reale via hook
+  const { state: planState } = usePlan();
+  useEffect(() => {
+    if (!planState) return;
+    setUserPlan(planState.isFounder ? "founder" : planState.plan);
+  }, [planState]);
+
+  const _legacyPlanInit = () => {
     };
     loadProfile();
   }, []);
