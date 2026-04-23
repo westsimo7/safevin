@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
+import { usePlan } from "@/hooks/usePlan";
+import { PLANS, REQUIRED_PLAN, isPlanAtLeast } from "@/lib/plans";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake, Lock } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -32,9 +34,9 @@ const AppNavbar = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { user, signOut } = useAuth();
+  const { state: planState } = usePlan();
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
-  const [isFounder, setIsFounder] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -46,16 +48,38 @@ const AppNavbar = () => {
       .then(({ data }) => {
         if (data) setProfileData(data);
       });
-    // Check founder role
-    supabase.rpc("has_role", { _user_id: user.id, _role: "founder" }).then(({ data }) => {
-      setIsFounder(data === true);
-    });
   }, [user]);
+
+  const isFounder = planState?.isFounder ?? false;
+  const currentPlanId = planState?.plan ?? "free";
+  const currentPlanLabel = isFounder ? "Founder" : PLANS[currentPlanId]?.label ?? "Free";
+  const studioRemaining = planState?.studioRemaining ?? 0;
+  const studioLimit = planState?.studioLimit ?? 0;
+  const cdRemaining = planState?.cdRemaining ?? 0;
+  const cdLimit = planState?.cdLimit ?? 0;
 
   const displayName = profileData?.nome
     ? `${profileData.nome} ${profileData.cognome}`.trim()
     : user?.email || "Utente SafeViN";
   const displayEmail = profileData?.email || user?.email || "";
+
+  // Helper: badge per servizio in base a piano richiesto
+  const serviceBadge = (feature: keyof typeof REQUIRED_PLAN) => {
+    const required = REQUIRED_PLAN[feature];
+    const accessible = isFounder || isPlanAtLeast(currentPlanId, required);
+    if (accessible) return undefined;
+    const label = PLANS[required].label;
+    const colorMap: Record<string, string> = {
+      Starter: "bg-orange-500/10 text-orange-500 border-orange-500/30",
+      Pro: "bg-primary/10 text-primary border-primary/20",
+      Expert: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+    };
+    return { label, color: colorMap[label] || "bg-muted text-muted-foreground border-border/50" };
+  };
+
+  const cdBadge = serviceBadge("creative_director");
+  const upgradeBadge = serviceBadge("upgrade");
+  const collabBadge = serviceBadge("collaboration");
 
   const menuSections: MenuSection[] = [
     ...(isFounder ? [{
@@ -74,16 +98,51 @@ const AppNavbar = () => {
     ...(isFounder ? [] : [{
       title: "Abbonamento",
       items: [
-        { label: "Piano attuale", icon: Sparkles, badge: "Starter", badgeColor: "bg-primary/10 text-primary border-primary/20" },
-        { label: "Upgrade", icon: Crown, action: () => { setOpen(false); navigate("/pricing"); }, badge: "Pro", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        {
+          label: "Piano attuale",
+          icon: Sparkles,
+          badge: currentPlanLabel,
+          badgeColor: currentPlanId === "expert"
+            ? "bg-blue-500/10 text-blue-500 border-blue-500/30"
+            : currentPlanId === "pro"
+              ? "bg-primary/10 text-primary border-primary/20"
+              : currentPlanId === "starter"
+                ? "bg-orange-500/10 text-orange-500 border-orange-500/30"
+                : "bg-muted text-muted-foreground border-border/50",
+        },
+        ...(currentPlanId !== "expert" ? [{
+          label: "Cambia piano",
+          icon: Crown,
+          action: () => { setOpen(false); navigate("/pricing"); },
+          badge: "Upgrade",
+          badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        }] : []),
       ],
     }]),
     {
       title: "Servizi",
       items: [
-        { label: "Artist Director", icon: Palette, action: () => { setOpen(false); navigate("/artist-director"); }, badge: "Pro", badgeColor: "bg-primary/10 text-primary border-primary/20" },
-        { label: "Upgrade", icon: Rocket, action: () => { setOpen(false); navigate("/upgrade"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
-        { label: "Collaborazioni", icon: Handshake, action: () => { setOpen(false); navigate("/collaboration"); }, badge: "Expert", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        {
+          label: "Artist Director",
+          icon: Palette,
+          action: () => { setOpen(false); navigate("/artist-director"); },
+          badge: cdBadge?.label,
+          badgeColor: cdBadge?.color,
+        },
+        {
+          label: "Upgrade",
+          icon: Rocket,
+          action: () => { setOpen(false); navigate("/upgrade"); },
+          badge: upgradeBadge?.label,
+          badgeColor: upgradeBadge?.color,
+        },
+        {
+          label: "Collaborazioni",
+          icon: Handshake,
+          action: () => { setOpen(false); navigate("/collaboration"); },
+          badge: collabBadge?.label,
+          badgeColor: collabBadge?.color,
+        },
       ],
     },
     {
@@ -165,12 +224,12 @@ const AppNavbar = () => {
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {isFounder
                         ? <>Piano: <span className="font-semibold text-amber-500">Founder</span> · Annunci: <span className="font-semibold text-amber-500">∞</span></>
-                        : <>Annunci creabili: <span className="font-semibold text-foreground/70">?? / 10</span></>
+                        : <>Annunci creabili: <span className="font-semibold text-foreground/70">{studioRemaining} / {studioLimit}</span></>
                       }
                     </p>
-                    {!isFounder && (
+                    {!isFounder && cdLimit > 0 && (
                       <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                        Pro: 2 campagne · Expert: 6 campagne
+                        Creative Director: {cdRemaining} / {cdLimit} disponibili
                       </p>
                     )}
                   </div>
