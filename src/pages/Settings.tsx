@@ -79,14 +79,6 @@ const Settings = () => {
     loadProfile();
   }, []);
 
-  // Piano reale via hook
-  const { state: planState } = usePlan();
-  useEffect(() => {
-    if (!planState) return;
-    setUserPlan(planState.isFounder ? "founder" : planState.plan);
-  }, [planState]);
-
-
   const handleSave = async () => {
     setSaving(true);
     try {
