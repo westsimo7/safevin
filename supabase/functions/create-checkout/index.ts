@@ -8,10 +8,10 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const PRICE_BY_PLAN: Record<string, string> = {
-  starter: "safevin_starter_monthly",
-  pro: "safevin_pro_monthly",
-  expert: "safevin_expert_monthly",
+const PRODUCT_NAME_BY_PLAN: Record<string, string> = {
+  starter: "SAFEViN Starter",
+  pro: "SAFEViN Pro",
+  expert: "SAFEViN Expert",
 };
 
 const log = (step: string, details?: unknown) => {
@@ -44,16 +44,20 @@ serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const plan = String(body?.plan || "").toLowerCase();
-    const priceId = PRICE_BY_PLAN[plan];
-    if (!priceId) throw new Error(`Invalid plan: ${plan}`);
+    const productName = PRODUCT_NAME_BY_PLAN[plan];
+    if (!productName) throw new Error(`Invalid plan: ${plan}`);
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2025-08-27.basil" });
 
-    // Resolve real Stripe price id from lookup_key (price_id we set when creating products)
-    const prices = await stripe.prices.list({ lookup_keys: [priceId], active: true, limit: 1 });
-    if (prices.data.length === 0) throw new Error(`Price not found for ${priceId}`);
-    const stripePriceId = prices.data[0].id;
-    log("priceResolved", { priceId, stripePriceId });
+    // Find Stripe product by name, then take its first active recurring price
+    const products = await stripe.products.list({ active: true, limit: 100 });
+    const product = products.data.find((p) => p.name === productName);
+    if (!product) throw new Error(`Product not found: ${productName}`);
+    const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
+    const recurring = prices.data.find((p) => p.recurring?.interval === "month") || prices.data[0];
+    if (!recurring) throw new Error(`No price for product ${productName}`);
+    const stripePriceId = recurring.id;
+    log("priceResolved", { productName, productId: product.id, stripePriceId });
 
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     const customerId = customers.data[0]?.id;
