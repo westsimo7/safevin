@@ -111,8 +111,85 @@ const plans = [
   },
 ];
 
+type PlanKey = "free" | "starter" | "pro" | "expert";
+const PLAN_LABEL_TO_KEY: Record<string, PlanKey> = {
+  Free: "free",
+  Starter: "starter",
+  Pro: "pro",
+  Expert: "expert",
+};
+
 const Pricing = () => {
   useSwipeBack("/home");
+  const { user } = useAuth();
+  const { state: planState, refresh: refreshPlan } = usePlan();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const currentPlanKey: PlanKey = planState?.plan ?? "free";
+
+  // After Stripe redirect, refresh subscription state
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (!status) return;
+    if (status === "success") {
+      toast({ title: "Pagamento completato", description: "Stiamo aggiornando il tuo piano…" });
+      (async () => {
+        try {
+          await supabase.functions.invoke("check-subscription");
+          await refreshPlan();
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    } else if (status === "cancel") {
+      toast({ title: "Pagamento annullato", variant: "destructive" });
+    }
+    searchParams.delete("status");
+    setSearchParams(searchParams, { replace: true });
+  }, [searchParams, setSearchParams, refreshPlan]);
+
+  // On mount, refresh subscription from Stripe to keep DB in sync
+  useEffect(() => {
+    if (!user) return;
+    supabase.functions.invoke("check-subscription").then(() => refreshPlan()).catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const handleCheckout = async (planKey: PlanKey) => {
+    if (!user) {
+      toast({ title: "Accedi per continuare", description: "Devi essere registrato per attivare un piano." });
+      return;
+    }
+    if (planKey === "free") return;
+    setLoadingPlan(planKey);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan: planKey },
+      });
+      if (error) throw error;
+      if (data?.url) window.open(data.url, "_blank");
+      else throw new Error("Nessun URL di checkout ricevuto");
+    } catch (e: any) {
+      toast({ title: "Errore", description: e.message ?? "Impossibile avviare il pagamento", variant: "destructive" });
+    } finally {
+      setLoadingPlan(null);
+    }
+  };
+
+  const handleManage = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) window.open(data.url, "_blank");
+    } catch (e: any) {
+      toast({ title: "Errore", description: e.message ?? "Impossibile aprire la gestione abbonamento", variant: "destructive" });
+    } finally {
+      setPortalLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
