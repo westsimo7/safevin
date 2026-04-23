@@ -86,10 +86,6 @@ const Settings = () => {
     setUserPlan(planState.isFounder ? "founder" : planState.plan);
   }, [planState]);
 
-  const _legacyPlanInit = () => {
-    };
-    loadProfile();
-  }, []);
 
   const handleSave = async () => {
     setSaving(true);
