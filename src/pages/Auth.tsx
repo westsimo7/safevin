@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
@@ -10,20 +10,54 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
+const VALID_CHECKOUT_PLANS = new Set(["starter", "pro", "expert"]);
+
 const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const checkoutPlan = searchParams.get("checkout") ?? "";
+  const hasPendingCheckout = VALID_CHECKOUT_PLANS.has(checkoutPlan);
+  // If checkout is pending, default to signup mode (most users coming from landing pricing won't have account yet)
+  const [isLogin, setIsLogin] = useState(!hasPendingCheckout);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nome: "", cognome: "" });
 
-  // Redirect if already logged in
-  if (user) {
-    navigate("/home", { replace: true });
-    return null;
-  }
+  // After auth success: either start checkout or go home
+  const proceedAfterAuth = async () => {
+    if (!hasPendingCheckout) {
+      navigate("/home", { replace: true });
+      return;
+    }
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan: checkoutPlan },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+        return;
+      }
+      throw new Error("Nessun URL di checkout ricevuto");
+    } catch (e: any) {
+      toast({
+        title: "Errore",
+        description: e?.message ?? "Impossibile avviare il pagamento",
+        variant: "destructive",
+      });
+      navigate("/home", { replace: true });
+    }
+  };
+
+  // If user is/becomes logged in (e.g. via OAuth redirect or already signed in), trigger checkout or home
+  useEffect(() => {
+    if (user) {
+      proceedAfterAuth();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
