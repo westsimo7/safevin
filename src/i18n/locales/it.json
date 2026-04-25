@@ -81,15 +81,15 @@
     "steps": {
       "upload": {
         "title": "Carica le foto",
-        "description": "Carica le foto del prodotto e verranno estrapolate le informazioni base e i dettagli per velocizzare la creazione dell'annuncio."
+        "description": "Carica le foto del prodotto e verranno estrapolate le informazioni base e i dettagli."
       },
       "info": {
         "title": "Aggiungi le info chiave",
-        "description": "Solo tu conosci i dettagli fondamentali: rispondi a poche domande per un annuncio iper-specifico e completo in pochi minuti."
+        "description": " Rispondi a poche domande per un annuncio iper-specifico e completo in pochi minuti."
       },
       "copy": {
         "title": "Copia e pubblica",
-        "description": "Ricevi titolo, descrizione e prezzo strategico pronti per essere caricati direttamente su Vinted e velocizzare il processo."
+        "description": "Ricevi titolo, descrizione e prezzo strategico pronti per essere caricati direttamente su Vinted."
       }
     },
     "statsTitle": "Non è opinione.",
