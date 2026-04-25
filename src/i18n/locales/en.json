@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "tryFree": "Try free",
+    "login": "Log in",
+    "loggingIn": "Signing in...",
+    "register": "Sign up",
+    "googleLogin": "Sign in with Google",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "googleError": "Google login error"
+  },
+  "hero": {
+    "subtitle": "Sell on Vinted <1>faster</1>, <2>clearer</2> and at the <3>right price</3>.",
+    "tryFree": "Try free",
+    "dashboard": "Dashboard",
+    "description": "Create optimized listings in minutes to boost your <1>statistical sales probability</1>."
+  },
+  "problem": {
+    "title": "Your listing is selling less than it could",
+    "items": {
+      "photos": "Unoptimized photos → don't attract or convince",
+      "title": "Bare title → nobody finds it",
+      "description": "Weak description → doesn't answer doubts",
+      "details": "Missing key details → trust breaks down",
+      "price": "Uncompetitive price → no clicks, no offers",
+      "value": "No value conveyed → users scroll past"
+    },
+    "closing": "Every overlooked detail is",
+    "closingHighlight": "a lost sale."
+  },
+  "solution": {
+    "titlePrefix": "",
+    "titleHighlight": "SAFEViN",
+    "titleSuffix": "Engine",
+    "subtitle": "AI tools to create listings that sell, with the support of a dedicated coach.",
+    "studio": {
+      "title": "SAFEViN Studio",
+      "body": "Strategic listing construction through photo analysis on the 4 key conversion pillars, followed by targeted questions to improve final quality. Structured output with strategic pricing to drive offers and closing, plus extra sales tips."
+    },
+    "artist": {
+      "title": "SAFEViN Artist Director",
+      "body": "Entrust the visual campaigns of your items to SAFEViN: every photo is analyzed to ensure visual consistency and quality, so your listing communicates professionalism and attracts more buyers."
+    },
+    "coach": {
+      "title": "SAFEViN Coach",
+      "body": "Actively supports you with targeted questions to help you solve every problem and reach your sales goal. It guides you on photos, titles, descriptions and selling strategies."
+    }
+  },
+  "pillars": {
+    "titlePrefix": "The 4 pillars of ",
+    "titleHighlight": "photo analysis",
+    "subtitle": "Every image is rated on 4 key parameters to maximize your selling probability.",
+    "tapToRead": "tap to read",
+    "close": "Close",
+    "items": {
+      "qualita": {
+        "label": "Quality",
+        "short": "Sharpness and definition",
+        "body": "We evaluate the sharpness and definition of every photo. Grainy or blurry images dramatically reduce buyer trust. For top scores shoot in natural light, with a stable camera and focus on the garment."
+      },
+      "luce": {
+        "label": "Light",
+        "short": "Correct lighting",
+        "body": "We analyze how light hits the garment: backlight, harsh shadows or under-exposure hide important details. Frontal natural light (e.g. by a window) is always the best choice to show real color and detail."
+      },
+      "contrasto": {
+        "label": "Contrast",
+        "short": "Stand out from the background",
+        "body": "The garment must stand out from the background. Effective contrast makes the product readable and the protagonist of the image. Use a background opposite to the garment color (light for dark items, dark for light items)."
+      },
+      "completezza": {
+        "label": "Completeness",
+        "short": "All angles covered",
+        "body": "We check that the photo set covers all the necessary angles: front, back, details, labels and any defects. A complete set removes buyer doubts and speeds up the purchase decision."
+      }
+    }
+  },
+  "how": {
+    "title": "How it works",
+    "subtitle": "Three steps for listings that actually sell.",
+    "steps": {
+      "upload": {
+        "title": "Upload your photos",
+        "description": "Upload the product photos and the basic info and details will be extracted to speed up listing creation."
+      },
+      "info": {
+        "title": "Add the key info",
+        "description": "Only you know the essential details: answer a few questions for a hyper-specific, complete listing in minutes."
+      },
+      "copy": {
+        "title": "Copy and publish",
+        "description": "Get title, description and strategic price ready to upload directly to Vinted and speed up the process."
+      }
+    },
+    "statsTitle": "It's not opinion.",
+    "statsHighlight": "It's statistics.",
+    "statsSubtitle": "Every detail not overlooked is one more chance to sell.",
+    "studioCardTitle": "SAFEViN Studio",
+    "features": [
+      "Smart image analysis via the Engine",
+      "Rating on the 4 pillars: quality, light, contrast, completeness",
+      "Targeted questions on the product's essential details",
+      "Precise data collection for a perfectly optimized output",
+      "Full generation: title, description and strategic price",
+      "Optimized copy to boost visibility and conversion",
+      "Instant output, ready to copy and publish",
+      "Professional structure already shaped for Vinted",
+      "Creation history always accessible",
+      "Every listing saved for comparison and continuous improvement"
+    ]
+  },
+  "pricing": {
+    "title": "Choose your plan",
+    "subtitle": "Every plan gives you concrete tools. No empty promises, only method.",
+    "perMonth": "/month",
+    "footer": "Cancel anytime. No strings. No surprises.",
+    "badges": {
+      "starter": "To get started",
+      "popular": "Best seller",
+      "expert": "For experts"
+    },
+    "errors": {
+      "title": "Error",
+      "noCheckoutUrl": "No checkout URL received",
+      "cantStartPayment": "Could not start payment"
+    },
+    "plans": {
+      "free": {
+        "description": "Try it hands-on and see for yourself",
+        "cta": "Try free",
+        "features": ["2 listings", "Strategic pricing"],
+        "limitations": [
+          "Access to SAFEViN Creative Direction",
+          "3 listings delegated to the SAFEViN Creative Direction team",
+          "Upgrade section to leave suggestions and improve the platform with commissions",
+          "Collaborations with the SAFEViN team",
+          "Personal discount coupons",
+          "Priority access to new features"
+        ]
+      },
+      "starter": {
+        "description": "To start selling better\nOptimize your first listings",
+        "cta": "Start now",
+        "features": ["10 listings", "Strategic pricing"],
+        "limitations": [
+          "Access to SAFEViN Creative Direction",
+          "3 listings delegated to the SAFEViN Creative Direction team",
+          "Upgrade section to leave suggestions and improve the platform with commissions",
+          "Collaborations with the SAFEViN team",
+          "Personal discount coupons",
+          "Priority access to new features"
+        ]
+      },
+      "pro": {
+        "description": "To sell consistently\nMore visibility, more conversions",
+        "cta": "Activate Pro",
+        "features": [
+          "25 listings",
+          "Advanced strategic pricing",
+          "Access to SAFEViN Creative Direction",
+          "2 listings delegated to the SAFEViN Creative Direction team"
+        ],
+        "limitations": [
+          "Upgrade section to leave suggestions and improve the platform with commissions",
+          "Collaborations with the SAFEViN team",
+          "Personal discount coupons",
+          "Priority access to new features"
+        ]
+      },
+      "expert": {
+        "description": "To maximize every listing\nFull ecosystem for true experts",
+        "cta": "Go Expert",
+        "features": [
+          "60 listings",
+          "Advanced strategic pricing",
+          "Priority access to SAFEViN Creative Direction",
+          "6 listings delegated to the SAFEViN Creative Direction team",
+          "Upgrade section to leave suggestions and improve the platform with commissions",
+          "Collaborations with the SAFEViN team",
+          "Personal discount coupons",
+          "Priority access to new features"
+        ],
+        "limitations": []
+      }
+    }
+  },
+  "disclaimer": {
+    "label": "Disclaimer",
+    "p1": "SafeViN is an independent tool: we don't partner with Vinted.",
+    "p2": "We don't guarantee certain results: outcomes also depend on product, price, demand and offer quality. SafeViN gives you tools and analysis, but final success is influenced by many market factors."
+  },
+  "footer": {
+    "plans": "Plans",
+    "privacy": "Privacy",
+    "cookies": "Cookies",
+    "terms": "Terms",
+    "rights": "© 2024 SAFEViN. All rights reserved.",
+    "note": "SAFEViN is an independent listing analysis and optimization ecosystem. Not affiliated with Vinted. Results depend on the quality of the data provided and market conditions."
+  },
+  "lang": {
+    "label": "Language",
+    "it": "Italiano",
+    "en": "English"
+  }
+}

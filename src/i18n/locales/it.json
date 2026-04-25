@@ -1,0 +1,205 @@
+{
+  "nav": {
+    "tryFree": "Prova gratis",
+    "login": "Login",
+    "loggingIn": "Accesso...",
+    "register": "Registrati",
+    "googleLogin": "Accedi con Google",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "googleError": "Errore con Google login"
+  },
+  "hero": {
+    "subtitle": "Vendi su Vinted, più <1>veloce</1>, <2>chiaro</2> e al <3>prezzo giusto</3>.",
+    "tryFree": "Prova gratis",
+    "dashboard": "Dashboard",
+    "description": "Creazione di Annunci ottimizzati in pochi minuti per aumentare la <1>probabilità statistica di vendita</1>."
+  },
+  "problem": {
+    "title": "Il tuo annuncio sta vendendo meno di quanto potrebbe",
+    "items": {
+      "photos": "Foto non ottimizzate → non attirano né convincono",
+      "title": "Titolo troppo spoglio → nessuno lo trova",
+      "description": "Descrizione debole → non risponde ai dubbi",
+      "details": "Dettagli fondamentali mancanti → blocchi la fiducia",
+      "price": "Prezzo non competitivo → niente click, niente offerte",
+      "value": "Non trasmette valore → l'utente scrolla oltre"
+    },
+    "closing": "Ogni dettaglio trascurato è",
+    "closingHighlight": "una vendita persa."
+  },
+  "solution": {
+    "titlePrefix": "",
+    "titleHighlight": "SAFEViN",
+    "titleSuffix": "Engine",
+    "subtitle": "Strumenti AI per creare annunci che vendono, con il supporto di un coach dedicato.",
+    "studio": {
+      "title": "SAFEViN Studio",
+      "body": "Costruzione strategica dell'annuncio tramite analisi foto sui 4 pilastri chiave per la conversione, seguita da domande mirate per migliorare la qualità finale. Output strutturato con prezzo strategico per favorire offerte e chiusura, più consigli extra di vendita."
+    },
+    "artist": {
+      "title": "SAFEViN Artist Director",
+      "body": "Affida le campagne visive dei tuoi articoli in vendita a SAFEViN: analizza ogni foto per garantire coerenza visiva e qualità, così il tuo annuncio comunica professionalità e attira più acquirenti."
+    },
+    "coach": {
+      "title": "SAFEViN Coach",
+      "body": "Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita. Ti guida su foto, titoli, descrizioni e strategie di vendita."
+    }
+  },
+  "pillars": {
+    "titlePrefix": "I 4 pilastri dell'",
+    "titleHighlight": "analisi foto",
+    "subtitle": "Ogni immagine viene valutata su 4 parametri chiave per massimizzare la probabilità di vendita.",
+    "tapToRead": "schiaccia per leggere",
+    "close": "Chiudi",
+    "items": {
+      "qualita": {
+        "label": "Qualità",
+        "short": "Nitidezza e definizione",
+        "body": "Valutiamo la nitidezza e la definizione di ogni foto. Immagini sgranate o sfocate riducono drasticamente la fiducia dell'acquirente. Per ottenere il massimo punteggio scatta con luce naturale, fotocamera stabile e messa a fuoco sull'indumento."
+      },
+      "luce": {
+        "label": "Luce",
+        "short": "Illuminazione corretta",
+        "body": "Analizziamo come la luce colpisce l'indumento: controluce, ombre forti o sotto-esposizione nascondono dettagli importanti. La luce frontale e naturale (es. davanti a una finestra) è sempre la scelta migliore per mostrare colore reale e dettagli."
+      },
+      "contrasto": {
+        "label": "Contrasto",
+        "short": "Stacco dal fondo",
+        "body": "Il capo deve risaltare dallo sfondo. Un contrasto efficace rende il prodotto leggibile e protagonista dell'immagine. Usa uno sfondo opposto al colore del capo (chiaro per capi scuri, scuro per capi chiari) per farlo emergere."
+      },
+      "completezza": {
+        "label": "Completezza",
+        "short": "Tutti gli angoli coperti",
+        "body": "Verifichiamo che il set foto copra tutti gli angoli necessari: fronte, retro, dettagli, etichette ed eventuali difetti. Un set completo elimina i dubbi dell'acquirente e accelera la decisione di acquisto."
+      }
+    }
+  },
+  "how": {
+    "title": "Come funziona",
+    "subtitle": "Tre step per annunci che vendono davvero.",
+    "steps": {
+      "upload": {
+        "title": "Carica le foto",
+        "description": "Carica le foto del prodotto e verranno estrapolate le informazioni base e i dettagli per velocizzare la creazione dell'annuncio."
+      },
+      "info": {
+        "title": "Aggiungi le info chiave",
+        "description": "Solo tu conosci i dettagli fondamentali: rispondi a poche domande per un annuncio iper-specifico e completo in pochi minuti."
+      },
+      "copy": {
+        "title": "Copia e pubblica",
+        "description": "Ricevi titolo, descrizione e prezzo strategico pronti per essere caricati direttamente su Vinted e velocizzare il processo."
+      }
+    },
+    "statsTitle": "Non è opinione.",
+    "statsHighlight": "È statistica.",
+    "statsSubtitle": "Ogni dettaglio non trascurato, è una possibilità in più di vendita.",
+    "studioCardTitle": "SAFEViN Studio",
+    "features": [
+      "Analisi intelligente delle immagini tramite l'Engine",
+      "Valutazione sui 4 pilastri: qualità, luce, contrasto, completezza",
+      "Domande mirate sui dettagli fondamentali del prodotto",
+      "Raccolta dati precisa per un output perfettamente ottimizzato",
+      "Generazione completa: titolo, descrizione e prezzo strategico",
+      "Copy ottimizzato per aumentare visibilità e conversione",
+      "Output immediato, pronto da copiare e pubblicare",
+      "Struttura professionale già strutturata per Vinted",
+      "Storico creazioni sempre accessibile",
+      "Tutti gli annunci salvati per confronto e miglioramento continuo"
+    ]
+  },
+  "pricing": {
+    "title": "Scegli il tuo piano",
+    "subtitle": "Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.",
+    "perMonth": "/mese",
+    "footer": "Cancelli quando vuoi. Zero vincoli. Zero sorprese.",
+    "badges": {
+      "starter": "Per Iniziare",
+      "popular": "Il più venduto",
+      "expert": "Per gli esperti"
+    },
+    "errors": {
+      "title": "Errore",
+      "noCheckoutUrl": "Nessun URL di checkout ricevuto",
+      "cantStartPayment": "Impossibile avviare il pagamento"
+    },
+    "plans": {
+      "free": {
+        "description": "Prova gratis con mano e guarda tu stesso se fa per te",
+        "cta": "Prova gratis",
+        "features": ["2 annunci creabili", "Prezzo strategico"],
+        "limitations": [
+          "Accesso alla SAFEViN Creative Direction",
+          "3 annunci delegabili al team SAFEViN Creative Direction",
+          "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+          "Collaborazioni con il team di SAFEViN",
+          "Coupon sconto personali",
+          "Accesso prioritario alle nuove funzionalità"
+        ]
+      },
+      "starter": {
+        "description": "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
+        "cta": "Inizia ora",
+        "features": ["10 annunci creabili", "Prezzo strategico"],
+        "limitations": [
+          "Accesso alla SAFEViN Creative Direction",
+          "3 annunci delegabili al team SAFEViN Creative Direction",
+          "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+          "Collaborazioni con il team di SAFEViN",
+          "Coupon sconto personali",
+          "Accesso prioritario alle nuove funzionalità"
+        ]
+      },
+      "pro": {
+        "description": "Per vendere con costanza\nPiù visibilità, più conversioni",
+        "cta": "Attiva Pro",
+        "features": [
+          "25 annunci creabili",
+          "Prezzo strategico avanzato",
+          "Accesso alla SAFEViN Creative Direction",
+          "2 annunci delegabili al team SAFEViN Creative Direction"
+        ],
+        "limitations": [
+          "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+          "Collaborazioni con il team di SAFEViN",
+          "Coupon sconto personali",
+          "Accesso prioritario alle nuove funzionalità"
+        ]
+      },
+      "expert": {
+        "description": "Per massimizzare ogni annuncio\nEcosistema completo per veri expert",
+        "cta": "Passa a Expert",
+        "features": [
+          "60 annunci creabili",
+          "Prezzo strategico avanzato",
+          "Accesso alla SAFEViN Creative Direction prioritaria",
+          "6 annunci delegabili al team SAFEViN Creative Direction",
+          "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
+          "Collaborazioni con il team di SAFEViN",
+          "Coupon sconto personali",
+          "Accesso prioritario alle nuove funzionalità"
+        ],
+        "limitations": []
+      }
+    }
+  },
+  "disclaimer": {
+    "label": "Disclaimer",
+    "p1": "SafeViN è uno strumento indipendente: non collaboriamo con Vinted.",
+    "p2": "Non garantiamo risultati certi: i risultati dipendono anche da prodotto, prezzo, domanda e qualità dell'offerta. SafeViN ti fornisce gli strumenti e l'analisi, ma il successo finale è influenzato da molti fattori di mercato."
+  },
+  "footer": {
+    "plans": "Piani",
+    "privacy": "Privacy",
+    "cookies": "Cookie",
+    "terms": "Termini",
+    "rights": "© 2024 SAFEViN. Tutti i diritti riservati.",
+    "note": "SAFEViN è un ecosistema indipendente di analisi e ottimizzazione annunci. Non è affiliato con Vinted. I risultati dipendono dalla qualità dei dati forniti e dalle condizioni di mercato."
+  },
+  "lang": {
+    "label": "Lingua",
+    "it": "Italiano",
+    "en": "English"
+  }
+}

@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
+import "./i18n";
 
 // Apply persisted theme before first render to avoid flash
 if (typeof window !== "undefined" && localStorage.getItem("safevin-theme") === "light") {
