@@ -7,103 +7,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslation } from "react-i18next";
 
 type PlanKey = "free" | "starter" | "pro" | "expert";
-const PLAN_KEY_BY_NAME: Record<string, PlanKey> = {
-  Free: "free",
-  Starter: "starter",
-  Pro: "pro",
-  Expert: "expert",
-};
 
-const plans = [
-  {
-    name: "Free",
-    price: "0",
-    period: "",
-    description: "Prova gratis con mano e guarda tu stesso se fa per te",
-    icon: Gift,
-    features: [
-      "2 annunci creabili",
-      "Prezzo strategico",
-    ],
-    limitations: [
-      "Accesso alla SAFEViN Creative Direction",
-      "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Prova gratis",
-    popular: false,
-    variant: "glass" as const,
-  },
-  {
-    name: "Starter",
-    price: "8,99",
-    period: "/mese",
-    description: "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
-    icon: Zap,
-    features: [
-      "10 annunci creabili",
-      "Prezzo strategico",
-    ],
-    limitations: [
-      "Accesso alla SAFEViN Creative Direction",
-      "3 annunci delegabili al team SAFEViN Creative Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Inizia ora",
-    popular: false,
-    variant: "glass" as const,
-  },
-  {
-    name: "Pro",
-    price: "14,99",
-    period: "/mese",
-    description: "Per vendere con costanza\nPiù visibilità, più conversioni",
-    icon: Crown,
-    features: [
-      "25 annunci creabili",
-      "Prezzo strategico avanzato",
-      "Accesso alla SAFEViN Creative Direction",
-      "2 annunci delegabili al team SAFEViN Creative Direction",
-    ],
-    limitations: [
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Attiva Pro",
-    popular: true,
-    variant: "neon" as const,
-  },
-  {
-    name: "Expert",
-    price: "34,99",
-    period: "/mese",
-    description: "Per massimizzare ogni annuncio\nEcosistema completo per veri expert",
-    icon: Rocket,
-    features: [
-      "60 annunci creabili",
-      "Prezzo strategico avanzato",
-      "Accesso alla SAFEViN Creative Direction prioritaria",
-      "6 annunci delegabili al team SAFEViN Creative Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    limitations: [],
-    cta: "Passa a Expert",
-    popular: false,
-    variant: "glass" as const,
-  },
+const planDefs = [
+  { key: "free" as PlanKey, name: "Free", price: "0", icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
+  { key: "starter" as PlanKey, name: "Starter", price: "8,99", icon: Zap, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "pro" as PlanKey, name: "Pro", price: "14,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
+  { key: "expert" as PlanKey, name: "Expert", price: "34,99", icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
 ];
 
 const PricingSection = () => {
