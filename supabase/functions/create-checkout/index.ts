@@ -69,8 +69,8 @@ serve(async (req) => {
       line_items: [{ price: stripePriceId, quantity: 1 }],
       mode: "subscription",
       allow_promotion_codes: true,
-      success_url: `${origin}/pricing?status=success`,
-      cancel_url: `${origin}/pricing?status=cancel`,
+      success_url: `${origin}/home?status=success&plan=${plan}`,
+      cancel_url: `${origin}/home?status=cancel`,
       metadata: { user_id: user.id, plan },
       subscription_data: { metadata: { user_id: user.id, plan } },
     });
