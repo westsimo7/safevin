@@ -43,7 +43,7 @@ const Privacy = () => {
         <Section title="1. Titolare del trattamento">
           <p>Il titolare del trattamento dei dati è:</p>
           <p>
-            <strong className="text-foreground">SafeVin</strong>
+            <strong className="text-foreground">Simone Piscitelli</strong> (operante con il nome commerciale "SafeVin")
             <br />
             Email di contatto: <a href="mailto:info@safevin.com" className="text-primary hover:underline">info@safevin.com</a>
           </p>
