@@ -109,8 +109,12 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
+      // Preserve checkout intent across OAuth redirect by returning to /auth with the same query.
+      const redirectTarget = hasPendingCheckout
+        ? `${window.location.origin}/auth?checkout=${checkoutPlan}`
+        : `${window.location.origin}/home`;
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: redirectTarget,
       });
 
       if (result.error) {
@@ -121,7 +125,7 @@ const Auth = () => {
         return;
       }
 
-      navigate("/home", { replace: true });
+      // If no redirect happened, useEffect on user will handle proceedAfterAuth.
     } catch (err: any) {
       toast({
         title: "Errore",
