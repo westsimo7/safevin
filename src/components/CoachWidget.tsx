@@ -34,13 +34,15 @@ async function streamChat({
   // Send messages without the images field to keep payload clean for subsequent messages
   const cleanMessages = messages.map(({ images: _img, ...rest }) => rest);
   
+  const language = (typeof window !== "undefined" && localStorage.getItem("safevin-lang")) || "it";
+
   const resp = await fetch(CHAT_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
     },
-    body: JSON.stringify({ messages: cleanMessages, images }),
+    body: JSON.stringify({ messages: cleanMessages, images, language }),
   });
 
   if (!resp.ok) {
