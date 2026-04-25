@@ -134,12 +134,16 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const { analysis, userInput, auditContext } = body;
+    const { analysis, userInput, auditContext, language } = body;
     if (!analysis || !userInput) {
       return new Response(JSON.stringify({ error: "Dati mancanti" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const lang = language === "en" ? "en" : "it";
+    const langInstruction = lang === "en"
+      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. The fixed labels '📋 DETTAGLI TECNICI', 'Brand:', 'Taglia:', 'Colore:', 'Condizione:', 'Materiale:', 'Misure:' must be translated to: '📋 TECHNICAL DETAILS', 'Brand:', 'Size:', 'Color:', 'Condition:', 'Material:', 'Measurements:'. Use English for everything else as well."
+      : "";
 
     const measurementsStr = Object.entries(userInput.measurements || {})
       .filter(([, v]) => v)
@@ -224,7 +228,7 @@ Genera l'annuncio ottimizzato per Vinted.`;
       body: JSON.stringify({
         model: "openai/gpt-5.2",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: SYSTEM_PROMPT + langInstruction },
           { role: "user", content: userPrompt },
         ],
       }),

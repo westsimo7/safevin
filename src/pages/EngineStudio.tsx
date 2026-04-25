@@ -178,8 +178,9 @@ const EngineStudio = () => {
     setPhase("generating");
 
     try {
+      const language = (typeof window !== "undefined" && localStorage.getItem("safevin-lang")) || "it";
       const { data, error } = await supabase.functions.invoke("studio-generate", {
-        body: { analysis, userInput },
+        body: { analysis, userInput, language },
       });
 
       if (error) throw error;
