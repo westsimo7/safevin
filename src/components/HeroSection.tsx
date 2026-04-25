@@ -1,16 +1,25 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
+import { useAuth } from "@/hooks/useAuth";
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
 const HeroSection = () => {
   const descRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.8 });
   const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleProvaGratis = () => {
+    // Piano Free: nessun pagamento Stripe necessario.
+    // Alla registrazione l'utente riceve automaticamente il piano "free" via handle_new_user_credits.
+    navigate(user ? "/home" : "/auth");
+  };
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-6">
@@ -81,7 +90,12 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.65 }}
         >
-          <Button variant="neon" size="lg" className="group w-full sm:w-auto cursor-not-allowed opacity-70 h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12" disabled>
+          <Button
+            variant="neon"
+            size="lg"
+            className="group w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12"
+            onClick={handleProvaGratis}
+          >
             Prova gratis
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
