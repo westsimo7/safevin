@@ -81,15 +81,15 @@
     "steps": {
       "upload": {
         "title": "Upload your photos",
-        "description": "Upload the product photos and the basic info and details will be extracted to speed up listing creation."
+        "description": "Upload the product photos and the basic info and details will be extracted."
       },
       "info": {
         "title": "Add the key info",
-        "description": "Only you know the essential details: answer a few questions for a hyper-specific, complete listing in minutes."
+        "description": "Answer a few questions for a hyper-specific, complete listing in minutes."
       },
       "copy": {
         "title": "Copy and publish",
-        "description": "Get title, description and strategic price ready to upload directly to Vinted and speed up the process."
+        "description": "Get title, description and strategic price ready to upload directly to Vinted."
       }
     },
     "statsTitle": "It's not opinion.",
