@@ -17,17 +17,15 @@ interface AdminUser {
   cognome: string;
   telefono: string;
   role: string;
+  plan: string;
+  studio_used: number;
+  studio_limit: number;
+  cd_used: number;
+  cd_limit: number;
   created_at: string;
   studio_count: number;
   analysis_count: number;
 }
-
-const planLimits: Record<string, number> = {
-  free: 2,
-  starter: 10,
-  pro: 25,
-  expert: 60,
-};
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -172,9 +170,9 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody>
                     {users.map((u) => {
-                      const plan = "starter"; // TODO: connect to real plan
-                      const limit = planLimits[plan] || 10;
-                      const created = u.studio_count + u.analysis_count;
+                      const plan = u.plan || "free";
+                      const used = u.studio_used ?? 0;
+                      const limit = u.studio_limit ?? 2;
                       return (
                         <tr key={u.user_id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                           <td className="p-3">
@@ -198,8 +196,8 @@ const AdminDashboard = () => {
                             <span className="text-xs capitalize">{plan}</span>
                           </td>
                           <td className="p-3 text-center">
-                            <span className={`font-semibold ${created >= limit ? "text-destructive" : "text-foreground"}`}>
-                              {created}
+                            <span className={`font-semibold ${used >= limit ? "text-destructive" : "text-foreground"}`}>
+                              {used}
                             </span>
                             <span className="text-muted-foreground">/{limit}</span>
                           </td>
