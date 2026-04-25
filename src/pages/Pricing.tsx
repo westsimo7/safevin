@@ -43,7 +43,6 @@ const plans = [
     icon: Zap,
     features: [
       "10 annunci creabili",
-      "Storico ultime 3 sessioni",
       "Prezzo strategico",
       "Salvataggio creazioni incomplete",
       "Assistenza h24",
