@@ -51,10 +51,10 @@ serve(async (req) => {
 
     // Find Stripe product by name, then take its first active recurring price
     const products = await stripe.products.list({ active: true, limit: 100 });
-    const product = products.data.find((p) => p.name === productName);
+    const product = products.data.find((p: any) => p.name === productName);
     if (!product) throw new Error(`Product not found: ${productName}`);
     const prices = await stripe.prices.list({ product: product.id, active: true, limit: 10 });
-    const recurring = prices.data.find((p) => p.recurring?.interval === "month") || prices.data[0];
+    const recurring = prices.data.find((p: any) => p.recurring?.interval === "month") || prices.data[0];
     if (!recurring) throw new Error(`No price for product ${productName}`);
     const stripePriceId = recurring.id;
     log("priceResolved", { productName, productId: product.id, stripePriceId });
