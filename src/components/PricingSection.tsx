@@ -9,16 +9,13 @@ const plans = [
     name: "Free",
     price: "0",
     period: "",
-    description: "Prova gratis",
+    description: "Prova gratis con mano e guarda tu stesso se fa per te",
     icon: Gift,
     features: [
       "2 annunci creabili",
-      "Storico sui 2 annunci",
       "Prezzo strategico",
     ],
     limitations: [
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -38,10 +35,7 @@ const plans = [
     icon: Zap,
     features: [
       "10 annunci creabili",
-      "Storico ultime 3 sessioni",
       "Prezzo strategico",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
     ],
     limitations: [
       "Accesso alla SAFEViN Creative Direction",
@@ -63,10 +57,7 @@ const plans = [
     icon: Crown,
     features: [
       "25 annunci creabili",
-      "Storico completo mensile",
       "Prezzo strategico avanzato",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "2 annunci delegabili al team SAFEViN Creative Direction",
     ],
@@ -88,10 +79,7 @@ const plans = [
     icon: Rocket,
     features: [
       "60 annunci creabili",
-      "Storico completo trimestrale",
       "Prezzo strategico avanzato",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24 prioritaria",
       "Accesso alla SAFEViN Creative Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Creative Direction",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
