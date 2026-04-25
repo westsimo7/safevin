@@ -272,8 +272,17 @@ const PricingSection = () => {
                   ))}
                 </ul>
 
-                <Button variant={plan.variant} className="w-full h-10 sm:h-11 text-sm" disabled>
-                  {plan.cta}
+                <Button
+                  variant={plan.variant}
+                  className="w-full h-10 sm:h-11 text-sm"
+                  disabled={loadingPlan !== null}
+                  onClick={() => handlePlanClick(plan.name)}
+                >
+                  {loadingPlan === PLAN_KEY_BY_NAME[plan.name] ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    plan.cta
+                  )}
                 </Button>
               </div>
             );
