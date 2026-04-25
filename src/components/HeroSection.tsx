@@ -3,6 +3,7 @@ import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "luc
 import { Link, useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
+import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
 
@@ -13,10 +14,9 @@ const HeroSection = () => {
   const descRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.8 });
   const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleProvaGratis = () => {
-    // "Prova gratis" porta SEMPRE alla pagina di registrazione/accesso (email o Google).
-    // Il piano Free viene assegnato automaticamente alla creazione dell'account.
     navigate("/auth");
   };
 
@@ -79,7 +79,14 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ ...spring, delay: 0.5 }}
         >
-          Vendi su Vinted, più <strong className="text-foreground">veloce</strong>, <strong className="text-foreground">chiaro</strong> e al <strong className="text-foreground">prezzo giusto</strong>.
+          <Trans
+            i18nKey="hero.subtitle"
+            components={{
+              1: <strong className="text-foreground" />,
+              2: <strong className="text-foreground" />,
+              3: <strong className="text-foreground" />,
+            }}
+          />
         </motion.p>
 
         {/* CTA Buttons */}
@@ -95,13 +102,13 @@ const HeroSection = () => {
             className="group w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12"
             onClick={handleProvaGratis}
           >
-            Prova gratis
+            {t("hero.tryFree")}
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Link to="/home" className="w-full sm:w-auto">
             <Button variant="glass" size="lg" className="w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-10">
               <LayoutDashboard className="mr-2 w-5 h-5" />
-              Dashboard
+              {t("hero.dashboard")}
             </Button>
           </Link>
         </motion.div>
@@ -117,8 +124,10 @@ const HeroSection = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.85 }}
         >
-          Creazione di Annunci ottimizzati in pochi minuti per aumentare la{" "}
-          <strong className="text-foreground">probabilità statistica di vendita</strong>.
+          <Trans
+            i18nKey="hero.description"
+            components={{ 1: <strong className="text-foreground" /> }}
+          />
         </motion.p>
 
       </div>

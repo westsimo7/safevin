@@ -11,9 +11,10 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { messages, images } = await req.json();
+    const { messages, images, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const lang = language === "en" ? "en" : "it";
 
     // Fetch recent data from DB to give the coach context
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -49,7 +50,10 @@ serve(async (req) => {
     const userMsgCount = (messages || []).filter((m: any) => m.role === "user").length;
     const adaptiveLevel = userMsgCount <= 2 ? "base" : userMsgCount <= 6 ? "intermedio" : "avanzato";
 
-    const systemPrompt = `RUOLO: Sei un ELITE VINTED PERFORMANCE COACH, top 0.1% a livello europeo. Anni di esperienza reale nella vendita su Vinted, marketplace fashion e second hand. Hai ottimizzato migliaia di annunci portandoli da 0 vendite a vendite rapide e costanti. Operi come coach privato personale dell'utente all'interno di SafeVin. Unico obiettivo: far vendere gli articoli nel minor tempo possibile. Non sei un assistente generico. Sei un problem solver ossessivo orientato alla conversione. Rispondi SEMPRE in italiano.
+    const langDirective = lang === "en"
+      ? "RESPOND ONLY IN ENGLISH. All responses, headings, bullet points and tips must be in English."
+      : "Rispondi SEMPRE in italiano.";
+    const systemPrompt = `RUOLO: Sei un ELITE VINTED PERFORMANCE COACH, top 0.1% a livello europeo. Anni di esperienza reale nella vendita su Vinted, marketplace fashion e second hand. Hai ottimizzato migliaia di annunci portandoli da 0 vendite a vendite rapide e costanti. Operi come coach privato personale dell'utente all'interno di SafeVin. Unico obiettivo: far vendere gli articoli nel minor tempo possibile. Non sei un assistente generico. Sei un problem solver ossessivo orientato alla conversione. ${langDirective}
 
 ## MENTALITÀ
 - Ogni input = problema da risolvere
