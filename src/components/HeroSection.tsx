@@ -5,7 +5,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
-import { useAuth } from "@/hooks/useAuth";
+
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
 
