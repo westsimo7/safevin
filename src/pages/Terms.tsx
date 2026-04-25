@@ -43,16 +43,20 @@ const Terms = () => {
 
         <Section title="1. Informazioni generali">
           <p>
-            SafeVin è una piattaforma digitale che utilizza intelligenza artificiale per supportare
-            la creazione, analisi e ottimizzazione di annunci online.
+            SafeVin è una piattaforma digitale gestita da <strong className="text-foreground">Simone Piscitelli</strong> che utilizza intelligenza artificiale per supportare la creazione, analisi e ottimizzazione di annunci online.
           </p>
           <p>
             <strong className="text-foreground">Contatti</strong>
+            <br />
+            Titolare: Simone Piscitelli
             <br />
             Email:{" "}
             <a href="mailto:info@safevin.com" className="text-primary hover:underline">
               info@safevin.com
             </a>
+          </p>
+          <p className="mt-2 p-3 rounded-lg bg-muted/40 border border-border/50 text-foreground">
+            <strong>Merchant of Record:</strong> Il nostro processo di acquisto è gestito dal nostro rivenditore online <strong>Paddle.com</strong>. Paddle.com è il Merchant of Record (rivenditore ufficiale) per tutti i nostri ordini. Paddle gestisce tutte le richieste di assistenza relative ai pagamenti e gestisce i rimborsi.
           </p>
         </Section>
 
@@ -92,28 +96,43 @@ const Terms = () => {
         </Section>
 
         <Section title="5. Abbonamenti e pagamenti">
-          <p>SafeVin può offrire piani gratuiti e a pagamento.</p>
+          <p>
+            SafeVin può offrire piani gratuiti e a pagamento. I pagamenti sono processati da{" "}
+            <strong className="text-foreground">Paddle.com Market Limited</strong>, che agisce come Merchant of Record per la vendita degli abbonamenti.
+          </p>
           <ul className="space-y-1.5">
             <Bullet>I prezzi sono indicati sulla piattaforma</Bullet>
             <Bullet>Il pagamento è anticipato</Bullet>
-            <Bullet>Gli abbonamenti possono essere ricorrenti</Bullet>
+            <Bullet>Gli abbonamenti possono essere ricorrenti e si rinnovano automaticamente</Bullet>
+            <Bullet>Tasse e imposte sono gestite e applicate da Paddle in base alla giurisdizione dell'utente</Bullet>
           </ul>
-          <p>L'utente può cancellare l'abbonamento in qualsiasi momento.</p>
+          <p>
+            L'utente può cancellare l'abbonamento in qualsiasi momento tramite il portale clienti Paddle (paddle.net) o contattando il supporto. Per i termini completi di acquisto consulta i{" "}
+            <a href="https://www.paddle.com/legal/checkout-buyer-terms" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+              Buyer Terms di Paddle
+            </a>.
+          </p>
         </Section>
 
         <Section title="6. Politica di rimborso">
           <p>
-            Gli abbonamenti sono rimborsabili entro i primi <strong className="text-foreground">7 giorni</strong> dall'acquisto, a condizione che:
+            Offriamo una <strong className="text-foreground">garanzia di rimborso di 30 giorni</strong>. Se non sei soddisfatto del tuo acquisto, puoi richiedere un rimborso completo entro 30 giorni dalla data dell'ordine.
           </p>
-          <ul className="space-y-1.5">
-            <Bullet>
-              Non sia stato utilizzato più del <strong className="text-foreground">20%</strong> del limite totale di annunci generabili previsto dal piano acquistato
-            </Bullet>
-          </ul>
-          <p>Se tale soglia viene superata, il rimborso non sarà più disponibile.</p>
           <p>
-            SafeVin si riserva il diritto di verificare l'utilizzo effettivo del servizio prima di
-            approvare il rimborso.
+            <strong className="text-foreground">Come richiedere un rimborso:</strong> i rimborsi sono gestiti dal nostro processore di pagamento Paddle. Per richiedere un rimborso visita{" "}
+            <a href="https://paddle.net" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+              paddle.net
+            </a>{" "}
+            oppure contatta il nostro supporto all'indirizzo{" "}
+            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
+              info@safevin.com
+            </a>.
+          </p>
+          <p>
+            Per maggiori informazioni puoi consultare la{" "}
+            <a href="https://www.paddle.com/legal/refund-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+              Refund Policy di Paddle
+            </a>.
           </p>
         </Section>
 
