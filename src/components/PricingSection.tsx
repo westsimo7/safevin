@@ -1,8 +1,20 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
+import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+type PlanKey = "free" | "starter" | "pro" | "expert";
+const PLAN_KEY_BY_NAME: Record<string, PlanKey> = {
+  Free: "free",
+  Starter: "starter",
+  Pro: "pro",
+  Expert: "expert",
+};
 
 const plans = [
   {
@@ -100,8 +112,12 @@ const PricingSection = () => {
   const footerRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.6, distance: 20 });
 
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const popularIndex = plans.findIndex(p => p.popular);
+  const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
     if (isMobile && scrollContainerRef.current && popularIndex >= 0) {
@@ -115,6 +131,44 @@ const PricingSection = () => {
       }
     }
   }, [isMobile, popularIndex]);
+
+  const handlePlanClick = async (planName: string) => {
+    const planKey = PLAN_KEY_BY_NAME[planName];
+    if (!planKey) return;
+
+    // Free plan: just go to signup (or home if already logged in)
+    if (planKey === "free") {
+      navigate(user ? "/home" : "/auth");
+      return;
+    }
+
+    // Not logged in: redirect to auth, preserving the chosen plan to resume after login
+    if (!user) {
+      navigate(`/auth?checkout=${planKey}`);
+      return;
+    }
+
+    // Logged in: start checkout immediately
+    setLoadingPlan(planKey);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan: planKey },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("Nessun URL di checkout ricevuto");
+      }
+    } catch (e: any) {
+      toast({
+        title: "Errore",
+        description: e?.message ?? "Impossibile avviare il pagamento",
+        variant: "destructive",
+      });
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <section className="relative py-8 sm:py-12 md:py-16 bg-card/20 overflow-hidden" id="pricing">
@@ -218,8 +272,17 @@ const PricingSection = () => {
                   ))}
                 </ul>
 
-                <Button variant={plan.variant} className="w-full h-10 sm:h-11 text-sm" disabled>
-                  {plan.cta}
+                <Button
+                  variant={plan.variant}
+                  className="w-full h-10 sm:h-11 text-sm"
+                  disabled={loadingPlan !== null}
+                  onClick={() => handlePlanClick(plan.name)}
+                >
+                  {loadingPlan === PLAN_KEY_BY_NAME[plan.name] ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    plan.cta
+                  )}
                 </Button>
               </div>
             );

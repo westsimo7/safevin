@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
@@ -10,20 +10,54 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
+const VALID_CHECKOUT_PLANS = new Set(["starter", "pro", "expert"]);
+
 const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { user } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const [searchParams] = useSearchParams();
+  const checkoutPlan = searchParams.get("checkout") ?? "";
+  const hasPendingCheckout = VALID_CHECKOUT_PLANS.has(checkoutPlan);
+  // If checkout is pending, default to signup mode (most users coming from landing pricing won't have account yet)
+  const [isLogin, setIsLogin] = useState(!hasPendingCheckout);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nome: "", cognome: "" });
 
-  // Redirect if already logged in
-  if (user) {
-    navigate("/home", { replace: true });
-    return null;
-  }
+  // After auth success: either start checkout or go home
+  const proceedAfterAuth = async () => {
+    if (!hasPendingCheckout) {
+      navigate("/home", { replace: true });
+      return;
+    }
+    try {
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { plan: checkoutPlan },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+        return;
+      }
+      throw new Error("Nessun URL di checkout ricevuto");
+    } catch (e: any) {
+      toast({
+        title: "Errore",
+        description: e?.message ?? "Impossibile avviare il pagamento",
+        variant: "destructive",
+      });
+      navigate("/home", { replace: true });
+    }
+  };
+
+  // If user is/becomes logged in (e.g. via OAuth redirect or already signed in), trigger checkout or home
+  useEffect(() => {
+    if (user) {
+      proceedAfterAuth();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +70,9 @@ const Auth = () => {
           password: form.password,
         });
         if (error) throw error;
-        navigate("/home", { replace: true });
+        // The useEffect on `user` will trigger proceedAfterAuth (checkout or /home)
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
           options: {
@@ -50,10 +84,16 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast({
-          title: "Registrazione completata",
-          description: "Controlla la tua email per verificare l'account.",
-        });
+        // If a session was created immediately (email confirmation disabled), useEffect handles it.
+        // Otherwise inform the user to verify email.
+        if (!data.session) {
+          toast({
+            title: "Registrazione completata",
+            description: hasPendingCheckout
+              ? "Controlla la tua email per verificare l'account, poi accedi per completare il pagamento."
+              : "Controlla la tua email per verificare l'account.",
+          });
+        }
       }
     } catch (err: any) {
       toast({
@@ -69,8 +109,12 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
+      // Preserve checkout intent across OAuth redirect by returning to /auth with the same query.
+      const redirectTarget = hasPendingCheckout
+        ? `${window.location.origin}/auth?checkout=${checkoutPlan}`
+        : `${window.location.origin}/home`;
       const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: window.location.origin,
+        redirect_uri: redirectTarget,
       });
 
       if (result.error) {
@@ -81,7 +125,7 @@ const Auth = () => {
         return;
       }
 
-      navigate("/home", { replace: true });
+      // If no redirect happened, useEffect on user will handle proceedAfterAuth.
     } catch (err: any) {
       toast({
         title: "Errore",
