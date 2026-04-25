@@ -23,8 +23,6 @@ const plans = [
       "Prezzo strategico",
     ],
     limitations: [
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "3 annunci delegabili al team SAFEViN Creative Direction",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
