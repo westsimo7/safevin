@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PlanProvider } from "@/hooks/usePlan";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PlanProtectedRoute from "@/components/PlanProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import EngineStudio from "./pages/EngineStudio";
@@ -80,7 +81,7 @@ const AnimatedRoutes = () => {
             <ProtectedRoute><PageTransition direction="up"><Profile /></PageTransition></ProtectedRoute>
           } />
           <Route path="/artist-director" element={
-            <ProtectedRoute><PageTransition direction="up"><ArtistDirector /></PageTransition></ProtectedRoute>
+            <PlanProtectedRoute feature="creative_director"><PageTransition direction="up"><ArtistDirector /></PageTransition></PlanProtectedRoute>
           } />
           <Route path="/pricing" element={
             <ProtectedRoute><PageTransition direction="up"><Pricing /></PageTransition></ProtectedRoute>
@@ -95,7 +96,7 @@ const AnimatedRoutes = () => {
             <ProtectedRoute><PageTransition direction="left"><UpgradeInbox /></PageTransition></ProtectedRoute>
           } />
           <Route path="/upgrade" element={
-            <ProtectedRoute><PageTransition direction="up"><Upgrade /></PageTransition></ProtectedRoute>
+            <PlanProtectedRoute feature="upgrade"><PageTransition direction="up"><Upgrade /></PageTransition></PlanProtectedRoute>
           } />
           <Route path="/support" element={
             <ProtectedRoute><PageTransition direction="up"><Support /></PageTransition></ProtectedRoute>
@@ -104,7 +105,7 @@ const AnimatedRoutes = () => {
             <ProtectedRoute><PageTransition direction="left"><SupportInbox /></PageTransition></ProtectedRoute>
           } />
           <Route path="/collaboration" element={
-            <ProtectedRoute><PageTransition direction="up"><Collaboration /></PageTransition></ProtectedRoute>
+            <PlanProtectedRoute feature="collaboration"><PageTransition direction="up"><Collaboration /></PageTransition></PlanProtectedRoute>
           } />
           <Route path="/admin/collaboration-inbox" element={
             <ProtectedRoute><PageTransition direction="left"><CollaborationInbox /></PageTransition></ProtectedRoute>
