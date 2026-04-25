@@ -43,16 +43,20 @@ const Terms = () => {
 
         <Section title="1. Informazioni generali">
           <p>
-            SafeVin è una piattaforma digitale che utilizza intelligenza artificiale per supportare
-            la creazione, analisi e ottimizzazione di annunci online.
+            SafeVin è una piattaforma digitale gestita da <strong className="text-foreground">Simone Piscitelli</strong> che utilizza intelligenza artificiale per supportare la creazione, analisi e ottimizzazione di annunci online.
           </p>
           <p>
             <strong className="text-foreground">Contatti</strong>
+            <br />
+            Titolare: Simone Piscitelli
             <br />
             Email:{" "}
             <a href="mailto:info@safevin.com" className="text-primary hover:underline">
               info@safevin.com
             </a>
+          </p>
+          <p className="mt-2 p-3 rounded-lg bg-muted/40 border border-border/50 text-foreground">
+            <strong>Merchant of Record:</strong> Il nostro processo di acquisto è gestito dal nostro rivenditore online <strong>Paddle.com</strong>. Paddle.com è il Merchant of Record (rivenditore ufficiale) per tutti i nostri ordini. Paddle gestisce tutte le richieste di assistenza relative ai pagamenti e gestisce i rimborsi.
           </p>
         </Section>
 
