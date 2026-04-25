@@ -44,8 +44,6 @@ const plans = [
     features: [
       "10 annunci creabili",
       "Prezzo strategico",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
     ],
     limitations: [
       "Accesso alla SAFEViN Creative Direction",
@@ -66,10 +64,7 @@ const plans = [
     icon: Crown,
     features: [
       "25 annunci creabili",
-      "Storico completo mensile",
       "Prezzo strategico avanzato",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24",
       "Accesso alla SAFEViN Creative Direction",
       "2 annunci delegabili al team SAFEViN Creative Direction",
       
@@ -92,8 +87,6 @@ const plans = [
     features: [
       "60 annunci creabili",
       "Prezzo strategico avanzato",
-      "Salvataggio creazioni incomplete",
-      "Assistenza h24 prioritaria",
       "Accesso alla SAFEViN Creative Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Creative Direction",
       
