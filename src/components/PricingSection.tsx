@@ -1,8 +1,20 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Check, Zap, Crown, Rocket, Gift } from "lucide-react";
+import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
 import { useScrollReveal, useStaggerReveal } from "@/hooks/useScrollReveal";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+
+type PlanKey = "free" | "starter" | "pro" | "expert";
+const PLAN_KEY_BY_NAME: Record<string, PlanKey> = {
+  Free: "free",
+  Starter: "starter",
+  Pro: "pro",
+  Expert: "expert",
+};
 
 const plans = [
   {
