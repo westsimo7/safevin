@@ -20,7 +20,6 @@ const plans = [
     icon: Gift,
     features: [
       "2 annunci creabili",
-      "Storico sui 2 annunci",
       "Prezzo strategico",
     ],
     limitations: [
