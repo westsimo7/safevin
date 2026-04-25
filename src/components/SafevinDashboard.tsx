@@ -3,12 +3,17 @@ import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, PenTool, Sparkles, ShieldCheck, Clock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { countStudioDrafts, getStudioDraftsChangeEvent } from "@/lib/studioDrafts";
+import { supabase } from "@/integrations/supabase/client";
+import { usePlan } from "@/hooks/usePlan";
+import { toast } from "@/hooks/use-toast";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { refresh: refreshPlan } = usePlan();
   const [draftCount, setDraftCount] = useState(0);
   const spring = { type: "spring" as const, stiffness: 80, damping: 18 };
   const snappy = { type: "spring" as const, stiffness: 120, damping: 14 };
@@ -23,6 +28,30 @@ const SafevinHome = () => {
       window.removeEventListener(changeEvent, syncDraftCount);
       window.removeEventListener("storage", syncDraftCount);
     };
+  }, []);
+
+  // Handle return from Stripe checkout: refresh subscription and notify user.
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (!status) return;
+    if (status === "success") {
+      toast({ title: "Pagamento completato", description: "Stiamo attivando il tuo piano…" });
+      (async () => {
+        try {
+          await supabase.functions.invoke("check-subscription");
+          await refreshPlan();
+          toast({ title: "Piano attivo", description: "Il tuo abbonamento è stato attivato." });
+        } catch (e) {
+          console.error(e);
+        }
+      })();
+    } else if (status === "cancel") {
+      toast({ title: "Pagamento annullato", variant: "destructive" });
+    }
+    searchParams.delete("status");
+    searchParams.delete("plan");
+    setSearchParams(searchParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const features = [
