@@ -91,7 +91,6 @@ const plans = [
     icon: Rocket,
     features: [
       "60 annunci creabili",
-      "Storico completo trimestrale",
       "Prezzo strategico avanzato",
       "Salvataggio creazioni incomplete",
       "Assistenza h24 prioritaria",
