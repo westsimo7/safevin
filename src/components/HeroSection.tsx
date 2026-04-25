@@ -13,12 +13,11 @@ const HeroSection = () => {
   const descRef = useScrollReveal({ direction: "up", delay: 0.3, duration: 0.8 });
   const cardRef = useScrollReveal({ direction: "up", delay: 0.6, duration: 0.9, distance: 80 });
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const handleProvaGratis = () => {
-    // Piano Free: nessun pagamento Stripe necessario.
-    // Alla registrazione l'utente riceve automaticamente il piano "free" via handle_new_user_credits.
-    navigate(user ? "/home" : "/auth");
+    // "Prova gratis" porta SEMPRE alla pagina di registrazione/accesso (email o Google).
+    // Il piano Free viene assegnato automaticamente alla creazione dell'account.
+    navigate("/auth");
   };
 
   return (
