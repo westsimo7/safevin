@@ -90,7 +90,12 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.65 }}
         >
-          <Button variant="neon" size="lg" className="group w-full sm:w-auto cursor-not-allowed opacity-70 h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12" disabled>
+          <Button
+            variant="neon"
+            size="lg"
+            className="group w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-12"
+            onClick={handleProvaGratis}
+          >
             Prova gratis
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
