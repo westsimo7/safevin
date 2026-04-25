@@ -1,20 +1,22 @@
 import { Zap, Camera, PenTool, MessageCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTranslation } from "react-i18next";
 
 const SolutionSection = () => {
   const headerRef = useScrollReveal({ direction: "up", duration: 0.7 });
   const studioRef = useScrollReveal({ direction: "up", delay: 0.15, duration: 0.8 });
+  const { t } = useTranslation();
 
   return (
     <section className="relative py-14 sm:py-20 md:py-24 bg-background overflow-hidden">
       <div className="container mx-auto px-5 sm:px-6 max-w-5xl">
         <div ref={headerRef} className="text-center mb-8 sm:mb-10 md:mb-14">
           <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-foreground mb-2.5 sm:mb-3 md:mb-4">
-            <span className="text-primary">SAFEViN</span> Engine
+            <span className="text-primary">{t("solution.titleHighlight")}</span> {t("solution.titleSuffix")}
           </h2>
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
-            Strumenti AI per creare annunci che vendono, con il supporto di un coach dedicato.
+            {t("solution.subtitle")}
           </p>
         </div>
 
@@ -25,10 +27,10 @@ const SolutionSection = () => {
                 <PenTool className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                SAFEViN Studio
+                {t("solution.studio.title")}
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Costruzione strategica dell'annuncio tramite analisi foto sui 4 pilastri chiave per la conversione, seguita da domande mirate per migliorare la qualità finale. Output strutturato con prezzo strategico per favorire offerte e chiusura, più consigli extra di vendita.
+                {t("solution.studio.body")}
               </p>
             </CardContent>
           </Card>
@@ -39,10 +41,10 @@ const SolutionSection = () => {
                 <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                SAFEViN Artist Director
+                {t("solution.artist.title")}
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Affida le campagne visive dei tuoi articoli in vendita a SAFEViN: analizza ogni foto per garantire coerenza visiva e qualità, così il tuo annuncio comunica professionalità e attira più acquirenti.
+                {t("solution.artist.body")}
               </p>
             </CardContent>
           </Card>
@@ -56,10 +58,10 @@ const SolutionSection = () => {
                 <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                SAFEViN Coach
+                {t("solution.coach.title")}
               </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
-                Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita. Ti guida su foto, titoli, descrizioni e strategie di vendita.
+                {t("solution.coach.body")}
               </p>
             </CardContent>
           </Card>
