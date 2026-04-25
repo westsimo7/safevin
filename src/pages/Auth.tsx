@@ -70,9 +70,9 @@ const Auth = () => {
           password: form.password,
         });
         if (error) throw error;
-        navigate("/home", { replace: true });
+        // The useEffect on `user` will trigger proceedAfterAuth (checkout or /home)
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
           options: {
@@ -84,10 +84,16 @@ const Auth = () => {
           },
         });
         if (error) throw error;
-        toast({
-          title: "Registrazione completata",
-          description: "Controlla la tua email per verificare l'account.",
-        });
+        // If a session was created immediately (email confirmation disabled), useEffect handles it.
+        // Otherwise inform the user to verify email.
+        if (!data.session) {
+          toast({
+            title: "Registrazione completata",
+            description: hasPendingCheckout
+              ? "Controlla la tua email per verificare l'account, poi accedi per completare il pagamento."
+              : "Controlla la tua email per verificare l'account.",
+          });
+        }
       }
     } catch (err: any) {
       toast({
