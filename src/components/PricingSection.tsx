@@ -27,8 +27,9 @@ const PricingSection = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const popularIndex = plans.findIndex(p => p.popular);
+  const popularIndex = planDefs.findIndex(p => p.popular);
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
@@ -37,30 +38,21 @@ const PricingSection = () => {
       const cards = container.children;
       if (cards[popularIndex]) {
         const card = cards[popularIndex] as HTMLElement;
-        // Center the popular card in view
         const scrollLeft = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
         container.scrollTo({ left: scrollLeft, behavior: "instant" });
       }
     }
   }, [isMobile, popularIndex]);
 
-  const handlePlanClick = async (planName: string) => {
-    const planKey = PLAN_KEY_BY_NAME[planName];
-    if (!planKey) return;
-
-    // Free plan: just go to signup (or home if already logged in)
+  const handlePlanClick = async (planKey: PlanKey) => {
     if (planKey === "free") {
       navigate(user ? "/home" : "/auth");
       return;
     }
-
-    // Not logged in: redirect to auth, preserving the chosen plan to resume after login
     if (!user) {
       navigate(`/auth?checkout=${planKey}`);
       return;
     }
-
-    // Logged in: start checkout immediately
     setLoadingPlan(planKey);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
@@ -70,12 +62,12 @@ const PricingSection = () => {
       if (data?.url) {
         window.location.href = data.url;
       } else {
-        throw new Error("Nessun URL di checkout ricevuto");
+        throw new Error(t("pricing.errors.noCheckoutUrl"));
       }
     } catch (e: any) {
       toast({
-        title: "Errore",
-        description: e?.message ?? "Impossibile avviare il pagamento",
+        title: t("pricing.errors.title"),
+        description: e?.message ?? t("pricing.errors.cantStartPayment"),
         variant: "destructive",
       });
       setLoadingPlan(null);
@@ -89,14 +81,13 @@ const PricingSection = () => {
       <div className="container mx-auto px-5 sm:px-6 max-w-7xl">
         <div ref={headerRef} className="text-center mb-5 sm:mb-8 md:mb-10">
           <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-1.5 sm:mb-3">
-            Scegli il tuo piano
+            {t("pricing.title")}
           </h2>
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
-            Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.
+            {t("pricing.subtitle")}
           </p>
         </div>
 
-        {/* Mobile/Tablet: horizontal scroll, Desktop: grid */}
         <div
           ref={(el) => {
             scrollContainerRef.current = el;
@@ -106,9 +97,9 @@ const PricingSection = () => {
           }}
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
-          {plans.map((plan, index) => {
-            const isStarter = plan.name === "Starter";
-            const isExpert = plan.name === "Expert";
+          {planDefs.map((plan, index) => {
+            const isStarter = plan.key === "starter";
+            const isExpert = plan.key === "expert";
 
             const accent = isStarter
               ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
@@ -122,6 +113,9 @@ const PricingSection = () => {
               ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
               : `border ${accent.border} bg-card/50 hover:border-border`;
 
+            const features = t(`pricing.plans.${plan.key}.features`, { returnObjects: true }) as string[];
+            const limitations = t(`pricing.plans.${plan.key}.limitations`, { returnObjects: true }) as string[];
+
             return (
               <div
                 key={index}
@@ -131,21 +125,21 @@ const PricingSection = () => {
                 {isStarter && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
-                      Per Iniziare
+                      {t("pricing.badges.starter")}
                     </div>
                   </div>
                 )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg shadow-primary/40">
-                      Il più venduto
+                      {t("pricing.badges.popular")}
                     </div>
                   </div>
                 )}
                 {isExpert && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
-                      Per gli esperti
+                      {t("pricing.badges.expert")}
                     </div>
                   </div>
                 )}
@@ -157,16 +151,20 @@ const PricingSection = () => {
                   <h3 className={`text-lg sm:text-xl font-bold mb-1 ${accent.text}`}>
                     {plan.name}
                   </h3>
-                  <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
+                  <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">
+                    {t(`pricing.plans.${plan.key}.description`)}
+                  </p>
                 </div>
 
                 <div className="mb-3 sm:mb-4">
                   <span className="text-2xl sm:text-3xl font-bold text-foreground">€{plan.price}</span>
-                  <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
+                  {plan.hasPeriod && (
+                    <span className="text-muted-foreground text-[13px] sm:text-sm">{t("pricing.perMonth")}</span>
+                  )}
                 </div>
 
                 <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5 flex-grow">
-                  {plan.features.map((feature, i) => (
+                  {features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
                         <Check className={`w-2.5 h-2.5 ${accent.text}`} />
@@ -174,7 +172,7 @@ const PricingSection = () => {
                       <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{feature}</span>
                     </li>
                   ))}
-                  {plan.limitations.map((limitation, i) => (
+                  {limitations.map((limitation, i) => (
                     <li key={`lim-${i}`} className="flex items-start gap-2 opacity-50">
                       <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
                         <span className="text-[10px] text-muted-foreground">–</span>
@@ -188,12 +186,12 @@ const PricingSection = () => {
                   variant={plan.variant}
                   className="w-full h-10 sm:h-11 text-sm"
                   disabled={loadingPlan !== null}
-                  onClick={() => handlePlanClick(plan.name)}
+                  onClick={() => handlePlanClick(plan.key)}
                 >
-                  {loadingPlan === PLAN_KEY_BY_NAME[plan.name] ? (
+                  {loadingPlan === plan.key ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
-                    plan.cta
+                    t(`pricing.plans.${plan.key}.cta`)
                   )}
                 </Button>
               </div>
@@ -203,7 +201,7 @@ const PricingSection = () => {
 
         <div ref={footerRef} className="mt-5 sm:mt-8 text-center">
           <p className="text-muted-foreground text-[13px] sm:text-sm">
-            Cancelli quando vuoi. Zero vincoli. Zero sorprese.
+            {t("pricing.footer")}
           </p>
         </div>
       </div>
