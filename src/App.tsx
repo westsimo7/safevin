@@ -34,6 +34,7 @@ import Privacy from "./pages/Privacy";
 import Cookies from "./pages/Cookies";
 import Terms from "./pages/Terms";
 import Unsubscribe from "./pages/Unsubscribe";
+import ResetPassword from "./pages/ResetPassword";
 import CookieBanner from "./components/CookieBanner";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
@@ -43,7 +44,7 @@ const queryClient = new QueryClient();
 const AnimatedRoutes = () => {
   const location = useLocation();
   const isLanding = location.pathname === "/" || location.pathname === "/index";
-  const isAuth = location.pathname === "/auth";
+  const isAuth = location.pathname === "/auth" || location.pathname === "/reset-password";
 
   return (
     <div className={isLanding || isAuth ? "h-[100dvh] overflow-y-auto overflow-x-hidden" : "h-[100dvh] flex flex-col overflow-hidden"}>
@@ -115,6 +116,7 @@ const AnimatedRoutes = () => {
           <Route path="/cookies" element={<PageTransition direction="up"><Cookies /></PageTransition>} />
           <Route path="/terms" element={<PageTransition direction="up"><Terms /></PageTransition>} />
           <Route path="/unsubscribe" element={<Unsubscribe />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
