@@ -33,6 +33,7 @@ import CollaborationInbox from "./pages/CollaborationInbox";
 import Privacy from "./pages/Privacy";
 import Cookies from "./pages/Cookies";
 import Terms from "./pages/Terms";
+import Unsubscribe from "./pages/Unsubscribe";
 import CookieBanner from "./components/CookieBanner";
 import BottomBar from "./components/BottomBar";
 import PageTransition from "./components/PageTransition";
@@ -113,6 +114,7 @@ const AnimatedRoutes = () => {
           <Route path="/privacy" element={<PageTransition direction="up"><Privacy /></PageTransition>} />
           <Route path="/cookies" element={<PageTransition direction="up"><Cookies /></PageTransition>} />
           <Route path="/terms" element={<PageTransition direction="up"><Terms /></PageTransition>} />
+          <Route path="/unsubscribe" element={<Unsubscribe />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
