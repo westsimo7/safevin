@@ -277,6 +277,86 @@ const Settings = () => {
             </Card>
           )}
 
+          {/* Account: cambia email / password */}
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <button
+                className="w-full flex items-center justify-between hover:text-primary transition-colors"
+                onClick={() => setAccountOpen(!accountOpen)}
+              >
+                <div className="flex items-center gap-3">
+                  <KeyRound className="w-5 h-5 text-muted-foreground" />
+                  <span className="font-medium">Account e sicurezza</span>
+                </div>
+                {accountOpen ? (
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
+
+              {accountOpen && (
+                <div className="animate-fade-in space-y-6 pt-2">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-muted-foreground" />
+                      <Label className="text-sm">Cambia email</Label>
+                    </div>
+                    <p className="text-xs text-muted-foreground">
+                      Email attuale: <span className="text-foreground">{profile.email || "—"}</span>
+                    </p>
+                    <Input
+                      type="email"
+                      placeholder="nuova@email.com"
+                      value={newEmail}
+                      onChange={(e) => setNewEmail(e.target.value)}
+                      className="h-9 text-sm"
+                    />
+                    <Button
+                      onClick={handleChangeEmail}
+                      disabled={emailLoading || !newEmail}
+                      className="w-full"
+                      size="sm"
+                    >
+                      {emailLoading ? "Invio…" : "Invia email di conferma"}
+                    </Button>
+                  </div>
+
+                  <div className="space-y-2 pt-4 border-t border-border/50">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-muted-foreground" />
+                      <Label className="text-sm">Cambia password</Label>
+                    </div>
+                    <Input
+                      type="password"
+                      placeholder="Nuova password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="h-9 text-sm"
+                      minLength={6}
+                    />
+                    <Input
+                      type="password"
+                      placeholder="Conferma nuova password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="h-9 text-sm"
+                      minLength={6}
+                    />
+                    <Button
+                      onClick={handleChangePassword}
+                      disabled={pwdLoading || !newPassword}
+                      className="w-full"
+                      size="sm"
+                    >
+                      {pwdLoading ? "Aggiornamento…" : "Aggiorna password"}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Button 
             variant="destructive" 
             className="w-full gap-2"
