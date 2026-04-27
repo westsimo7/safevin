@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera } from "lucide-react";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera, Mail, Lock, KeyRound } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,6 +39,7 @@ const Settings = () => {
   }, [darkMode]);
   const [profileOpen, setProfileOpen] = useState(false);
   const [cdOpen, setCdOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -49,6 +50,58 @@ const Settings = () => {
     telefono: "",
     avatar_url: "",
   });
+  const [newEmail, setNewEmail] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [pwdLoading, setPwdLoading] = useState(false);
+
+  const handleChangeEmail = async () => {
+    if (!newEmail || !/.+@.+\..+/.test(newEmail)) {
+      toast({ title: "Email non valida", variant: "destructive" });
+      return;
+    }
+    setEmailLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser(
+        { email: newEmail },
+        { emailRedirectTo: `${window.location.origin}/settings` }
+      );
+      if (error) throw error;
+      toast({
+        title: "Conferma inviata",
+        description: "Controlla sia la vecchia che la nuova email per confermare il cambio.",
+      });
+      setNewEmail("");
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast({ title: "Password troppo corta", description: "Minimo 6 caratteri.", variant: "destructive" });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ title: "Le password non coincidono", variant: "destructive" });
+      return;
+    }
+    setPwdLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      toast({ title: "Password aggiornata" });
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setPwdLoading(false);
+    }
+  };
 
   // Piano reale via hook
   const { state: planState } = usePlan();
