@@ -24,6 +24,26 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({ email: "", password: "", nome: "", cognome: "" });
+  const [resetting, setResetting] = useState(false);
+
+  const handleForgotPassword = async () => {
+    if (!form.email) {
+      toast({ title: "Inserisci la tua email", description: "Scrivi l'email sopra, poi clicca di nuovo.", variant: "destructive" });
+      return;
+    }
+    setResetting(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(form.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast({ title: "Email inviata", description: "Controlla la posta per il link di reset password." });
+    } catch (err: any) {
+      toast({ title: "Errore", description: err.message, variant: "destructive" });
+    } finally {
+      setResetting(false);
+    }
+  };
 
   // After auth success: either start checkout or go home
   const proceedAfterAuth = async () => {
@@ -249,6 +269,17 @@ const Auth = () => {
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? "Caricamento..." : isLogin ? "Accedi" : "Registrati"}
               </Button>
+
+              {isLogin && (
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={resetting}
+                  className="block w-full text-center text-xs text-muted-foreground hover:text-primary hover:underline"
+                >
+                  {resetting ? "Invio in corso…" : "Password dimenticata?"}
+                </button>
+              )}
             </form>
 
             <p className="text-center text-xs text-muted-foreground">
