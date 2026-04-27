@@ -197,6 +197,27 @@ export type Database = {
           },
         ]
       }
+      email_notification_state: {
+        Row: {
+          conversation_id: string
+          conversation_type: string
+          id: string
+          last_notified_at: string
+        }
+        Insert: {
+          conversation_id: string
+          conversation_type: string
+          id?: string
+          last_notified_at?: string
+        }
+        Update: {
+          conversation_id?: string
+          conversation_type?: string
+          id?: string
+          last_notified_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
@@ -667,6 +688,15 @@ export type Database = {
         }
         Returns: boolean
       }
+      invoke_send_transactional_email: {
+        Args: {
+          p_idempotency_key: string
+          p_recipient_email: string
+          p_template_data?: Json
+          p_template_name: string
+        }
+        Returns: number
+      }
       move_to_dlq: {
         Args: {
           dlq_name: string
@@ -675,6 +705,16 @@ export type Database = {
           source_queue: string
         }
         Returns: number
+      }
+      notify_user_on_founder_reply: {
+        Args: {
+          p_chat_label: string
+          p_chat_url: string
+          p_conversation_id: string
+          p_conversation_type: string
+          p_recipient_user_id: string
+        }
+        Returns: undefined
       }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
