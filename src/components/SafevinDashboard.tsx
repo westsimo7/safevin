@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import AppNavbar from "@/components/AppNavbar";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Clock, MessageCircle, History, Wand2 } from "lucide-react";
+import { ArrowRight, Sparkles, Clock, History } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { countStudioDrafts, getStudioDraftsChangeEvent } from "@/lib/studioDrafts";
