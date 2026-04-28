@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles } from "lucide-react";
+import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
