@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles } from "lucide-react";
+import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,7 @@ interface StudioOutputProps {
   output: StudioGeneratedOutput;
   onNewAnalysis: () => void;
   onBack: () => void;
+  onFinish?: () => void;
 }
 
 const DETAIL_ORDER: { key: string; label: string }[] = [
@@ -46,7 +47,7 @@ const DETAIL_ORDER: { key: string; label: string }[] = [
   { key: "misure", label: "Misure" },
 ];
 
-const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
+const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputProps) => {
   const { toast } = useToast();
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDesc, setCopiedDesc] = useState(false);
@@ -205,6 +206,15 @@ const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
 
       {/* Actions */}
       <div className="flex flex-col gap-3">
+        {onFinish && (
+          <Button
+            onClick={onFinish}
+            className="w-full h-12 bg-green-600 hover:bg-green-500 text-white font-semibold shadow-lg shadow-green-600/30 border-0"
+          >
+            <CheckCircle2 className="w-5 h-5 mr-2" />
+            Fine — salva annuncio
+          </Button>
+        )}
         <Button variant="glass" className="w-full" onClick={onNewAnalysis}>
           <RotateCcw className="w-4 h-4 mr-2" />
           Nuova analisi

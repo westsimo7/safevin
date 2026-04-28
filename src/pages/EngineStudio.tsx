@@ -284,6 +284,10 @@ const EngineStudio = () => {
             output={generatedOutput}
             onNewAnalysis={handleNewAnalysis}
             onBack={() => setPhase("input")}
+            onFinish={() => {
+              toast({ title: "Annuncio salvato", description: "Lo trovi nello Storico." });
+              navigate("/storico");
+            }}
           />
         )}
       </main>
