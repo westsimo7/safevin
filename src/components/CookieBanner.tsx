@@ -8,13 +8,30 @@ const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    let timer: number | undefined;
     const check = () => {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        setVisible(false);
+        return;
+      }
+      // Mostra il banner dopo 10 secondi se non c'è ancora consenso
+      timer = window.setTimeout(() => {
+        const latest = localStorage.getItem(STORAGE_KEY);
+        setVisible(!latest);
+      }, 10000);
+    };
+    const reset = () => {
+      if (timer) window.clearTimeout(timer);
       const stored = localStorage.getItem(STORAGE_KEY);
       setVisible(!stored);
     };
     check();
-    window.addEventListener("safevin-cookie-reset", check);
-    return () => window.removeEventListener("safevin-cookie-reset", check);
+    window.addEventListener("safevin-cookie-reset", reset);
+    return () => {
+      if (timer) window.clearTimeout(timer);
+      window.removeEventListener("safevin-cookie-reset", reset);
+    };
   }, []);
 
   const setConsent = (value: "accepted" | "rejected") => {
