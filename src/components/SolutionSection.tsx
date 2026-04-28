@@ -23,12 +23,14 @@ const SolutionSection = () => {
         <div ref={studioRef} className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           <Card className="border-border/50 bg-card/50 hover:border-primary/30 transition-all duration-300 h-full">
             <CardContent className="p-5 sm:p-6 md:p-8 flex flex-col h-full">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
-                <PenTool className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <div className="flex items-center gap-3 mb-2 sm:mb-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <PenTool className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                  {t("solution.studio.title")}
+                </h3>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                {t("solution.studio.title")}
-              </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
                 {t("solution.studio.body")}
               </p>
@@ -37,12 +39,14 @@ const SolutionSection = () => {
 
           <Card className="border-amber-500/30 bg-amber-500/5 hover:border-amber-500/50 transition-all duration-300 h-full">
             <CardContent className="p-5 sm:p-6 md:p-8 flex flex-col h-full">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 flex items-center justify-center mb-3 sm:mb-4">
-                <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
+              <div className="flex items-center gap-3 mb-2 sm:mb-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0">
+                  <Camera className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                  {t("solution.artist.title")}
+                </h3>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                {t("solution.artist.title")}
-              </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
                 {t("solution.artist.body")}
               </p>
@@ -54,12 +58,14 @@ const SolutionSection = () => {
               SOON
             </div>
             <CardContent className="p-5 sm:p-6 md:p-8 flex flex-col h-full">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-3 sm:mb-4">
-                <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              <div className="flex items-center gap-3 mb-2 sm:mb-3">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground">
+                  {t("solution.coach.title")}
+                </h3>
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                {t("solution.coach.title")}
-              </h3>
               <p className="text-muted-foreground text-[13px] sm:text-sm leading-relaxed flex-1">
                 {t("solution.coach.body")}
               </p>
