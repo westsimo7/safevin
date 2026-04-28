@@ -250,7 +250,7 @@ const Settings = () => {
             </CardContent>
           </Card>
 
-          {/* Creative Director section - visible for expert and pro plans */}
+          {/* Artist Director section - visible for expert and pro plans */}
           {(userPlan === "expert" || userPlan === "pro") && (
             <Card>
               <CardContent className="p-6 space-y-4">
@@ -260,7 +260,7 @@ const Settings = () => {
                 >
                   <div className="flex items-center gap-3">
                     <Palette className="w-5 h-5 text-amber-500" />
-                    <span className="font-medium">Creative Director</span>
+                    <span className="font-medium">Artist Director</span>
                   </div>
                   {cdOpen ? (
                     <ChevronUp className="w-4 h-4 text-muted-foreground" />

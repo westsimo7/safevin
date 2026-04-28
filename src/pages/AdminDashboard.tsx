@@ -117,13 +117,13 @@ const AdminDashboard = () => {
             </Card>
           </div>
 
-          {/* Creative Director Inbox button */}
+          {/* Artist Director Inbox button */}
           <Button
             className="w-full mb-3 bg-amber-500 hover:bg-amber-600 text-white gap-2"
             onClick={() => navigate("/admin/inbox")}
           >
             <MessageSquare className="w-4 h-4" />
-            Creative Director — Inbox
+            Artist Director — Inbox
           </Button>
 
           {/* Upgrade Inbox button */}

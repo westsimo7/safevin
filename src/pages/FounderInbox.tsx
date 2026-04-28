@@ -341,7 +341,7 @@ const FounderInbox = () => {
       <AppNavbar />
       <main className="flex-1 overflow-y-auto px-4 pt-4 pb-20">
         <div className="max-w-2xl mx-auto">
-          <PageTitle title="Creative Director — Inbox" backTo="/admin" />
+          <PageTitle title="Artist Director — Inbox" backTo="/admin" />
 
           {conversations.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground text-sm">

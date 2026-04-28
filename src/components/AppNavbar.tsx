@@ -228,7 +228,7 @@ const AppNavbar = () => {
                     </p>
                     {!isFounder && cdLimit > 0 && (
                       <p className="text-[10px] text-muted-foreground/60 mt-0.5">
-                        Creative Director: {cdRemaining} / {cdLimit} disponibili
+                        Artist Director: {cdRemaining} / {cdLimit} disponibili
                       </p>
                     )}
                   </div>

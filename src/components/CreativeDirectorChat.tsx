@@ -190,7 +190,7 @@ const CreativeDirectorChat = () => {
         <div className="w-16 h-16 rounded-2xl bg-amber-500/10 flex items-center justify-center">
           <Palette className="w-8 h-8 text-amber-500" />
         </div>
-        <h3 className="text-lg font-semibold text-foreground">Creative Director</h3>
+        <h3 className="text-lg font-semibold text-foreground">Artist Director</h3>
         <p className="text-sm text-muted-foreground max-w-xs">
           Il team SAFEViN creerà il tuo annuncio professionale. Inizia un lavoro e comunica con noi direttamente.
         </p>
@@ -248,7 +248,7 @@ const CreativeDirectorChat = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
           <div className="text-center text-sm text-muted-foreground py-8">
-            Invia un messaggio al team Creative Director per iniziare.
+            Invia un messaggio al team Artist Director per iniziare.
           </div>
         )}
         {messages.map((msg) => {
