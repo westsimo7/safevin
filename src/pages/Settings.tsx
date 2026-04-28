@@ -250,15 +250,25 @@ const Settings = () => {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+              <button
+                type="button"
+                onClick={handleOpenBillingPortal}
+                disabled={portalLoading}
+                className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+              >
                 <CreditCard className="w-5 h-5 text-muted-foreground" />
-                <span>Metodo di pagamento</span>
-              </div>
+                <span>{portalLoading ? "Apertura portale…" : "Metodo di pagamento"}</span>
+              </button>
 
-              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+              <button
+                type="button"
+                onClick={handleOpenBillingPortal}
+                disabled={portalLoading}
+                className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+              >
                 <Receipt className="w-5 h-5 text-muted-foreground" />
                 <span>Fatture e ricevute</span>
-              </div>
+              </button>
 
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <Bell className="w-5 h-5 text-muted-foreground" />
