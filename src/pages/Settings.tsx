@@ -193,6 +193,27 @@ const Settings = () => {
     navigate("/");
   };
 
+  const handleOpenBillingPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("Nessun URL ricevuto");
+      }
+    } catch (e: any) {
+      toast({
+        title: "Impossibile aprire il portale",
+        description: e.message ?? "Verifica di avere un abbonamento attivo per gestire i metodi di pagamento.",
+        variant: "destructive",
+      });
+    } finally {
+      setPortalLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
