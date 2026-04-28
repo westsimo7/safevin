@@ -23,8 +23,8 @@ const plans = [
       "Prezzo strategico",
     ],
     limitations: [
-      "Accesso alla SAFEViN Creative Direction",
-      "3 annunci delegabili al team SAFEViN Creative Direction",
+      "Accesso alla SAFEViN Artist Direction",
+      "3 annunci delegabili al team SAFEViN Artist Direction",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -44,8 +44,8 @@ const plans = [
       "Prezzo strategico",
     ],
     limitations: [
-      "Accesso alla SAFEViN Creative Direction",
-      "3 annunci delegabili al team SAFEViN Creative Direction",
+      "Accesso alla SAFEViN Artist Direction",
+      "3 annunci delegabili al team SAFEViN Artist Direction",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -63,8 +63,8 @@ const plans = [
     features: [
       "25 annunci creabili",
       "Prezzo strategico avanzato",
-      "Accesso alla SAFEViN Creative Direction",
-      "2 annunci delegabili al team SAFEViN Creative Direction",
+      "Accesso alla SAFEViN Artist Direction",
+      "2 annunci delegabili al team SAFEViN Artist Direction",
       
     ],
     limitations: [
@@ -85,8 +85,8 @@ const plans = [
     features: [
       "60 annunci creabili",
       "Prezzo strategico avanzato",
-      "Accesso alla SAFEViN Creative Direction prioritaria",
-      "6 annunci delegabili al team SAFEViN Creative Direction",
+      "Accesso alla SAFEViN Artist Direction prioritaria",
+      "6 annunci delegabili al team SAFEViN Artist Direction",
       
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
