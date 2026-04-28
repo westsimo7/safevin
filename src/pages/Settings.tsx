@@ -41,6 +41,7 @@ const Settings = () => {
   const [cdOpen, setCdOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [profile, setProfile] = useState({
@@ -192,6 +193,27 @@ const Settings = () => {
     navigate("/");
   };
 
+  const handleOpenBillingPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("customer-portal");
+      if (error) throw error;
+      if (data?.url) {
+        window.open(data.url, "_blank");
+      } else {
+        throw new Error("Nessun URL ricevuto");
+      }
+    } catch (e: any) {
+      toast({
+        title: "Impossibile aprire il portale",
+        description: e.message ?? "Verifica di avere un abbonamento attivo per gestire i metodi di pagamento.",
+        variant: "destructive",
+      });
+    } finally {
+      setPortalLoading(false);
+    }
+  };
+
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
@@ -228,15 +250,25 @@ const Settings = () => {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+              <button
+                type="button"
+                onClick={handleOpenBillingPortal}
+                disabled={portalLoading}
+                className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+              >
                 <CreditCard className="w-5 h-5 text-muted-foreground" />
-                <span>Metodo di pagamento</span>
-              </div>
+                <span>{portalLoading ? "Apertura portale…" : "Metodo di pagamento"}</span>
+              </button>
 
-              <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
+              <button
+                type="button"
+                onClick={handleOpenBillingPortal}
+                disabled={portalLoading}
+                className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+              >
                 <Receipt className="w-5 h-5 text-muted-foreground" />
                 <span>Fatture e ricevute</span>
-              </div>
+              </button>
 
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <Bell className="w-5 h-5 text-muted-foreground" />
