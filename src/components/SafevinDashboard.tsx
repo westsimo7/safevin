@@ -184,7 +184,7 @@ const SafevinHome = () => {
 
           {/* Quick actions */}
           <motion.div
-            className="grid grid-cols-3 gap-3"
+            className="grid grid-cols-2 gap-3"
             initial="hidden"
             animate="visible"
             variants={{ visible: { transition: { staggerChildren: 0.06, delayChildren: 0.25 } } }}
