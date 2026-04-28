@@ -120,7 +120,7 @@ const AnimatedRoutes = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AnimatePresence>
-      {!isLanding && !isAuth && <BottomBar />}
+      {/* BottomBar removed */}
       <CookieBanner />
     </div>
   );
