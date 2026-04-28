@@ -47,7 +47,7 @@ const DETAIL_ORDER: { key: string; label: string }[] = [
   { key: "misure", label: "Misure" },
 ];
 
-const StudioOutput = ({ output, onNewAnalysis, onBack }: StudioOutputProps) => {
+const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputProps) => {
   const { toast } = useToast();
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDesc, setCopiedDesc] = useState(false);
