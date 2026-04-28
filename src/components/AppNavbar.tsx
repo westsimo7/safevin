@@ -278,7 +278,7 @@ const AppNavbar = () => {
                 <div className="border-t border-border/50 p-2">
                   <button
                     className="w-full flex items-center gap-3 text-sm py-2.5 px-4 rounded-lg text-destructive/70 hover:bg-destructive/5 hover:text-destructive transition-colors"
-                    onClick={async () => { setOpen(false); await signOut(); navigate("/"); }}
+                    onClick={async () => { setOpen(false); await signOut(); window.location.href = "/"; }}
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Esci</span>
