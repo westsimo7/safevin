@@ -98,12 +98,6 @@ const SafevinHome = () => {
       onClick: () => navigate("/incomplete"),
       highlight: draftCount > 0,
     },
-    {
-      icon: <MessageCircle className="w-5 h-5" />,
-      title: "Coach",
-      desc: "Consigli rapidi",
-      onClick: () => navigate("/coach"),
-    },
   ];
 
   return (
