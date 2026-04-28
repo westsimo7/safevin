@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 const SafevinHome = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { refresh: refreshPlan, plan } = usePlan();
+  const { refresh: refreshPlan, state: planState } = usePlan();
   const { user } = useAuth();
   const [draftCount, setDraftCount] = useState(0);
   const [creationsCount, setCreationsCount] = useState<number | null>(null);
@@ -82,7 +82,7 @@ const SafevinHome = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const planLabel = plan?.tier ? plan.tier.charAt(0).toUpperCase() + plan.tier.slice(1) : "Free";
+  const planLabel = planState?.plan ? planState.plan.charAt(0).toUpperCase() + planState.plan.slice(1) : "Free";
 
   const quickActions = [
     {
