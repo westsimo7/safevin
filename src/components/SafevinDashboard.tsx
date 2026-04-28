@@ -209,25 +209,6 @@ const SafevinHome = () => {
             ))}
           </motion.div>
 
-          {/* Secondary CTA */}
-          <motion.button
-            type="button"
-            onClick={() => navigate("/coach")}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.35 }}
-            whileHover={{ y: -2 }}
-            className="surface-soft w-full rounded-2xl p-4 flex items-center gap-3 text-left"
-          >
-            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
-              <Wand2 className="w-5 h-5" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground">Chiedi al Coach</p>
-              <p className="text-xs text-muted-foreground">Consigli su prezzo, foto e descrizioni.</p>
-            </div>
-            <ArrowRight className="w-4 h-4 text-muted-foreground" />
-          </motion.button>
         </div>
       </main>
     </div>
