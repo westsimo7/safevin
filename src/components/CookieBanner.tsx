@@ -12,7 +12,7 @@ const CookieBanner = () => {
     const check = () => {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
-        setVisible(true);
+        setVisible(false);
         return;
       }
       // Mostra il banner dopo 10 secondi se non c'è ancora consenso
