@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 const navLinks = [
   { to: "/home", label: "Home", disabled: false },
   { to: "/storico", label: "Storico", disabled: false },
-  { to: "/coach", label: "Coach", disabled: true },
 ];
 
 type MenuItem = {
