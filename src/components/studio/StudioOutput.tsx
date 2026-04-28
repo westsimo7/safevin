@@ -35,6 +35,7 @@ interface StudioOutputProps {
   output: StudioGeneratedOutput;
   onNewAnalysis: () => void;
   onBack: () => void;
+  onFinish?: () => void;
 }
 
 const DETAIL_ORDER: { key: string; label: string }[] = [
