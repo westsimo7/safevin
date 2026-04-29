@@ -141,7 +141,7 @@ serve(async (req) => {
     }
     const lang = language === "en" ? "en" : "it";
     const langInstruction = lang === "en"
-      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. The fixed labels '📋 DETTAGLI TECNICI', 'Brand:', 'Taglia:', 'Colore:', 'Condizione:', 'Materiale:', 'Misure:' must be translated to: '📋 TECHNICAL DETAILS', 'Brand:', 'Size:', 'Color:', 'Condition:', 'Material:', 'Measurements:'. Use English for everything else as well."
+      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. For measurements bullets use English labels: '• Shoulders: ... cm', '• Length: ... cm'. Do NOT add any technical details summary block."
       : "";
 
     const measurementsStr = Object.entries(userInput.measurements || {})
