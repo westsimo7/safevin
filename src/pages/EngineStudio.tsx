@@ -266,7 +266,7 @@ const EngineStudio = () => {
       if (data?.output) {
         setGeneratedOutput(data.output);
         setPhase("output");
-        await saveStudioCreation(data.output);
+        await saveStudioCreation(data.output, incompleteId);
       } else {
         throw new Error("Risposta non valida");
       }
