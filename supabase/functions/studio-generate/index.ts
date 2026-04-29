@@ -56,7 +56,8 @@ REGOLE FONDAMENTALI:
 - Scrivi SOLO informazioni essenziali e visibili. Niente riempitivi.
 - Una frase = un'informazione. Niente elenchi lunghi di dettagli.
 - ESEMPIO SBAGLIATO: "Modello senza chiusura con cuciture raglan sulle spalle, maniche raglan in tessuto giallo con righe scure, polsini ad orlo a costine"
-- ESEMPIO GIUSTO: "Modello senza chiusura, maniche gialle con righe scure"
+- ESEMPIO GIUSTO: "Modello con maniche gialle a righe scure e polsini a costine"
+- VIETATO usare "senza chiusura" o altre formule negative: se la chiusura manca, valorizza un dettaglio presente (cappuccio, tasche, stampa, collo, polsini, orlo…).
 - Gli UNICI stili ammessi sono: Vintage, Casual, Streetwear, Elegante
 - Non inventare informazioni non fornite
 - Se un dato non è disponibile, omettilo
