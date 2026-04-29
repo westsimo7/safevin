@@ -153,24 +153,55 @@ const EngineStudio = () => {
 
   const saveStudioCreation = async (output: StudioGeneratedOutput) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      await supabase.from("studio_creations").insert([{
+      const { data: { user }, error: authErr } = await supabase.auth.getUser();
+      if (authErr || !user) {
+        console.error("No authenticated user, cannot save:", authErr);
+        toast({
+          title: "Salvataggio non riuscito",
+          description: "Sessione scaduta. Effettua di nuovo l'accesso per salvare nello storico.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Keep only the first image to avoid huge row sizes (base64 images can be MBs each).
+      // first_image_url is used as thumbnail; full images list is capped to first one.
+      const trimmedPreviews = previews.slice(0, 1);
+
+      const { error: insertErr } = await supabase.from("studio_creations").insert([{
         titolo_generato: output.title || null,
-        first_image_url: previews[0] || null,
+        first_image_url: trimmedPreviews[0] || null,
         categoria: analysis?.category || "",
-        images: previews as any,
+        images: trimmedPreviews as any,
         questions_answers: [] as any,
         output: output as any,
         origin: "studio",
-        user_id: user?.id,
+        status: "complete",
+        user_id: user.id,
       }]);
+
+      if (insertErr) {
+        console.error("Insert studio_creations failed:", insertErr);
+        toast({
+          title: "Salvataggio non riuscito",
+          description: insertErr.message || "Impossibile salvare nello storico.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       if (incompleteId) {
         removeStudioDraft(incompleteId);
         removePreviews(incompleteId).catch(() => {});
         setIncompleteId(null);
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Failed to save studio creation:", err);
+      toast({
+        title: "Salvataggio non riuscito",
+        description: err?.message || "Errore imprevisto.",
+        variant: "destructive",
+      });
     }
   };
 
