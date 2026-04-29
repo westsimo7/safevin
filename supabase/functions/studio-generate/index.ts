@@ -41,15 +41,14 @@ RIGA 4: Disponibile per foto extra e spedizione.
 
 REGOLA MATERIALE: Se l'utente ha indicato UN SOLO materiale, scrivi "Tessuto [materiale] 100%". Se sono più materiali, elencali senza percentuale.
 
-Poi aggiungi una riga vuota e:
+NON aggiungere mai un blocco "📋 DETTAGLI TECNICI" o un elenco riepilogativo di Brand/Taglia/Colore/Condizione/Materiale nella descrizione. Quei dati appaiono già nella scheda prodotto separata.
 
-📋 DETTAGLI TECNICI
-• Brand: ...
-• Taglia: ...
-• Colore: ...
-• Condizione: ...
-• Materiale: ...
-• Misure: ... (SOLO se l'utente ha fornito misure, altrimenti ometti questa riga)
+MISURE (UNICA ECCEZIONE): Se — e SOLO se — l'utente ha fornito misure di spalle e/o lunghezza, aggiungi una riga vuota dopo la RIGA 4 e poi un elenco con SOLO quelle misure, una per riga, ciascuna preceduta dal pallino "• ". Esempio:
+
+• Spalle: 49 cm
+• Lunghezza: 60 cm
+
+Nessun titolo, nessun'altra voce. Se non ci sono misure, non aggiungere nulla dopo la RIGA 4.
 
 REGOLE FONDAMENTALI:
 - MASSIMO 60 PAROLE nella descrizione (esclusi bullet points). Conta le parole.
@@ -92,7 +91,7 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 
 {
   "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + ([Taglia]) + – + [Condizione]",
-  "description": "INTERO blocco descrizione con struttura professionale + blocco DETTAGLI TECNICI con bullet points. Tutto insieme, un unico testo copiabile.",
+  "description": "Blocco descrizione professionale (RIGA 1-4). NIENTE blocco DETTAGLI TECNICI. Solo se ci sono misure spalle/lunghezza, aggiungi alla fine i bullet '• Spalle: X cm' e/o '• Lunghezza: Y cm'.",
   "details": {
     "categoria": "categoria prodotto (es. Abbigliamento)",
     "tipo_prodotto": "tipo specifico (es. Felpa con cappuccio)",
@@ -142,7 +141,7 @@ serve(async (req) => {
     }
     const lang = language === "en" ? "en" : "it";
     const langInstruction = lang === "en"
-      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. The fixed labels '📋 DETTAGLI TECNICI', 'Brand:', 'Taglia:', 'Colore:', 'Condizione:', 'Materiale:', 'Misure:' must be translated to: '📋 TECHNICAL DETAILS', 'Brand:', 'Size:', 'Color:', 'Condition:', 'Material:', 'Measurements:'. Use English for everything else as well."
+      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. For measurements bullets use English labels: '• Shoulders: ... cm', '• Length: ... cm'. Do NOT add any technical details summary block."
       : "";
 
     const measurementsStr = Object.entries(userInput.measurements || {})
