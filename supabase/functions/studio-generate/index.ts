@@ -35,7 +35,8 @@ RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + [Colore] + [Taglia].
 (riga vuota)
 RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione]
 (riga vuota)
-RIGA 3: Modello [tipo chiusura] con [elementi strutturali] e [extra]. Tessuto [materiale] [qualità]. Vestibilità [fit].
+RIGA 3: Modello con [elementi strutturali distintivi] e [extra]. Tessuto [materiale] [qualità]. Vestibilità [fit].
+   REGOLA CHIUSURA: Menziona il tipo di chiusura SOLO se è effettivamente presente e rilevante (es. "Modello con zip frontale…", "Modello con bottoni a pressione…"). Se l'indumento NON ha chiusura (es. t-shirt, felpa pullover, maglia), NON scrivere mai "senza chiusura" né formule negative: apri la frase valorizzando un dettaglio reale del capo (es. "Modello con cappuccio fisso e tasca a marsupio…", "Modello con scollo a girocollo e polsini a costine…", "Modello con stampa grafica frontale e orlo dritto…"). Usa i dettagli rilevati dalle foto (loghi, stampe, tasche, cappuccio, collo, polsini, orlo, cuciture, patch).
 (riga vuota)
 RIGA 4: Disponibile per foto extra e spedizione.
 
