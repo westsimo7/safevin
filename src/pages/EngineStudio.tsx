@@ -31,6 +31,33 @@ function createThumbnail(dataUrl: string): string {
   return dataUrl.substring(0, 200);
 }
 
+async function createCoverImageBlob(dataUrl: string): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const maxSize = 900;
+      const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+      const width = Math.max(1, Math.round(img.width * scale));
+      const height = Math.max(1, Math.round(img.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Canvas non disponibile"));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error("Cover non generata"));
+      }, "image/jpeg", 0.72);
+    };
+    img.onerror = () => reject(new Error("Immagine cover non valida"));
+    img.src = dataUrl;
+  });
+}
+
 
 type Phase = "upload" | "loading" | "recognition" | "missing_photos" | "input" | "generating" | "output";
 
