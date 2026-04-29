@@ -178,11 +178,11 @@ const EngineStudio = () => {
     setPhase("input");
   }, [analysis, previews, incompleteId, saveDraft]);
 
-  const saveStudioCreation = async (output: StudioGeneratedOutput) => {
+  const saveStudioCreation = async (output: StudioGeneratedOutput, draftIdToRemove: string | null) => {
     try {
       const { data: { user }, error: authErr } = await supabase.auth.getUser();
       if (authErr || !user) {
-        console.error("No authenticated user, cannot save:", authErr);
+        console.error("[Studio] No authenticated user, cannot save:", authErr);
         toast({
           title: "Salvataggio non riuscito",
           description: "Sessione scaduta. Effettua di nuovo l'accesso per salvare nello storico.",
@@ -191,23 +191,28 @@ const EngineStudio = () => {
         return;
       }
 
+      // Try to upload cover, but don't block save if it fails
       let coverUrl: string | null = null;
       if (previews[0]) {
-        const coverBlob = await createCoverImageBlob(previews[0]);
-        const coverPath = `${user.id}/studio-cover-${Date.now()}.jpg`;
-        const { data: uploadData, error: uploadErr } = await supabase.storage
-          .from("analysis-images")
-          .upload(coverPath, coverBlob, { contentType: "image/jpeg", upsert: false });
+        try {
+          const coverBlob = await createCoverImageBlob(previews[0]);
+          const coverPath = `${user.id}/studio-cover-${Date.now()}.jpg`;
+          const { data: uploadData, error: uploadErr } = await supabase.storage
+            .from("analysis-images")
+            .upload(coverPath, coverBlob, { contentType: "image/jpeg", upsert: false });
 
-        if (uploadErr) {
-          console.error("Studio cover upload failed:", uploadErr);
-          throw uploadErr;
+          if (uploadErr) {
+            console.warn("[Studio] Cover upload failed, saving without cover:", uploadErr);
+          } else if (uploadData) {
+            const { data: urlData } = supabase.storage.from("analysis-images").getPublicUrl(uploadData.path);
+            coverUrl = urlData.publicUrl;
+          }
+        } catch (coverErr) {
+          console.warn("[Studio] Cover generation failed, saving without cover:", coverErr);
         }
-
-        const { data: urlData } = supabase.storage.from("analysis-images").getPublicUrl(uploadData.path);
-        coverUrl = urlData.publicUrl;
       }
 
+      console.log("[Studio] Inserting studio_creation, draftId:", draftIdToRemove, "coverUrl:", coverUrl);
       const { error: insertErr } = await supabase.from("studio_creations").insert([{
         titolo_generato: output.title || null,
         first_image_url: coverUrl,
@@ -221,7 +226,7 @@ const EngineStudio = () => {
       }]);
 
       if (insertErr) {
-        console.error("Insert studio_creations failed:", insertErr);
+        console.error("[Studio] Insert studio_creations failed:", insertErr);
         toast({
           title: "Salvataggio non riuscito",
           description: insertErr.message || "Impossibile salvare nello storico.",
@@ -230,13 +235,14 @@ const EngineStudio = () => {
         return;
       }
 
-      if (incompleteId) {
-        removeStudioDraft(incompleteId);
-        removePreviews(incompleteId).catch(() => {});
+      console.log("[Studio] Insert OK, removing draft:", draftIdToRemove);
+      if (draftIdToRemove) {
+        removeStudioDraft(draftIdToRemove);
+        removePreviews(draftIdToRemove).catch(() => {});
         setIncompleteId(null);
       }
     } catch (err: any) {
-      console.error("Failed to save studio creation:", err);
+      console.error("[Studio] Failed to save studio creation:", err);
       toast({
         title: "Salvataggio non riuscito",
         description: err?.message || "Errore imprevisto.",
