@@ -91,7 +91,7 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 
 {
   "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + ([Taglia]) + – + [Condizione]",
-  "description": "INTERO blocco descrizione con struttura professionale + blocco DETTAGLI TECNICI con bullet points. Tutto insieme, un unico testo copiabile.",
+  "description": "Blocco descrizione professionale (RIGA 1-4). NIENTE blocco DETTAGLI TECNICI. Solo se ci sono misure spalle/lunghezza, aggiungi alla fine i bullet '• Spalle: X cm' e/o '• Lunghezza: Y cm'.",
   "details": {
     "categoria": "categoria prodotto (es. Abbigliamento)",
     "tipo_prodotto": "tipo specifico (es. Felpa con cappuccio)",
