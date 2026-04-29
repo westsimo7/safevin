@@ -41,15 +41,14 @@ RIGA 4: Disponibile per foto extra e spedizione.
 
 REGOLA MATERIALE: Se l'utente ha indicato UN SOLO materiale, scrivi "Tessuto [materiale] 100%". Se sono più materiali, elencali senza percentuale.
 
-Poi aggiungi una riga vuota e:
+NON aggiungere mai un blocco "📋 DETTAGLI TECNICI" o un elenco riepilogativo di Brand/Taglia/Colore/Condizione/Materiale nella descrizione. Quei dati appaiono già nella scheda prodotto separata.
 
-📋 DETTAGLI TECNICI
-• Brand: ...
-• Taglia: ...
-• Colore: ...
-• Condizione: ...
-• Materiale: ...
-• Misure: ... (SOLO se l'utente ha fornito misure, altrimenti ometti questa riga)
+MISURE (UNICA ECCEZIONE): Se — e SOLO se — l'utente ha fornito misure di spalle e/o lunghezza, aggiungi una riga vuota dopo la RIGA 4 e poi un elenco con SOLO quelle misure, una per riga, ciascuna preceduta dal pallino "• ". Esempio:
+
+• Spalle: 49 cm
+• Lunghezza: 60 cm
+
+Nessun titolo, nessun'altra voce. Se non ci sono misure, non aggiungere nulla dopo la RIGA 4.
 
 REGOLE FONDAMENTALI:
 - MASSIMO 60 PAROLE nella descrizione (esclusi bullet points). Conta le parole.
