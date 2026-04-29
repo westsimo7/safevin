@@ -191,15 +191,28 @@ const EngineStudio = () => {
         return;
       }
 
-      // Keep only the first image to avoid huge row sizes (base64 images can be MBs each).
-      // first_image_url is used as thumbnail; full images list is capped to first one.
-      const trimmedPreviews = previews.slice(0, 1);
+      let coverUrl: string | null = null;
+      if (previews[0]) {
+        const coverBlob = await createCoverImageBlob(previews[0]);
+        const coverPath = `${user.id}/studio-cover-${Date.now()}.jpg`;
+        const { data: uploadData, error: uploadErr } = await supabase.storage
+          .from("analysis-images")
+          .upload(coverPath, coverBlob, { contentType: "image/jpeg", upsert: false });
+
+        if (uploadErr) {
+          console.error("Studio cover upload failed:", uploadErr);
+          throw uploadErr;
+        }
+
+        const { data: urlData } = supabase.storage.from("analysis-images").getPublicUrl(uploadData.path);
+        coverUrl = urlData.publicUrl;
+      }
 
       const { error: insertErr } = await supabase.from("studio_creations").insert([{
         titolo_generato: output.title || null,
-        first_image_url: trimmedPreviews[0] || null,
+        first_image_url: coverUrl,
         categoria: analysis?.category || "",
-        images: trimmedPreviews as any,
+        images: coverUrl ? [coverUrl] as any : [] as any,
         questions_answers: [] as any,
         output: output as any,
         origin: "studio",
