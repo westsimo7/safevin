@@ -15,10 +15,12 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + ([Taglia]) + – + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Sesso] + ([Taglia]) + – + [Condizione]
 
-Esempio: "Nike Felpa con cappuccio Nera Streetwear (L) – Come nuovo"
-Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K (L) – Come nuovo"
+Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
+
+Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) – Come nuovo"
+Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K Donna (S) – Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
@@ -92,7 +94,7 @@ categoria → tipo_prodotto → brand → taglia → condizione → colore → m
 Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 
 {
-  "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + ([Taglia]) + – + [Condizione]",
+  "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Sesso] + ([Taglia]) + – + [Condizione]",
   "description": "Blocco descrizione professionale (RIGA 1-4). NIENTE blocco DETTAGLI TECNICI. Solo se ci sono misure spalle/lunghezza, aggiungi alla fine i bullet '• Spalle: X cm' e/o '• Lunghezza: Y cm'.",
   "details": {
     "categoria": "categoria prodotto (es. Abbigliamento)",
@@ -209,8 +211,8 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K") + ([Taglia]) – [Condizione]
-   IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo
+1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K") + [Sesso: Uomo/Donna] + ([Taglia]) – [Condizione]
+   IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
 3. Analizza la fascia di posizionamento in base a brand, condizione, materiali
