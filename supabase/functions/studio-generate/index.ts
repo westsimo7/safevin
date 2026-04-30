@@ -213,7 +213,7 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K") + [Sesso: Uomo/Donna] + ([Taglia]) – [Condizione]
+1. Crea un titolo SEO con formula: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K") + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione
    IMPORTANTE: Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
