@@ -15,12 +15,14 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Sesso] + ([Taglia]) + – + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Sesso] + ([Taglia]) + [Condizione]
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
 
-Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) – Come nuovo"
-Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K Donna (S) – Come nuovo"
+IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
+
+Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) Come nuovo"
+Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K Donna (S) Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
