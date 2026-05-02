@@ -50,6 +50,8 @@ const Settings = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cdOpen, setCdOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [topSecretOpen, setTopSecretOpen] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
