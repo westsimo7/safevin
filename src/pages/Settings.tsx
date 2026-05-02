@@ -272,15 +272,20 @@ const Settings = () => {
                 <span>{portalLoading ? "Apertura portale…" : "Metodo di pagamento"}</span>
               </button>
 
-              <button
-                type="button"
-                onClick={handleOpenBillingPortal}
-                disabled={portalLoading}
-                className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
-              >
-                <Receipt className="w-5 h-5 text-muted-foreground" />
-                <span>Fatture e ricevute</span>
-              </button>
+              <div className="space-y-2 pt-2 border-t border-border/50">
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Le fatture vengono caricate automaticamente in questa sezione al completamento di ogni acquisto. Se non è stata caricata la fattura, contatta il team di assistenza SAFEViN.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleOpenBillingPortal}
+                  disabled={portalLoading}
+                  className="w-full flex items-center gap-3 cursor-pointer hover:text-primary transition-colors text-left disabled:opacity-60 disabled:cursor-wait"
+                >
+                  <Receipt className="w-5 h-5 text-muted-foreground" />
+                  <span>{portalLoading ? "Apertura…" : "Fatture e ricevute"}</span>
+                </button>
+              </div>
 
               <div className="flex items-center gap-3 cursor-pointer hover:text-primary transition-colors">
                 <Bell className="w-5 h-5 text-muted-foreground" />
