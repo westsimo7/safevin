@@ -401,6 +401,39 @@ const Settings = () => {
             </CardContent>
           </Card>
 
+          {/* Top Secret */}
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <button
+                className="w-full flex items-center justify-between hover:text-destructive transition-colors"
+                onClick={() => setTopSecretOpen(!topSecretOpen)}
+              >
+                <div className="flex items-center gap-3">
+                  <Eye className="w-5 h-5 text-muted-foreground" />
+                  <span className="font-medium">Top secret</span>
+                </div>
+                {topSecretOpen ? (
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
+
+              {topSecretOpen && (
+                <div className="animate-fade-in pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setCancelDialogOpen(true)}
+                    className="w-full flex items-center gap-3 text-left text-destructive hover:opacity-80 transition-opacity"
+                  >
+                    <AlertTriangle className="w-5 h-5" />
+                    <span className="font-medium">Disdici il tuo abbonamento</span>
+                  </button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Button 
             variant="destructive" 
             className="w-full gap-2"
@@ -411,6 +444,28 @@ const Settings = () => {
           </Button>
         </div>
       </main>
+
+      <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disdici abbonamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Se cancelli ora il tuo abbonamento, avrai accesso alle feature dell'abbonamento solamente entro la fine del ciclo di fatturazione corrente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setCancelDialogOpen(false);
+                handleOpenBillingPortal();
+              }}
+            >
+              Conferma disdetta
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
