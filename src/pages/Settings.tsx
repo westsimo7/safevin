@@ -8,7 +8,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera, Mail, Lock, KeyRound } from "lucide-react";
+import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera, Mail, Lock, KeyRound, Eye, AlertTriangle } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,6 +50,8 @@ const Settings = () => {
   const [profileOpen, setProfileOpen] = useState(false);
   const [cdOpen, setCdOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [topSecretOpen, setTopSecretOpen] = useState(false);
+  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
@@ -389,6 +401,39 @@ const Settings = () => {
             </CardContent>
           </Card>
 
+          {/* Top Secret */}
+          <Card>
+            <CardContent className="p-6 space-y-4">
+              <button
+                className="w-full flex items-center justify-between hover:text-destructive transition-colors"
+                onClick={() => setTopSecretOpen(!topSecretOpen)}
+              >
+                <div className="flex items-center gap-3">
+                  <Eye className="w-5 h-5 text-muted-foreground" />
+                  <span className="font-medium">Top secret</span>
+                </div>
+                {topSecretOpen ? (
+                  <ChevronUp className="w-4 h-4 text-muted-foreground" />
+                ) : (
+                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                )}
+              </button>
+
+              {topSecretOpen && (
+                <div className="animate-fade-in pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setCancelDialogOpen(true)}
+                    className="w-full flex items-center gap-3 text-left text-destructive hover:opacity-80 transition-opacity"
+                  >
+                    <AlertTriangle className="w-5 h-5" />
+                    <span className="font-medium">Disdici il tuo abbonamento</span>
+                  </button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
           <Button 
             variant="destructive" 
             className="w-full gap-2"
@@ -399,6 +444,28 @@ const Settings = () => {
           </Button>
         </div>
       </main>
+
+      <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Disdici abbonamento</AlertDialogTitle>
+            <AlertDialogDescription>
+              Se cancelli ora il tuo abbonamento, avrai accesso alle feature dell'abbonamento solamente entro la fine del ciclo di fatturazione corrente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annulla</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setCancelDialogOpen(false);
+                handleOpenBillingPortal();
+              }}
+            >
+              Conferma disdetta
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
