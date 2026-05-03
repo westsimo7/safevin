@@ -25,7 +25,16 @@ export interface StudioUserInput {
   minPrice: string;
   measurements: Record<string, string>;
   extras: string;
+  decade?: string;
 }
+
+const DECADE_OPTIONS = [
+  { value: "unknown", label: "Non so" },
+  { value: "70s", label: "Anni '70" },
+  { value: "80s", label: "Anni '80" },
+  { value: "90s", label: "Anni '90" },
+  { value: "y2k", label: "Y2K / Anni 2000" },
+];
 
 const UPPER_BODY_KEYWORDS = [
   "t-shirt", "maglietta", "maglia", "felpa", "giacca", "giubbotto", "cappotto",
@@ -154,6 +163,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
+  const [decade, setDecade] = useState("unknown");
   const [showGuide, setShowGuide] = useState(false);
 
   const toggleMaterial = (mat: string) => {
@@ -178,6 +188,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       minPrice,
       measurements,
       extras,
+      decade: decade && decade !== "unknown" ? decade : undefined,
     });
   };
 
@@ -263,6 +274,22 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
               <SelectContent>
                 {STYLE_OPTIONS.map(s => (
                   <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              Periodo stimato <span className="text-xs text-muted-foreground font-normal">(facoltativo)</span>
+            </Label>
+            <Select value={decade} onValueChange={setDecade}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona periodo" />
+              </SelectTrigger>
+              <SelectContent>
+                {DECADE_OPTIONS.map(d => (
+                  <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -185,7 +185,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "openai/gpt-5.2",
+        model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: VISION_PROMPT },
           {
@@ -196,6 +196,7 @@ serve(async (req) => {
             ],
           },
         ],
+        response_format: { type: "json_object" },
       }),
     });
 

@@ -15,14 +15,16 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Sesso] + ([Taglia]) + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Y2K / Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
+
+Se la decade è fornita, inseriscila SUBITO DOPO lo stile (e dopo "Y2K" se presente). Se decade non fornita, omettila completamente.
 
 IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
 
 Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) Come nuovo"
-Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K Donna (S) Come nuovo"
+Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Y2K Anni '90 Donna (S) Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
@@ -35,9 +37,14 @@ Esempio con stile Vintage: "Nike Felpa con cappuccio Nera Vintage Y2K Donna (S) 
 La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
 Struttura (5 righe con spaziatura specifica):
-RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + [Colore] + [Taglia].
+RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + (se decade fornita: + decade es. "Anni '90") + [Colore] + [Taglia].
 (riga vuota)
 RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione]
+   REGOLA TONO VINTAGE: Se style === "Vintage" e la condizione NON è "Nuovo con cartellino" né "Nuovo senza cartellino", sostituisci la formula standard con un tono che valorizza l'autenticità del capo:
+   - "Ottime condizioni" → "Condizioni eccellenti per un pezzo d'epoca, conservato alla perfezione"
+   - "Buone condizioni" → "Vissuto autentico, patina coerente con l'età del capo"
+   - "Condizioni soddisfacenti" / "Condizioni discrete" → "Segni del tempo che ne certificano l'autenticità vintage"
+   Per tutti gli altri stili (Casual, Streetwear, Elegante, ecc.) e per i due "Nuovo" anche se Vintage, usa il tono neutro standard.
 (riga vuota)
 RIGA 3: Modello con [elementi strutturali distintivi] e [extra]. Tessuto [materiale] [qualità]. Vestibilità [fit].
    REGOLA CHIUSURA: Menziona il tipo di chiusura SOLO se è effettivamente presente e rilevante (es. "Modello con zip frontale…", "Modello con bottoni a pressione…"). Se l'indumento NON ha chiusura (es. t-shirt, felpa pullover, maglia), NON scrivere mai "senza chiusura" né formule negative: apri la frase valorizzando un dettaglio reale del capo (es. "Modello con cappuccio fisso e tasca a marsupio…", "Modello con scollo a girocollo e polsini a costine…", "Modello con stampa grafica frontale e orlo dritto…"). Usa i dettagli rilevati dalle foto (loghi, stampe, tasche, cappuccio, collo, polsini, orlo, cuciture, patch).
@@ -128,8 +135,47 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
     "consiglio vendita pratico 2",
     "consiglio vendita pratico 3",
     "consiglio vendita pratico 4"
+  ],
+  "hashtags": [
+    "4-5 hashtag ottimizzati per Vinted/Instagram, lowercase, senza spazi, senza simboli speciali oltre al # iniziale. In italiano se language=it, in inglese se language=en. Esempio: ['#vintage90s', '#y2k', '#ralphlauren', '#fleece', '#streetwearuomo']"
   ]
 }`;
+
+function decadeLabel(d?: string): string {
+  switch (d) {
+    case "70s": return "Anni '70";
+    case "80s": return "Anni '80";
+    case "90s": return "Anni '90";
+    case "y2k": return "Y2K / Anni 2000";
+    default: return "";
+  }
+}
+
+function sanitizeOutput(output: any): any {
+  if (!output || typeof output !== "object") return output;
+  // Sanitize title: remove dashes between size and condition, clamp to 80 chars
+  if (typeof output.title === "string") {
+    let t = output.title.replace(/\s+[–-]\s+/g, " ").replace(/\s{2,}/g, " ").trim();
+    if (t.length > 80) {
+      const truncated = t.slice(0, 80);
+      const lastSpace = truncated.lastIndexOf(" ");
+      t = (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trim();
+    }
+    output.title = t;
+  }
+  // Normalize hashtags: ensure array of lowercase strings starting with #
+  if (Array.isArray(output.hashtags)) {
+    output.hashtags = output.hashtags
+      .filter((h: any) => typeof h === "string" && h.trim().length > 0)
+      .map((h: string) => {
+        let v = h.trim().toLowerCase().replace(/\s+/g, "");
+        if (!v.startsWith("#")) v = "#" + v;
+        return v;
+      })
+      .slice(0, 5);
+  }
+  return output;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
@@ -209,6 +255,7 @@ DATI FORNITI DALL'UTENTE:
 - Condizione: ${userInput.condition}
 - Materiali: ${userInput.materials || "non specificati"}
 - Prezzo minimo accettato: ${userInput.minPrice}€
+${userInput.decade ? `- Decade / Periodo: ${decadeLabel(userInput.decade)}` : ""}
 ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
@@ -236,6 +283,7 @@ Genera l'annuncio ottimizzato per Vinted.`;
           { role: "system", content: SYSTEM_PROMPT + langInstruction },
           { role: "user", content: userPrompt },
         ],
+        response_format: { type: "json_object" },
       }),
     });
 
@@ -262,7 +310,8 @@ Genera l'annuncio ottimizzato per Vinted.`;
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
     try {
-      const output = JSON.parse(content);
+      const parsed = JSON.parse(content);
+      const output = sanitizeOutput(parsed);
       return new Response(JSON.stringify({ output }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });

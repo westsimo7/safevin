@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2 } from "lucide-react";
+import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2, Hash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -29,6 +29,7 @@ export interface StudioGeneratedOutput {
     negotiation: string[];
   };
   tips: string[];
+  hashtags?: string[];
 }
 
 interface StudioOutputProps {
@@ -51,6 +52,7 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
   const { toast } = useToast();
   const [copiedTitle, setCopiedTitle] = useState(false);
   const [copiedDesc, setCopiedDesc] = useState(false);
+  const [copiedTags, setCopiedTags] = useState(false);
 
   const handleCopyTitle = async () => {
     try {
@@ -203,6 +205,43 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
           ))}
         </CardContent>
       </Card>
+
+      {/* HASHTAGS */}
+      {output.hashtags && output.hashtags.length > 0 && (
+        <Card className="border-primary/30 bg-primary/5">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Hash className="w-4 h-4 text-primary" />
+                <p className="text-xs font-semibold text-primary uppercase tracking-wider">Hashtag consigliati</p>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(output.hashtags!.join(" "));
+                    setCopiedTags(true);
+                    toast({ title: "Hashtag copiati!", description: "Incollali sotto la descrizione" });
+                    setTimeout(() => setCopiedTags(false), 2000);
+                  } catch {
+                    toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
+                  }
+                }}
+                className="text-xs gap-1.5"
+              >
+                {copiedTags ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                {copiedTags ? "Copiati!" : "Copia"}
+              </Button>
+            </div>
+            <div className="p-3 rounded-xl bg-background/80 border border-border/30">
+              <p className="text-sm text-foreground/80 break-words">
+                {output.hashtags.join(" ")}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Actions */}
       <div className="flex flex-col gap-3">
