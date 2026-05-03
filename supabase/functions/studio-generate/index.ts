@@ -219,6 +219,7 @@ DATI FORNITI DALL'UTENTE:
 - Condizione: ${userInput.condition}
 - Materiali: ${userInput.materials || "non specificati"}
 - Prezzo minimo accettato: ${userInput.minPrice}€
+${userInput.decade ? `- Decade / Periodo: ${decadeLabel(userInput.decade)}` : ""}
 ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
