@@ -310,7 +310,8 @@ Genera l'annuncio ottimizzato per Vinted.`;
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
     try {
-      const output = JSON.parse(content);
+      const parsed = JSON.parse(content);
+      const output = sanitizeOutput(parsed);
       return new Response(JSON.stringify({ output }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
