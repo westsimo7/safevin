@@ -219,12 +219,18 @@ Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto
     // Build garment features string
     const gf = analysis.garment_features || {};
     const featuresLines: string[] = [];
-    if (gf.logos?.length) {
-      gf.logos.forEach((l: any) => featuresLines.push(`Logo: ${l.description} (${l.type}, ${l.position}, ${l.size})`));
-    }
-    if (gf.prints?.length) {
-      gf.prints.forEach((p: any) => featuresLines.push(`Stampa: ${p.description} (${p.type}, ${p.position}, ${p.technique})`));
-    }
+    const logosArr = Array.isArray(gf.logos) ? gf.logos : (gf.logos && typeof gf.logos === "object" ? [gf.logos] : []);
+    logosArr.forEach((l: any) => {
+      if (l && typeof l === "object") {
+        featuresLines.push(`Logo: ${l.description ?? ""} (${l.type ?? ""}, ${l.position ?? ""}, ${l.size ?? ""})`);
+      }
+    });
+    const printsArr = Array.isArray(gf.prints) ? gf.prints : (gf.prints && typeof gf.prints === "object" ? [gf.prints] : []);
+    printsArr.forEach((p: any) => {
+      if (p && typeof p === "object") {
+        featuresLines.push(`Stampa: ${p.description ?? ""} (${p.type ?? ""}, ${p.position ?? ""}, ${p.technique ?? ""})`);
+      }
+    });
     const simpleFeatures = ["zippers", "pockets", "buttons", "hood", "collar", "cuffs", "hem", "embossing_relief", "patches_badges", "drawstrings", "stitching_details", "other_details"];
     for (const key of simpleFeatures) {
       if (gf[key] && gf[key] !== "nessuno" && gf[key] !== "nessuna") {
