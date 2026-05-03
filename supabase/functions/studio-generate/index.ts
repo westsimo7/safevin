@@ -283,6 +283,7 @@ Genera l'annuncio ottimizzato per Vinted.`;
           { role: "system", content: SYSTEM_PROMPT + langInstruction },
           { role: "user", content: userPrompt },
         ],
+        response_format: { type: "json_object" },
       }),
     });
 
