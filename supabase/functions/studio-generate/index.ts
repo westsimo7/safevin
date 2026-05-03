@@ -37,9 +37,14 @@ Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Y2K A
 La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
 Struttura (5 righe con spaziatura specifica):
-RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + [Colore] + [Taglia].
+RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + (se decade fornita: + decade es. "Anni '90") + [Colore] + [Taglia].
 (riga vuota)
 RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione]
+   REGOLA TONO VINTAGE: Se style === "Vintage" e la condizione NON è "Nuovo con cartellino" né "Nuovo senza cartellino", sostituisci la formula standard con un tono che valorizza l'autenticità del capo:
+   - "Ottime condizioni" → "Condizioni eccellenti per un pezzo d'epoca, conservato alla perfezione"
+   - "Buone condizioni" → "Vissuto autentico, patina coerente con l'età del capo"
+   - "Condizioni soddisfacenti" / "Condizioni discrete" → "Segni del tempo che ne certificano l'autenticità vintage"
+   Per tutti gli altri stili (Casual, Streetwear, Elegante, ecc.) e per i due "Nuovo" anche se Vintage, usa il tono neutro standard.
 (riga vuota)
 RIGA 3: Modello con [elementi strutturali distintivi] e [extra]. Tessuto [materiale] [qualità]. Vestibilità [fit].
    REGOLA CHIUSURA: Menziona il tipo di chiusura SOLO se è effettivamente presente e rilevante (es. "Modello con zip frontale…", "Modello con bottoni a pressione…"). Se l'indumento NON ha chiusura (es. t-shirt, felpa pullover, maglia), NON scrivere mai "senza chiusura" né formule negative: apri la frase valorizzando un dettaglio reale del capo (es. "Modello con cappuccio fisso e tasca a marsupio…", "Modello con scollo a girocollo e polsini a costine…", "Modello con stampa grafica frontale e orlo dritto…"). Usa i dettagli rilevati dalle foto (loghi, stampe, tasche, cappuccio, collo, polsini, orlo, cuciture, patch).
