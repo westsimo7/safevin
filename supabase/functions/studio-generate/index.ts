@@ -141,6 +141,42 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
   ]
 }`;
 
+function decadeLabel(d?: string): string {
+  switch (d) {
+    case "70s": return "Anni '70";
+    case "80s": return "Anni '80";
+    case "90s": return "Anni '90";
+    case "y2k": return "Y2K / Anni 2000";
+    default: return "";
+  }
+}
+
+function sanitizeOutput(output: any): any {
+  if (!output || typeof output !== "object") return output;
+  // Sanitize title: remove dashes between size and condition, clamp to 80 chars
+  if (typeof output.title === "string") {
+    let t = output.title.replace(/\s+[–-]\s+/g, " ").replace(/\s{2,}/g, " ").trim();
+    if (t.length > 80) {
+      const truncated = t.slice(0, 80);
+      const lastSpace = truncated.lastIndexOf(" ");
+      t = (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trim();
+    }
+    output.title = t;
+  }
+  // Normalize hashtags: ensure array of lowercase strings starting with #
+  if (Array.isArray(output.hashtags)) {
+    output.hashtags = output.hashtags
+      .filter((h: any) => typeof h === "string" && h.trim().length > 0)
+      .map((h: string) => {
+        let v = h.trim().toLowerCase().replace(/\s+/g, "");
+        if (!v.startsWith("#")) v = "#" + v;
+        return v;
+      })
+      .slice(0, 5);
+  }
+  return output;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
