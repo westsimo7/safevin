@@ -280,6 +280,22 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           </div>
 
           <div className="space-y-2">
+            <Label className="text-sm font-medium">
+              Periodo stimato <span className="text-xs text-muted-foreground font-normal">(facoltativo)</span>
+            </Label>
+            <Select value={decade} onValueChange={setDecade}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleziona periodo" />
+              </SelectTrigger>
+              <SelectContent>
+                {DECADE_OPTIONS.map(d => (
+                  <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
             <Label className="text-sm font-medium">Condizione *</Label>
             <Select value={condition} onValueChange={setCondition}>
               <SelectTrigger>
