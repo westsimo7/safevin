@@ -135,6 +135,9 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
     "consiglio vendita pratico 2",
     "consiglio vendita pratico 3",
     "consiglio vendita pratico 4"
+  ],
+  "hashtags": [
+    "4-5 hashtag ottimizzati per Vinted/Instagram, lowercase, senza spazi, senza simboli speciali oltre al # iniziale. In italiano se language=it, in inglese se language=en. Esempio: ['#vintage90s', '#y2k', '#ralphlauren', '#fleece', '#streetwearuomo']"
   ]
 }`;
 
