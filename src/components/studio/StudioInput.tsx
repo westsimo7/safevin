@@ -162,7 +162,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
-  const [decade, setDecade] = useState("unknown");
+  const [decade, setDecade] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
   const toggleMaterial = (mat: string) => {
