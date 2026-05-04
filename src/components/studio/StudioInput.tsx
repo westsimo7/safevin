@@ -29,7 +29,6 @@ export interface StudioUserInput {
 }
 
 const DECADE_OPTIONS = [
-  { value: "unknown", label: "Non so" },
   { value: "70s", label: "Anni '70" },
   { value: "80s", label: "Anni '80" },
   { value: "90s", label: "Anni '90" },
@@ -163,7 +162,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [minPrice, setMinPrice] = useState(auditSource?.prezzo || "");
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
-  const [decade, setDecade] = useState("unknown");
+  const [decade, setDecade] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
   const toggleMaterial = (mat: string) => {
@@ -174,7 +173,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && productType && fit && style && condition && selectedMaterials.length > 0 && minPrice;
+  const canContinue = size && gender && productType && fit && style && condition && decade && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
@@ -188,7 +187,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       minPrice,
       measurements,
       extras,
-      decade: decade && decade !== "unknown" ? decade : undefined,
+      decade,
     });
   };
 
@@ -281,7 +280,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              Periodo stimato <span className="text-xs text-muted-foreground font-normal">(facoltativo)</span>
+              Periodo stimato *
             </Label>
             <Select value={decade} onValueChange={setDecade}>
               <SelectTrigger>
