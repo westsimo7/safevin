@@ -280,7 +280,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
           <div className="space-y-2">
             <Label className="text-sm font-medium">
-              Periodo stimato <span className="text-xs text-muted-foreground font-normal">(facoltativo)</span>
+              Periodo stimato *
             </Label>
             <Select value={decade} onValueChange={setDecade}>
               <SelectTrigger>
