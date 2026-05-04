@@ -29,7 +29,6 @@ export interface StudioUserInput {
 }
 
 const DECADE_OPTIONS = [
-  { value: "unknown", label: "Non so" },
   { value: "70s", label: "Anni '70" },
   { value: "80s", label: "Anni '80" },
   { value: "90s", label: "Anni '90" },
