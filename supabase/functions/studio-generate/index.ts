@@ -19,7 +19,7 @@ Formula OBBLIGATORIA:
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
 
-Se la decade è fornita, inseriscila SUBITO DOPO lo stile (e dopo "Y2K" se presente). Se decade non fornita, omettila completamente.
+Se la decade è fornita, inseriscila SUBITO DOPO lo stile. Se decade non fornita, omettila completamente. NON aggiungere mai "Y2K" come parola separata: per gli anni 2000 usa esclusivamente "Anni 2000".
 
 IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
 
