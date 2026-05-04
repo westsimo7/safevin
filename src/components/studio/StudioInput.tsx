@@ -187,7 +187,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       minPrice,
       measurements,
       extras,
-      decade: decade && decade !== "unknown" ? decade : undefined,
+      decade,
     });
   };
 
