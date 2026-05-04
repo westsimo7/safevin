@@ -32,7 +32,7 @@ const DECADE_OPTIONS = [
   { value: "70s", label: "Anni '70" },
   { value: "80s", label: "Anni '80" },
   { value: "90s", label: "Anni '90" },
-  { value: "y2k", label: "Y2K / Anni 2000" },
+  { value: "y2k", label: "Anni 2000" },
 ];
 
 const UPPER_BODY_KEYWORDS = [

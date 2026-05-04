@@ -15,11 +15,11 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Y2K / Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
 
-Se la decade è fornita, inseriscila SUBITO DOPO lo stile (e dopo "Y2K" se presente). Se decade non fornita, omettila completamente.
+Se la decade è fornita, inseriscila SUBITO DOPO lo stile. Se decade non fornita, omettila completamente. NON aggiungere mai "Y2K" come parola separata: per gli anni 2000 usa esclusivamente "Anni 2000".
 
 IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
 
@@ -146,7 +146,7 @@ function decadeLabel(d?: string): string {
     case "70s": return "Anni '70";
     case "80s": return "Anni '80";
     case "90s": return "Anni '90";
-    case "y2k": return "Y2K / Anni 2000";
+    case "y2k": return "Anni 2000";
     default: return "";
   }
 }
@@ -266,8 +266,8 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula ESATTA in quest'ordine: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se stile=Vintage aggiungi "Y2K" SUBITO DOPO lo stile) + (se decade fornita aggiungi "Anni '70" / "Anni '80" / "Anni '90" / "Y2K / Anni 2000" SUBITO DOPO lo stile/Y2K) + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione
-   IMPORTANTE: Y2K e la decade vanno SEMPRE collocati tra lo Stile e il Sesso, MAI dopo la taglia o la condizione. Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
+1. Crea un titolo SEO con formula ESATTA in quest'ordine: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se decade fornita aggiungi "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" SUBITO DOPO lo stile) + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione, e NON usare mai "Y2K" come parola nel titolo (per gli anni 2000 usa solo "Anni 2000")
+   IMPORTANTE: La decade va SEMPRE collocata tra lo Stile e il Sesso, MAI dopo la taglia o la condizione. Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
 3. Analizza la fascia di posizionamento in base a brand, condizione, materiali
