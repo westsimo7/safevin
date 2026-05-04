@@ -15,7 +15,7 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + Y2K (SOLO se lo stile è Vintage, aggiungi "Y2K" subito dopo lo stile) + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Y2K / Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
 
