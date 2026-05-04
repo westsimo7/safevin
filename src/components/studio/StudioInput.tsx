@@ -173,7 +173,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && productType && fit && style && condition && selectedMaterials.length > 0 && minPrice;
+  const canContinue = size && gender && productType && fit && style && condition && decade && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     onContinue({
