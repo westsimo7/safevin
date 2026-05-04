@@ -146,7 +146,7 @@ function decadeLabel(d?: string): string {
     case "70s": return "Anni '70";
     case "80s": return "Anni '80";
     case "90s": return "Anni '90";
-    case "y2k": return "Y2K / Anni 2000";
+    case "y2k": return "Anni 2000";
     default: return "";
   }
 }
