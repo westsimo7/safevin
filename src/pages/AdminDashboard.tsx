@@ -36,25 +36,43 @@ const AdminDashboard = () => {
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
-      if (!user) return;
+    if (!user) return;
+    let active = true;
+
+    const load = async (showSpinner = false) => {
+      if (showSpinner) setLoading(true);
       try {
         const { data, error } = await supabase.rpc("get_all_users_admin");
+        if (!active) return;
         if (error) {
           console.error("Admin access denied:", error);
           setAuthorized(false);
-          setLoading(false);
-          return;
+        } else {
+          setUsers(data || []);
+          setAuthorized(true);
         }
-        setUsers(data || []);
-        setAuthorized(true);
       } catch {
-        setAuthorized(false);
+        if (active) setAuthorized(false);
       } finally {
-        setLoading(false);
+        if (active && showSpinner) setLoading(false);
       }
     };
-    load();
+
+    load(true);
+
+    // Realtime: refresh on any change to creations / analyses / credits
+    const channel = supabase
+      .channel("admin-dashboard-realtime")
+      .on("postgres_changes", { event: "*", schema: "public", table: "studio_creations" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "analyses" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_credits" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => load())
+      .subscribe();
+
+    return () => {
+      active = false;
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   if (loading) {
