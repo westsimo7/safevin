@@ -160,7 +160,10 @@ const PricingSection = () => {
                   </p>
                 </div>
 
-                <div className="mb-3 sm:mb-4">
+                <div className="mb-3 sm:mb-4 flex items-baseline gap-2 flex-wrap">
+                  {plan.oldPrice && (
+                    <span className="text-base sm:text-lg text-muted-foreground line-through">€{plan.oldPrice}</span>
+                  )}
                   <span className="text-2xl sm:text-3xl font-bold text-foreground">€{plan.price}</span>
                   {plan.hasPeriod && (
                     <span className="text-muted-foreground text-[13px] sm:text-sm">{t("pricing.perMonth")}</span>
