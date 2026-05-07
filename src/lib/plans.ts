@@ -48,7 +48,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   starter: {
     id: "starter",
     label: "Starter",
-    price: "8,99",
+    price: "5,99",
     limits: {
       studio_limit: 10,
       creative_director_limit: 0,
@@ -63,7 +63,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   pro: {
     id: "pro",
     label: "Pro",
-    price: "14,99",
+    price: "12,99",
     limits: {
       studio_limit: 25,
       creative_director_limit: 2,
