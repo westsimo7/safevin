@@ -1,5 +1,6 @@
 import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
+import OfferTimer from "@/components/OfferTimer";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
