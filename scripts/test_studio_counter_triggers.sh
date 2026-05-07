@@ -41,14 +41,14 @@ REMAIN=$(psql -tAc "SELECT GREATEST(0, (public.get_free_effective_limit('$UID_T'
 assert_eq "remaining = 0 -> CTA must be disabled" "0" "$REMAIN"
 
 # DELETE 1 — must NOT refund
-psql -q -c "DELETE FROM public.studio_creations WHERE id='$ID1'" >/dev/null
+psql -q -c "SELECT public.test_delete_studio_creation('$ID1'::uuid)" >/dev/null
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "after DELETE studio_used STILL = 2 (no refund)" "2" "$USED"
 REMAIN=$(psql -tAc "SELECT GREATEST(0, (public.get_free_effective_limit('$UID_T')->>'limit')::int - studio_used) FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "after DELETE remaining still 0" "0" "$REMAIN"
 
 # DELETE 2 — also no refund
-psql -q -c "DELETE FROM public.studio_creations WHERE id='$ID2'" >/dev/null
+psql -q -c "SELECT public.test_delete_studio_creation('$ID2'::uuid)" >/dev/null
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "after deleting all, studio_used STILL = 2" "2" "$USED"
 
@@ -64,7 +64,7 @@ ID3=$(psql -tAc "SELECT gen_random_uuid()")
 psql -q -c "INSERT INTO public.studio_creations (id, user_id, status, categoria) VALUES ('$ID3','$UID_T','complete','x')" >/dev/null
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "new window, 1 INSERT -> studio_used = 1" "1" "$USED"
-psql -q -c "DELETE FROM public.studio_creations WHERE id='$ID3'" >/dev/null
+psql -q -c "SELECT public.test_delete_studio_creation('$ID3'::uuid)" >/dev/null
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "new window, after DELETE still 1 (high-water-mark)" "1" "$USED"
 
