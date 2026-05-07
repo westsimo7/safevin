@@ -733,6 +733,7 @@ export type Database = {
           read_ct: number
         }[]
       }
+      recount_studio_used: { Args: { p_user_id: string }; Returns: undefined }
       set_user_plan: {
         Args: {
           p_new_plan: Database["public"]["Enums"]["subscription_plan"]
