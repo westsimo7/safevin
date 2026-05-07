@@ -12,10 +12,10 @@ import { useTranslation } from "react-i18next";
 type PlanKey = "free" | "starter" | "pro" | "expert";
 
 const planDefs = [
-  { key: "free" as PlanKey, name: "Free", price: "0", icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
-  { key: "starter" as PlanKey, name: "Starter", price: "5,99", icon: Zap, popular: false, variant: "glass" as const, hasPeriod: true },
-  { key: "pro" as PlanKey, name: "Pro", price: "12,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
-  { key: "expert" as PlanKey, name: "Expert", price: "34,99", icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "free" as PlanKey, name: "Free", price: "0", oldPrice: null as string | null, icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
+  { key: "starter" as PlanKey, name: "Starter", price: "5,99", oldPrice: "8,99", icon: Zap, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "pro" as PlanKey, name: "Pro", price: "12,99", oldPrice: "15,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
+  { key: "expert" as PlanKey, name: "Expert", price: "34,99", oldPrice: null, icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
 ];
 
 const PricingSection = () => {
