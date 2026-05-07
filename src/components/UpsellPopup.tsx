@@ -56,13 +56,14 @@ const UpsellPopup = () => {
     if (state.isFounder) return;
     if (state.plan !== "free") return;
 
-    const shown = getShown(user.id);
+    const shownP = getShownPersistent(user.id);
+    const shownS = getShownSession(user.id);
     const used = state.studioUsed ?? 0;
     const limit = state.studioLimit ?? 1;
 
     let next: Trigger | null = null;
-    if (used >= limit && !shown.limit_reached) next = "limit_reached";
-    else if (used === 0 && !shown.welcome) next = "welcome";
+    if (used >= limit && !shownP.limit_reached) next = "limit_reached";
+    else if (used === 0 && !shownS.welcome) next = "welcome";
 
     if (next) {
       const t = setTimeout(() => setActive(next), next === "welcome" ? 1500 : 600);
