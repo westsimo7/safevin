@@ -19,7 +19,7 @@ const plans = [
     description: "Prova gratis con mano e guarda tu stesso se fa per te",
     icon: Gift,
     features: [
-      "2 annunci creabili",
+      "2 annunci al giorno",
       "Prezzo strategico",
     ],
     limitations: [
