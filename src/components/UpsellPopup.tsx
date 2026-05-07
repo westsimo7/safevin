@@ -2,20 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Rocket, Crown } from "lucide-react";
+import { Sparkles, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlan } from "@/hooks/usePlan";
 
-type Trigger = "welcome" | "after_first" | "limit_reached";
+type Trigger = "welcome" | "limit_reached";
 
-const STORAGE_KEY = "safevin_upsell_shown_v1";
+const STORAGE_KEY = "safevin_upsell_shown_v2";
 
 const getShown = (uid: string): Record<Trigger, boolean> => {
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { welcome: false, after_first: false, limit_reached: false };
+  return { welcome: false, limit_reached: false };
 };
 
 const markShown = (uid: string, t: Trigger) => {
@@ -44,11 +44,10 @@ const UpsellPopup = () => {
 
     const shown = getShown(user.id);
     const used = state.studioUsed ?? 0;
-    const limit = state.studioLimit ?? 2;
+    const limit = state.studioLimit ?? 1;
 
     let next: Trigger | null = null;
     if (used >= limit && !shown.limit_reached) next = "limit_reached";
-    else if (used === 1 && !shown.after_first) next = "after_first";
     else if (used === 0 && !shown.welcome) next = "welcome";
 
     if (next) {
@@ -74,22 +73,15 @@ const UpsellPopup = () => {
         return {
           icon: <Sparkles className="w-6 h-6 text-primary" />,
           title: "Benvenuto in SAFEViN",
-          desc: "Hai 2 annunci gratuiti per provare lo Studio. Vuoi crearne molti di più? Sblocca i piani in offerta lancio.",
+          desc: "Hai 1 annuncio prova gratuito per testare lo Studio. Vuoi crearne molti di più? Sblocca i piani in offerta lancio.",
           cta: "Scopri i piani",
-        };
-      case "after_first":
-        return {
-          icon: <Rocket className="w-6 h-6 text-primary" />,
-          title: "Ottimo, primo annuncio creato!",
-          desc: "Ti rimane 1 solo annuncio gratis. Passa a Starter (5,99€ invece di 8,99€) e crea fino a 10 annunci al mese.",
-          cta: "Sblocca Starter a 5,99€",
         };
       case "limit_reached":
         return {
           icon: <Crown className="w-6 h-6 text-primary" />,
-          title: "Hai usato i tuoi annunci gratuiti",
-          desc: "Continua a creare senza limiti. Pro a 12,99€ (invece di 15,99€) per 25 annunci al mese + Artist Director.",
-          cta: "Passa a Pro a 12,99€",
+          title: "Hai usato il tuo annuncio prova",
+          desc: "Continua a creare senza limiti. Starter 5,99€ (10/mese) o Pro 12,99€ (25/mese + Artist Director).",
+          cta: "Sblocca più annunci",
         };
       default:
         return null;
@@ -111,7 +103,7 @@ const UpsellPopup = () => {
           </DialogDescription>
         </DialogHeader>
 
-        {active !== "welcome" && (
+        {active === "limit_reached" && (
           <div className="grid grid-cols-2 gap-2 my-2">
             <div className="rounded-xl border border-border/50 p-3 bg-muted/30">
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">Starter</p>
@@ -133,7 +125,7 @@ const UpsellPopup = () => {
         <DialogFooter className="flex-col gap-2 sm:flex-col">
           <Button onClick={goPricing} className="w-full h-11">{content.cta}</Button>
           <Button onClick={close} variant="ghost" className="w-full h-10 text-muted-foreground">
-            {active === "limit_reached" ? "Più tardi" : "Continua gratis"}
+            {active === "limit_reached" ? "Più tardi" : "Continua"}
           </Button>
         </DialogFooter>
       </DialogContent>
