@@ -117,6 +117,19 @@ const Pricing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // On mobile, scroll Pro card into view (the "popular" plan)
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    if (window.matchMedia("(min-width: 640px)").matches) return;
+    const proIndex = plans.findIndex((p) => p.name === "Pro");
+    const card = container.children[proIndex] as HTMLElement | undefined;
+    if (!card) return;
+    const left = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
+    container.scrollTo({ left, behavior: "instant" as ScrollBehavior });
+  }, []);
 
   const currentPlanKey: PlanKey = planState?.plan ?? "free";
 
