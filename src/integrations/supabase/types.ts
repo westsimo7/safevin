@@ -624,6 +624,13 @@ export type Database = {
         Args: { p_conversation_id: string }
         Returns: boolean
       }
+      compute_period_for_plan: {
+        Args: { p_plan: Database["public"]["Enums"]["subscription_plan"] }
+        Returns: {
+          period_end: string
+          period_start: string
+        }[]
+      }
       consume_feature_credit: { Args: { p_feature: string }; Returns: Json }
       delete_email: {
         Args: { message_id: number; queue_name: string }

@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -189,6 +190,44 @@ serve(async (req) => {
     if (!analysis || !userInput) {
       return new Response(JSON.stringify({ error: "Dati mancanti" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Server-side enforcement of plan limits (founder bypassed in RPC)
+    const authHeader = req.headers.get("Authorization") || "";
+    if (!authHeader) {
+      return new Response(JSON.stringify({ error: "Non autenticato" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      { global: { headers: { Authorization: authHeader } }, auth: { persistSession: false } }
+    );
+    const { data: consumeRes, error: consumeErr } = await supabase.rpc("consume_feature_credit", { p_feature: "studio" });
+    if (consumeErr) {
+      console.error("consume_feature_credit error:", consumeErr);
+      return new Response(JSON.stringify({ error: "Verifica piano non riuscita" }), {
+        status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const cr: any = consumeRes;
+    if (cr && cr.success === false) {
+      if (cr.error === "limit_reached") {
+        return new Response(JSON.stringify({
+          error: "Hai raggiunto il limite di annunci del tuo piano. Effettua l'upgrade per continuare.",
+          code: "limit_reached",
+          used: cr.used, limit: cr.limit,
+        }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
+      if (cr.error === "unauthenticated") {
+        return new Response(JSON.stringify({ error: "Non autenticato" }), {
+          status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      return new Response(JSON.stringify({ error: cr.error || "Errore piano" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     const lang = language === "en" ? "en" : "it";
