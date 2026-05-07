@@ -10,46 +10,46 @@
     "googleError": "Google login error"
   },
   "hero": {
-    "subtitle": "Sell on Vinted <1>faster</1>, <2>clearer</2> and at the <3>right price</3>.",
+    "subtitle": "Create optimized Vinted listings in under <1>3 minutes</1>. <2>Clearer</2>, at the <3>right price</3>, and built to sell more.",
     "tryFree": "Try free",
     "dashboard": "Dashboard",
-    "description": "Create optimized listings in minutes to boost your <1>statistical sales probability</1>."
+    "description": "Upload photos, answer a few questions, and get a professional listing ready for Vinted in under 3 minutes. Every detail optimized to boost your <1>sales probability</1>."
   },
   "problem": {
-    "title": "Your listing is selling less than it could",
+    "title": "Creating a listing that sells takes too much time and effort",
     "items": {
-      "photos": "Unoptimized photos → don't attract or convince",
-      "title": "Bare title → nobody finds it",
-      "description": "Weak description → doesn't answer doubts",
-      "details": "Missing key details → trust breaks down",
-      "price": "Uncompetitive price → no clicks, no offers",
-      "value": "No value conveyed → users scroll past"
+      "photos": "Unoptimized photos → you waste time reshooting and buyers scroll past",
+      "title": "Bare title → you have to figure it out with no idea what works",
+      "description": "Weak description → you lose minutes writing with no results",
+      "details": "Missing details → you answer private questions, slowing down sales",
+      "price": "Wrong price → no clicks, hours of work wasted",
+      "value": "No perceived value → users scroll, you lose time"
     },
-    "closing": "Every overlooked detail is",
-    "closingHighlight": "a lost sale."
+    "closing": "Every minute spent creating listings manually",
+    "closingHighlight": "is a minute you are not selling."
   },
   "solution": {
     "titlePrefix": "",
     "titleHighlight": "SAFEViN",
     "titleSuffix": "Engine",
-    "subtitle": "AI tools to create listings that sell, with the support of a dedicated coach.",
+    "subtitle": "Create optimized listings in under 3 minutes. Then let AI maximize your sales, with the support of a dedicated coach.",
     "studio": {
       "title": "SAFEViN Studio",
-      "body": "Strategic listing construction through photo analysis on the 4 key conversion pillars, followed by targeted questions. Structured output to drive offers and closing."
+      "body": "Strategic listing construction through photo analysis on the 4 key conversion pillars, followed by targeted questions. Structured output ready in minutes to drive offers and closing."
     },
     "artist": {
       "title": "SAFEViN Artist Director",
-      "body": "Entrust the visual campaigns of your items to SAFEViN: every photo is analyzed to ensure visual consistency and quality, so your listing communicates professionalism and attracts more buyers."
+      "body": "Entrust the visual campaigns of your items to SAFEViN: every photo is analyzed to ensure visual consistency and quality in no time, so your listing communicates professionalism and attracts more buyers."
     },
     "coach": {
       "title": "SAFEViN Coach",
-      "body": "Actively supports you with targeted questions to help you solve every problem and reach your sales goal. It guides you on photos, titles, descriptions and selling strategies."
+      "body": "Actively supports you with targeted questions to help you solve problems and reach your sales goal faster. Guides you on photos, titles, descriptions and strategies in under 3 minutes per listing."
     }
   },
   "pillars": {
     "titlePrefix": "The 4 pillars of ",
     "titleHighlight": "photo analysis",
-    "subtitle": "Every image is rated on 4 key parameters to maximize your selling probability.",
+    "subtitle": "Every image is rated on 4 key parameters to maximize your selling probability quickly.",
     "tapToRead": "tap to read",
     "close": "Close",
     "items": {
@@ -76,25 +76,25 @@
     }
   },
   "how": {
-    "title": "How it works",
-    "subtitle": "Three steps for listings that actually sell.",
+    "title": "Your listing ready in 3 minutes",
+    "subtitle": "Upload, answer, publish. No more hours in front of the screen.",
     "steps": {
       "upload": {
         "title": "Upload your photos",
-        "description": "Upload the product photos and the basic info and details will be extracted."
+        "description": "Upload the product photos and AI extracts the basic info and details in seconds."
       },
       "info": {
         "title": "Add the key info",
-        "description": "Answer a few questions for a hyper-specific, complete listing in minutes."
+        "description": "Answer a few questions for a hyper-specific, complete listing in under 3 minutes."
       },
       "copy": {
         "title": "Copy and publish",
-        "description": "Get title, description and strategic price ready to upload directly to Vinted."
+        "description": "Get title, description and strategic price ready to copy and publish directly to Vinted."
       }
     },
-    "statsTitle": "It's not opinion.",
-    "statsHighlight": "It's statistics.",
-    "statsSubtitle": "Every detail not overlooked is one more chance to sell.",
+    "statsTitle": "Less time creating.",
+    "statsHighlight": "More time selling.",
+    "statsSubtitle": "Every listing optimized in 3 minutes is one more chance to sell. Less effort, more results.",
     "studioCardTitle": "SAFEViN Studio",
     "features": [
       "Smart image analysis via the Engine",
@@ -111,7 +111,7 @@
   },
   "pricing": {
     "title": "Choose your plan",
-    "subtitle": "Every plan gives you concrete tools. No empty promises, only method.",
+    "subtitle": "Every plan is designed to let you create optimized listings in minutes. No empty promises, only method.",
     "perMonth": "/month",
     "footer": "Cancel anytime. No strings. No surprises.",
     "badges": {
@@ -126,9 +126,9 @@
     },
     "plans": {
       "free": {
-        "description": "Try it hands-on and see for yourself",
+        "description": "Try it free: create your first optimized listing in 3 minutes and see for yourself",
         "cta": "Try free",
-        "features": ["2 listings", "Strategic pricing"],
+        "features": ["1 listing", "Strategic pricing"],
         "limitations": [
           "Access to SAFEViN Artist Direction",
           "3 listings delegated to the SAFEViN Artist Direction team",
@@ -139,7 +139,7 @@
         ]
       },
       "starter": {
-        "description": "To start selling better\nOptimize your first listings",
+        "description": "To start selling better\nCreate your first optimized listings in under 3 minutes each",
         "cta": "Start now",
         "features": ["10 listings", "Strategic pricing"],
         "limitations": [
@@ -152,7 +152,7 @@
         ]
       },
       "pro": {
-        "description": "To sell consistently\nMore visibility, more conversions",
+        "description": "To sell consistently\nMore visibility, more conversions, less time spent",
         "cta": "Activate Pro",
         "features": [
           "25 listings",
@@ -168,7 +168,7 @@
         ]
       },
       "expert": {
-        "description": "To maximize every listing\nFull ecosystem for true experts",
+        "description": "To maximize every listing\nFull ecosystem to create and sell faster",
         "cta": "Go Expert",
         "features": [
           "60 listings",
