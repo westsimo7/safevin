@@ -58,6 +58,7 @@ const plans = [
   {
     name: "Pro",
     price: "12,99",
+    oldPrice: "15,99",
     period: "/mese",
     description: "Per vendere con costanza\nPiù visibilità, più conversioni",
     icon: Crown,
