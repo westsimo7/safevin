@@ -683,6 +683,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_free_effective_limit: { Args: { p_user_id: string }; Returns: Json }
       get_plan_limits: {
         Args: { p_plan: Database["public"]["Enums"]["subscription_plan"] }
         Returns: Json
