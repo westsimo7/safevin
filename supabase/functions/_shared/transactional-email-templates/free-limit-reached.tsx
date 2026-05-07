@@ -43,9 +43,8 @@ const FreeLimitReachedEmail = ({ name }: FreeLimitReachedProps) => (
             5,99€ <span style={oldPrice}>8,99€</span> <span style={perMonth}>/ mese</span>
           </Text>
           <Text style={planDetail}>
-            • 10 annunci/mese<br />
-            • Salvataggio bozze illimitato<br />
-            • Supporto entro 24h
+            • 10 annunci creabili<br />
+            • Prezzo strategico
           </Text>
         </Section>
 
@@ -55,10 +54,10 @@ const FreeLimitReachedEmail = ({ name }: FreeLimitReachedProps) => (
             12,99€ <span style={oldPrice}>15,99€</span> <span style={perMonth}>/ mese</span>
           </Text>
           <Text style={planDetail}>
-            • 25 annunci/mese<br />
-            • Artist Director (revisione professionale)<br />
-            • Storico mensile completo<br />
-            • Salvataggio bozze + Supporto 24h
+            • 25 annunci creabili<br />
+            • Prezzo strategico avanzato<br />
+            • Accesso alla SAFEViN Artist Direction<br />
+            • 2 annunci delegabili al team SAFEViN Artist Direction
           </Text>
         </Section>
 
