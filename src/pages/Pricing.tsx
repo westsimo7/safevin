@@ -35,7 +35,7 @@ const plans = [
   },
   {
     name: "Starter",
-    price: "8,99",
+    price: "5,99",
     period: "/mese",
     description: "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
     icon: Zap,
@@ -56,7 +56,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "14,99",
+    price: "12,99",
     period: "/mese",
     description: "Per vendere con costanza\nPiù visibilità, più conversioni",
     icon: Crown,
