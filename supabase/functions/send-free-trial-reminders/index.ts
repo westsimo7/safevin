@@ -101,6 +101,8 @@ Deno.serve(async (req) => {
         console.error('invoke err', e)
         results[win.template].errors++
       }
+      // Throttle: stay under invocation rate limit
+      await new Promise(r => setTimeout(r, 600))
     }
   }
 
