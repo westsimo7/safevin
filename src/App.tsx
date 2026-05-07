@@ -123,6 +123,7 @@ const AnimatedRoutes = () => {
       </AnimatePresence>
       {/* BottomBar removed */}
       <CookieBanner />
+      <UpsellPopup />
     </div>
   );
 };
