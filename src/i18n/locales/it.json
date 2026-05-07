@@ -10,46 +10,46 @@
     "googleError": "Errore con Google login"
   },
   "hero": {
-    "subtitle": "Vendi su Vinted, più <1>veloce</1>, <2>chiaro</2> e al <3>prezzo giusto</3>.",
+    "subtitle": "Crea annunci ottimizzati per Vinted in meno di <1>3 minuti</1>. Più <2>chiari</2>, al <3>prezzo giusto</3> e progettati per vendere di più.",
     "tryFree": "Prova gratis",
     "dashboard": "Dashboard",
-    "description": "Creazione di Annunci ottimizzati in pochi minuti per aumentare la <1>probabilità statistica di vendita</1>."
+    "description": "Carica le foto, rispondi a poche domande e ottieni un annuncio professionale pronto per Vinted in meno di 3 minuti. Ogni dettaglio ottimizzato per aumentare la <1>probabilità di vendita</1>."
   },
   "problem": {
-    "title": "Il tuo annuncio sta vendendo meno di quanto potrebbe",
+    "title": "Creare un annuncio che vende richiede troppo tempo e fatica",
     "items": {
-      "photos": "Foto non ottimizzate → non attirano né convincono",
-      "title": "Titolo troppo spoglio → nessuno lo trova",
-      "description": "Descrizione debole → non risponde ai dubbi",
-      "details": "Dettagli fondamentali mancanti → blocchi la fiducia",
-      "price": "Prezzo non competitivo → niente click, niente offerte",
-      "value": "Non trasmette valore → l'utente scrolla oltre"
+      "photos": "Foto non ottimizzate → perdi tempo a rifarle e l'acquirente non si ferma",
+      "title": "Titolo troppo spoglio → devi pensarci tu, senza sapere cosa funziona",
+      "description": "Descrizione debole → perdi minuti a scrivere senza risultati",
+      "details": "Dettagli mancanti → rispondi a domande private, rallentando la vendita",
+      "price": "Prezzo sbagliato → nessun click, ore di lavoro sprecate",
+      "value": "Nessun valore percepito → l'utente scrolla, tu perdi tempo"
     },
-    "closing": "Ogni dettaglio trascurato è",
-    "closingHighlight": "una vendita persa."
+    "closing": "Ogni minuto speso a creare annunci a mano",
+    "closingHighlight": "è un minuto che non vendi."
   },
   "solution": {
     "titlePrefix": "",
     "titleHighlight": "SAFEViN",
     "titleSuffix": "Engine",
-    "subtitle": "Strumenti AI per creare annunci che vendono, con il supporto di un coach dedicato.",
+    "subtitle": "Crea annunci ottimizzati in meno di 3 minuti. Poi lascia che l'AI massimizzi le tue vendite, con il supporto di un coach dedicato.",
     "studio": {
       "title": "SAFEViN Studio",
-      "body": "Costruzione strategica dell'annuncio tramite analisi foto sui 4 pilastri chiave per la conversione, seguita da domande mirate. Output strutturato per favorire offerte e chiusura."
+      "body": "Costruzione strategica dell'annuncio tramite analisi foto sui 4 pilastri chiave, seguita da domande mirate. Output strutturato pronto in pochi minuti per favorire offerte e chiusura."
     },
     "artist": {
       "title": "SAFEViN Artist Director",
-      "body": "Affida le campagne visive dei tuoi articoli in vendita a SAFEViN: analizza ogni foto per garantire coerenza visiva e qualità, così il tuo annuncio comunica professionalità e attira più acquirenti."
+      "body": "Affida le campagne visive dei tuoi articoli a SAFEViN: analizza ogni foto per garantire coerenza e qualità in tempi brevi, così il tuo annuncio comunica professionalità e attira più acquirenti."
     },
     "coach": {
       "title": "SAFEViN Coach",
-      "body": "Ti supporta in modo attivo con domande mirate per aiutarti a risolvere ogni problema e raggiungere il tuo obiettivo di vendita. Ti guida su foto, titoli, descrizioni e strategie di vendita."
+      "body": "Ti supporta con domande mirate per risolvere problemi e raggiungere l'obiettivo di vendita velocemente. Ti guida su foto, titoli, descrizioni e strategie in meno di 3 minuti per annuncio."
     }
   },
   "pillars": {
     "titlePrefix": "I 4 pilastri dell'",
     "titleHighlight": "analisi foto",
-    "subtitle": "Ogni immagine viene valutata su 4 parametri chiave per massimizzare la probabilità di vendita.",
+    "subtitle": "Ogni immagine viene valutata su 4 parametri chiave per massimizzare la probabilità di vendita rapidamente.",
     "tapToRead": "schiaccia per leggere",
     "close": "Chiudi",
     "items": {
@@ -76,25 +76,25 @@
     }
   },
   "how": {
-    "title": "Come funziona",
-    "subtitle": "Tre step per annunci che vendono davvero.",
+    "title": "Il tuo annuncio pronto in 3 minuti",
+    "subtitle": "Carica, rispondi, pubblica. Niente più ore davanti allo schermo.",
     "steps": {
       "upload": {
         "title": "Carica le foto",
-        "description": "Carica le foto del prodotto e verranno estrapolate le informazioni base e i dettagli."
+        "description": "Carica le foto del prodotto e l'AI estrapola le informazioni base e i dettagli in pochi secondi."
       },
       "info": {
         "title": "Aggiungi le info chiave",
-        "description": "Rispondi a poche domande per un annuncio iper-specifico e completo in pochi minuti."
+        "description": "Rispondi a poche domande per un annuncio iper-specifico e completo in meno di 3 minuti."
       },
       "copy": {
         "title": "Copia e pubblica",
-        "description": "Ricevi titolo, descrizione e prezzo strategico pronti per essere caricati direttamente su Vinted."
+        "description": "Ricevi titolo, descrizione e prezzo strategico pronti da copiare e pubblicare direttamente su Vinted."
       }
     },
-    "statsTitle": "Non è opinione.",
-    "statsHighlight": "È statistica.",
-    "statsSubtitle": "Ogni dettaglio non trascurato, è una possibilità in più di vendita.",
+    "statsTitle": "Meno tempo a creare.",
+    "statsHighlight": "Più tempo a vendere.",
+    "statsSubtitle": "Ogni annuncio ottimizzato in 3 minuti è una possibilità in più di vendita. Meno fatica, più risultati.",
     "studioCardTitle": "SAFEViN Studio",
     "features": [
       "Analisi intelligente delle immagini tramite l'Engine",
@@ -111,7 +111,7 @@
   },
   "pricing": {
     "title": "Scegli il tuo piano",
-    "subtitle": "Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo.",
+    "subtitle": "Ogni piano è pensato per farti creare annunci ottimizzati in pochi minuti. Nessuna promessa vuota, solo metodo.",
     "perMonth": "/mese",
     "footer": "Cancelli quando vuoi. Zero vincoli. Zero sorprese.",
     "badges": {
@@ -126,7 +126,7 @@
     },
     "plans": {
       "free": {
-        "description": "Prova gratis con mano e guarda tu stesso se fa per te",
+        "description": "Prova gratis: crea il tuo primo annuncio ottimizzato in 3 minuti e vedi se fa per te",
         "cta": "Prova gratis",
         "features": ["1 annuncio prova creabile", "Prezzo strategico"],
         "limitations": [
@@ -139,7 +139,7 @@
         ]
       },
       "starter": {
-        "description": "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
+        "description": "Per iniziare a vendere meglio\nCrea i tuoi primi annunci ottimizzati in meno di 3 minuti l'uno",
         "cta": "Inizia ora",
         "features": ["10 annunci creabili", "Prezzo strategico"],
         "limitations": [
@@ -152,7 +152,7 @@
         ]
       },
       "pro": {
-        "description": "Per vendere con costanza\nPiù visibilità, più conversioni",
+        "description": "Per vendere con costanza\nPiù visibilità, più conversioni, meno tempo speso",
         "cta": "Attiva Pro",
         "features": [
           "25 annunci creabili",
@@ -168,7 +168,7 @@
         ]
       },
       "expert": {
-        "description": "Per massimizzare ogni annuncio\nEcosistema completo per veri expert",
+        "description": "Per massimizzare ogni annuncio\nEcosistema completo per creare e vendere più velocemente",
         "cta": "Passa a Expert",
         "features": [
           "60 annunci creabili",
