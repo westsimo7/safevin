@@ -25,16 +25,16 @@ interface FreeLimitReachedProps {
 const FreeLimitReachedEmail = ({ name }: FreeLimitReachedProps) => (
   <Html lang="it" dir="ltr">
     <Head />
-    <Preview>Hai finito i tuoi annunci gratuiti — sblocca di più con i piani in offerta</Preview>
+    <Preview>Hai finito il tuo annuncio prova gratuito — sblocca di più con i piani in offerta</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>
-          {name ? `${name}, hai usato tutti gli annunci gratuiti` : 'Hai usato tutti gli annunci gratuiti'}
+          {name ? `${name}, hai usato il tuo annuncio prova gratuito` : 'Hai usato il tuo annuncio prova gratuito'}
         </Heading>
         <Text style={text}>
-          I tuoi 2 annunci gratuiti su {SITE_NAME} sono terminati. Per
-          continuare a creare annunci professionali e vendere più velocemente
-          su Vinted, scegli uno dei piani in offerta lancio.
+          Il tuo annuncio prova su {SITE_NAME} è terminato. Per continuare a
+          creare annunci professionali e vendere più velocemente su Vinted,
+          scegli uno dei piani in offerta lancio.
         </Text>
 
         <Section style={planBox}>
@@ -78,8 +78,8 @@ const FreeLimitReachedEmail = ({ name }: FreeLimitReachedProps) => (
 
 export const template = {
   component: FreeLimitReachedEmail,
-  subject: 'Hai finito i tuoi annunci gratuiti su SAFEViN',
-  displayName: 'Annunci gratuiti esauriti (Free)',
+  subject: 'Hai finito il tuo annuncio prova su SAFEViN',
+  displayName: 'Annuncio prova esaurito (Free)',
   previewData: { name: 'Marco' },
 } satisfies TemplateEntry
 
