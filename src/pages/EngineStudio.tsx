@@ -260,6 +260,28 @@ const EngineStudio = () => {
         body: { analysis, userInput, language },
       });
 
+      // Handle 403 limit_reached gracefully
+      const errCtx: any = (error as any)?.context;
+      if (errCtx) {
+        try {
+          const txt = await errCtx.text();
+          const parsed = txt ? JSON.parse(txt) : null;
+          if (parsed?.code === "limit_reached") {
+            toast({
+              title: "Limite annunci raggiunto",
+              description: parsed.error || "Hai esaurito gli annunci del tuo piano.",
+              variant: "destructive",
+            });
+            setPhase("input");
+            navigate("/pricing");
+            return;
+          }
+          if (parsed?.error) throw new Error(parsed.error);
+        } catch (parseErr) {
+          if (parseErr instanceof Error && parseErr.message) throw parseErr;
+        }
+      }
+
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
 
@@ -275,7 +297,7 @@ const EngineStudio = () => {
       toast({ title: "Errore", description: err.message || "Errore durante la generazione.", variant: "destructive" });
       setPhase("input");
     }
-  }, [analysis, toast, previews, incompleteId]);
+  }, [analysis, toast, previews, incompleteId, navigate]);
 
   const handleNewAnalysis = useCallback(() => {
     if (incompleteId) {
