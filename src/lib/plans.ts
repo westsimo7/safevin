@@ -35,7 +35,7 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
     label: "Free",
     price: "0",
     limits: {
-      studio_limit: 2,
+      studio_limit: 1,
       creative_director_limit: 0,
       history_mode: "last_2",
       incomplete_save: false,
