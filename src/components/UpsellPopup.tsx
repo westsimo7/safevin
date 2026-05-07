@@ -144,9 +144,19 @@ const UpsellPopup = () => {
         )}
 
         <DialogFooter className="flex-col gap-2 sm:flex-col">
-          <Button onClick={goPricing} className="w-full h-11">{content.cta}</Button>
+          <Button
+            onClick={active === "welcome" ? goStudio : goPricing}
+            className="w-full h-11"
+          >
+            {content.cta}
+          </Button>
+          {active === "welcome" && (
+            <Button onClick={goPricing} variant="outline" className="w-full h-10">
+              Vedi i piani
+            </Button>
+          )}
           <Button onClick={close} variant="ghost" className="w-full h-10 text-muted-foreground">
-            {active === "limit_reached" ? "Più tardi" : "Continua"}
+            {active === "limit_reached" ? "Più tardi" : "Più tardi"}
           </Button>
         </DialogFooter>
       </DialogContent>
