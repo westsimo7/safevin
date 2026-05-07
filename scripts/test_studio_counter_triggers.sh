@@ -25,12 +25,12 @@ USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UI
 assert_eq "initial studio_used = 0" "0" "$USED"
 
 # INSERT 1
-ID1=$(psql -tAc "INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id")
+ID1=$(psql -tAc "WITH ins AS (INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id) SELECT id FROM ins")
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "after 1st INSERT studio_used = 1" "1" "$USED"
 
 # INSERT 2
-ID2=$(psql -tAc "INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id")
+ID2=$(psql -tAc "WITH ins AS (INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id) SELECT id FROM ins")
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "after 2nd INSERT studio_used = 2" "2" "$USED"
 
@@ -58,7 +58,7 @@ USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UI
 assert_eq "after window rollover studio_used = 0 (new window)" "0" "$USED"
 
 # Insert in new window, then delete: still no refund within same window
-ID3=$(psql -tAc "INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id")
+ID3=$(psql -tAc "WITH ins AS (INSERT INTO public.studio_creations (user_id, status, categoria) VALUES ('$UID_T','complete','x') RETURNING id) SELECT id FROM ins")
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
 assert_eq "new window, 1 INSERT -> studio_used = 1" "1" "$USED"
 psql -q -c "DELETE FROM public.studio_creations WHERE id='$ID3'" >/dev/null
