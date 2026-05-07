@@ -5,7 +5,7 @@ import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -117,6 +117,19 @@ const Pricing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // On mobile, scroll Pro card into view (the "popular" plan)
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    if (window.matchMedia("(min-width: 640px)").matches) return;
+    const proIndex = plans.findIndex((p) => p.name === "Pro");
+    const card = container.children[proIndex] as HTMLElement | undefined;
+    if (!card) return;
+    const left = card.offsetLeft - (container.offsetWidth - card.offsetWidth) / 2;
+    container.scrollTo({ left, behavior: "instant" as ScrollBehavior });
+  }, []);
 
   const currentPlanKey: PlanKey = planState?.plan ?? "free";
 
@@ -199,7 +212,7 @@ const Pricing = () => {
           </div>
 
           <div className="-mx-4 sm:mx-0 mt-6">
-            <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {plans.map((plan) => {
               const planKey = PLAN_LABEL_TO_KEY[plan.name];
               const isCurrent = planKey === currentPlanKey;
