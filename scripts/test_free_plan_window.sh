@@ -60,12 +60,8 @@ SQL
     )) / 86400")
   assert_eq "window span = 30d" "30" "$(printf '%.0f' "$span_days")"
 
-  # Cleanup
-  psql -q <<SQL >/dev/null
-DELETE FROM public.studio_creations WHERE user_id = '$uid';
-DELETE FROM public.user_credits WHERE user_id = '$uid';
-DELETE FROM public.profiles WHERE user_id = '$uid';
-SQL
+  # Cleanup via SECURITY DEFINER helper
+  psql -q -c "SELECT public.cleanup_test_users()" >/dev/null
 }
 
 echo "=== Free plan 30-day rolling window tests ==="
