@@ -748,6 +748,14 @@ export type Database = {
         }
         Returns: Json
       }
+      test_age_test_user: {
+        Args: { p_days: number; p_user_id: string }
+        Returns: undefined
+      }
+      test_delete_studio_creation: {
+        Args: { p_id: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "founder" | "admin" | "user"
