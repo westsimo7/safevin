@@ -36,6 +36,7 @@ import Terms from "./pages/Terms";
 import Unsubscribe from "./pages/Unsubscribe";
 import ResetPassword from "./pages/ResetPassword";
 import CookieBanner from "./components/CookieBanner";
+import UpsellPopup from "./components/UpsellPopup";
 // BottomBar removed (Home/Storico/Coach mobile bar)
 import PageTransition from "./components/PageTransition";
 
