@@ -126,36 +126,44 @@ const SafevinHome = () => {
           </motion.div>
 
           {/* Hero CTA — holographic card */}
-          <motion.button
-            type="button"
-            onClick={() => navigate("/engine/studio")}
-            initial={{ opacity: 0, y: 20, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ ...spring, delay: 0.08 }}
-            whileHover={{ y: -2 }}
-            whileTap={{ scale: 0.98 }}
-            className="card-holo w-full text-left rounded-3xl p-6 sm:p-7 group"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground/70 mb-2">
-                  <Sparkles className="w-3.5 h-3.5 text-primary" />
-                  Studio · {planState?.isFounder
-                    ? `${planState.studioUsed}/∞`
-                    : `${planState?.studioUsed ?? 0}/${planState?.studioLimit ?? 0}`}
+          {(() => {
+            const limitReached = !planState?.isFounder && (planState?.studioRemaining ?? 0) <= 0;
+            return (
+              <motion.button
+                type="button"
+                onClick={() => { if (limitReached) { navigate("/pricing"); } else { navigate("/engine/studio"); } }}
+                disabled={limitReached}
+                initial={{ opacity: 0, y: 20, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ ...spring, delay: 0.08 }}
+                whileHover={limitReached ? undefined : { y: -2 }}
+                whileTap={limitReached ? undefined : { scale: 0.98 }}
+                className={`card-holo w-full text-left rounded-3xl p-6 sm:p-7 group ${limitReached ? "opacity-60 cursor-not-allowed" : ""}`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-foreground/70 mb-2">
+                      <Sparkles className="w-3.5 h-3.5 text-primary" />
+                      Studio · {planState?.isFounder
+                        ? `${planState.studioUsed}/∞`
+                        : `${planState?.studioUsed ?? 0}/${planState?.studioLimit ?? 0}`}
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-foreground leading-tight mb-1">
+                      {limitReached ? "Limite raggiunto" : "Crea un nuovo annuncio"}
+                    </h2>
+                    <p className="text-sm text-foreground/70">
+                      {limitReached
+                        ? "Hai usato tutti gli annunci del tuo piano. Aggiorna per continuare."
+                        : "Foto → titolo, descrizione e prezzo in pochi secondi."}
+                    </p>
+                  </div>
+                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-foreground/10 backdrop-blur flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-foreground leading-tight mb-1">
-                  Crea un nuovo annuncio
-                </h2>
-                <p className="text-sm text-foreground/70">
-                  Foto → titolo, descrizione e prezzo in pochi secondi.
-                </p>
-              </div>
-              <div className="shrink-0 w-12 h-12 rounded-2xl bg-foreground/10 backdrop-blur flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </div>
-          </motion.button>
+              </motion.button>
+            );
+          })()}
 
           {/* Stats row */}
           <motion.div

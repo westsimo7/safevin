@@ -102,6 +102,17 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
     refresh();
   }, [refresh]);
 
+  // Realtime: refresh plan whenever user_credits or studio_creations change for this user
+  useEffect(() => {
+    if (!user) return;
+    const channel = supabase
+      .channel(`plan-sync-${user.id}`)
+      .on("postgres_changes", { event: "*", schema: "public", table: "user_credits", filter: `user_id=eq.${user.id}` }, () => { refresh(); })
+      .on("postgres_changes", { event: "*", schema: "public", table: "studio_creations", filter: `user_id=eq.${user.id}` }, () => { refresh(); })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [user, refresh]);
+
   const canAccess = useCallback(
     (feature: FeatureKey): boolean => {
       if (!state) return false;
