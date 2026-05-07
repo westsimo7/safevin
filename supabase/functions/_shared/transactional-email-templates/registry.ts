@@ -12,9 +12,11 @@ export interface TemplateEntry {
 import { template as welcome } from './welcome.tsx'
 import { template as planUpgrade } from './plan-upgrade.tsx'
 import { template as chatReply } from './chat-reply.tsx'
+import { template as freeLimitReached } from './free-limit-reached.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'welcome': welcome,
   'plan-upgrade': planUpgrade,
   'chat-reply': chatReply,
+  'free-limit-reached': freeLimitReached,
 }
