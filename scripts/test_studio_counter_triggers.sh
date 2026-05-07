@@ -53,7 +53,7 @@ USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UI
 assert_eq "after deleting all, studio_used STILL = 2" "2" "$USED"
 
 # Window rollover: simulate 35 days passed -> new window resets to real count (0)
-psql -q -c "UPDATE public.profiles SET created_at = now() - interval '35 days' WHERE user_id='$UID_T'" >/dev/null
+psql -q -c "SELECT public.test_age_test_user('$UID_T'::uuid, 35)" >/dev/null
 # Trigger rollover by ensuring credits
 psql -q -c "SELECT public.ensure_user_credits('$UID_T')" >/dev/null
 USED=$(psql -tAc "SELECT studio_used FROM public.user_credits WHERE user_id='$UID_T'")
