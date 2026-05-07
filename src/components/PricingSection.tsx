@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import OfferTimer from "@/components/OfferTimer";
 
 type PlanKey = "free" | "starter" | "pro" | "expert";
 
