@@ -620,6 +620,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_test_users: { Args: never; Returns: number }
       complete_creative_director_job: {
         Args: { p_conversation_id: string }
         Returns: boolean
