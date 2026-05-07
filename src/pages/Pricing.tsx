@@ -266,7 +266,10 @@ const Pricing = () => {
                     <p className="text-[11px] leading-snug text-muted-foreground whitespace-pre-line">{plan.description}</p>
                   </div>
 
-                  <div className="mb-2.5">
+                  <div className="mb-2.5 flex items-baseline gap-1.5 flex-wrap">
+                    {(plan as any).oldPrice && (
+                      <span className="text-sm text-muted-foreground line-through">€{(plan as any).oldPrice}</span>
+                    )}
                     <span className="text-2xl font-bold text-foreground">€{plan.price}</span>
                     <span className="text-muted-foreground text-xs">{plan.period}</span>
                   </div>
