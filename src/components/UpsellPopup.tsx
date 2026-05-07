@@ -82,14 +82,20 @@ const UpsellPopup = () => {
     navigate("/pricing");
   };
 
+  const goStudio = () => {
+    if (user && active) markShown(user.id, active);
+    setActive(null);
+    navigate("/engine/studio");
+  };
+
   const content = useMemo(() => {
     switch (active) {
       case "welcome":
         return {
           icon: <Sparkles className="w-6 h-6 text-primary" />,
-          title: "Benvenuto in SAFEViN",
-          desc: "Hai 1 annuncio prova gratuito per testare lo Studio. Vuoi crearne molti di più? Sblocca i piani in offerta lancio.",
-          cta: "Scopri i piani",
+          title: "Hai 1 annuncio prova da usare",
+          desc: "Non hai ancora usato il tuo annuncio prova gratuito. Provalo subito su Studio oppure scopri i piani in offerta lancio.",
+          cta: "Usa il mio annuncio prova",
         };
       case "limit_reached":
         return {
