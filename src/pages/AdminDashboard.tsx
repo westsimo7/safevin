@@ -190,7 +190,7 @@ const AdminDashboard = () => {
                     {users.map((u) => {
                       const plan = u.plan || "free";
                       const used = u.studio_used ?? 0;
-                      const limit = u.studio_limit ?? 2;
+                      const limit = u.studio_limit ?? 1;
                       return (
                         <tr key={u.user_id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                           <td className="p-3">
