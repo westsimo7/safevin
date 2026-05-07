@@ -9,8 +9,10 @@ import { usePlan } from "@/hooks/usePlan";
 type Trigger = "welcome" | "limit_reached";
 
 const STORAGE_KEY = "safevin_upsell_shown_v2";
+const SESSION_KEY = "safevin_upsell_session_v2";
 
-const getShown = (uid: string): Record<Trigger, boolean> => {
+// limit_reached: shown only once ever (localStorage). welcome: shown once per session.
+const getShownPersistent = (uid: string): Record<Trigger, boolean> => {
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
@@ -18,12 +20,24 @@ const getShown = (uid: string): Record<Trigger, boolean> => {
   return { welcome: false, limit_reached: false };
 };
 
-const markShown = (uid: string, t: Trigger) => {
-  const cur = getShown(uid);
-  cur[t] = true;
+const getShownSession = (uid: string): Record<Trigger, boolean> => {
   try {
-    localStorage.setItem(`${STORAGE_KEY}:${uid}`, JSON.stringify(cur));
+    const raw = sessionStorage.getItem(`${SESSION_KEY}:${uid}`);
+    if (raw) return JSON.parse(raw);
   } catch {}
+  return { welcome: false, limit_reached: false };
+};
+
+const markShown = (uid: string, t: Trigger) => {
+  if (t === "limit_reached") {
+    const cur = getShownPersistent(uid);
+    cur[t] = true;
+    try { localStorage.setItem(`${STORAGE_KEY}:${uid}`, JSON.stringify(cur)); } catch {}
+  } else {
+    const cur = getShownSession(uid);
+    cur[t] = true;
+    try { sessionStorage.setItem(`${SESSION_KEY}:${uid}`, JSON.stringify(cur)); } catch {}
+  }
 };
 
 const HIDDEN_ROUTES = ["/auth", "/reset-password", "/pricing", "/unsubscribe"];
