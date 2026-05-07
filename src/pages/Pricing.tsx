@@ -1,5 +1,6 @@
 import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
+import OfferTimer from "@/components/OfferTimer";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -36,6 +37,7 @@ const plans = [
   {
     name: "Starter",
     price: "5,99",
+    oldPrice: "8,99",
     period: "/mese",
     description: "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
     icon: Zap,
@@ -57,6 +59,7 @@ const plans = [
   {
     name: "Pro",
     price: "12,99",
+    oldPrice: "15,99",
     period: "/mese",
     description: "Per vendere con costanza\nPiù visibilità, più conversioni",
     icon: Crown,
@@ -191,6 +194,9 @@ const Pricing = () => {
             backTo="/home"
             className="text-center"
           />
+          <div className="flex justify-center mt-3">
+            <OfferTimer />
+          </div>
 
           <div className="-mx-4 sm:mx-0 mt-6">
             <div className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -260,7 +266,10 @@ const Pricing = () => {
                     <p className="text-[11px] leading-snug text-muted-foreground whitespace-pre-line">{plan.description}</p>
                   </div>
 
-                  <div className="mb-2.5">
+                  <div className="mb-2.5 flex items-baseline gap-1.5 flex-wrap">
+                    {(plan as any).oldPrice && (
+                      <span className="text-sm text-muted-foreground line-through">€{(plan as any).oldPrice}</span>
+                    )}
                     <span className="text-2xl font-bold text-foreground">€{plan.price}</span>
                     <span className="text-muted-foreground text-xs">{plan.period}</span>
                   </div>

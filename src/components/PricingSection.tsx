@@ -8,14 +8,15 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+import OfferTimer from "@/components/OfferTimer";
 
 type PlanKey = "free" | "starter" | "pro" | "expert";
 
 const planDefs = [
-  { key: "free" as PlanKey, name: "Free", price: "0", icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
-  { key: "starter" as PlanKey, name: "Starter", price: "5,99", icon: Zap, popular: false, variant: "glass" as const, hasPeriod: true },
-  { key: "pro" as PlanKey, name: "Pro", price: "12,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
-  { key: "expert" as PlanKey, name: "Expert", price: "34,99", icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "free" as PlanKey, name: "Free", price: "0", oldPrice: null as string | null, icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
+  { key: "starter" as PlanKey, name: "Starter", price: "5,99", oldPrice: "8,99", icon: Zap, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "pro" as PlanKey, name: "Pro", price: "12,99", oldPrice: "15,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
+  { key: "expert" as PlanKey, name: "Expert", price: "34,99", oldPrice: null, icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
 ];
 
 const PricingSection = () => {
@@ -86,6 +87,9 @@ const PricingSection = () => {
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
             {t("pricing.subtitle")}
           </p>
+          <div className="mt-3 flex justify-center">
+            <OfferTimer />
+          </div>
         </div>
 
         <div
@@ -156,7 +160,10 @@ const PricingSection = () => {
                   </p>
                 </div>
 
-                <div className="mb-3 sm:mb-4">
+                <div className="mb-3 sm:mb-4 flex items-baseline gap-2 flex-wrap">
+                  {plan.oldPrice && (
+                    <span className="text-base sm:text-lg text-muted-foreground line-through">€{plan.oldPrice}</span>
+                  )}
                   <span className="text-2xl sm:text-3xl font-bold text-foreground">€{plan.price}</span>
                   {plan.hasPeriod && (
                     <span className="text-muted-foreground text-[13px] sm:text-sm">{t("pricing.perMonth")}</span>
