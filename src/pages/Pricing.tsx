@@ -201,7 +201,7 @@ const Pricing = () => {
 
               // Accent palette per plan (independent from current state)
               const accent = isStarter
-                ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500", badgeBg: "bg-orange-500", badgeText: "text-white", badgeShadow: "shadow-orange-500/30" }
+                ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400", badgeBg: "bg-yellow-400", badgeText: "text-background", badgeShadow: "shadow-yellow-400/30" }
                 : isExpert
                   ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500", badgeBg: "bg-blue-500", badgeText: "text-white", badgeShadow: "shadow-blue-500/30" }
                   : plan.popular
