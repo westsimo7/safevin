@@ -106,12 +106,24 @@ const HeroSection = () => {
             {t("hero.tryFree")}
             <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Link to="/home" className="w-full sm:w-auto">
-            <Button variant="glass" size="lg" className="w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-10">
-              <LayoutDashboard className="mr-2 w-5 h-5" />
-              {t("hero.dashboard")}
+          <div className="w-full sm:w-auto flex flex-col gap-2.5">
+            <Link to="/home" className="w-full sm:w-auto">
+              <Button variant="glass" size="lg" className="w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-10">
+                <LayoutDashboard className="mr-2 w-5 h-5" />
+                {t("hero.dashboard")}
+              </Button>
+            </Link>
+            <Button
+              size="lg"
+              onClick={() => {
+                const el = document.getElementById("pricing");
+                if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+              className="w-full sm:w-auto h-14 sm:h-14 text-base sm:text-lg px-8 sm:px-10 bg-orange-500 hover:bg-orange-600 text-white font-bold"
+            >
+              Pricing
             </Button>
-          </Link>
+          </div>
         </motion.div>
 
         {/* Floating sold items */}
