@@ -99,17 +99,19 @@ const PricingSection = () => {
           }}
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
-          <BundlePurchaseCard />
           {planDefs.map((plan, index) => {
             const isExpert = plan.key === "expert";
+            const isStarter = plan.key === "free";
 
-            const accent = isExpert
-              ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
-              : plan.popular
-                ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
-                : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
+            const accent = isStarter
+              ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
+              : isExpert
+                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
+                : plan.popular
+                  ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
+                  : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
 
-            const cardBorder = (isExpert || plan.popular)
+            const cardBorder = (isExpert || isStarter || plan.popular)
               ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
               : `border ${accent.border} bg-card/50 hover:border-border`;
 
@@ -122,6 +124,13 @@ const PricingSection = () => {
                 data-reveal
                 className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
               >
+                {isStarter && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                    <div className="px-3 py-1 rounded-full bg-yellow-400 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-yellow-400/30">
+                      Starter
+                    </div>
+                  </div>
+                )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg shadow-primary/40">
@@ -180,7 +189,7 @@ const PricingSection = () => {
 
                 <Button
                   variant={plan.variant}
-                  className="w-full h-10 sm:h-11 text-sm"
+                  className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-yellow-400 hover:bg-yellow-500 text-background border border-yellow-400/40" : ""}`}
                   disabled={loadingPlan !== null}
                   onClick={() => handlePlanClick(plan.key)}
                 >
@@ -192,6 +201,15 @@ const PricingSection = () => {
                 </Button>
               </div>
             );
+
+            if (isStarter) {
+              return (
+                <React.Fragment key={`starter-bundle-${index}`}>
+                  {cardEl}
+                  <BundlePurchaseCard />
+                </React.Fragment>
+              );
+            }
 
             return cardEl;
           })}
