@@ -101,10 +101,19 @@ const Pricing = () => {
   const [portalLoading, setPortalLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // On mobile, scroll Pro card into view (the "popular" plan)
+  // On mobile, scroll Pro card into view (or Bundle if #bundle hash)
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
+    const wantsBundle = window.location.hash === "#bundle";
+    if (wantsBundle) {
+      requestAnimationFrame(() => {
+        const el = document.getElementById("bundle");
+        if (!el) return;
+        el.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      });
+      return;
+    }
     if (window.matchMedia("(min-width: 640px)").matches) return;
     const proIndex = plans.findIndex((p) => p.name === "Pro");
     const card = container.children[proIndex] as HTMLElement | undefined;
