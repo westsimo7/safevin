@@ -32,7 +32,7 @@ export interface PlanDefinition {
 export const PLANS: Record<PlanId, PlanDefinition> = {
   free: {
     id: "free",
-    label: "Free",
+    label: "Starter",
     price: "0",
     limits: {
       studio_limit: 1,
