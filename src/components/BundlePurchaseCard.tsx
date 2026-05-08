@@ -123,7 +123,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
               <div className="flex items-center justify-center gap-2 mb-1">
                 <span className="text-sm text-muted-foreground line-through">€{fmt(subtotal)}</span>
                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-                  -10%
+                  -{Math.round(discountPct * 100)}%
                 </span>
               </div>
               <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
@@ -133,7 +133,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             <>
               <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
               <div className="text-[11px] text-muted-foreground mt-0.5">
-                Da 10 annunci sconto -10%
+                10+ -10% · 30+ -15% · 60+ -20%
               </div>
             </>
           )}
