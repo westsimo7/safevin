@@ -101,37 +101,27 @@ const PricingSection = () => {
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
           {planDefs.map((plan, index) => {
-            const isStarter = plan.key === "starter";
             const isExpert = plan.key === "expert";
 
-            const accent = isStarter
-              ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
-              : isExpert
-                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
-                : plan.popular
-                  ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
-                  : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
+            const accent = isExpert
+              ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
+              : plan.popular
+                ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
+                : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
 
-            const cardBorder = (isStarter || isExpert || plan.popular)
+            const cardBorder = (isExpert || plan.popular)
               ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
               : `border ${accent.border} bg-card/50 hover:border-border`;
 
             const features = t(`pricing.plans.${plan.key}.features`, { returnObjects: true }) as string[];
             const limitations = t(`pricing.plans.${plan.key}.limitations`, { returnObjects: true }) as string[];
 
-            return (
+            const cardEl = (
               <div
                 key={index}
                 data-reveal
                 className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
               >
-                {isStarter && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
-                      {t("pricing.badges.starter")}
-                    </div>
-                  </div>
-                )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg shadow-primary/40">
