@@ -3,7 +3,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const LandingNavbar = () => {
   const handlePricingClick = () => {
-    const el = document.getElementById("pricing");
+    const el = document.getElementById("bundle") || document.getElementById("pricing");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
