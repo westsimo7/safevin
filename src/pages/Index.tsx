@@ -37,7 +37,6 @@ const Index = () => {
         <HeroSection />
         <ProblemSection />
         <SolutionSection />
-        <PillarsSection />
         <HowItWorksSection />
         <PricingSection />
         <DisclaimerSection />
