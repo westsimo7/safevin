@@ -166,8 +166,11 @@ const SafevinHome = () => {
                         : "Foto → titolo, descrizione e prezzo in pochi secondi."}
                     </p>
                   </div>
-                  <div className="shrink-0 w-12 h-12 rounded-2xl bg-foreground/10 backdrop-blur flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all">
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                  <div className="shrink-0 min-w-[3rem] h-12 px-3 rounded-2xl bg-foreground/10 backdrop-blur flex flex-col items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all leading-none">
+                    <span className="text-xl font-bold tabular-nums">
+                      {planState?.isFounder ? "∞" : (planState?.studioRemaining ?? 0)}
+                    </span>
+                    <span className="text-[9px] uppercase tracking-wider opacity-70 mt-0.5">left</span>
                   </div>
                 </div>
               </motion.button>
