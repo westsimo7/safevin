@@ -61,14 +61,20 @@ const SafevinHome = () => {
 
   useEffect(() => {
     const status = searchParams.get("status");
+    const sessionId = searchParams.get("session_id");
+    const bundle = searchParams.get("bundle");
     if (!status) return;
     if (status === "success") {
-      toast({ title: "Pagamento completato", description: "Stiamo attivando il tuo piano…" });
+      toast({ title: "Pagamento completato", description: "Stiamo aggiornando il tuo account…" });
       (async () => {
         try {
-          await supabase.functions.invoke("check-subscription");
+          if (bundle && sessionId) {
+            await supabase.functions.invoke("verify-bundle-payment", { body: { session_id: sessionId } });
+          } else {
+            await supabase.functions.invoke("check-subscription");
+          }
           await refreshPlan();
-          toast({ title: "Piano attivo", description: "Il tuo abbonamento è stato attivato." });
+          toast({ title: "Account aggiornato", description: bundle ? `Hai aggiunto ${bundle} annunci.` : "Il tuo abbonamento è stato attivato." });
         } catch (e) {
           console.error(e);
         }
@@ -78,6 +84,8 @@ const SafevinHome = () => {
     }
     searchParams.delete("status");
     searchParams.delete("plan");
+    searchParams.delete("bundle");
+    searchParams.delete("session_id");
     setSearchParams(searchParams, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
