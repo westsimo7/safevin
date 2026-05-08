@@ -117,6 +117,31 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
           </button>
         </div>
 
+        {/* Discount quick-set pills */}
+        <div className="mt-3 flex items-center justify-center gap-2">
+          {[
+            { pct: 10, q: 10 },
+            { pct: 15, q: 30 },
+            { pct: 20, q: 60 },
+          ].map(({ pct, q }) => {
+            const active = qty >= q && (q === 60 || qty < (q === 10 ? 30 : 60));
+            return (
+              <button
+                key={pct}
+                type="button"
+                onClick={() => setQty(q)}
+                className={`px-3 h-8 rounded-full text-[12px] font-bold transition-all border ${
+                  active
+                    ? "bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-500/30"
+                    : "bg-orange-500/10 text-orange-500 border-orange-500/30 hover:bg-orange-500/20"
+                }`}
+              >
+                -{pct}%
+              </button>
+            );
+          })}
+        </div>
+
         {/* Total */}
         <div className="mt-3 pt-3 border-t border-border/50 text-center">
           {hasDiscount ? (
@@ -128,15 +153,9 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
                 </span>
               </div>
               <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
-              <div className="text-[11px] text-emerald-500 mt-0.5">Sconto bulk attivo</div>
             </>
           ) : (
-            <>
-              <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
-              <div className="text-[11px] text-muted-foreground mt-0.5">
-                10+ -10% · 30+ -15% · 60+ -20%
-              </div>
-            </>
+            <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
           )}
         </div>
       </div>
@@ -145,8 +164,6 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         {[
           "Paghi solo quello che usi",
           "Nessun rinnovo automatico",
-          "Sconti progressivi: 10+ -10%, 30+ -15%, 60+ -20%",
-          "Stesso motore degli abbonamenti",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
             <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-orange-500/10">
