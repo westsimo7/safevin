@@ -192,12 +192,6 @@ const Pricing = () => {
 
       <main className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pt-4 sm:pt-6 pb-8">
         <div className="max-w-5xl mx-auto">
-          <PageTitle
-            title="Scegli il tuo piano"
-            subtitle="Ogni piano è pensato per darti strumenti concreti. Nessuna promessa vuota, solo metodo."
-            backTo="/home"
-            className="text-center"
-          />
 
           <div className="-mx-4 sm:mx-0 mt-6">
             <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
