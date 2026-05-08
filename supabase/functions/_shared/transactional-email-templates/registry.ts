@@ -18,8 +18,10 @@ import { template as freeReminder24h } from './free-reminder-24h.tsx'
 import { template as freeReminder48h } from './free-reminder-48h.tsx'
 import { template as freeReminder4d } from './free-reminder-4d.tsx'
 import { template as freeReminder7d } from './free-reminder-7d.tsx'
+import { template as firstListingGenerated } from './first-listing-generated.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
+  'first-listing-generated': firstListingGenerated,
   'welcome': welcome,
   'plan-upgrade': planUpgrade,
   'chat-reply': chatReply,
