@@ -16,6 +16,8 @@ import { template as freeLimitReached } from './free-limit-reached.tsx'
 import { template as freeReminder2h } from './free-reminder-2h.tsx'
 import { template as freeReminder24h } from './free-reminder-24h.tsx'
 import { template as freeReminder48h } from './free-reminder-48h.tsx'
+import { template as freeReminder4d } from './free-reminder-4d.tsx'
+import { template as freeReminder7d } from './free-reminder-7d.tsx'
 
 export const TEMPLATES: Record<string, TemplateEntry> = {
   'welcome': welcome,
@@ -25,4 +27,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'free-reminder-2h': freeReminder2h,
   'free-reminder-24h': freeReminder24h,
   'free-reminder-48h': freeReminder48h,
+  'free-reminder-4d': freeReminder4d,
+  'free-reminder-7d': freeReminder7d,
 }
