@@ -16,6 +16,8 @@ interface PlanState {
   studioUsed: number;
   studioLimit: number;
   studioRemaining: number;
+  bonusCredits: number;
+  planRemaining: number;
   cdUsed: number;
   cdLimit: number;
   cdRemaining: number;
