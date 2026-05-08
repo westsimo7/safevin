@@ -189,9 +189,6 @@ const Pricing = () => {
             backTo="/home"
             className="text-center"
           />
-          <div className="flex justify-center mt-3">
-            <OfferTimer />
-          </div>
 
           <div className="-mx-4 sm:mx-0 mt-6">
             <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -268,6 +265,12 @@ const Pricing = () => {
                     <span className="text-2xl font-bold text-foreground">€{plan.price}</span>
                     <span className="text-muted-foreground text-xs">{plan.period}</span>
                   </div>
+
+                  {plan.popular && !isCurrent && (
+                    <div className="mb-2.5 flex justify-center">
+                      <OfferTimer compact />
+                    </div>
+                  )}
 
                   <ul className="space-y-1.5 mb-3 flex-grow">
                     {plan.features.map((feature, i) => (

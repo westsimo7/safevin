@@ -31,7 +31,7 @@ const OfferTimer = ({ className = "", compact = false }: Props) => {
       className={`inline-flex items-center gap-2 rounded-full border border-orange-500/40 bg-orange-500/10 text-orange-400 ${compact ? "px-2.5 py-1 text-[11px]" : "px-3.5 py-1.5 text-xs"} font-semibold ${className}`}
     >
       <Flame className={compact ? "w-3 h-3" : "w-3.5 h-3.5"} />
-      <span className="uppercase tracking-wider">Offerta lancio</span>
+      <span className="uppercase tracking-wider">Sconto limitato</span>
       <span className="font-mono font-bold text-orange-300 tabular-nums">{format(remaining)}</span>
     </div>
   );

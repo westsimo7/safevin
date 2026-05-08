@@ -88,9 +88,6 @@ const PricingSection = () => {
           <p className="text-muted-foreground text-[13px] sm:text-sm md:text-base max-w-xl mx-auto px-2 sm:px-0">
             {t("pricing.subtitle")}
           </p>
-          <div className="mt-3 flex justify-center">
-            <OfferTimer />
-          </div>
         </div>
 
         <div

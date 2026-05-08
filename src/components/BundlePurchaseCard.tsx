@@ -9,8 +9,7 @@ import ApplePayButton from "@/components/ApplePayButton";
 import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 
 const UNIT_PRICE = 0.59;
-const DISCOUNT_THRESHOLD = 10;
-const DISCOUNT_PCT = 0.10;
+const getDiscountPct = (q: number) => (q >= 60 ? 0.20 : q >= 30 ? 0.15 : q >= 10 ? 0.10 : 0);
 
 interface Props {
   accentClass?: string;
@@ -24,8 +23,9 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
   const { toast } = useToast();
 
   const subtotal = qty * UNIT_PRICE;
-  const hasDiscount = qty >= DISCOUNT_THRESHOLD;
-  const total = hasDiscount ? subtotal * (1 - DISCOUNT_PCT) : subtotal;
+  const discountPct = getDiscountPct(qty);
+  const hasDiscount = discountPct > 0;
+  const total = subtotal * (1 - discountPct);
 
   const fmt = (n: number) =>
     n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -123,7 +123,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
               <div className="flex items-center justify-center gap-2 mb-1">
                 <span className="text-sm text-muted-foreground line-through">€{fmt(subtotal)}</span>
                 <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-                  -10%
+                  -{Math.round(discountPct * 100)}%
                 </span>
               </div>
               <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
@@ -133,7 +133,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             <>
               <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
               <div className="text-[11px] text-muted-foreground mt-0.5">
-                Da 10 annunci sconto -10%
+                10+ -10% · 30+ -15% · 60+ -20%
               </div>
             </>
           )}
@@ -144,7 +144,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         {[
           "Paghi solo quello che usi",
           "Nessun rinnovo automatico",
-          "Sconto 10% da 10 annunci in su",
+          "Sconti progressivi: 10+ -10%, 30+ -15%, 60+ -20%",
           "Stesso motore degli abbonamenti",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
