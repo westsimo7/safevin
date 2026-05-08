@@ -5,6 +5,8 @@ import { Minus, Plus, ShoppingBag, Loader2, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ApplePayButton from "@/components/ApplePayButton";
+import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 
 const UNIT_PRICE = 0.59;
 const DISCOUNT_THRESHOLD = 10;
@@ -154,14 +156,23 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         ))}
       </ul>
 
-      <Button
-        variant="glass"
-        className="w-full h-10 sm:h-11 text-sm"
-        disabled={loading}
-        onClick={handleCheckout}
-      >
-        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Acquista ${qty} ${qty === 1 ? "annuncio" : "annunci"}`}
-      </Button>
+      <div className="space-y-2">
+        <Button
+          variant="glass"
+          className="w-full h-10 sm:h-11 text-sm"
+          disabled={loading}
+          onClick={handleCheckout}
+          onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}
+          onFocus={() => speedupCheckoutHover("create-bundle-checkout")}
+        >
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Acquista ${qty} ${qty === 1 ? "annuncio" : "annunci"}`}
+        </Button>
+        <ApplePayButton
+          onClick={handleCheckout}
+          loading={loading}
+          prewarmFn="create-bundle-checkout"
+        />
+      </div>
     </div>
   );
 };
