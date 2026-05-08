@@ -301,11 +301,7 @@ const Pricing = () => {
                     )}
                   </Button>
                 </div>
-                {isStarter && (
-                  <div className="shrink-0 w-[85%] snap-center sm:w-auto sm:shrink flex">
-                    <BundlePurchaseCard />
-                  </div>
-                )}
+                {isStarter && <BundlePurchaseCard />}
                 </React.Fragment>
               );
             })}
