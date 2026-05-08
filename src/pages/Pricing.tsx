@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
 import React from "react";
 import BundlePurchaseCard from "@/components/BundlePurchaseCard";
+import ApplePayButton from "@/components/ApplePayButton";
+import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
