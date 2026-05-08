@@ -82,6 +82,27 @@ export type Database = {
           },
         ]
       }
+      bundle_purchases: {
+        Row: {
+          created_at: string
+          quantity: number
+          session_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          quantity: number
+          session_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          quantity?: number
+          session_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       collaboration_conversations: {
         Row: {
           created_at: string
@@ -548,6 +569,7 @@ export type Database = {
       }
       user_credits: {
         Row: {
+          bonus_credits: number
           created_at: string
           creative_director_used: number
           credits_total: number
@@ -563,6 +585,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bonus_credits?: number
           created_at?: string
           creative_director_used?: number
           credits_total?: number
@@ -578,6 +601,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bonus_credits?: number
           created_at?: string
           creative_director_used?: number
           credits_total?: number
@@ -633,6 +657,10 @@ export type Database = {
         }[]
       }
       consume_feature_credit: { Args: { p_feature: string }; Returns: Json }
+      credit_bundle_purchase: {
+        Args: { p_quantity: number; p_session_id: string; p_user_id: string }
+        Returns: Json
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -644,6 +672,7 @@ export type Database = {
       ensure_user_credits: {
         Args: { p_user_id: string }
         Returns: {
+          bonus_credits: number
           created_at: string
           creative_director_used: number
           credits_total: number
