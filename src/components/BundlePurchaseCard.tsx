@@ -164,6 +164,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         {[
           "Paghi solo quello che usi",
           "Nessun rinnovo automatico",
+          "Include tutto lo Starter: 1 annuncio prova, prezzo strategico, Assistente Tommy Scendi",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
             <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-orange-500/10">
