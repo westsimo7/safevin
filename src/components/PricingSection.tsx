@@ -196,10 +196,10 @@ const PricingSection = () => {
 
             if (plan.key === "free") {
               return (
-                <>
+                <React.Fragment key={`free-bundle-${index}`}>
                   {cardEl}
-                  <BundlePurchaseCard key="bundle" />
-                </>
+                  <BundlePurchaseCard />
+                </React.Fragment>
               );
             }
             return cardEl;
