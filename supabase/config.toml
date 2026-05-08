@@ -11,6 +11,8 @@ project_id = "ilnkeilltvkceohcjfjy"
     verify_jwt = false
   [functions.create-bundle-checkout]
     verify_jwt = false
+  [functions.verify-bundle-payment]
+    verify_jwt = false
   [functions.customer-portal]
     verify_jwt = false
   [functions.process-email-queue]
