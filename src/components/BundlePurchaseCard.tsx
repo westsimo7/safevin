@@ -9,8 +9,7 @@ import ApplePayButton from "@/components/ApplePayButton";
 import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 
 const UNIT_PRICE = 0.59;
-const DISCOUNT_THRESHOLD = 10;
-const DISCOUNT_PCT = 0.10;
+const getDiscountPct = (q: number) => (q >= 60 ? 0.20 : q >= 30 ? 0.15 : q >= 10 ? 0.10 : 0);
 
 interface Props {
   accentClass?: string;
@@ -24,8 +23,9 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
   const { toast } = useToast();
 
   const subtotal = qty * UNIT_PRICE;
-  const hasDiscount = qty >= DISCOUNT_THRESHOLD;
-  const total = hasDiscount ? subtotal * (1 - DISCOUNT_PCT) : subtotal;
+  const discountPct = getDiscountPct(qty);
+  const hasDiscount = discountPct > 0;
+  const total = subtotal * (1 - discountPct);
 
   const fmt = (n: number) =>
     n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
