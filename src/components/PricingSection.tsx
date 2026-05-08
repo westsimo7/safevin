@@ -30,8 +30,8 @@ const PricingSection = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // children layout: [bundle, free, pro, expert] — Bundle is first (index 0)
-  const popularIndex = 0;
+  // children layout: [free/starter, bundle, pro, expert] — Pro is at index 2
+  const popularIndex = 2;
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
