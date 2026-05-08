@@ -152,7 +152,7 @@ const Pricing = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const handleCheckout = async (planKey: PlanKey) => {
+  const handleCheckout = async (planKey: PlanKey, wallet?: "apple_pay") => {
     if (!user) {
       toast({ title: "Accedi per continuare", description: "Devi essere registrato per attivare un piano." });
       return;
@@ -161,7 +161,7 @@ const Pricing = () => {
     setLoadingPlan(planKey);
     try {
       const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { plan: planKey },
+        body: { plan: planKey, wallet },
       });
       if (error) throw error;
       if (data?.url) window.open(data.url, "_blank");
@@ -313,7 +313,7 @@ const Pricing = () => {
                     </Button>
                     {!isCurrent && planKey !== "free" && (
                       <ApplePayButton
-                        onClick={() => handleCheckout(planKey)}
+                        onClick={() => handleCheckout(planKey, "apple_pay")}
                         loading={loadingPlan === planKey}
                         prewarmFn="create-checkout"
                       />
