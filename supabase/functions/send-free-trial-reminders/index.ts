@@ -1,6 +1,9 @@
-// Cron: runs every 15 minutes. Sends free trial reminders (2h, 24h, 48h)
-// to free users who haven't created their first listing yet.
-// Idempotency is enforced via the email API's `idempotency_key`.
+// Cron: runs every 15 minutes.
+// - Trial reminders (2h, 24h, 48h): per utenti free che NON hanno ancora
+//   creato il primo annuncio (studio_used = 0).
+// - Post-credit reminders (4d, 7d): per utenti free che hanno esaurito
+//   i crediti (studio_used >= 1) — spingono su acquisti singoli e premium.
+// Idempotency è garantita dal pre-check su email_send_log.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { corsHeaders } from 'jsr:@supabase/supabase-js@2/cors'
 
@@ -11,13 +14,18 @@ interface Window {
   template: string
   hoursMin: number
   hoursMax: number
+  // 'unused' = solo studio_used = 0 (trial reminders)
+  // 'exhausted' = studio_used >= 1 (crediti finiti)
+  audience: 'unused' | 'exhausted'
 }
 
-// Order matters: process oldest windows first (48h before 24h before 2h)
+// Process oldest windows first to avoid double-sending in same run
 const WINDOWS: Window[] = [
-  { template: 'free-reminder-48h', hoursMin: 48, hoursMax: 96 },
-  { template: 'free-reminder-24h', hoursMin: 24, hoursMax: 48 },
-  { template: 'free-reminder-2h',  hoursMin: 2,  hoursMax: 24 },
+  { template: 'free-reminder-7d',  hoursMin: 168, hoursMax: 336, audience: 'exhausted' }, // 7-14d
+  { template: 'free-reminder-4d',  hoursMin: 96,  hoursMax: 168, audience: 'exhausted' }, // 4-7d
+  { template: 'free-reminder-48h', hoursMin: 48,  hoursMax: 96,  audience: 'unused' },
+  { template: 'free-reminder-24h', hoursMin: 24,  hoursMax: 48,  audience: 'unused' },
+  { template: 'free-reminder-2h',  hoursMin: 2,   hoursMax: 24,  audience: 'unused' },
 ]
 
 Deno.serve(async (req) => {
@@ -29,7 +37,6 @@ Deno.serve(async (req) => {
   for (const win of WINDOWS) {
     results[win.template] = { sent: 0, skipped: 0, errors: 0 }
 
-    // Find candidates: free users with 0 studio_used, registered within window
     const minDate = new Date(Date.now() - win.hoursMax * 3600 * 1000).toISOString()
     const maxDate = new Date(Date.now() - win.hoursMin * 3600 * 1000).toISOString()
 
@@ -49,7 +56,6 @@ Deno.serve(async (req) => {
 
     const userIds = profiles.map(p => p.user_id)
 
-    // Filter to free plan with 0 studio_used
     const { data: credits } = await supabase
       .from('user_credits')
       .select('user_id, plan, studio_used')
@@ -57,7 +63,11 @@ Deno.serve(async (req) => {
 
     const eligible = new Set(
       (credits || [])
-        .filter(c => c.plan === 'free' && (c.studio_used ?? 0) === 0)
+        .filter(c => {
+          if (c.plan !== 'free') return false
+          const used = c.studio_used ?? 0
+          return win.audience === 'unused' ? used === 0 : used >= 1
+        })
         .map(c => c.user_id)
     )
 
@@ -69,7 +79,6 @@ Deno.serve(async (req) => {
 
       const idempotencyKey = `${win.template}-${p.user_id}`
 
-      // Pre-check: skip if already logged (prevents repeated invokes)
       const { data: existing } = await supabase
         .from('email_send_log')
         .select('id')
@@ -101,7 +110,6 @@ Deno.serve(async (req) => {
         console.error('invoke err', e)
         results[win.template].errors++
       }
-      // Throttle: stay under invocation rate limit
       await new Promise(r => setTimeout(r, 600))
     }
   }
