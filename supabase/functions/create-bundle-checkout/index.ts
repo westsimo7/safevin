@@ -53,7 +53,7 @@ serve(async (req) => {
       mode: "payment",
       allow_promotion_codes: true,
       discounts: quantity >= 10 ? [{ coupon: COUPON_ID }] : undefined,
-      success_url: `${origin}/home?status=success&bundle=${quantity}`,
+      success_url: `${origin}/home?status=success&bundle=${quantity}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?status=cancel`,
       metadata: {
         user_id: userId ?? "",

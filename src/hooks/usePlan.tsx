@@ -16,6 +16,8 @@ interface PlanState {
   studioUsed: number;
   studioLimit: number;
   studioRemaining: number;
+  bonusCredits: number;
+  planRemaining: number;
   cdUsed: number;
   cdLimit: number;
   cdRemaining: number;
@@ -45,6 +47,8 @@ const DEFAULT_STATE: PlanState = {
   studioUsed: 0,
   studioLimit: PLANS.free.limits.studio_limit,
   studioRemaining: PLANS.free.limits.studio_limit,
+  bonusCredits: 0,
+  planRemaining: PLANS.free.limits.studio_limit,
   cdUsed: 0,
   cdLimit: 0,
   cdRemaining: 0,
@@ -81,6 +85,8 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
           studioUsed: d.studio_used ?? 0,
           studioLimit: d.studio_limit ?? plan.limits.studio_limit,
           studioRemaining: d.studio_remaining ?? plan.limits.studio_limit,
+          bonusCredits: d.bonus_credits ?? 0,
+          planRemaining: d.plan_remaining ?? (d.studio_remaining ?? plan.limits.studio_limit),
           cdUsed: d.creative_director_used ?? 0,
           cdLimit: d.creative_director_limit ?? plan.limits.creative_director_limit,
           cdRemaining: d.creative_director_remaining ?? plan.limits.creative_director_limit,
