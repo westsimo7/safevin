@@ -192,6 +192,16 @@ const PricingSection = () => {
                 </Button>
               </div>
             );
+
+            if (plan.key === "free") {
+              return (
+                <>
+                  {cardEl}
+                  <BundlePurchaseCard key="bundle" />
+                </>
+              );
+            }
+            return cardEl;
           })}
         </div>
 
