@@ -44,6 +44,7 @@ serve(async (req) => {
 
     const body = await req.json().catch(() => ({}));
     const plan = String(body?.plan || "").toLowerCase();
+    const wallet = String(body?.wallet || "").toLowerCase(); // "apple_pay" | "google_pay" | ""
     const productName = PRODUCT_NAME_BY_PLAN[plan];
     if (!productName) throw new Error(`Invalid plan: ${plan}`);
 
@@ -68,10 +69,13 @@ serve(async (req) => {
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: stripePriceId, quantity: 1 }],
       mode: "subscription",
+      // "card" abilita automaticamente i wallet (Apple Pay / Google Pay) come
+      // Express Checkout in cima alla pagina di Stripe Checkout sui dispositivi compatibili.
+      payment_method_types: ["card"],
       allow_promotion_codes: true,
       success_url: `${origin}/home?status=success&plan=${plan}`,
       cancel_url: `${origin}/home?status=cancel`,
-      metadata: { user_id: user.id, plan },
+      metadata: { user_id: user.id, plan, wallet_preference: wallet || "none" },
       subscription_data: { metadata: { user_id: user.id, plan } },
     });
 
