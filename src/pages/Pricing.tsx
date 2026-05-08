@@ -266,6 +266,12 @@ const Pricing = () => {
                     <span className="text-muted-foreground text-xs">{plan.period}</span>
                   </div>
 
+                  {plan.popular && !isCurrent && (
+                    <div className="mb-2.5 flex justify-center">
+                      <OfferTimer compact />
+                    </div>
+                  )}
+
                   <ul className="space-y-1.5 mb-3 flex-grow">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-1.5">
