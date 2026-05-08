@@ -5,6 +5,8 @@ import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
+import React from "react";
+import BundlePurchaseCard from "@/components/BundlePurchaseCard";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
