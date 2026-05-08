@@ -30,8 +30,8 @@ const PricingSection = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // children layout: [free, bundle, pro, expert] — Pro is at index 2
-  const popularIndex = 2;
+  // children layout: [bundle, free, pro, expert] — Bundle is first (index 0)
+  const popularIndex = 0;
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
@@ -99,6 +99,7 @@ const PricingSection = () => {
           }}
           className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
+          <BundlePurchaseCard />
           {planDefs.map((plan, index) => {
             const isExpert = plan.key === "expert";
 
@@ -192,14 +193,6 @@ const PricingSection = () => {
               </div>
             );
 
-            if (plan.key === "free") {
-              return (
-                <React.Fragment key={`free-bundle-${index}`}>
-                  {cardEl}
-                  <BundlePurchaseCard />
-                </React.Fragment>
-              );
-            }
             return cardEl;
           })}
         </div>
