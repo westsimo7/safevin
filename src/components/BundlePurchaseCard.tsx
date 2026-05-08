@@ -176,8 +176,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
 
       <div className="space-y-2">
         <Button
-          variant="glass"
-          className="w-full h-10 sm:h-11 text-sm"
+          className="w-full h-10 sm:h-11 text-sm bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-500/40 shadow-[0_0_20px_rgb(16_185_129_/_0.35)] hover:shadow-[0_0_28px_rgb(16_185_129_/_0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
           disabled={loading}
           onClick={handleCheckout}
           onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}

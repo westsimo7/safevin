@@ -39,9 +39,10 @@ const ApplePayButton = ({
       disabled={disabled || loading}
       aria-label={label || "Paga con Apple Pay"}
       className={cn(
-        "w-full h-10 sm:h-11 rounded-lg bg-black text-white flex items-center justify-center gap-1.5",
-        "border border-white/10 hover:bg-zinc-900 active:bg-zinc-950 transition-colors",
-        "disabled:opacity-60 disabled:cursor-not-allowed",
+        "inline-flex w-full h-10 sm:h-11 px-5 py-2 rounded-2xl items-center justify-center gap-1.5 whitespace-nowrap",
+        "bg-black text-white font-semibold text-sm border border-white/15",
+        "hover:bg-zinc-900 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300",
+        "disabled:opacity-60 disabled:cursor-not-allowed disabled:pointer-events-none",
         className
       )}
     >
