@@ -85,6 +85,7 @@ const HeroSection = () => {
               1: <strong className="text-foreground" />,
               2: <strong className="text-foreground" />,
               3: <strong className="text-foreground" />,
+              4: <strong className="text-foreground" />,
             }}
           />
         </motion.p>
