@@ -5,6 +5,8 @@ import { useSwipeBack } from "@/hooks/useSwipeBack";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
+import React from "react";
+import BundlePurchaseCard from "@/components/BundlePurchaseCard";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -191,7 +193,7 @@ const Pricing = () => {
 
           <div className="-mx-4 sm:mx-0 mt-6">
             <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {plans.map((plan) => {
+            {plans.map((plan, planIdx) => {
               const planKey = PLAN_LABEL_TO_KEY[plan.name];
               const isCurrent = planKey === currentPlanKey;
               const isStarter = plan.name === "Starter";
@@ -214,8 +216,8 @@ const Pricing = () => {
                   : `border ${accent.border} bg-card/50 hover:border-border`;
 
               return (
+                <React.Fragment key={plan.name}>
                 <div
-                  key={plan.name}
                   className={`relative flex flex-col p-3.5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
                 >
                   {isCurrent && (
@@ -299,6 +301,8 @@ const Pricing = () => {
                     )}
                   </Button>
                 </div>
+                {isStarter && <BundlePurchaseCard />}
+                </React.Fragment>
               );
             })}
             </div>
