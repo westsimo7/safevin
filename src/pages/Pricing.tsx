@@ -216,8 +216,8 @@ const Pricing = () => {
                   : `border ${accent.border} bg-card/50 hover:border-border`;
 
               return (
+                <React.Fragment key={plan.name}>
                 <div
-                  key={plan.name}
                   className={`relative flex flex-col p-3.5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
                 >
                   {isCurrent && (
@@ -301,6 +301,12 @@ const Pricing = () => {
                     )}
                   </Button>
                 </div>
+                {isStarter && (
+                  <div className="shrink-0 w-[85%] snap-center sm:w-auto sm:shrink flex">
+                    <BundlePurchaseCard />
+                  </div>
+                )}
+                </React.Fragment>
               );
             })}
             </div>
