@@ -286,20 +286,32 @@ const Pricing = () => {
                     ))}
                   </ul>
 
-                  <Button
-                    variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
-                    className="w-full text-xs h-9"
-                    disabled={isCurrent || planKey === "free" || loadingPlan !== null}
-                    onClick={() => handleCheckout(planKey)}
-                  >
-                    {loadingPlan === planKey ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    ) : isCurrent ? (
-                      "Piano attuale"
-                    ) : (
-                      plan.cta
+                  <div className="space-y-2">
+                    <Button
+                      variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
+                      className="w-full text-xs h-9"
+                      disabled={isCurrent || planKey === "free" || loadingPlan !== null}
+                      onClick={() => handleCheckout(planKey)}
+                      onMouseEnter={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
+                      onFocus={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
+                    >
+                      {loadingPlan === planKey ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : isCurrent ? (
+                        "Piano attuale"
+                      ) : (
+                        plan.cta
+                      )}
+                    </Button>
+                    {!isCurrent && planKey !== "free" && (
+                      <ApplePayButton
+                        onClick={() => handleCheckout(planKey)}
+                        loading={loadingPlan === planKey}
+                        prewarmFn="create-checkout"
+                        className="h-9"
+                      />
                     )}
-                  </Button>
+                  </div>
                 </div>
                 {isStarter && <BundlePurchaseCard />}
                 </React.Fragment>
