@@ -90,7 +90,7 @@ const SafevinHome = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const planLabel = planState?.plan ? planState.plan.charAt(0).toUpperCase() + planState.plan.slice(1) : "Free";
+  const planLabel = planState?.plan === "free" ? "Starter" : planState?.plan ? planState.plan.charAt(0).toUpperCase() + planState.plan.slice(1) : "Starter";
 
   const quickActions = [
     {

@@ -145,9 +145,9 @@ const AppNavbar = () => {
       ],
     },
     {
-      title: "Supporto",
+      title: "Assistente",
       items: [
-        { label: "Centro assistenza", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
+        { label: "Tommy Scendi", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
       ],
     },
   ];

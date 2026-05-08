@@ -14,7 +14,7 @@ import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
-    name: "Free",
+    name: "Starter",
     price: "0",
     period: "",
     description: "Prova gratis con mano e guarda tu stesso se fa per te",
@@ -22,6 +22,7 @@ const plans = [
     features: [
       "1 annuncio prova creabile",
       "Prezzo strategico",
+      "Assistente Tommy Scendi",
     ],
     limitations: [
       "Accesso alla SAFEViN Artist Direction",
@@ -32,28 +33,6 @@ const plans = [
       "Accesso prioritario alle nuove funzionalità",
     ],
     cta: "Prova gratis",
-    popular: false,
-  },
-  {
-    name: "Starter",
-    price: "5,99",
-    oldPrice: "8,99",
-    period: "/mese",
-    description: "Per iniziare a vendere meglio\nOttimizza i tuoi primi annunci",
-    icon: Zap,
-    features: [
-      "10 annunci creabili",
-      "Prezzo strategico",
-    ],
-    limitations: [
-      "Accesso alla SAFEViN Artist Direction",
-      "3 annunci delegabili al team SAFEViN Artist Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Inizia ora",
     popular: false,
   },
   {
@@ -68,7 +47,7 @@ const plans = [
       "Prezzo strategico avanzato",
       "Accesso alla SAFEViN Artist Direction",
       "2 annunci delegabili al team SAFEViN Artist Direction",
-      
+      "Assistente Tommy Scendi",
     ],
     limitations: [
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -90,7 +69,7 @@ const plans = [
       "Prezzo strategico avanzato",
       "Accesso alla SAFEViN Artist Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Artist Direction",
-      
+      "Assistente Tommy Scendi",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
@@ -104,8 +83,7 @@ const plans = [
 
 type PlanKey = "free" | "starter" | "pro" | "expert";
 const PLAN_LABEL_TO_KEY: Record<string, PlanKey> = {
-  Free: "free",
-  Starter: "starter",
+  Starter: "free",
   Pro: "pro",
   Expert: "expert",
 };

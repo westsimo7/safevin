@@ -128,7 +128,7 @@
       "free": {
         "description": "Try it free: create your first optimized listing in 3 minutes and see for yourself",
         "cta": "Try free",
-        "features": ["1 listing", "Strategic pricing"],
+        "features": ["1 listing", "Strategic pricing", "Tommy Scendi assistant"],
         "limitations": [
           "Access to SAFEViN Artist Direction",
           "3 listings delegated to the SAFEViN Artist Direction team",
@@ -158,7 +158,8 @@
           "25 listings",
           "Advanced strategic pricing",
           "Access to SAFEViN Artist Direction",
-          "2 listings delegated to the SAFEViN Artist Direction team"
+          "2 listings delegated to the SAFEViN Artist Direction team",
+          "Tommy Scendi assistant"
         ],
         "limitations": [
           "Upgrade section to leave suggestions and improve the platform with commissions",
@@ -175,6 +176,7 @@
           "Advanced strategic pricing",
           "Priority access to SAFEViN Artist Direction",
           "6 listings delegated to the SAFEViN Artist Direction team",
+          "Tommy Scendi assistant",
           "Upgrade section to leave suggestions and improve the platform with commissions",
           "Collaborations with the SAFEViN team",
           "Personal discount coupons",
