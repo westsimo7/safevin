@@ -156,14 +156,23 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         ))}
       </ul>
 
-      <Button
-        variant="glass"
-        className="w-full h-10 sm:h-11 text-sm"
-        disabled={loading}
-        onClick={handleCheckout}
-      >
-        {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Acquista ${qty} ${qty === 1 ? "annuncio" : "annunci"}`}
-      </Button>
+      <div className="space-y-2">
+        <Button
+          variant="glass"
+          className="w-full h-10 sm:h-11 text-sm"
+          disabled={loading}
+          onClick={handleCheckout}
+          onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}
+          onFocus={() => speedupCheckoutHover("create-bundle-checkout")}
+        >
+          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Acquista ${qty} ${qty === 1 ? "annuncio" : "annunci"}`}
+        </Button>
+        <ApplePayButton
+          onClick={handleCheckout}
+          loading={loading}
+          prewarmFn="create-bundle-checkout"
+        />
+      </div>
     </div>
   );
 };
