@@ -234,16 +234,11 @@ const Pricing = () => {
                     </div>
                   )}
                   {plan.popular && !isCurrent && !isStarter && (
-                    <>
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                        <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                          Il più venduto
-                        </div>
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                      <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                        Il più venduto
                       </div>
-                      <div className="absolute -top-3 right-2 z-10">
-                        <OfferTimer compact />
-                      </div>
-                    </>
+                    </div>
                   )}
                   {isExpert && !isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
