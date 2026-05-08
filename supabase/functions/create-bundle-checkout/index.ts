@@ -9,7 +9,11 @@ const corsHeaders = {
 };
 
 const PRICE_ID = "price_1TUc2XQjr3o863GD5mwBifjm"; // 0.59€ per ad
-const COUPON_ID = "OnXtQyhj"; // -10% from 10+
+const COUPON_10 = "OnXtQyhj"; // -10% from 10+
+const COUPON_15 = "9VbrLq1R"; // -15% from 30+
+const COUPON_20 = "1LCLkhLY"; // -20% from 60+
+const pickCoupon = (q: number) =>
+  q >= 60 ? COUPON_20 : q >= 30 ? COUPON_15 : q >= 10 ? COUPON_10 : null;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -52,7 +56,7 @@ serve(async (req) => {
       line_items: [{ price: PRICE_ID, quantity }],
       mode: "payment",
       allow_promotion_codes: true,
-      discounts: quantity >= 10 ? [{ coupon: COUPON_ID }] : undefined,
+      discounts: pickCoupon(quantity) ? [{ coupon: pickCoupon(quantity)! }] : undefined,
       success_url: `${origin}/home?status=success&bundle=${quantity}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?status=cancel`,
       metadata: {
