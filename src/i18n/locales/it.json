@@ -128,7 +128,7 @@
       "free": {
         "description": "Prova gratis: crea il tuo primo annuncio ottimizzato in 3 minuti e vedi se fa per te",
         "cta": "Prova gratis",
-        "features": ["1 annuncio prova creabile", "Prezzo strategico"],
+        "features": ["1 annuncio prova creabile", "Prezzo strategico", "Assistente Tommy Scendi"],
         "limitations": [
           "Accesso alla SAFEViN Artist Direction",
           "3 annunci delegabili al team SAFEViN Artist Direction",
@@ -158,7 +158,8 @@
           "25 annunci creabili",
           "Prezzo strategico avanzato",
           "Accesso alla SAFEViN Artist Direction",
-          "2 annunci delegabili al team SAFEViN Artist Direction"
+          "2 annunci delegabili al team SAFEViN Artist Direction",
+          "Assistente Tommy Scendi"
         ],
         "limitations": [
           "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -175,6 +176,7 @@
           "Prezzo strategico avanzato",
           "Accesso alla SAFEViN Artist Direction prioritaria",
           "6 annunci delegabili al team SAFEViN Artist Direction",
+          "Assistente Tommy Scendi",
           "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
           "Collaborazioni con il team di SAFEViN",
           "Coupon sconto personali",
