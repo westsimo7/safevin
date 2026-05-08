@@ -84,7 +84,7 @@ const HeroSection = () => {
             components={{
               1: <strong className="text-foreground" />,
               2: <strong className="text-foreground" />,
-              3: <strong className="text-foreground" />,
+              3: <strong className="text-orange-500" />,
               4: <strong className="text-foreground" />,
             }}
           />
