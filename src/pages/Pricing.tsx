@@ -189,9 +189,6 @@ const Pricing = () => {
             backTo="/home"
             className="text-center"
           />
-          <div className="flex justify-center mt-3">
-            <OfferTimer />
-          </div>
 
           <div className="-mx-4 sm:mx-0 mt-6">
             <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -237,11 +234,16 @@ const Pricing = () => {
                     </div>
                   )}
                   {plan.popular && !isCurrent && !isStarter && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
-                        Il più venduto
+                    <>
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                        <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                          Il più venduto
+                        </div>
                       </div>
-                    </div>
+                      <div className="absolute -top-3 right-2 z-10">
+                        <OfferTimer compact />
+                      </div>
+                    </>
                   )}
                   {isExpert && !isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
