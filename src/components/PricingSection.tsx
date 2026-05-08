@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import OfferTimer from "@/components/OfferTimer";
 import BundlePurchaseCard from "@/components/BundlePurchaseCard";
+import ApplePayButton from "@/components/ApplePayButton";
 
 type PlanKey = "free" | "pro" | "expert";
 
@@ -187,18 +188,27 @@ const PricingSection = () => {
                   ))}
                 </ul>
 
-                <Button
-                  variant={plan.variant}
-                  className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-yellow-400 hover:bg-yellow-500 text-background border border-yellow-400/40" : ""}`}
-                  disabled={loadingPlan !== null}
-                  onClick={() => handlePlanClick(plan.key)}
-                >
-                  {loadingPlan === plan.key ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    t(`pricing.plans.${plan.key}.cta`)
+                <div className="space-y-2">
+                  <Button
+                    variant={plan.variant}
+                    className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-yellow-400 hover:bg-yellow-500 text-background border border-yellow-400/40" : ""}`}
+                    disabled={loadingPlan !== null}
+                    onClick={() => handlePlanClick(plan.key)}
+                  >
+                    {loadingPlan === plan.key ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      t(`pricing.plans.${plan.key}.cta`)
+                    )}
+                  </Button>
+                  {!isStarter && (
+                    <ApplePayButton
+                      onClick={() => handlePlanClick(plan.key)}
+                      loading={loadingPlan === plan.key}
+                      prewarmFn="create-checkout"
+                    />
                   )}
-                </Button>
+                </div>
               </div>
             );
 
