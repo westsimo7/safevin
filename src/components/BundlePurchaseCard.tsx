@@ -144,7 +144,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         {[
           "Paghi solo quello che usi",
           "Nessun rinnovo automatico",
-          "Sconto 10% da 10 annunci in su",
+          "Sconti progressivi: 10+ -10%, 30+ -15%, 60+ -20%",
           "Stesso motore degli abbonamenti",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
