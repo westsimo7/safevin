@@ -102,9 +102,10 @@ const SafevinHome = () => {
     {
       icon: <Clock className="w-5 h-5" />,
       title: "Riprendi",
-      desc: draftCount > 0 ? `${draftCount} in sospeso` : "Nessuno",
+      desc: draftCount > 0 ? "Lavori in corso" : "Nessuno",
       onClick: () => navigate("/incomplete"),
       highlight: draftCount > 0,
+      badge: draftCount > 0 ? draftCount : undefined,
     },
   ];
 
@@ -188,14 +189,18 @@ const SafevinHome = () => {
               <p className="text-xs text-muted-foreground mb-1">Annunci creati</p>
               <p className="text-2xl font-bold text-foreground">{creationsCount ?? "—"}</p>
             </motion.div>
-            <motion.div
+            <motion.button
+              type="button"
+              onClick={() => navigate("/pricing#bundle")}
               variants={{ hidden: { opacity: 0, y: 16 }, visible: { opacity: 1, y: 0 } }}
               transition={spring}
-              className="surface-soft rounded-2xl p-4"
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="surface-soft rounded-2xl p-4 text-left transition-all ring-1 ring-orange-500/40 hover:ring-orange-500/70"
             >
-              <p className="text-xs text-muted-foreground mb-1">In sospeso</p>
-              <p className="text-2xl font-bold text-foreground">{draftCount}</p>
-            </motion.div>
+              <p className="text-xs text-muted-foreground mb-1">Acquista</p>
+              <p className="text-2xl font-bold text-orange-500">+ Annunci</p>
+            </motion.button>
           </motion.div>
 
           {/* Quick actions */}
@@ -214,8 +219,13 @@ const SafevinHome = () => {
                 transition={spring}
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                className={`surface-soft rounded-2xl p-4 text-left transition-all ${a.highlight ? "ring-1 ring-primary/40" : ""}`}
+                className={`relative surface-soft rounded-2xl p-4 text-left transition-all ${a.highlight ? "ring-1 ring-primary/40" : ""}`}
               >
+                {a.badge !== undefined && (
+                  <span className="absolute top-2 right-2 min-w-[22px] h-[22px] px-1.5 rounded-full bg-primary text-primary-foreground text-[11px] font-bold flex items-center justify-center">
+                    {a.badge}
+                  </span>
+                )}
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2 ${a.highlight ? "bg-primary/15 text-primary" : "bg-foreground/5 text-foreground/80"}`}>
                   {a.icon}
                 </div>
