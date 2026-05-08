@@ -190,10 +190,10 @@ const Pricing = () => {
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
       <AppNavbar />
 
-      <main className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pt-4 sm:pt-6 pb-8">
+      <main className="flex-1 overflow-y-auto overflow-x-hidden px-4 sm:px-6 pt-1 pb-8">
         <div className="max-w-5xl mx-auto">
 
-          <div className="-mx-4 sm:mx-0 mt-6">
+          <div className="-mx-4 sm:mx-0 mt-1">
             <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {plans.map((plan, planIdx) => {
               const planKey = PLAN_LABEL_TO_KEY[plan.name];
