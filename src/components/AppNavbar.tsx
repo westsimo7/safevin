@@ -223,7 +223,7 @@ const AppNavbar = () => {
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {isFounder
                         ? <>Piano: <span className="font-semibold text-amber-500">Founder</span> · Annunci: <span className="font-semibold text-amber-500">∞</span></>
-                        : <>Annunci creabili: <span className="font-semibold text-foreground/70">{studioRemaining} / {studioLimit}</span></>
+                        : <>Annunci creabili: <span className="font-semibold text-foreground/70">{studioRemaining}</span></>
                       }
                     </p>
                     {!isFounder && cdLimit > 0 && (
