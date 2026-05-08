@@ -16,7 +16,7 @@ const LandingNavbar = () => {
             size="sm"
             className="h-9 px-4 text-sm font-bold bg-orange-500 hover:bg-orange-600 text-white"
           >
-            Pricing
+            Prezzi
           </Button>
         </div>
 
