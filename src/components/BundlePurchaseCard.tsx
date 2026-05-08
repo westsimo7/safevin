@@ -5,6 +5,8 @@ import { Minus, Plus, ShoppingBag, Loader2, Check } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import ApplePayButton from "@/components/ApplePayButton";
+import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 
 const UNIT_PRICE = 0.59;
 const DISCOUNT_THRESHOLD = 10;
