@@ -220,7 +220,7 @@ const Pricing = () => {
               return (
                 <React.Fragment key={plan.name}>
                 <div
-                  className={`relative flex flex-col p-3.5 rounded-2xl transition-all duration-300 shrink-0 w-[85%] snap-center sm:w-auto sm:shrink ${cardBorder}`}
+                  className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder}`}
                 >
                   {isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
@@ -237,8 +237,8 @@ const Pricing = () => {
                     </div>
                   )}
                   {plan.popular && !isCurrent && !isStarter && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold whitespace-nowrap shadow-lg shadow-primary/30">
                         Il più venduto
                       </div>
                     </div>
@@ -251,45 +251,45 @@ const Pricing = () => {
                     </div>
                   )}
 
-                  <div className="mb-2.5">
-                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-2 ${accent.bg}`}>
-                      <plan.icon className={`w-4 h-4 ${accent.text}`} />
+                  <div className="mb-3 sm:mb-4">
+                    <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 ${accent.bg}`}>
+                      <plan.icon className={`w-4 h-4 sm:w-5 sm:h-5 ${accent.text}`} />
                     </div>
-                    <h3 className={`text-base font-bold mb-0.5 ${accent.text}`}>
+                    <h3 className={`text-lg sm:text-xl font-bold mb-1 ${accent.text}`}>
                       {plan.name}
                     </h3>
-                    <p className="text-[11px] leading-snug text-muted-foreground whitespace-pre-line">{plan.description}</p>
+                    <p className="text-[13px] sm:text-sm text-muted-foreground whitespace-pre-line">{plan.description}</p>
                   </div>
 
-                  <div className="mb-2.5 flex items-baseline gap-1.5 flex-wrap">
+                  <div className="mb-3 sm:mb-4 flex items-baseline gap-2 flex-wrap">
                     {(plan as any).oldPrice && (
-                      <span className="text-sm text-muted-foreground line-through">€{(plan as any).oldPrice}</span>
+                      <span className="text-base sm:text-lg text-muted-foreground line-through">€{(plan as any).oldPrice}</span>
                     )}
-                    <span className="text-2xl font-bold text-foreground">€{plan.price}</span>
-                    <span className="text-muted-foreground text-xs">{plan.period}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-foreground">€{plan.price}</span>
+                    <span className="text-muted-foreground text-[13px] sm:text-sm">{plan.period}</span>
                   </div>
 
                   {plan.popular && !isCurrent && (
-                    <div className="mb-2.5 flex justify-center">
+                    <div className="mb-3 flex justify-center">
                       <OfferTimer compact />
                     </div>
                   )}
 
-                  <ul className="space-y-1.5 mb-3 flex-grow">
+                  <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5 flex-grow">
                     {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-1.5">
-                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
-                          <Check className={`w-2 h-2 ${accent.text}`} />
+                      <li key={i} className="flex items-start gap-2">
+                        <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${accent.iconBg}`}>
+                          <Check className={`w-2.5 h-2.5 ${accent.text}`} />
                         </div>
-                        <span className="text-foreground/80 text-[11px] leading-snug">{feature}</span>
+                        <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{feature}</span>
                       </li>
                     ))}
                     {plan.limitations.map((limitation, i) => (
-                      <li key={`lim-${i}`} className="flex items-start gap-1.5 opacity-40">
-                        <div className="w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
-                          <span className="text-[9px] text-muted-foreground">–</span>
+                      <li key={`lim-${i}`} className="flex items-start gap-2 opacity-40">
+                        <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-muted">
+                          <span className="text-[10px] text-muted-foreground">–</span>
                         </div>
-                        <span className="text-muted-foreground text-[11px] leading-snug line-through">{limitation}</span>
+                        <span className="text-muted-foreground text-[12.5px] sm:text-[13px] leading-snug line-through">{limitation}</span>
                       </li>
                     ))}
                   </ul>
@@ -297,14 +297,14 @@ const Pricing = () => {
                   <div className="space-y-2">
                     <Button
                       variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
-                      className="w-full text-xs h-9"
+                      className="w-full h-10 sm:h-11 text-sm"
                       disabled={isCurrent || planKey === "free" || loadingPlan !== null}
                       onClick={() => handleCheckout(planKey)}
                       onMouseEnter={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
                       onFocus={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
                     >
                       {loadingPlan === planKey ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <Loader2 className="w-4 h-4 animate-spin" />
                       ) : isCurrent ? (
                         "Piano attuale"
                       ) : (
@@ -316,7 +316,6 @@ const Pricing = () => {
                         onClick={() => handleCheckout(planKey)}
                         loading={loadingPlan === planKey}
                         prewarmFn="create-checkout"
-                        className="h-9"
                       />
                     )}
                   </div>
