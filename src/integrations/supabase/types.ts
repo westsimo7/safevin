@@ -218,6 +218,66 @@ export type Database = {
           },
         ]
       }
+      device_login_history: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          email: string | null
+          id: string
+          ip_address: string | null
+          outcome: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          outcome: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          email?: string | null
+          id?: string
+          ip_address?: string | null
+          outcome?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      device_registrations: {
+        Row: {
+          device_fingerprint: string
+          first_seen_at: string
+          ip_address: string | null
+          last_seen_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          device_fingerprint: string
+          first_seen_at?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          device_fingerprint?: string
+          first_seen_at?: string
+          ip_address?: string | null
+          last_seen_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_notification_state: {
         Row: {
           conversation_id: string
@@ -763,6 +823,10 @@ export type Database = {
         }[]
       }
       recount_studio_used: { Args: { p_user_id: string }; Returns: undefined }
+      register_or_check_device: {
+        Args: { p_fingerprint: string; p_ip?: string; p_user_agent?: string }
+        Returns: Json
+      }
       set_user_plan: {
         Args: {
           p_new_plan: Database["public"]["Enums"]["subscription_plan"]
