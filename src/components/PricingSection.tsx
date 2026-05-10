@@ -123,7 +123,7 @@ const PricingSection = () => {
               <div
                 key={index}
                 data-reveal
-                className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
+                className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder}`}
               >
                 {isStarter && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
