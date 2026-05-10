@@ -111,7 +111,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             onClick={inc}
             disabled={qty >= 500}
             aria-label="Aumenta"
-            className="h-11 w-11 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 disabled:opacity-40 flex items-center justify-center transition-colors"
+            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 flex items-center justify-center transition-colors"
           >
             <Plus className="w-4 h-4" />
           </button>
