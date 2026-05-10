@@ -133,7 +133,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
                 className={`px-3 h-8 rounded-full text-[12px] font-bold transition-all border ${
                   active
                     ? "bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-500/30"
-                    : "bg-orange-500/10 text-orange-500 border-orange-500/30 hover:bg-orange-500/20"
+                    : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
                 }`}
               >
                 -{pct}%
