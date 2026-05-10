@@ -167,8 +167,8 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
           "Include tutto lo Starter: 1 annuncio prova, prezzo strategico, Assistente Tommy Scendi",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
-            <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-orange-500/10">
-              <Check className="w-2.5 h-2.5 text-orange-500" />
+            <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary/10">
+              <Check className="w-2.5 h-2.5 text-primary" />
             </div>
             <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{f}</span>
           </li>
