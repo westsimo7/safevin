@@ -105,11 +105,11 @@ const PricingSection = () => {
             const isStarter = plan.key === "free";
 
             const accent = isStarter
-              ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
+              ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
               : isExpert
-                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
+                ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
                 : plan.popular
-                  ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
+                  ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
                   : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
 
             const cardBorder = (isExpert || isStarter || plan.popular)
