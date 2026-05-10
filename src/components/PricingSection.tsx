@@ -190,8 +190,16 @@ const PricingSection = () => {
 
                 <div className="space-y-2">
                   <Button
-                    variant={plan.variant}
-                    className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-blue-500 hover:bg-blue-600 text-white border border-blue-500/40" : ""}`}
+                    variant={plan.popular ? "default" : plan.variant}
+                    className={`w-full h-10 sm:h-11 text-sm ${
+                      isStarter
+                        ? "bg-blue-500 hover:bg-blue-600 text-white border border-blue-500/40"
+                        : plan.popular
+                          ? "bg-orange-500 hover:bg-orange-600 text-white border border-orange-500/40 shadow-[0_0_20px_rgb(249_115_22_/_0.35)]"
+                          : isExpert
+                            ? "bg-yellow-400 hover:bg-yellow-500 text-background border border-yellow-400/40"
+                            : ""
+                    }`}
                     disabled={loadingPlan !== null}
                     onClick={() => handlePlanClick(plan.key)}
                   >
