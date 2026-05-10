@@ -72,10 +72,10 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
       </div>
 
       <div className="mb-3 sm:mb-4">
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 bg-orange-500/20">
-          <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 bg-primary/20">
+          <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-1 text-orange-500">Annunci Singoli</h3>
+        <h3 className="text-lg sm:text-xl font-bold mb-1 text-primary">Annunci Singoli</h3>
         <p className="text-[13px] sm:text-sm text-muted-foreground">
           Compra solo gli annunci che ti servono. Nessun abbonamento. Sconto 10% da 10 annunci.
         </p>
