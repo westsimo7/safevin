@@ -105,11 +105,11 @@ const PricingSection = () => {
             const isStarter = plan.key === "free";
 
             const accent = isStarter
-              ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
+              ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
               : isExpert
-                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
+                ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
                 : plan.popular
-                  ? { border: "border-primary/60", shadow: "shadow-primary/20", bg: "bg-primary/20", iconBg: "bg-primary/10", text: "text-primary" }
+                  ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
                   : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
 
             const cardBorder = (isExpert || isStarter || plan.popular)
@@ -127,21 +127,21 @@ const PricingSection = () => {
               >
                 {isStarter && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-yellow-400 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-yellow-400/30">
+                    <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
                       Starter
                     </div>
                   </div>
                 )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-primary text-primary-foreground text-xs font-semibold shadow-lg shadow-primary/40">
+                    <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold shadow-lg shadow-orange-500/40">
                       {t("pricing.badges.popular")}
                     </div>
                   </div>
                 )}
                 {isExpert && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
+                    <div className="px-3 py-1 rounded-full bg-yellow-400 text-background text-xs font-semibold whitespace-nowrap shadow-lg shadow-yellow-400/30">
                       {t("pricing.badges.expert")}
                     </div>
                   </div>
@@ -191,7 +191,7 @@ const PricingSection = () => {
                 <div className="space-y-2">
                   <Button
                     variant={plan.variant}
-                    className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-yellow-400 hover:bg-yellow-500 text-background border border-yellow-400/40" : ""}`}
+                    className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-blue-500 hover:bg-blue-600 text-white border border-blue-500/40" : ""}`}
                     disabled={loadingPlan !== null}
                     onClick={() => handlePlanClick(plan.key)}
                   >

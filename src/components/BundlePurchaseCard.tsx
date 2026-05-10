@@ -63,19 +63,19 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
     <div
       id="bundle"
       data-reveal
-      className="relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink border-2 border-orange-500/60 bg-card shadow-lg shadow-orange-500/10 scroll-mt-20"
+      className="relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink border-2 border-primary/60 bg-card shadow-lg shadow-primary/10 scroll-mt-20"
     >
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-        <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
+        <div className="px-3 py-1 rounded-full bg-primary text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-primary/30">
           Acquisto singolo
         </div>
       </div>
 
       <div className="mb-3 sm:mb-4">
-        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 bg-orange-500/20">
-          <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
+        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 bg-primary/20">
+          <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
-        <h3 className="text-lg sm:text-xl font-bold mb-1 text-orange-500">Annunci Singoli</h3>
+        <h3 className="text-lg sm:text-xl font-bold mb-1 text-primary">Annunci Singoli</h3>
         <p className="text-[13px] sm:text-sm text-muted-foreground">
           Compra solo gli annunci che ti servono. Nessun abbonamento. Sconto 10% da 10 annunci.
         </p>
@@ -97,7 +97,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             onClick={dec}
             disabled={qty <= 1}
             aria-label="Diminuisci"
-            className="h-11 w-11 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 disabled:opacity-40 disabled:hover:bg-orange-500/10 flex items-center justify-center transition-colors"
+            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 disabled:hover:bg-primary/10 flex items-center justify-center transition-colors"
           >
             <Minus className="w-4 h-4" />
           </button>
@@ -111,7 +111,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             onClick={inc}
             disabled={qty >= 500}
             aria-label="Aumenta"
-            className="h-11 w-11 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 disabled:opacity-40 flex items-center justify-center transition-colors"
+            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 flex items-center justify-center transition-colors"
           >
             <Plus className="w-4 h-4" />
           </button>
@@ -133,7 +133,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
                 className={`px-3 h-8 rounded-full text-[12px] font-bold transition-all border ${
                   active
                     ? "bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-500/30"
-                    : "bg-orange-500/10 text-orange-500 border-orange-500/30 hover:bg-orange-500/20"
+                    : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
                 }`}
               >
                 -{pct}%
@@ -167,8 +167,8 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
           "Include tutto lo Starter: 1 annuncio prova, prezzo strategico, Assistente Tommy Scendi",
         ].map((f, i) => (
           <li key={i} className="flex items-start gap-2">
-            <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-orange-500/10">
-              <Check className="w-2.5 h-2.5 text-orange-500" />
+            <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary/10">
+              <Check className="w-2.5 h-2.5 text-primary" />
             </div>
             <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{f}</span>
           </li>
