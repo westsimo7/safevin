@@ -97,7 +97,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
             onClick={dec}
             disabled={qty <= 1}
             aria-label="Diminuisci"
-            className="h-11 w-11 rounded-full bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 disabled:opacity-40 disabled:hover:bg-orange-500/10 flex items-center justify-center transition-colors"
+            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 disabled:hover:bg-primary/10 flex items-center justify-center transition-colors"
           >
             <Minus className="w-4 h-4" />
           </button>
