@@ -63,7 +63,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
     <div
       id="bundle"
       data-reveal
-      className="relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink border-2 border-orange-500/60 bg-card shadow-lg shadow-orange-500/10 scroll-mt-20"
+      className="relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink border-2 border-primary/60 bg-card shadow-lg shadow-primary/10 scroll-mt-20"
     >
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
         <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-orange-500/30">
