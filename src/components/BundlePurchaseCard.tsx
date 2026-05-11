@@ -30,7 +30,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
   const fmt = (n: number) =>
     n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  const dec = () => setQty((q) => Math.max(2, q - 1));
+  const dec = () => setQty((q) => Math.max(1, q - 1));
   const inc = () => setQty((q) => Math.min(500, q + 1));
 
   const handleCheckout = async () => {
