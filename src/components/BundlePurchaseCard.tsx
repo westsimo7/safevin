@@ -16,7 +16,7 @@ interface Props {
 }
 
 const BundlePurchaseCard = ({ accentClass }: Props) => {
-  const [qty, setQty] = useState(2);
+  const [qty, setQty] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
