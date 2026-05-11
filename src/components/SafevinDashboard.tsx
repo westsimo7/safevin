@@ -251,6 +251,7 @@ const SafevinHome = () => {
 
         </div>
       </main>
+      <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
     </div>
   );
 };
