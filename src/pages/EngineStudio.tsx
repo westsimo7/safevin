@@ -73,6 +73,7 @@ const EngineStudio = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { state: planState, refresh: refreshPlan } = usePlan();
 
   const [phase, setPhase] = useState<Phase>("upload");
   const [analysis, setAnalysis] = useState<ProductAnalysis | null>(null);
@@ -80,6 +81,7 @@ const EngineStudio = () => {
   const [images, setImages] = useState<File[]>([]);
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
   const [incompleteId, setIncompleteId] = useState<string | null>(null);
+  const [showFirstPopup, setShowFirstPopup] = useState(false);
 
   useEffect(() => {
     const state = location.state as ResumeState;
