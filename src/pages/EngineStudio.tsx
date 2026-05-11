@@ -10,6 +10,8 @@ import StudioRecognition, { type ProductAnalysis } from "@/components/studio/Stu
 import StudioMissingPhotos from "@/components/studio/StudioMissingPhotos";
 import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInput";
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
+import FirstListingPopup from "@/components/FirstListingPopup";
+import { usePlan } from "@/hooks/usePlan";
 import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
 import { savePreviews, loadPreviews, removePreviews } from "@/lib/studioPreviews";
 
