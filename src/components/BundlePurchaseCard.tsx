@@ -16,7 +16,7 @@ interface Props {
 }
 
 const BundlePurchaseCard = ({ accentClass }: Props) => {
-  const [qty, setQty] = useState(1);
+  const [qty, setQty] = useState(2);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -30,7 +30,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
   const fmt = (n: number) =>
     n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  const dec = () => setQty((q) => Math.max(1, q - 1));
+  const dec = () => setQty((q) => Math.max(2, q - 1));
   const inc = () => setQty((q) => Math.min(500, q + 1));
 
   const handleCheckout = async () => {
@@ -95,7 +95,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
           <button
             type="button"
             onClick={dec}
-            disabled={qty <= 1}
+            disabled={qty <= 2}
             aria-label="Diminuisci"
             className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 disabled:hover:bg-primary/10 flex items-center justify-center transition-colors"
           >
