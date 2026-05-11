@@ -293,6 +293,14 @@ const EngineStudio = () => {
         setGeneratedOutput(data.output);
         setPhase("output");
         await saveStudioCreation(data.output, incompleteId);
+        // Mostra il popup "primo annuncio" agli utenti free dopo la prima creazione
+        try {
+          await refreshPlan();
+        } catch {}
+        const isFree = !planState?.isFounder && (planState?.plan === "free" || !planState?.plan);
+        if (isFree) {
+          setShowFirstPopup(true);
+        }
       } else {
         throw new Error("Risposta non valida");
       }
