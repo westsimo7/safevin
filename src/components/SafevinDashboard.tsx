@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/hooks/usePlan";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
+import FirstListingPopup from "@/components/FirstListingPopup";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
@@ -17,6 +18,16 @@ const SafevinHome = () => {
   const { user } = useAuth();
   const [draftCount, setDraftCount] = useState(0);
   const [creationsCount, setCreationsCount] = useState<number | null>(null);
+  const [showFirstPopup, setShowFirstPopup] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("firstPopup") === "1") {
+      setShowFirstPopup(true);
+      searchParams.delete("firstPopup");
+      setSearchParams(searchParams, { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const spring = { type: "spring" as const, stiffness: 90, damping: 18 };
 
