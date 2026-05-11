@@ -402,6 +402,7 @@ const EngineStudio = () => {
           />
         )}
       </main>
+      <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
     </div>
   );
 };
