@@ -33,6 +33,8 @@ const DECADE_OPTIONS = [
   { value: "80s", label: "Anni '80" },
   { value: "90s", label: "Anni '90" },
   { value: "y2k", label: "Anni 2000" },
+  { value: "2010s", label: "Anni 2010" },
+  { value: "custom", label: "Altro (scrivi a mano)" },
 ];
 
 const UPPER_BODY_KEYWORDS = [
@@ -163,6 +165,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
   const [decade, setDecade] = useState("");
+  const [customDecade, setCustomDecade] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
   const toggleMaterial = (mat: string) => {
@@ -173,9 +176,13 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && productType && fit && style && condition && decade && selectedMaterials.length > 0 && minPrice;
+  const decadeValid = decade && (decade !== "custom" || customDecade.trim().length > 0);
+  const canContinue = size && gender && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
+    const decadeLabel = decade === "custom"
+      ? customDecade.trim()
+      : (DECADE_OPTIONS.find(d => d.value === decade)?.label || decade);
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
@@ -187,7 +194,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       minPrice,
       measurements,
       extras,
-      decade,
+      decade: decadeLabel,
     });
   };
 
@@ -292,6 +299,14 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
                 ))}
               </SelectContent>
             </Select>
+            {decade === "custom" && (
+              <Input
+                value={customDecade}
+                onChange={e => setCustomDecade(e.target.value)}
+                placeholder="Es: Fine anni '60, primi anni 2020..."
+                className="text-sm mt-2"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
