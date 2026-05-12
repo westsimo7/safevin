@@ -177,7 +177,6 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [fit, setFit] = useState("");
-  const [fit, setFit] = useState("");
   const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
   const [selectedMaterials, setSelectedMaterials] = useState<string[]>(() => {
