@@ -250,19 +250,21 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Taglia *</Label>
-            <Select value={size} onValueChange={setSize} disabled={!gender}>
-              <SelectTrigger>
-                <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
-              </SelectTrigger>
-              <SelectContent>
-                {getSizeOptions(gender, zone).map(s => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {zone !== "object" && (
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Taglia *</Label>
+              <Select value={size} onValueChange={setSize} disabled={!gender && zone !== "shoes"}>
+                <SelectTrigger>
+                  <SelectValue placeholder={(gender || zone === "shoes") ? "Seleziona taglia" : "Seleziona prima il genere"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {getSizeOptions(gender, zone).map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2 rounded-lg border-2 border-amber-500/60 bg-amber-500/5 shadow-[0_0_14px_-3px_hsl(45_95%_55%/0.5)] p-3">
             <div className="flex items-center gap-3 overflow-hidden">
               <Label className="text-sm font-medium shrink-0">Tipologia prodotto *</Label>
