@@ -176,9 +176,13 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     });
   };
 
-  const canContinue = size && gender && productType && fit && style && condition && decade && selectedMaterials.length > 0 && minPrice;
+  const decadeValid = decade && (decade !== "custom" || customDecade.trim().length > 0);
+  const canContinue = size && gender && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
+    const decadeLabel = decade === "custom"
+      ? customDecade.trim()
+      : (DECADE_OPTIONS.find(d => d.value === decade)?.label || decade);
     onContinue({
       size,
       gender: GENDER_OPTIONS.find(g => g.value === gender)?.label || gender,
@@ -190,7 +194,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
       minPrice,
       measurements,
       extras,
-      decade,
+      decade: decadeLabel,
     });
   };
 
