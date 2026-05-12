@@ -49,8 +49,28 @@ const LOWER_BODY_KEYWORDS = [
   "leggings", "bermuda", "cargo", "chino", "jogger", "skort",
 ];
 
-function getGarmentZone(category: string, productType: string): "upper" | "lower" | "unknown" {
+const SHOES_KEYWORDS = [
+  "scarpa", "scarpe", "sneaker", "sneakers", "stivale", "stivali", "stivaletto",
+  "stivaletti", "sandalo", "sandali", "mocassino", "mocassini", "ballerina",
+  "ballerine", "anfibio", "anfibi", "decollete", "décolleté", "zeppa", "zeppe",
+  "ciabatta", "ciabatte", "infradito", "running", "trainer", "boot", "boots",
+  "loafer", "loafers", "espadrillas", "espadrilla", "tacco", "tacchi",
+];
+
+const OBJECT_KEYWORDS = [
+  "borsa", "borse", "zaino", "zaini", "pochette", "tracolla", "shopper",
+  "marsupio", "portafoglio", "portafogli", "cintura", "cinture", "cappello",
+  "berretto", "sciarpa", "guanti", "occhiali", "orologio", "gioiello",
+  "collana", "bracciale", "anello", "orecchini", "accessorio", "accessori",
+  "valigia", "trolley", "ombrello",
+];
+
+type Zone = "upper" | "lower" | "shoes" | "object" | "unknown";
+
+function getGarmentZone(category: string, productType: string): Zone {
   const text = `${category} ${productType}`.toLowerCase();
+  if (SHOES_KEYWORDS.some(k => text.includes(k))) return "shoes";
+  if (OBJECT_KEYWORDS.some(k => text.includes(k))) return "object";
   if (LOWER_BODY_KEYWORDS.some(k => text.includes(k))) return "lower";
   if (UPPER_BODY_KEYWORDS.some(k => text.includes(k))) return "upper";
   return "unknown";
@@ -78,7 +98,10 @@ const SIZES_DONNA = [
   "Taglia unica", "Altro",
 ];
 
-function getSizeOptions(gender: string, zone: "upper" | "lower" | "unknown"): string[] {
+const SIZES_SHOES = Array.from({ length: 48 - 28 + 1 }, (_, i) => `EU ${28 + i}`);
+
+function getSizeOptions(gender: string, zone: Zone): string[] {
+  if (zone === "shoes") return SIZES_SHOES;
   if (gender === "donna") return SIZES_DONNA;
   if (gender === "uomo") {
     if (zone === "lower") return SIZES_LOWER_UOMO;
@@ -148,10 +171,11 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return match?.value || "";
   };
 
-  const zone = getGarmentZone(analysis.category, analysis.product_type);
+  const [productType, _setProductType] = useState(analysis.product_type || "");
+  const setProductType = (v: string) => { _setProductType(v); setSize(""); };
+  const zone = useMemo(() => getGarmentZone(analysis.category, productType), [analysis.category, productType]);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
-  const [productType, setProductType] = useState(analysis.product_type || "");
   const [fit, setFit] = useState("");
   const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
@@ -177,7 +201,8 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   };
 
   const decadeValid = decade && (decade !== "custom" || customDecade.trim().length > 0);
-  const canContinue = size && gender && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
+  const sizeValid = zone === "object" || !!size;
+  const canContinue = sizeValid && gender && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     const decadeLabel = decade === "custom"
@@ -227,19 +252,21 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Taglia *</Label>
-            <Select value={size} onValueChange={setSize} disabled={!gender}>
-              <SelectTrigger>
-                <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
-              </SelectTrigger>
-              <SelectContent>
-                {getSizeOptions(gender, zone).map(s => (
-                  <SelectItem key={s} value={s}>{s}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {zone !== "object" && (
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Taglia *</Label>
+              <Select value={size} onValueChange={setSize} disabled={!gender}>
+                <SelectTrigger>
+                  <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {getSizeOptions(gender, zone).map(s => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <div className="space-y-2 rounded-lg border-2 border-amber-500/60 bg-amber-500/5 shadow-[0_0_14px_-3px_hsl(45_95%_55%/0.5)] p-3">
             <div className="flex items-center gap-3 overflow-hidden">
               <Label className="text-sm font-medium shrink-0">Tipologia prodotto *</Label>
