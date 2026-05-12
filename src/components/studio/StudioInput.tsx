@@ -33,6 +33,8 @@ const DECADE_OPTIONS = [
   { value: "80s", label: "Anni '80" },
   { value: "90s", label: "Anni '90" },
   { value: "y2k", label: "Anni 2000" },
+  { value: "2010s", label: "Anni 2010" },
+  { value: "custom", label: "Altro (scrivi a mano)" },
 ];
 
 const UPPER_BODY_KEYWORDS = [
