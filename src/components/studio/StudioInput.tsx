@@ -171,7 +171,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
     return match?.value || "";
   };
 
-  const zone = getGarmentZone(analysis.category, analysis.product_type);
+  const [productType, _setProductType] = useState(analysis.product_type || "");
+  const setProductType = (v: string) => { _setProductType(v); setSize(""); };
+  const zone = useMemo(() => getGarmentZone(analysis.category, productType), [analysis.category, productType]);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
   const [productType, setProductType] = useState(analysis.product_type || "");
