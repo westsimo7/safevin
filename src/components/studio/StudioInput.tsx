@@ -255,9 +255,9 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
           {zone !== "object" && (
             <div className="space-y-2">
               <Label className="text-sm font-medium">Taglia *</Label>
-              <Select value={size} onValueChange={setSize} disabled={!gender && zone !== "shoes"}>
+              <Select value={size} onValueChange={setSize} disabled={!gender}>
                 <SelectTrigger>
-                  <SelectValue placeholder={(gender || zone === "shoes") ? "Seleziona taglia" : "Seleziona prima il genere"} />
+                  <SelectValue placeholder={gender ? "Seleziona taglia" : "Seleziona prima il genere"} />
                 </SelectTrigger>
                 <SelectContent>
                   {getSizeOptions(gender, zone).map(s => (
