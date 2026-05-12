@@ -165,6 +165,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const [measurements, setMeasurements] = useState<Record<string, string>>({});
   const [extras, setExtras] = useState("");
   const [decade, setDecade] = useState("");
+  const [customDecade, setCustomDecade] = useState("");
   const [showGuide, setShowGuide] = useState(false);
 
   const toggleMaterial = (mat: string) => {
