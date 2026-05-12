@@ -49,8 +49,28 @@ const LOWER_BODY_KEYWORDS = [
   "leggings", "bermuda", "cargo", "chino", "jogger", "skort",
 ];
 
-function getGarmentZone(category: string, productType: string): "upper" | "lower" | "unknown" {
+const SHOES_KEYWORDS = [
+  "scarpa", "scarpe", "sneaker", "sneakers", "stivale", "stivali", "stivaletto",
+  "stivaletti", "sandalo", "sandali", "mocassino", "mocassini", "ballerina",
+  "ballerine", "anfibio", "anfibi", "decollete", "décolleté", "zeppa", "zeppe",
+  "ciabatta", "ciabatte", "infradito", "running", "trainer", "boot", "boots",
+  "loafer", "loafers", "espadrillas", "espadrilla", "tacco", "tacchi",
+];
+
+const OBJECT_KEYWORDS = [
+  "borsa", "borse", "zaino", "zaini", "pochette", "tracolla", "shopper",
+  "marsupio", "portafoglio", "portafogli", "cintura", "cinture", "cappello",
+  "berretto", "sciarpa", "guanti", "occhiali", "orologio", "gioiello",
+  "collana", "bracciale", "anello", "orecchini", "accessorio", "accessori",
+  "valigia", "trolley", "ombrello",
+];
+
+type Zone = "upper" | "lower" | "shoes" | "object" | "unknown";
+
+function getGarmentZone(category: string, productType: string): Zone {
   const text = `${category} ${productType}`.toLowerCase();
+  if (SHOES_KEYWORDS.some(k => text.includes(k))) return "shoes";
+  if (OBJECT_KEYWORDS.some(k => text.includes(k))) return "object";
   if (LOWER_BODY_KEYWORDS.some(k => text.includes(k))) return "lower";
   if (UPPER_BODY_KEYWORDS.some(k => text.includes(k))) return "upper";
   return "unknown";
@@ -78,7 +98,10 @@ const SIZES_DONNA = [
   "Taglia unica", "Altro",
 ];
 
-function getSizeOptions(gender: string, zone: "upper" | "lower" | "unknown"): string[] {
+const SIZES_SHOES = Array.from({ length: 48 - 28 + 1 }, (_, i) => `EU ${28 + i}`);
+
+function getSizeOptions(gender: string, zone: Zone): string[] {
+  if (zone === "shoes") return SIZES_SHOES;
   if (gender === "donna") return SIZES_DONNA;
   if (gender === "uomo") {
     if (zone === "lower") return SIZES_LOWER_UOMO;
