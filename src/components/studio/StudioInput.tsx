@@ -202,8 +202,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
 
   const decadeValid = decade && (decade !== "custom" || customDecade.trim().length > 0);
   const sizeValid = zone === "object" || !!size;
-  const genderValid = zone === "shoes" ? true : !!gender;
-  const canContinue = sizeValid && genderValid && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
+  const canContinue = sizeValid && gender && productType && fit && style && condition && decadeValid && selectedMaterials.length > 0 && minPrice;
 
   const handleContinue = () => {
     const decadeLabel = decade === "custom"
