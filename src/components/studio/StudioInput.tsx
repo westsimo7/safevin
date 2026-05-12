@@ -299,6 +299,14 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
                 ))}
               </SelectContent>
             </Select>
+            {decade === "custom" && (
+              <Input
+                value={customDecade}
+                onChange={e => setCustomDecade(e.target.value)}
+                placeholder="Es: Fine anni '60, primi anni 2020..."
+                className="text-sm mt-2"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
