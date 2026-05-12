@@ -176,7 +176,7 @@ const StudioInput = ({ analysis, onContinue, onBack, auditSource }: StudioInputP
   const zone = useMemo(() => getGarmentZone(analysis.category, productType), [analysis.category, productType]);
   const [size, setSize] = useState("");
   const [gender, setGender] = useState("");
-  const [productType, setProductType] = useState(analysis.product_type || "");
+  const [fit, setFit] = useState("");
   const [fit, setFit] = useState("");
   const [style, setStyle] = useState("");
   const [condition, setCondition] = useState(getInitialCondition());
