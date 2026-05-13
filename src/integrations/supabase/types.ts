@@ -422,6 +422,21 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_gift_claims: {
+        Row: {
+          claimed_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       studio_creations: {
         Row: {
           categoria: string
@@ -704,6 +719,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      claim_purchase_gift: { Args: never; Returns: Json }
       cleanup_test_users: { Args: never; Returns: number }
       complete_creative_director_job: {
         Args: { p_conversation_id: string }
@@ -778,6 +794,7 @@ export type Database = {
         Args: { p_plan: Database["public"]["Enums"]["subscription_plan"] }
         Returns: Json
       }
+      get_purchase_gift_status: { Args: never; Returns: Json }
       get_user_plan: { Args: never; Returns: Json }
       has_role: {
         Args: {
