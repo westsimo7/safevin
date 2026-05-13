@@ -10,6 +10,7 @@ import { usePlan } from "@/hooks/usePlan";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import FirstListingPopup from "@/components/FirstListingPopup";
+import PurchaseGiftPopup from "@/components/PurchaseGiftPopup";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
