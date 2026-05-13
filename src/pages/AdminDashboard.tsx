@@ -191,7 +191,9 @@ const AdminDashboard = () => {
                     {users.map((u) => {
                       const plan = u.plan || "free";
                       const used = u.studio_used ?? 0;
-                      const limit = u.studio_limit ?? 1;
+                      const planLimit = u.studio_limit ?? 1;
+                      const bonus = u.bonus_credits ?? 0;
+                      const available = planLimit + bonus;
                       return (
                         <tr key={u.user_id} className="border-b border-border/30 hover:bg-muted/30 transition-colors">
                           <td className="p-3">
@@ -215,10 +217,13 @@ const AdminDashboard = () => {
                             <span className="text-xs capitalize">{plan}</span>
                           </td>
                           <td className="p-3 text-center">
-                            <span className={`font-semibold ${used >= limit ? "text-destructive" : "text-foreground"}`}>
+                            <span className={`font-semibold ${used >= available ? "text-destructive" : "text-foreground"}`}>
                               {used}
                             </span>
-                            <span className="text-muted-foreground">/{limit}</span>
+                            <span className="text-muted-foreground">/{available}</span>
+                            {bonus > 0 && (
+                              <span className="ml-1 text-[10px] font-bold text-orange-500">+{bonus}</span>
+                            )}
                           </td>
                           <td className="p-3 text-xs text-muted-foreground">
                             {new Date(u.created_at).toLocaleDateString("it-IT")}
