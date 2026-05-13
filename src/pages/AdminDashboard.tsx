@@ -20,6 +20,7 @@ interface AdminUser {
   plan: string;
   studio_used: number;
   studio_limit: number;
+  bonus_credits: number;
   cd_used: number;
   cd_limit: number;
   created_at: string;
