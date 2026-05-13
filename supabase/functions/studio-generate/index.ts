@@ -16,7 +16,7 @@ Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per con
 ═══════════════════════════════════════
 
 Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000"] + [Sesso] + ([Taglia]) + [Condizione]
+[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" / "Anni 2010" / periodo custom (es. "Fine anni '60", "primi anni 2020")] + [Sesso] + ([Taglia]) + [Condizione]
 
 Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
 
@@ -25,7 +25,7 @@ Se la decade è fornita, inseriscila SUBITO DOPO lo stile. Se decade non fornita
 IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
 
 Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) Come nuovo"
-Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Y2K Anni '90 Donna (S) Come nuovo"
+Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Anni '90 Donna (S) Come nuovo"
 
 - Massimo 80 caratteri
 - Ogni elemento presente se disponibile
@@ -38,7 +38,7 @@ Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Y2K A
 La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
 
 Struttura (5 righe con spaziatura specifica):
-RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + (se decade fornita: + decade es. "Anni '90") + [Colore] + [Taglia].
+RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + (se decade fornita: + decade es. "Anni '90" / "Anni 2010" / "Fine anni '60") + [Colore] + [Taglia].
 (riga vuota)
 RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione]
    REGOLA TONO VINTAGE: Se style === "Vintage" e la condizione NON è "Nuovo con cartellino" né "Nuovo senza cartellino", sostituisci la formula standard con un tono che valorizza l'autenticità del capo:
@@ -143,12 +143,14 @@ Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
 }`;
 
 function decadeLabel(d?: string): string {
+  if (!d) return "";
   switch (d) {
     case "70s": return "Anni '70";
     case "80s": return "Anni '80";
     case "90s": return "Anni '90";
     case "y2k": return "Anni 2000";
-    default: return "";
+    case "2010s": return "Anni 2010";
+    default: return d;
   }
 }
 
@@ -305,7 +307,7 @@ ${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
 ISTRUZIONI:
-1. Crea un titolo SEO con formula ESATTA in quest'ordine: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se decade fornita aggiungi "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" SUBITO DOPO lo stile) + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione, e NON usare mai "Y2K" come parola nel titolo (per gli anni 2000 usa solo "Anni 2000")
+1. Crea un titolo SEO con formula ESATTA in quest'ordine: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se decade fornita aggiungi "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" / "Anni 2010" o il periodo custom SUBITO DOPO lo stile) + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione, e NON usare mai "Y2K" come parola nel titolo (per gli anni 2000 usa solo "Anni 2000")
    IMPORTANTE: La decade va SEMPRE collocata tra lo Stile e il Sesso, MAI dopo la taglia o la condizione. Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
 2. Crea la descrizione professionale con la struttura indicata nel system prompt
    IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
