@@ -774,6 +774,7 @@ export type Database = {
         Args: never
         Returns: {
           analysis_count: number
+          bonus_credits: number
           cd_limit: number
           cd_used: number
           cognome: string
