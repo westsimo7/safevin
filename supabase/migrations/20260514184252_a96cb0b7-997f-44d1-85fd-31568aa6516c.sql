@@ -1,0 +1,1 @@
+DELETE FROM public.email_send_log WHERE template_name IN ('free-reminder-2h','free-reminder-24h','free-reminder-48h');
