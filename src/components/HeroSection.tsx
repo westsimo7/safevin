@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
 import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
-import ReviewsSection from "@/components/ReviewsSection";
+
 
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
@@ -119,11 +119,28 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
+        {/* Vedi recensioni button */}
+        <motion.div
+          className="mt-6 sm:mt-10 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+        >
+          <Button
+            variant="glass"
+            size="lg"
+            className="h-12 sm:h-12 px-7 text-sm sm:text-base"
+            onClick={() => {
+              document.getElementById("recensioni")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
+            <Star className="mr-2 w-4 h-4 fill-primary text-primary" />
+            Vedi recensioni
+          </Button>
+        </motion.div>
+
       </div>
       </section>
-
-      {/* Reviews & trust section */}
-      <ReviewsSection />
     </>
   );
 };

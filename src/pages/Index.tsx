@@ -7,6 +7,7 @@ import SolutionSection from "@/components/SolutionSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import PricingSection from "@/components/PricingSection";
 import DisclaimerSection from "@/components/DisclaimerSection";
+import ReviewsSection from "@/components/ReviewsSection";
 import Footer from "@/components/Footer";
 
 
@@ -39,6 +40,9 @@ const Index = () => {
         <SolutionSection />
         <HowItWorksSection />
         <PricingSection />
+        <div id="recensioni" className="scroll-mt-20">
+          <ReviewsSection />
+        </div>
         <DisclaimerSection />
         <Footer />
       </div>
