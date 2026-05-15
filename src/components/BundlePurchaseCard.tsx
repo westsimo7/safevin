@@ -78,11 +78,20 @@ const BundlePurchaseCard = ({}: Props) => {
         </p>
       </div>
 
-      {/* Tier list */}
-      <div className="flex flex-col gap-2.5 flex-grow">
+      {/* Tier list - identical layout, fills container */}
+      <div className="flex flex-col gap-3 flex-grow">
         {TIERS.map((tier) => {
           const isLoading = loadingQty === tier.qty;
           const Icon = tier.icon;
+          const isHighlight = tier.qty === 10;
+
+          const cardCls = isHighlight
+            ? "border-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/15 shadow-lg shadow-yellow-400/20"
+            : "border-border/60 hover:border-primary/60 bg-background/40 hover:bg-primary/5";
+          const iconCls = isHighlight ? "bg-yellow-400/25 text-yellow-400" : "bg-primary/15 text-primary";
+          const priceCls = isHighlight ? "text-yellow-400" : "text-primary";
+          const ctaCls = isHighlight ? "text-yellow-400" : "text-primary";
+
           return (
             <button
               key={tier.qty}
@@ -91,20 +100,20 @@ const BundlePurchaseCard = ({}: Props) => {
               onClick={() => handleCheckout(tier.qty)}
               onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}
               onFocus={() => speedupCheckoutHover("create-bundle-checkout")}
-              className="group w-full text-left rounded-xl border border-border/60 hover:border-primary/60 bg-background/40 hover:bg-primary/5 transition-all duration-200 p-3 sm:p-3.5 flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99]"
+              className={`group relative w-full flex-1 min-h-[88px] text-left rounded-xl border-2 ${cardCls} transition-all duration-200 p-4 flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99]`}
             >
-              <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center flex-shrink-0">
-                <Icon className="w-5 h-5 text-primary" />
+              <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 ${iconCls}`}>
+                <Icon className="w-5 h-5" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-foreground text-[14px] sm:text-[15px]">{tier.name}</span>
+                  <span className="font-bold text-foreground text-[15px]">{tier.name}</span>
                   <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
                     {tier.qty} annunci
                   </span>
                 </div>
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-base sm:text-lg font-bold text-primary tabular-nums">
+                <div className="flex items-baseline gap-2 mt-1">
+                  <span className={`text-lg font-bold tabular-nums ${priceCls}`}>
                     €{tier.price}
                   </span>
                   <span className="text-[12px] text-muted-foreground line-through tabular-nums">
@@ -114,10 +123,10 @@ const BundlePurchaseCard = ({}: Props) => {
               </div>
               <div className="flex-shrink-0">
                 {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                  <Loader2 className={`w-4 h-4 animate-spin ${ctaCls}`} />
                 ) : (
-                  <span className="text-primary text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                    Acquista →
+                  <span className={`text-xs font-semibold ${ctaCls} opacity-70 group-hover:opacity-100 transition-opacity`}>
+                    →
                   </span>
                 )}
               </div>
