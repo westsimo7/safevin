@@ -119,6 +119,11 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
+        {/* Stats numbers */}
+        <div className="mt-6 sm:mt-10">
+          <ReviewsStats />
+        </div>
+
         {/* Vedi recensioni button */}
         <motion.div
           className="mt-6 sm:mt-10 flex justify-center"
