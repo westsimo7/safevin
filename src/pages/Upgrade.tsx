@@ -19,7 +19,7 @@ const Upgrade = () => {
       <AppNavbar />
       <main className="flex-1 overflow-y-auto px-4 pt-4 pb-20">
         <div className="max-w-2xl mx-auto">
-          <PageTitle title="Upgrade" backTo="/home" />
+          <PageTitle title="Prezzi" backTo="/home" />
           <UpgradeChat />
 
           {/* Commissioni */}
