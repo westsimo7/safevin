@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
+import ReviewsSection from "@/components/ReviewsSection";
 
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
@@ -117,20 +118,11 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
-        {/* Description */}
-        <motion.p
-          ref={descRef}
-          className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2 sm:px-0"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.85 }}
-        >
-          <Trans
-            i18nKey="hero.description"
-            components={{ 1: <strong className="text-foreground" /> }}
-          />
-        </motion.p>
+      </div>
 
+      {/* Reviews & trust section */}
+      <div ref={descRef} className="relative z-10 w-full">
+        <ReviewsSection />
       </div>
     </section>
   );
