@@ -113,7 +113,7 @@ const AppNavbar = () => {
           label: "Cambia piano",
           icon: Crown,
           action: () => { setOpen(false); navigate("/pricing"); },
-          badge: "Upgrade",
+          badge: "Prezzi",
           badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30",
         }] : []),
       ],

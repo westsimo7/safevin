@@ -11,7 +11,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import FirstListingPopup from "@/components/FirstListingPopup";
 import PurchaseGiftPopup from "@/components/PurchaseGiftPopup";
-import ReviewsSection from "@/components/ReviewsSection";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
@@ -250,9 +249,6 @@ const SafevinHome = () => {
               </motion.button>
             ))}
           </motion.div>
-
-          {/* Reviews */}
-          <ReviewsSection />
 
         </div>
       </main>
