@@ -121,7 +121,13 @@ const HeroSection = () => {
         <FloatingResults />
 
         {/* Stats numbers */}
-        <div className="mt-6 sm:mt-10">
+        <div className="mt-6 sm:mt-10 max-w-3xl mx-auto text-center">
+          <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight mb-2 sm:mb-3">
+            La web app che <span className="text-primary">velocizza le tue vendite</span> e migliora i tuoi annunci
+          </h2>
+          <p className="text-xs sm:text-sm text-muted-foreground font-medium uppercase tracking-wider mb-5 sm:mb-7">
+            La voce di chi vende
+          </p>
           <ReviewsStats />
         </div>
 
