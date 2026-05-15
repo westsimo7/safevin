@@ -1,44 +1,41 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingBag, Loader2, Check } from "lucide-react";
+import { ShoppingBag, Loader2, Trophy, Star, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import ApplePayButton from "@/components/ApplePayButton";
 import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 
-const UNIT_PRICE = 0.59;
-const getDiscountPct = (q: number) => (q >= 60 ? 0.20 : q >= 30 ? 0.15 : q >= 10 ? 0.10 : 0);
+interface Tier {
+  qty: number;
+  name: string;
+  price: string;
+  oldPrice: string;
+  icon: typeof Star;
+}
+
+const TIERS: Tier[] = [
+  { qty: 5, name: "Dilettante", price: "2,95", oldPrice: "3,95", icon: Star },
+  { qty: 10, name: "Esperto", price: "5,95", oldPrice: "7,95", icon: Trophy },
+  { qty: 15, name: "Campione", price: "9,95", oldPrice: "12,95", icon: Crown },
+];
 
 interface Props {
   accentClass?: string;
 }
 
-const BundlePurchaseCard = ({ accentClass }: Props) => {
-  const [qty, setQty] = useState(2);
-  const [loading, setLoading] = useState(false);
+const BundlePurchaseCard = ({}: Props) => {
+  const [loadingQty, setLoadingQty] = useState<number | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const subtotal = qty * UNIT_PRICE;
-  const discountPct = getDiscountPct(qty);
-  const hasDiscount = discountPct > 0;
-  const total = subtotal * (1 - discountPct);
-
-  const fmt = (n: number) =>
-    n.toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-  const dec = () => setQty((q) => Math.max(2, q - 1));
-  const inc = () => setQty((q) => Math.min(500, q + 1));
-
-  const handleCheckout = async () => {
+  const handleCheckout = async (qty: number) => {
     if (!user) {
       navigate(`/auth?bundle=${qty}`);
       return;
     }
-    setLoading(true);
+    setLoadingQty(qty);
     try {
       const { data, error } = await supabase.functions.invoke("create-bundle-checkout", {
         body: { quantity: qty },
@@ -55,7 +52,7 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
         description: e?.message ?? "Impossibile avviare il pagamento",
         variant: "destructive",
       });
-      setLoading(false);
+      setLoadingQty(null);
     }
   };
 
@@ -67,130 +64,71 @@ const BundlePurchaseCard = ({ accentClass }: Props) => {
     >
       <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
         <div className="px-3 py-1 rounded-full bg-primary text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-primary/30">
-          Acquisto singolo
+          Annunci Singoli
         </div>
       </div>
 
-      <div className="mb-3 sm:mb-4">
+      <div className="mb-4">
         <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mb-2 sm:mb-3 bg-primary/20">
           <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
         </div>
         <h3 className="text-lg sm:text-xl font-bold mb-1 text-primary">Annunci Singoli</h3>
         <p className="text-[13px] sm:text-sm text-muted-foreground">
-          Compra solo gli annunci che ti servono. Nessun abbonamento. Sconto 10% da 10 annunci.
+          Scegli il pacchetto più adatto a te. Nessun abbonamento, paghi una volta sola.
         </p>
       </div>
 
-      <div className="mb-3 sm:mb-4 flex items-baseline gap-2 flex-wrap">
-        <span className="text-2xl sm:text-3xl font-bold text-foreground">€0,59</span>
-        <span className="text-muted-foreground text-[13px] sm:text-sm">/annuncio</span>
-      </div>
-
-      {/* Quantity selector */}
-      <div className="mb-3 rounded-xl bg-background/50 border border-border/50 p-3">
-        <div className="text-[12px] uppercase tracking-wide text-muted-foreground mb-2 text-center">
-          Quantità annunci
-        </div>
-        <div className="flex items-center justify-between gap-3">
-          <button
-            type="button"
-            onClick={dec}
-            disabled={qty <= 2}
-            aria-label="Diminuisci"
-            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 disabled:hover:bg-primary/10 flex items-center justify-center transition-colors"
-          >
-            <Minus className="w-4 h-4" />
-          </button>
-          <div className="flex-1 text-center">
-            <div className="text-3xl sm:text-4xl font-bold text-foreground tabular-nums leading-none">
-              {qty}
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={inc}
-            disabled={qty >= 500}
-            aria-label="Aumenta"
-            className="h-11 w-11 rounded-full bg-primary/10 text-primary hover:bg-primary/20 disabled:opacity-40 flex items-center justify-center transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Discount quick-set pills */}
-        <div className="mt-3 flex items-center justify-center gap-2">
-          {[
-            { pct: 10, q: 10 },
-            { pct: 15, q: 30 },
-            { pct: 20, q: 60 },
-          ].map(({ pct, q }) => {
-            const active = qty >= q && (q === 60 || qty < (q === 10 ? 30 : 60));
-            return (
-              <button
-                key={pct}
-                type="button"
-                onClick={() => setQty(q)}
-                className={`px-3 h-8 rounded-full text-[12px] font-bold transition-all border ${
-                  active
-                    ? "bg-emerald-500 text-white border-emerald-500 shadow-sm shadow-emerald-500/30"
-                    : "bg-primary/10 text-primary border-primary/30 hover:bg-primary/20"
-                }`}
-              >
-                -{pct}%
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Total */}
-        <div className="mt-3 pt-3 border-t border-border/50 text-center">
-          {hasDiscount ? (
-            <>
-              <div className="flex items-center justify-center gap-2 mb-1">
-                <span className="text-sm text-muted-foreground line-through">€{fmt(subtotal)}</span>
-                <span className="text-[11px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-500">
-                  -{Math.round(discountPct * 100)}%
-                </span>
+      {/* Tier list */}
+      <div className="flex flex-col gap-2.5 flex-grow">
+        {TIERS.map((tier) => {
+          const isLoading = loadingQty === tier.qty;
+          const Icon = tier.icon;
+          return (
+            <button
+              key={tier.qty}
+              type="button"
+              disabled={loadingQty !== null}
+              onClick={() => handleCheckout(tier.qty)}
+              onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}
+              onFocus={() => speedupCheckoutHover("create-bundle-checkout")}
+              className="group w-full text-left rounded-xl border border-border/60 hover:border-primary/60 bg-background/40 hover:bg-primary/5 transition-all duration-200 p-3 sm:p-3.5 flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99]"
+            >
+              <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center flex-shrink-0">
+                <Icon className="w-5 h-5 text-primary" />
               </div>
-              <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
-            </>
-          ) : (
-            <div className="text-2xl font-bold text-foreground">€{fmt(total)}</div>
-          )}
-        </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-foreground text-[14px] sm:text-[15px]">{tier.name}</span>
+                  <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                    {tier.qty} annunci
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <span className="text-base sm:text-lg font-bold text-primary tabular-nums">
+                    €{tier.price}
+                  </span>
+                  <span className="text-[12px] text-muted-foreground line-through tabular-nums">
+                    €{tier.oldPrice}
+                  </span>
+                </div>
+              </div>
+              <div className="flex-shrink-0">
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                ) : (
+                  <span className="text-primary text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                    Acquista →
+                  </span>
+                )}
+              </div>
+            </button>
+          );
+        })}
       </div>
 
-      <ul className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-5 flex-grow">
-        {[
-          "Paghi solo quello che usi",
-          "Nessun rinnovo automatico",
-          "Include tutto lo Starter: 1 annuncio prova, prezzo strategico, Assistente Tommy Scendi",
-        ].map((f, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-primary/10">
-              <Check className="w-2.5 h-2.5 text-primary" />
-            </div>
-            <span className="text-foreground/80 text-[12.5px] sm:text-[13px] leading-snug">{f}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="space-y-2">
-        <Button
-          className="w-full h-10 sm:h-11 text-sm bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-500/40 shadow-[0_0_20px_rgb(16_185_129_/_0.35)] hover:shadow-[0_0_28px_rgb(16_185_129_/_0.5)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
-          disabled={loading}
-          onClick={handleCheckout}
-          onMouseEnter={() => speedupCheckoutHover("create-bundle-checkout")}
-          onFocus={() => speedupCheckoutHover("create-bundle-checkout")}
-        >
-          {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : `Acquista ${qty} ${qty === 1 ? "annuncio" : "annunci"}`}
-        </Button>
-        <ApplePayButton
-          onClick={handleCheckout}
-          loading={loading}
-          prewarmFn="create-bundle-checkout"
-        />
-      </div>
+      <p className="mt-3 text-center text-[11px] text-muted-foreground">
+        Pagamento sicuro con Apple Pay, Google Pay o carta
+      </p>
     </div>
   );
 };
