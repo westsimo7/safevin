@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, LayoutDashboard, PenTool, Camera, Zap, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { motion } from "framer-motion";
