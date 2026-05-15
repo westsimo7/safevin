@@ -184,7 +184,6 @@ const avgRating = (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).t
 const stats = [
   { value: `${avgRating}/5`, label: "Valutazione media" },
   { value: "10+", label: "Recensioni verificate" },
-  { value: "220", label: "utenti attivi" },
   { value: "98%", label: "Utenti soddisfatti" },
 ];
 
