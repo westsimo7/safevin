@@ -8,36 +8,38 @@ import { SITE_URL } from './_blocks.tsx'
 
 interface Props { name?: string }
 
-const FreeReminder7dEmail = ({ name }: Props) => {
+const FreeReminder5dEmail = ({ name }: Props) => {
   const adLink = `${SITE_URL}/engine/studio`
   return (
     <Html lang="it" dir="ltr">
       <Head />
-      <Preview>Il tuo annuncio gratuito scade tra 48 ore</Preview>
+      <Preview>Il segreto dei venditori che vendono di più su Vinted</Preview>
       <Body style={main}>
         <Container style={container}>
           <Text style={text}>Ciao {name || 'utente'},</Text>
           <Text style={text}>
-            Non ti scrivo più dopo questa. Lo prometto.
+            Ho guardato i dati degli ultimi mesi e ho notato una cosa interessante.
           </Text>
           <Text style={text}>
-            Hai ancora il tuo annuncio gratuito disponibile su SAFEViN. Tra 48 ore lo rimuoviamo — non perché vogliamo farti pressione, ma perché teniamo pulito l'account e ha poco senso tenerlo aperto per sempre.
+            I venditori che ottengono più offerte su Vinted non sono necessariamente quelli con i prezzi più bassi, né quelli con il guardaroba più bello.
           </Text>
           <Text style={text}>
-            Se non è il momento giusto, nessun problema. Puoi tornare quando vuoi, SAFEViN sarà ancora qui.
+            Sono quelli con gli annunci migliori.
           </Text>
           <Text style={text}>
-            Ma se hai anche solo un articolo fermo in vetrina — una giacca, un paio di scarpe, qualcosa che non riesci a muovere — questo è il momento di usare il credito che hai già.
+            Titolo chiaro. Descrizione che risponde alle domande prima ancora che vengano fatte. Parole che fanno sentire l'acquirente sicuro di cliccare "compra subito".
           </Text>
           <Text style={text}>
-            Nessun obbligo dopo. Nessuna carta di credito. Solo un annuncio migliore, gratis.
+            È quello che fa SAFEViN, in automatico, per ogni articolo.
           </Text>
-          <Button style={button} href={adLink}>Usa il mio credito prima che scada</Button>
-          <Text style={closing}>In bocca al lupo con le tue vendite,</Text>
+          <Text style={text}>
+            Hai ancora il tuo annuncio gratuito disponibile. Usalo su quell'articolo che vorresti davvero riuscire a vendere — e guarda cosa succede.
+          </Text>
+          <Button style={button} href={adLink}>Prova adesso — è gratis</Button>
           <Text style={signature}>Simone</Text>
           <Text style={signatureRole}>Fondatore, SAFEViN</Text>
           <Text style={ps}>
-            P.S. — Se SAFEViN non fa per te, nessun problema. Rispondi a questa email e ti dico io stesso quale strumento potrebbe aiutarti di più. Voglio che tu venda, con o senza di noi.
+            P.S. — "Ho usato SAFEViN su una felpa Nike che era in vetrina da 3 settimane. Venduta in 2 giorni." — Giulia, venditrice da Milano. Il tuo annuncio gratuito è ancora qui che ti aspetta.
           </Text>
         </Container>
       </Body>
@@ -46,17 +48,16 @@ const FreeReminder7dEmail = ({ name }: Props) => {
 }
 
 export const template = {
-  component: FreeReminder7dEmail,
-  subject: 'Ultima email che ti mando (promesso)',
-  displayName: 'Reminder prova 7 giorni',
+  component: FreeReminder5dEmail,
+  subject: 'Cosa fanno i venditori Vinted che vendono di più (non è quello che pensi)',
+  displayName: 'Reminder prova 5 giorni',
   previewData: { name: 'Marco' },
 } satisfies TemplateEntry
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Inter, Arial, sans-serif' }
 const container = { padding: '32px 28px', maxWidth: '560px' }
 const text = { fontSize: '15px', color: '#3f4548', lineHeight: '1.6', margin: '0 0 16px' }
-const closing = { fontSize: '15px', color: '#3f4548', lineHeight: '1.6', margin: '16px 0 0' }
-const signature = { fontSize: '15px', color: '#0f1719', fontWeight: 'bold' as const, margin: '8px 0 0' }
+const signature = { fontSize: '15px', color: '#0f1719', fontWeight: 'bold' as const, margin: '24px 0 0' }
 const signatureRole = { fontSize: '14px', color: '#0f1719', margin: '0 0 16px' }
 const ps = { fontSize: '14px', color: '#3f4548', lineHeight: '1.6', margin: '16px 0 0', fontStyle: 'italic' as const }
 const button = { backgroundColor: '#1e9389', color: '#ffffff', fontSize: '15px', fontWeight: 'bold' as const, borderRadius: '12px', padding: '14px 24px', textDecoration: 'none', margin: '8px 0 20px', display: 'inline-block' }
