@@ -57,19 +57,29 @@ serve(async (req) => {
     }
 
     const origin = req.headers.get("origin") || "http://localhost:3000";
+    const tierPrice = TIER_PRICE_BY_QTY[quantity];
+    const useTier = Boolean(tierPrice);
+    const lineItems = useTier
+      ? [{ price: tierPrice, quantity: 1 }]
+      : [{ price: LEGACY_PRICE_ID, quantity }];
+    const discounts = useTier
+      ? undefined
+      : (pickCoupon(quantity) ? [{ coupon: pickCoupon(quantity)! }] : undefined);
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       customer_email: customerId ? undefined : userEmail,
-      line_items: [{ price: PRICE_ID, quantity }],
+      line_items: lineItems,
       mode: "payment",
+      payment_method_types: ["card"],
       allow_promotion_codes: true,
-      discounts: pickCoupon(quantity) ? [{ coupon: pickCoupon(quantity)! }] : undefined,
+      discounts,
       success_url: `${origin}/home?status=success&bundle=${quantity}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/?status=cancel`,
       metadata: {
         user_id: userId ?? "",
         quantity: String(quantity),
-        product: "single_listings_bundle",
+        product: useTier ? `single_listings_bundle_${quantity}` : "single_listings_bundle",
       },
     });
 
