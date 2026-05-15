@@ -119,12 +119,11 @@ const HeroSection = () => {
         <FloatingResults />
 
       </div>
+      </section>
 
       {/* Reviews & trust section */}
-      <div ref={descRef} className="relative z-10 w-full">
-        <ReviewsSection />
-      </div>
-    </section>
+      <ReviewsSection />
+    </>
   );
 };
 
