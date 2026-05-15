@@ -119,11 +119,28 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
+        {/* Vedi recensioni button */}
+        <motion.div
+          className="mt-6 sm:mt-10 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
+        >
+          <Button
+            variant="glass"
+            size="lg"
+            className="h-12 sm:h-12 px-7 text-sm sm:text-base"
+            onClick={() => {
+              document.getElementById("recensioni")?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
+            <Star className="mr-2 w-4 h-4 fill-primary text-primary" />
+            Vedi recensioni
+          </Button>
+        </motion.div>
+
       </div>
       </section>
-
-      {/* Reviews & trust section */}
-      <ReviewsSection />
     </>
   );
 };
