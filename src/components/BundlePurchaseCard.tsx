@@ -103,14 +103,16 @@ const BundlePurchaseCard = ({}: Props) => {
               className={`group relative w-full flex-1 min-h-[88px] text-left rounded-xl border-2 ${cardCls} transition-all duration-200 p-4 flex items-center gap-3 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.99]`}
             >
               <div className={`w-11 h-11 rounded-lg flex items-center justify-center flex-shrink-0 ${iconCls}`}>
-                <Icon className="w-5 h-5" />
+                <span className="text-lg font-black tabular-nums leading-none">{tier.qty}</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="font-bold text-foreground text-[15px]">{tier.name}</span>
-                  <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                    {tier.qty} annunci
-                  </span>
+                  <span className="font-black text-foreground text-[15px] tracking-wide">ANNUNCI</span>
+                  {isHighlight && (
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-yellow-400 flex items-center gap-0.5">
+                      il più scelto <span aria-hidden>⭐️</span>
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-baseline gap-2 mt-1">
                   <span className={`text-lg font-bold tabular-nums ${priceCls}`}>
