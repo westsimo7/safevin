@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
+import { ReviewsStats } from "@/components/ReviewsSection";
 
 
 
@@ -118,6 +119,11 @@ const HeroSection = () => {
 
         {/* Floating sold items */}
         <FloatingResults />
+
+        {/* Stats numbers */}
+        <div className="mt-6 sm:mt-10">
+          <ReviewsStats />
+        </div>
 
         {/* Vedi recensioni button */}
         <motion.div
