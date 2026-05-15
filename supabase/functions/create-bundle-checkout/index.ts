@@ -17,9 +17,9 @@ const pickCoupon = (q: number) =>
 
 // Fixed bundle tiers (one-time, custom price)
 const TIER_PRICE_BY_QTY: Record<number, string> = {
-  5: "safevin_bundle_5_price",
-  10: "safevin_bundle_10_price",
-  15: "safevin_bundle_15_price",
+  5: "price_1TXRTMQjr3o863GDb9VgMTPO",   // €2,95
+  10: "price_1TXRTmQjr3o863GDK3enbIxw",  // €5,95
+  15: "price_1TXRUCQjr3o863GDLNJtkzud",  // €9,95
 };
 
 serve(async (req) => {
