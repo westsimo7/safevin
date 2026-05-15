@@ -8,12 +8,19 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const PRICE_ID = "price_1TUc2XQjr3o863GD5mwBifjm"; // 0.59€ per ad
-const COUPON_10 = "OnXtQyhj"; // -10% from 10+
-const COUPON_15 = "9VbrLq1R"; // -15% from 30+
-const COUPON_20 = "1LCLkhLY"; // -20% from 60+
+const LEGACY_PRICE_ID = "price_1TUc2XQjr3o863GD5mwBifjm"; // 0.59€ per ad
+const COUPON_10 = "OnXtQyhj";
+const COUPON_15 = "9VbrLq1R";
+const COUPON_20 = "1LCLkhLY";
 const pickCoupon = (q: number) =>
   q >= 60 ? COUPON_20 : q >= 30 ? COUPON_15 : q >= 10 ? COUPON_10 : null;
+
+// Fixed bundle tiers (one-time, custom price)
+const TIER_PRICE_BY_QTY: Record<number, string> = {
+  5: "safevin_bundle_5_price",
+  10: "safevin_bundle_10_price",
+  15: "safevin_bundle_15_price",
+};
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
