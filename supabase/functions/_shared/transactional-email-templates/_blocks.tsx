@@ -15,22 +15,19 @@ interface BundleBlockProps {
 export const BundleBlock = ({ emphasis = false }: BundleBlockProps) => (
   <Section style={emphasis ? bundleBoxEmphasis : bundleBox}>
     <Text style={emphasis ? bundleLabelEmphasis : bundleLabel}>
-      ACQUISTI SINGOLI · Senza abbonamento
-    </Text>
-    <Text style={bundlePrice}>
-      0,59€ <span style={perItem}>/ annuncio</span>
+      ANNUNCI SINGOLI · Senza abbonamento
     </Text>
     <Text style={bundleDetail}>
-      Paghi solo gli annunci che ti servono. Più ne compri, più risparmi:
+      Scegli il pacchetto: paghi una volta sola, nessun rinnovo.
     </Text>
     <Section style={discountRow}>
-      <Text style={discountPill}>10 annunci → -10%</Text>
-      <Text style={discountPill}>30 annunci → -15%</Text>
-      <Text style={discountPillBest}>60 annunci → -20%</Text>
+      <Text style={discountPill}><strong>5 ANNUNCI</strong> · 2,95€</Text>
+      <Text style={discountPillBest}>⭐ <strong>10 ANNUNCI</strong> · 5,95€ — il più scelto</Text>
+      <Text style={discountPill}><strong>15 ANNUNCI</strong> · 9,95€</Text>
     </Section>
     <Text style={bundleDetail}>
-      • Sconto applicato in automatico al checkout<br />
-      • Nessun rinnovo · nessun coupon da inserire<br />
+      • Sconto già applicato · nessun coupon da inserire<br />
+      • Pagamento sicuro: Apple Pay, Google Pay o carta<br />
       • Include tutto lo Starter (prezzo strategico, Tommy Scendi)
     </Text>
   </Section>
