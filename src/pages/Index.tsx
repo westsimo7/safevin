@@ -7,6 +7,7 @@ import SolutionSection from "@/components/SolutionSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import PricingSection from "@/components/PricingSection";
 import DisclaimerSection from "@/components/DisclaimerSection";
+import ReviewsSection from "@/components/ReviewsSection";
 import Footer from "@/components/Footer";
 
 
