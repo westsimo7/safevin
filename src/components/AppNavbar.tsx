@@ -129,7 +129,7 @@ const AppNavbar = () => {
           badgeColor: cdBadge?.color,
         },
         {
-          label: "Upgrade",
+          label: "Prezzi",
           icon: Rocket,
           action: () => { setOpen(false); navigate("/upgrade"); },
           badge: upgradeBadge?.label,
