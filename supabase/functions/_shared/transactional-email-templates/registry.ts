@@ -31,5 +31,6 @@ export const TEMPLATES: Record<string, TemplateEntry> = {
   'free-reminder-24h': freeReminder24h,
   'free-reminder-48h': freeReminder48h,
   'free-reminder-4d': freeReminder4d,
+  'free-reminder-5d': freeReminder5d,
   'free-reminder-7d': freeReminder7d,
 }
