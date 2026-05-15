@@ -22,6 +22,7 @@ const HeroSection = () => {
   };
 
   return (
+    <>
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-background pt-4 sm:pt-6">
       <FloatingPercentages />
       <div className="absolute inset-0 bg-gradient-to-b from-background via-background to-card/30" />
@@ -119,12 +120,11 @@ const HeroSection = () => {
         <FloatingResults />
 
       </div>
+      </section>
 
       {/* Reviews & trust section */}
-      <div ref={descRef} className="relative z-10 w-full">
-        <ReviewsSection />
-      </div>
-    </section>
+      <ReviewsSection />
+    </>
   );
 };
 
