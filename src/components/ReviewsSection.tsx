@@ -185,6 +185,7 @@ const stats = [
   { value: `${avgRating}/5`, label: "Valutazione media" },
   { value: "10+", label: "Recensioni verificate" },
   { value: "98%", label: "Utenti soddisfatti" },
+  { value: "220", label: "utenti attivi" },
 ];
 
 export const ReviewsStats = () => {
