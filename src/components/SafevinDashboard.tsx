@@ -250,6 +250,9 @@ const SafevinHome = () => {
             ))}
           </motion.div>
 
+          {/* Reviews */}
+          <ReviewsSection />
+
         </div>
       </main>
       <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
