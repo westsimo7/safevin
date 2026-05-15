@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
+import ReviewsSection from "@/components/ReviewsSection";
 
 
 const spring = { type: "spring" as const, stiffness: 70, damping: 16 };
