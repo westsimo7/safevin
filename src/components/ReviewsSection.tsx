@@ -173,7 +173,7 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => {
       {/* Footer */}
       <div className="flex items-center gap-1.5 pt-2 border-t border-border/30">
         <ShoppingBag className="w-3.5 h-3.5 text-primary" />
-        <span className="text-xs text-muted-foreground">{review.items}</span>
+        <span className="text-xs text-muted-foreground">Vinted seller</span>
       </div>
     </motion.div>
   );
