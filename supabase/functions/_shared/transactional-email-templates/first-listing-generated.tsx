@@ -40,15 +40,12 @@ const FirstListingEmail = ({ name }: Props) => (
 
         {/* BUNDLE BOX */}
         <Section style={bundleBox}>
-          <Text style={bundleLabel}>ACQUISTI SINGOLI · Senza abbonamento</Text>
-          <Text style={bundlePrice}>
-            0,59€ <span style={perItem}>/ annuncio</span>
-          </Text>
-          <Text style={bundleDetail}>Paghi solo quello che usi.</Text>
+          <Text style={bundleLabel}>ANNUNCI SINGOLI · Senza abbonamento</Text>
+          <Text style={bundleDetail}>Scegli il pacchetto: paghi una volta sola.</Text>
           <Text style={bundleList}>
-            → 10 annunci · <strong>5,31€</strong> <span style={discount}>(–10%)</span><br />
-            → 30 annunci · <strong>15,04€</strong> <span style={discount}>(–15%)</span><br />
-            → 60 annunci · <strong>28,27€</strong> <span style={discountBest}>(–20%)</span>
+            → <strong>5 ANNUNCI</strong> · <strong>2,95€</strong><br />
+            → ⭐ <strong>10 ANNUNCI</strong> · <strong>5,95€</strong> <span style={discountBest}>il più scelto</span><br />
+            → <strong>15 ANNUNCI</strong> · <strong>9,95€</strong>
           </Text>
           <Section style={{ textAlign: 'center', marginTop: '14px' }}>
             <Button style={ctaPrimary} href={BUNDLE_URL}>Compra adesso →</Button>
