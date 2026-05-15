@@ -179,16 +179,40 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => {
   );
 };
 
+const avgRating = (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1);
+
+const stats = [
+  { value: `${avgRating}/5`, label: "Valutazione media" },
+  { value: "10+", label: "Recensioni verificate" },
+  { value: "1.500+", label: "Articoli venduti" },
+  { value: "98%", label: "Utenti soddisfatti" },
+];
+
+export const ReviewsStats = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-3xl mx-auto"
+    >
+      {stats.map((stat) => (
+        <div
+          key={stat.label}
+          className="surface-soft rounded-2xl border border-border/40 px-4 py-5 text-center"
+        >
+          <div className="text-2xl sm:text-3xl font-black text-primary mb-1">{stat.value}</div>
+          <div className="text-[11px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wide">
+            {stat.label}
+          </div>
+        </div>
+      ))}
+    </motion.div>
+  );
+};
+
 const ReviewsSection = () => {
-  const avgRating = (reviews.reduce((a, b) => a + b.rating, 0) / reviews.length).toFixed(1);
-
-  const stats = [
-    { value: `${avgRating}/5`, label: "Valutazione media" },
-    { value: "10+", label: "Recensioni verificate" },
-    { value: "1.500+", label: "Articoli venduti" },
-    { value: "98%", label: "Utenti soddisfatti" },
-  ];
-
   return (
     <section className="relative py-12 sm:py-20 px-4 sm:px-6 max-w-6xl mx-auto">
       {/* Header */}
@@ -218,27 +242,6 @@ const ReviewsSection = () => {
           Persone reali che usano SAFEViN ogni giorno per vendere più velocemente su Vinted.
         </p>
       </div>
-
-      {/* Stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 18 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6, delay: 0.1 }}
-        className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-10 sm:mb-14"
-      >
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="surface-soft rounded-2xl border border-border/40 px-4 py-5 text-center"
-          >
-            <div className="text-2xl sm:text-3xl font-black text-primary mb-1">{stat.value}</div>
-            <div className="text-[11px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wide">
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </motion.div>
 
       {/* Reviews grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
