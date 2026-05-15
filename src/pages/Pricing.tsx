@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Zap, Crown, Rocket, Gift, Loader2 } from "lucide-react";
 import React from "react";
 import BundlePurchaseCard from "@/components/BundlePurchaseCard";
+import ReviewsSection from "@/components/ReviewsSection";
 import ApplePayButton from "@/components/ApplePayButton";
 import { speedupCheckoutHover } from "@/lib/checkoutSpeed";
 import { useEffect, useRef, useState } from "react";
@@ -338,6 +339,8 @@ const Pricing = () => {
           <p className="text-center text-muted-foreground text-xs mt-5">
             Cancelli quando vuoi. Zero vincoli. Zero sorprese.
           </p>
+
+          <ReviewsSection />
         </div>
       </main>
     </div>
