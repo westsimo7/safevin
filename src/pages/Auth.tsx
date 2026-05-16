@@ -45,9 +45,16 @@ const Auth = () => {
     }
   };
 
-  // After auth success: either start checkout or go home
+  // After auth success: either start checkout or go home (or /pricing after a fresh signup)
   const proceedAfterAuth = async () => {
     if (!hasPendingCheckout) {
+      const postSignup = sessionStorage.getItem("safevin_post_signup_pricing") === "1";
+      if (postSignup) {
+        sessionStorage.removeItem("safevin_post_signup_pricing");
+        sessionStorage.setItem("safevin_pricing_exit_pending", "1");
+        navigate("/pricing", { replace: true });
+        return;
+      }
       navigate("/home", { replace: true });
       return;
     }
