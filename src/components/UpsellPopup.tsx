@@ -59,13 +59,22 @@ const UpsellPopup = () => {
     const shownP = getShownPersistent(user.id);
     const shownS = getShownSession(user.id);
     const remaining = state.studioRemaining ?? 0;
+    const pricingExitPending = sessionStorage.getItem("safevin_pricing_exit_pending") === "1";
+    const onPricing = location.pathname.startsWith("/pricing");
 
     let next: Trigger | null = null;
-    if (remaining <= 0 && !shownP.limit_reached) next = "limit_reached";
-    else if (!shownS.welcome) next = "welcome";
+    // Highest priority: user just signed up, visited /pricing, and navigated away without buying
+    if (pricingExitPending && !onPricing && remaining <= 0) {
+      next = "pricing_exit";
+    } else if (remaining <= 0 && !shownP.limit_reached) {
+      next = "limit_reached";
+    } else if (!shownS.welcome) {
+      next = "welcome";
+    }
 
     if (next) {
-      const t = setTimeout(() => setActive(next), next === "welcome" ? 1500 : 600);
+      const delay = next === "welcome" ? 1500 : next === "pricing_exit" ? 400 : 600;
+      const t = setTimeout(() => setActive(next), delay);
       return () => clearTimeout(t);
     }
   }, [user, loading, state, isHidden, location.pathname]);
