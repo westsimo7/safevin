@@ -19,28 +19,6 @@ import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
-    name: "Starter",
-    price: "0",
-    period: "",
-    description: "Prova gratis con mano e guarda tu stesso se fa per te",
-    icon: Gift,
-    features: [
-      "1 annuncio prova creabile",
-      "Prezzo strategico",
-      "Assistente Tommy Scendi",
-    ],
-    limitations: [
-      "Accesso alla SAFEViN Artist Direction",
-      "3 annunci delegabili al team SAFEViN Artist Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Prova gratis",
-    popular: false,
-  },
-  {
     name: "Pro",
     price: "12,99",
     oldPrice: "15,99",
@@ -86,9 +64,8 @@ const plans = [
   },
 ];
 
-type PlanKey = "free" | "starter" | "pro" | "expert";
+type PlanKey = "free" | "pro" | "expert";
 const PLAN_LABEL_TO_KEY: Record<string, PlanKey> = {
-  Starter: "free",
   Pro: "pro",
   Expert: "expert",
 };
