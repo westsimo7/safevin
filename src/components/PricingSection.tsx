@@ -30,8 +30,8 @@ const PricingSection = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // children layout: [free/starter, bundle, pro, expert] — Pro is at index 2
-  const popularIndex = 2;
+  // children layout: [bundle, pro, expert] — Pro is at index 1
+  const popularIndex = 1;
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
@@ -47,10 +47,6 @@ const PricingSection = () => {
   }, [isMobile, popularIndex]);
 
   const handlePlanClick = async (planKey: PlanKey) => {
-    if (planKey === "free") {
-      navigate(user ? "/home" : "/auth");
-      return;
-    }
     if (!user) {
       navigate(`/auth?checkout=${planKey}`);
       return;
