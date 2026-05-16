@@ -200,10 +200,10 @@ export const ReviewsStats = () => {
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className="surface-soft rounded-2xl border border-border/40 px-4 py-5 text-center"
+          className="surface-soft rounded-2xl px-4 py-5 text-center"
         >
-          <div className="text-2xl sm:text-3xl font-black text-primary mb-1">{stat.value}</div>
-          <div className="text-[11px] sm:text-xs text-muted-foreground font-medium uppercase tracking-wide">
+          <div className="stat-3d mb-2">{stat.value}</div>
+          <div className="text-[11px] sm:text-xs text-muted-foreground font-semibold uppercase tracking-[0.12em]">
             {stat.label}
           </div>
         </div>
