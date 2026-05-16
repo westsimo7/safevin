@@ -86,7 +86,7 @@ const BundlePurchaseCard = ({}: Props) => {
           const isHighlight = tier.qty === 10;
 
           const cardCls = isHighlight
-            ? "border-yellow-400 bg-yellow-400/10 hover:bg-yellow-400/15 shadow-lg shadow-yellow-400/20"
+            ? "border-yellow-400 bg-transparent hover:bg-yellow-400/5"
             : "border-border/60 hover:border-primary/60 bg-background/40 hover:bg-primary/5";
           const iconCls = isHighlight ? "bg-yellow-400/25 text-yellow-400" : "bg-primary/15 text-primary";
           const priceCls = isHighlight ? "text-yellow-400" : "text-primary";
