@@ -288,6 +288,24 @@
   }
   .hero-3d-logo .accent { color: hsl(var(--primary)); }
 
+  /* "SAFE" keeps brown 3D shadow layers */
+  .hero-3d-logo > span:not(.accent) {
+    text-shadow:
+      2px 2px 0px hsl(25 45% 38%),
+      4px 4px 0px hsl(25 50% 30%),
+      6px 6px 0px hsl(25 55% 22%),
+      8px 8px 0px hsl(0 0% 0% / 0.15),
+      10px 10px 20px hsl(0 0% 0% / 0.25);
+  }
+  .dark .hero-3d-logo > span:not(.accent) {
+    text-shadow:
+      2px 2px 0px hsl(25 45% 42%),
+      4px 4px 0px hsl(25 50% 32%),
+      6px 6px 0px hsl(25 55% 24%),
+      8px 8px 0px hsl(0 0% 0% / 0.3),
+      12px 12px 28px hsl(0 0% 0% / 0.5);
+  }
+
   @keyframes logo-depth {
     from {
       text-shadow:
