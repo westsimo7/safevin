@@ -14,8 +14,9 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        heading: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['DM Sans', 'system-ui', 'sans-serif'],
+        heading: ['Syne', 'DM Sans', 'system-ui', 'sans-serif'],
+        display: ['Syne', 'DM Sans', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -98,8 +99,12 @@ export default {
           "50%": { boxShadow: "0 0 40px hsl(174 65% 34% / 0.5)" },
         },
         "pro-glow": {
-          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.25), 0 0 8px hsl(var(--primary) / 0.15)" },
-          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.5), 0 0 14px hsl(var(--primary) / 0.3)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(var(--primary) / 0.20), 0 0 8px hsl(var(--primary) / 0.10)" },
+          "50%": { boxShadow: "0 0 40px hsl(var(--primary) / 0.40), 0 0 14px hsl(var(--primary) / 0.25)" },
+        },
+        "badge-pulse": {
+          "0%, 100%": { boxShadow: "0 0 0 0 hsl(var(--accent) / 0.4)" },
+          "50%": { boxShadow: "0 0 0 8px hsl(var(--accent) / 0)" },
         },
         "fade-in": {
           from: { opacity: "0", transform: "translateY(20px)" },
@@ -112,7 +117,8 @@ export default {
         "float": "float 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "pro-glow": "pro-glow 12s ease-in-out infinite",
-        "fade-in": "fade-in 0.6s ease-out forwards",
+        "badge-pulse": "badge-pulse 2.5s ease-in-out infinite",
+        "fade-in": "fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },
