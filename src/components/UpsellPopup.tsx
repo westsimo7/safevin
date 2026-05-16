@@ -118,6 +118,13 @@ const UpsellPopup = () => {
           desc: "Continua a creare senza limiti. Starter 5,99€ (10/mese) o Pro 12,99€ (25/mese + Artist Director).",
           cta: "Sblocca più annunci",
         };
+      case "pricing_exit":
+        return {
+          icon: <Crown className="w-6 h-6 text-primary" />,
+          title: "Vendi meglio su Vinted",
+          desc: "Per dare il massimo ai tuoi indumenti c'è l'offerta speciale sugli annunci singoli — oppure passa all'abbonamento Pro per 25 annunci al mese e accesso ad Artist Director.",
+          cta: "Vedi l'offerta",
+        };
       default:
         return null;
     }
