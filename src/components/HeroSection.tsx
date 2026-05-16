@@ -7,6 +7,7 @@ import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
 import { ReviewsStats } from "@/components/ReviewsSection";
+import safevinLogo from "@/assets/safevin-logo.png";
 
 
 
@@ -34,16 +35,18 @@ const HeroSection = () => {
 
         {/* LOGO */}
         <motion.div
-          className="mb-3 sm:mb-6"
+          className="mb-3 sm:mb-6 flex justify-center"
           initial={{ opacity: 0, y: 40, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.2, stiffness: 60 }}
         >
-          <motion.h1
-            className="hero-3d-logo text-[5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tight leading-[0.95] select-none flex flex-col items-center"
-          >
-            <span>SAFE</span><span className="accent">vin</span>
-          </motion.h1>
+          <h1 className="sr-only">SAFEvin</h1>
+          <img
+            src={safevinLogo}
+            alt="SAFEvin"
+            className="w-[260px] sm:w-[380px] md:w-[460px] lg:w-[540px] h-auto select-none"
+            draggable={false}
+          />
         </motion.div>
 
         {/* Subtitle */}
