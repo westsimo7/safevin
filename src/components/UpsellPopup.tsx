@@ -79,13 +79,19 @@ const UpsellPopup = () => {
     }
   }, [user, loading, state, isHidden, location.pathname]);
 
+  const clearPricingExit = () => {
+    try { sessionStorage.removeItem("safevin_pricing_exit_pending"); } catch {}
+  };
+
   const close = () => {
     if (user && active) markShown(user.id, active);
+    if (active === "pricing_exit") clearPricingExit();
     setActive(null);
   };
 
   const goPricing = () => {
     if (user && active) markShown(user.id, active);
+    if (active === "pricing_exit") clearPricingExit();
     setActive(null);
     navigate("/pricing");
   };
