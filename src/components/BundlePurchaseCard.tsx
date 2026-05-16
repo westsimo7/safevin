@@ -16,8 +16,8 @@ interface Tier {
 
 const TIERS: Tier[] = [
   { qty: 5, name: "Dilettante", price: "2,95", oldPrice: "3,95", icon: Star },
-  { qty: 10, name: "Esperto", price: "5,95", oldPrice: "7,95", icon: Trophy },
-  { qty: 15, name: "Campione", price: "9,95", oldPrice: "12,95", icon: Crown },
+  { qty: 10, name: "Esperto", price: "4,95", oldPrice: "7,95", icon: Trophy },
+  { qty: 15, name: "Campione", price: "8,95", oldPrice: "12,95", icon: Crown },
 ];
 
 interface Props {
