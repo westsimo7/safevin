@@ -36,10 +36,10 @@
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    /* Borders / lines now share the teal "ViN" color */
-    --border: 174 64% 29% / 0.35;
-    --input: 174 64% 29% / 0.35;
-    --ring: 174 64% 29%;
+    /* Lines / borders — bright teal #2EAA99 */
+    --border: 174 58% 42%;
+    --input: 174 58% 42%;
+    --ring: 174 58% 42%;
 
     --radius: 1rem;
 
