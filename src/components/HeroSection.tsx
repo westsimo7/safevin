@@ -35,25 +35,23 @@ const HeroSection = () => {
         {/* LOGO */}
         <motion.div
           className="mb-3 sm:mb-6"
-          initial={{ opacity: 0, rotateX: 50, y: 60, scale: 0.5 }}
-          animate={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
+          initial={{ opacity: 0, y: 40, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ ...spring, delay: 0.2, stiffness: 60 }}
-          style={{ perspective: "800px" }}
         >
           <motion.h1
-            className="hero-3d-logo text-[5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tighter leading-[0.85] select-none flex flex-col items-center"
-            style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
+            className="hero-3d-logo text-[5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tight leading-[1] select-none flex flex-col items-center gap-1 sm:gap-2"
           >
             <motion.span
               className="inline-block"
-              animate={{ y: [0, -8, 0], rotateX: [0, 3, 0], rotateY: [-2, 2, -2] }}
+              animate={{ y: [0, -6, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
               SAFE
             </motion.span>
             <motion.span
               className="accent inline-block"
-              animate={{ y: [0, -8, 0], rotateX: [0, -3, 0], rotateY: [2, -2, 2] }}
+              animate={{ y: [0, -6, 0] }}
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
             >
               ViN
