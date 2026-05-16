@@ -40,22 +40,9 @@ const HeroSection = () => {
           transition={{ ...spring, delay: 0.2, stiffness: 60 }}
         >
           <motion.h1
-            className="hero-3d-logo text-[5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tight leading-[1] select-none flex flex-col items-center gap-1 sm:gap-2"
+            className="hero-3d-logo text-[3.5rem] sm:text-7xl md:text-8xl lg:text-9xl tracking-tight leading-[1] select-none whitespace-nowrap"
           >
-            <motion.span
-              className="inline-block"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            >
-              SAFE
-            </motion.span>
-            <motion.span
-              className="accent inline-block"
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-            >
-              ViN
-            </motion.span>
+            <span>SAFE</span><span className="accent">ViN</span>
           </motion.h1>
         </motion.div>
 

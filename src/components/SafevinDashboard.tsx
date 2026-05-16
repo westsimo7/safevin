@@ -202,7 +202,7 @@ const SafevinHome = () => {
               className="surface-soft rounded-2xl p-4"
             >
               <p className="text-xs text-muted-foreground mb-1">Annunci creati</p>
-              <p className="text-2xl font-bold text-foreground">{creationsCount ?? "—"}</p>
+              <p className="font-display text-3xl text-foreground">{creationsCount ?? "—"}</p>
             </motion.div>
             <motion.button
               type="button"

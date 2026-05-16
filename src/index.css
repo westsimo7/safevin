@@ -263,58 +263,23 @@
       hsl(var(--background));
   }
 
-  /* Hero SAFEViN 3D layered logo */
+  /* Hero SAFEViN flat logo */
   .hero-3d-logo {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
     letter-spacing: -0.04em;
-    line-height: 0.9;
-    color: hsl(var(--foreground));
-    text-shadow:
-      2px 2px 0px hsl(var(--primary)),
-      4px 4px 0px hsl(var(--teal-hover)),
-      6px 6px 0px hsl(var(--teal-deep)),
-      8px 8px 0px hsl(0 0% 0% / 0.15),
-      10px 10px 20px hsl(0 0% 0% / 0.25);
-    animation: logo-depth 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    line-height: 1;
+    color: #F5F0E8;
+    text-shadow: none;
   }
-  .dark .hero-3d-logo {
-    text-shadow:
-      2px 2px 0px hsl(var(--primary)),
-      4px 4px 0px hsl(var(--teal-hover)),
-      6px 6px 0px hsl(var(--teal-deep)),
-      8px 8px 0px hsl(0 0% 0% / 0.3),
-      12px 12px 28px hsl(0 0% 0% / 0.5);
-  }
-  .hero-3d-logo .accent { color: hsl(var(--primary)); }
+  .hero-3d-logo .accent { color: #2EAA99; }
+  .hero-3d-logo > span { text-shadow: none !important; }
 
-  /* "SAFE" keeps brown 3D shadow layers (uniform dark chestnut) */
-  .hero-3d-logo > span:not(.accent) {
-    text-shadow:
-      2px 2px 0px hsl(22 55% 22%),
-      4px 4px 0px hsl(22 55% 22%),
-      6px 6px 0px hsl(22 55% 22%),
-      8px 8px 0px hsl(0 0% 0% / 0.15),
-      10px 10px 20px hsl(0 0% 0% / 0.25);
-  }
-  .dark .hero-3d-logo > span:not(.accent) {
-    text-shadow:
-      2px 2px 0px hsl(22 55% 22%),
-      4px 4px 0px hsl(22 55% 22%),
-      6px 6px 0px hsl(22 55% 22%),
-      8px 8px 0px hsl(0 0% 0% / 0.3),
-      12px 12px 28px hsl(0 0% 0% / 0.5);
-  }
-
-  @keyframes logo-depth {
-    from {
-      text-shadow:
-        0px 0px 0px hsl(var(--primary)),
-        0px 0px 0px hsl(var(--teal-hover)),
-        0px 0px 0px hsl(var(--teal-deep)),
-        0px 0px 0px hsl(0 0% 0% / 0),
-        0px 0px 0px hsl(0 0% 0% / 0);
-    }
+  /* Display font for all numeric values across the site */
+  .font-display {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
   }
 
   /* Extruded 3D stat numbers */
