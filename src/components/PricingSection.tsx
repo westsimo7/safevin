@@ -161,7 +161,7 @@ const PricingSection = () => {
 
                 <div className="mb-3 sm:mb-4 flex items-baseline gap-2 flex-wrap">
                   {plan.oldPrice && (
-                    <span className="font-display text-base sm:text-lg text-muted-foreground line-through">€{plan.oldPrice}</span>
+                    <span className="text-base sm:text-lg text-muted-foreground line-through">€{plan.oldPrice}</span>
                   )}
                   <span className="font-display text-3xl sm:text-4xl text-foreground">€{plan.price}</span>
                   {plan.hasPeriod && (
