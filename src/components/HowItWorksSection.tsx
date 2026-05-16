@@ -53,24 +53,6 @@ const HowItWorksSection = () => {
             </p>
           </div>
 
-          <Card ref={blockRef} className="border-border/50 bg-card/50 hover:border-primary/30 transition-colors max-w-2xl mx-auto">
-            <CardContent className="p-4 sm:p-5 md:p-6">
-              <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                </div>
-                <h3 className="text-base sm:text-lg font-bold text-foreground">{t("how.studioCardTitle")}</h3>
-              </div>
-              <ul className="space-y-2 sm:space-y-2.5">
-                {features.map((item, j) => (
-                  <li key={j} className="flex items-start gap-2 sm:gap-2.5 text-[13px] sm:text-sm text-foreground/80">
-                    <span className="text-primary mt-0.5 text-[10px] sm:text-xs">▸</span>
-                    <span className="leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
