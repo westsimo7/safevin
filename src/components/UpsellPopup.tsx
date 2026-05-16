@@ -6,7 +6,7 @@ import { Sparkles, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlan } from "@/hooks/usePlan";
 
-type Trigger = "welcome" | "limit_reached";
+type Trigger = "welcome" | "limit_reached" | "pricing_exit";
 
 const STORAGE_KEY = "safevin_upsell_shown_v2";
 const SESSION_KEY = "safevin_upsell_session_v2";
