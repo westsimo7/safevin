@@ -41,37 +41,13 @@ const HeroSection = () => {
           style={{ perspective: "800px" }}
         >
           <motion.h1
-            className="text-[5.5rem] sm:text-8xl md:text-9xl lg:text-[10rem] font-black tracking-tighter leading-[0.85] select-none"
+            className="hero-3d-logo text-[5.5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tighter leading-[0.85] select-none"
             animate={{ y: [0, -6, 0], rotateX: [0, 2, 0], rotateY: [-1.5, 1.5, -1.5] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
           >
-            <span
-              className="text-foreground inline-block"
-              style={{
-                textShadow:
-                  "0 2px 0 hsl(200 10% 20%), 0 4px 0 hsl(200 10% 16%), 0 6px 0 hsl(200 10% 12%), 0 10px 18px hsl(0 0% 0% / 0.45)",
-              }}
-            >
-              SAFE
-            </span>
-            <motion.span
-              className="text-primary inline-block"
-              style={{
-                textShadow:
-                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 0 hsl(174 65% 12%), 0 10px 18px hsl(174 65% 10% / 0.5)",
-              }}
-              animate={{
-                textShadow: [
-                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 0 hsl(174 65% 12%), 0 10px 18px hsl(174 65% 10% / 0.5)",
-                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 0 hsl(174 65% 12%), 0 10px 28px hsl(174 65% 34% / 0.8)",
-                  "0 2px 0 hsl(174 65% 24%), 0 4px 0 hsl(174 65% 18%), 0 6px 0 hsl(174 65% 12%), 0 10px 18px hsl(174 65% 10% / 0.5)",
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            >
-              ViN
-            </motion.span>
+            <span className="inline-block">SAFE</span>
+            <span className="accent inline-block">ViN</span>
           </motion.h1>
         </motion.div>
 

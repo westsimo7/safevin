@@ -134,7 +134,7 @@ const PricingSection = () => {
                 )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold shadow-lg shadow-orange-500/40">
+                    <div className="badge-pulse px-3 py-1 rounded-full bg-accent text-accent-foreground text-xs font-bold font-heading whitespace-nowrap">
                       {t("pricing.badges.popular")}
                     </div>
                   </div>
