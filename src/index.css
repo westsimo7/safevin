@@ -263,17 +263,18 @@
       hsl(var(--background));
   }
 
-  /* Hero SAFEViN flat logo */
+  /* Hero SAFEViN stacked logo (SAFE brown / vin teal, soft drop shadow) */
   .hero-3d-logo {
     font-family: 'Syne', sans-serif;
     font-weight: 800;
     letter-spacing: -0.04em;
-    line-height: 1;
-    color: #F5F0E8;
-    text-shadow: none;
+    line-height: 0.95;
+    color: #4A2A1A;
+    text-shadow:
+      2px 2px 0 rgba(0, 0, 0, 0.08),
+      6px 8px 14px rgba(0, 0, 0, 0.18);
   }
   .hero-3d-logo .accent { color: #2EAA99; }
-  .hero-3d-logo > span { text-shadow: none !important; }
 
   /* Display font for all numeric values across the site */
   .font-display {
