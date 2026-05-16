@@ -44,7 +44,7 @@ const HeroSection = () => {
           <img
             src={safevinLogo}
             alt="SAFEvin"
-            className="w-[260px] sm:w-[380px] md:w-[460px] lg:w-[540px] h-auto select-none"
+            className="w-full max-w-[1040px] sm:max-w-[1520px] md:max-w-[1840px] lg:max-w-[2160px] h-auto select-none"
             draggable={false}
           />
         </motion.div>
