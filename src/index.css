@@ -13,22 +13,22 @@
   :root {
     /* LIGHT MODE — warm off-white "paper" */
     --background: 36 35% 97%;            /* #FAF7F2 */
-    --foreground: 24 12% 10%;            /* #1C1A18 */
+    --foreground: 22 45% 22%;            /* chestnut brown #523319 */
 
     --card: 33 30% 92%;                  /* #F0EBE3 */
-    --card-foreground: 24 12% 10%;
+    --card-foreground: 22 45% 22%;
 
     --popover: 36 35% 97%;
-    --popover-foreground: 24 12% 10%;
+    --popover-foreground: 22 45% 22%;
 
     --primary: 174 64% 29%;              /* #1A7A6E petrol green */
     --primary-foreground: 36 35% 97%;
 
     --secondary: 33 30% 92%;
-    --secondary-foreground: 24 12% 10%;
+    --secondary-foreground: 22 45% 22%;
 
     --muted: 33 22% 88%;                 /* #E8E0D5 */
-    --muted-foreground: 28 7% 39%;       /* #6B6560 */
+    --muted-foreground: 22 18% 38%;      /* warm chestnut gray */
 
     --accent: 16 81% 53%;                /* #E8622A burnt orange */
     --accent-foreground: 36 35% 97%;
@@ -36,8 +36,9 @@
     --destructive: 0 72% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 24 12% 10% / 0.08;
-    --input: 33 22% 84%;
+    /* Borders / lines now share the teal "ViN" color */
+    --border: 174 64% 29% / 0.35;
+    --input: 174 64% 29% / 0.35;
     --ring: 174 64% 29%;
 
     --radius: 1rem;
