@@ -41,12 +41,23 @@ const HeroSection = () => {
           style={{ perspective: "800px" }}
         >
           <motion.h1
-            className="hero-3d-logo text-[3.5rem] sm:text-7xl md:text-8xl lg:text-9xl tracking-tighter leading-[0.85] select-none whitespace-nowrap"
-            animate={{ y: [0, -6, 0], rotateX: [0, 2, 0], rotateY: [-1.5, 1.5, -1.5] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="hero-3d-logo text-[5rem] sm:text-8xl md:text-9xl lg:text-[10rem] tracking-tighter leading-[0.85] select-none flex flex-col items-center"
             style={{ transformStyle: "preserve-3d", perspective: "1000px" }}
           >
-            <span className="inline">SAFE</span><span className="accent inline">ViN</span>
+            <motion.span
+              className="inline-block"
+              animate={{ y: [0, -8, 0], rotateX: [0, 3, 0], rotateY: [-2, 2, -2] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              SAFE
+            </motion.span>
+            <motion.span
+              className="accent inline-block"
+              animate={{ y: [0, -8, 0], rotateX: [0, -3, 0], rotateY: [2, -2, 2] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+            >
+              ViN
+            </motion.span>
           </motion.h1>
         </motion.div>
 
