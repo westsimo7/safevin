@@ -45,9 +45,16 @@ const Auth = () => {
     }
   };
 
-  // After auth success: either start checkout or go home
+  // After auth success: either start checkout or go home (or /pricing after a fresh signup)
   const proceedAfterAuth = async () => {
     if (!hasPendingCheckout) {
+      const postSignup = sessionStorage.getItem("safevin_post_signup_pricing") === "1";
+      if (postSignup) {
+        sessionStorage.removeItem("safevin_post_signup_pricing");
+        sessionStorage.setItem("safevin_pricing_exit_pending", "1");
+        navigate("/pricing", { replace: true });
+        return;
+      }
       navigate("/home", { replace: true });
       return;
     }
@@ -92,6 +99,7 @@ const Auth = () => {
         if (error) throw error;
         // The useEffect on `user` will trigger proceedAfterAuth (checkout or /home)
       } else {
+        sessionStorage.setItem("safevin_post_signup_pricing", "1");
         const { data, error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
@@ -133,6 +141,9 @@ const Auth = () => {
       const redirectTarget = hasPendingCheckout
         ? `${window.location.origin}/auth?checkout=${checkoutPlan}`
         : `${window.location.origin}/home`;
+      if (!isLogin && !hasPendingCheckout) {
+        sessionStorage.setItem("safevin_post_signup_pricing", "1");
+      }
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: redirectTarget,
       });

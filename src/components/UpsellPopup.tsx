@@ -6,7 +6,7 @@ import { Sparkles, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { usePlan } from "@/hooks/usePlan";
 
-type Trigger = "welcome" | "limit_reached";
+type Trigger = "welcome" | "limit_reached" | "pricing_exit";
 
 const STORAGE_KEY = "safevin_upsell_shown_v2";
 const SESSION_KEY = "safevin_upsell_session_v2";
@@ -17,7 +17,7 @@ const getShownPersistent = (uid: string): Record<Trigger, boolean> => {
     const raw = localStorage.getItem(`${STORAGE_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { welcome: false, limit_reached: false };
+  return { welcome: false, limit_reached: false, pricing_exit: false };
 };
 
 const getShownSession = (uid: string): Record<Trigger, boolean> => {
@@ -25,7 +25,7 @@ const getShownSession = (uid: string): Record<Trigger, boolean> => {
     const raw = sessionStorage.getItem(`${SESSION_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { welcome: false, limit_reached: false };
+  return { welcome: false, limit_reached: false, pricing_exit: false };
 };
 
 const markShown = (uid: string, t: Trigger) => {
@@ -59,24 +59,39 @@ const UpsellPopup = () => {
     const shownP = getShownPersistent(user.id);
     const shownS = getShownSession(user.id);
     const remaining = state.studioRemaining ?? 0;
+    const pricingExitPending = sessionStorage.getItem("safevin_pricing_exit_pending") === "1";
+    const onPricing = location.pathname.startsWith("/pricing");
 
     let next: Trigger | null = null;
-    if (remaining <= 0 && !shownP.limit_reached) next = "limit_reached";
-    else if (!shownS.welcome) next = "welcome";
+    // Highest priority: user just signed up, visited /pricing, and navigated away without buying
+    if (pricingExitPending && !onPricing && remaining <= 0) {
+      next = "pricing_exit";
+    } else if (remaining <= 0 && !shownP.limit_reached) {
+      next = "limit_reached";
+    } else if (!shownS.welcome) {
+      next = "welcome";
+    }
 
     if (next) {
-      const t = setTimeout(() => setActive(next), next === "welcome" ? 1500 : 600);
+      const delay = next === "welcome" ? 1500 : next === "pricing_exit" ? 400 : 600;
+      const t = setTimeout(() => setActive(next), delay);
       return () => clearTimeout(t);
     }
   }, [user, loading, state, isHidden, location.pathname]);
 
+  const clearPricingExit = () => {
+    try { sessionStorage.removeItem("safevin_pricing_exit_pending"); } catch {}
+  };
+
   const close = () => {
     if (user && active) markShown(user.id, active);
+    if (active === "pricing_exit") clearPricingExit();
     setActive(null);
   };
 
   const goPricing = () => {
     if (user && active) markShown(user.id, active);
+    if (active === "pricing_exit") clearPricingExit();
     setActive(null);
     navigate("/pricing");
   };
@@ -102,6 +117,13 @@ const UpsellPopup = () => {
           title: "Hai usato il tuo annuncio prova",
           desc: "Continua a creare senza limiti. Starter 5,99€ (10/mese) o Pro 12,99€ (25/mese + Artist Director).",
           cta: "Sblocca più annunci",
+        };
+      case "pricing_exit":
+        return {
+          icon: <Crown className="w-6 h-6 text-primary" />,
+          title: "Vendi meglio su Vinted",
+          desc: "Per dare il massimo ai tuoi indumenti c'è l'offerta speciale sugli annunci singoli — oppure passa all'abbonamento Pro per 25 annunci al mese e accesso ad Artist Director.",
+          cta: "Vedi l'offerta",
         };
       default:
         return null;
