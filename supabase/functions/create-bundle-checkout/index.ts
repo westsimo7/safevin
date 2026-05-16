@@ -18,8 +18,8 @@ const pickCoupon = (q: number) =>
 // Fixed bundle tiers (one-time, custom price)
 const TIER_PRICE_BY_QTY: Record<number, string> = {
   5: "price_1TXRTMQjr3o863GDb9VgMTPO",   // €2,95
-  10: "price_1TXRTmQjr3o863GDK3enbIxw",  // €5,95
-  15: "price_1TXRUCQjr3o863GDLNJtkzud",  // €9,95
+  10: "price_1TXXUzQjr3o863GD13MaRgoY",  // €4,95
+  15: "price_1TXXVJQjr3o863GDDVH2ZLkU",  // €8,95
 };
 
 serve(async (req) => {
