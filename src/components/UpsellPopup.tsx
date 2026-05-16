@@ -17,7 +17,7 @@ const getShownPersistent = (uid: string): Record<Trigger, boolean> => {
     const raw = localStorage.getItem(`${STORAGE_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { welcome: false, limit_reached: false };
+  return { welcome: false, limit_reached: false, pricing_exit: false };
 };
 
 const getShownSession = (uid: string): Record<Trigger, boolean> => {
@@ -25,7 +25,7 @@ const getShownSession = (uid: string): Record<Trigger, boolean> => {
     const raw = sessionStorage.getItem(`${SESSION_KEY}:${uid}`);
     if (raw) return JSON.parse(raw);
   } catch {}
-  return { welcome: false, limit_reached: false };
+  return { welcome: false, limit_reached: false, pricing_exit: false };
 };
 
 const markShown = (uid: string, t: Trigger) => {
