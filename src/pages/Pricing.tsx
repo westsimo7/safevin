@@ -19,28 +19,6 @@ import { toast } from "@/hooks/use-toast";
 
 const plans = [
   {
-    name: "Starter",
-    price: "0",
-    period: "",
-    description: "Prova gratis con mano e guarda tu stesso se fa per te",
-    icon: Gift,
-    features: [
-      "1 annuncio prova creabile",
-      "Prezzo strategico",
-      "Assistente Tommy Scendi",
-    ],
-    limitations: [
-      "Accesso alla SAFEViN Artist Direction",
-      "3 annunci delegabili al team SAFEViN Artist Direction",
-      "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
-      "Collaborazioni con il team di SAFEViN",
-      "Coupon sconto personali",
-      "Accesso prioritario alle nuove funzionalità",
-    ],
-    cta: "Prova gratis",
-    popular: false,
-  },
-  {
     name: "Pro",
     price: "12,99",
     oldPrice: "15,99",
@@ -86,9 +64,8 @@ const plans = [
   },
 ];
 
-type PlanKey = "free" | "starter" | "pro" | "expert";
+type PlanKey = "free" | "pro" | "expert";
 const PLAN_LABEL_TO_KEY: Record<string, PlanKey> = {
-  Starter: "free",
   Pro: "pro",
   Expert: "expert",
 };
@@ -123,7 +100,8 @@ const Pricing = () => {
     container.scrollTo({ left, behavior: "instant" as ScrollBehavior });
   }, []);
 
-  const currentPlanKey: PlanKey = planState?.plan ?? "free";
+  const rawPlan = planState?.plan ?? "free";
+  const currentPlanKey: PlanKey = (rawPlan === "pro" || rawPlan === "expert") ? rawPlan : "free";
 
   // After Stripe redirect, refresh subscription state
   useEffect(() => {
@@ -195,32 +173,29 @@ const Pricing = () => {
         <div className="max-w-5xl mx-auto">
 
           <div className="-mx-4 sm:mx-0 mt-1">
-            <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div ref={scrollRef} className="flex sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-px-4 px-4 sm:px-0 pt-5 sm:pt-4 pb-4 sm:pb-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <BundlePurchaseCard />
             {plans.map((plan, planIdx) => {
               const planKey = PLAN_LABEL_TO_KEY[plan.name];
               const isCurrent = planKey === currentPlanKey;
-              const isStarter = plan.name === "Starter";
               const isExpert = plan.name === "Expert";
 
               // Accent palette per plan — must match landing PricingSection
-              const accent = isStarter
-                ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500", badgeBg: "bg-blue-500", badgeText: "text-white", badgeShadow: "shadow-blue-500/30" }
-                : isExpert
-                  ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400", badgeBg: "bg-yellow-400", badgeText: "text-background", badgeShadow: "shadow-yellow-400/30" }
-                  : plan.popular
-                    ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500", badgeBg: "bg-orange-500", badgeText: "text-white", badgeShadow: "shadow-orange-500/40" }
-                    : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground", badgeBg: "", badgeText: "", badgeShadow: "" };
+              const accent = isExpert
+                ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400", badgeBg: "bg-yellow-400", badgeText: "text-background", badgeShadow: "shadow-yellow-400/30" }
+                : plan.popular
+                  ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500", badgeBg: "bg-orange-500", badgeText: "text-white", badgeShadow: "shadow-orange-500/40" }
+                  : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground", badgeBg: "", badgeText: "", badgeShadow: "" };
 
-              // Current plan: yellow border overrides, but keep accent fill colors
               const cardBorder = isCurrent
                 ? "border-2 border-yellow-400 bg-card shadow-lg shadow-yellow-400/20"
-                : (accent.border.includes("border-2") || isExpert || isStarter || plan.popular)
+                : (isExpert || plan.popular)
                   ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
                   : `border ${accent.border} bg-card/50 hover:border-border`;
 
               return (
-                <React.Fragment key={plan.name}>
                 <div
+                  key={plan.name}
                   className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder}`}
                 >
                   {isCurrent && (
@@ -230,14 +205,7 @@ const Pricing = () => {
                       </div>
                     </div>
                   )}
-                  {isStarter && !isCurrent && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                      <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
-                        Starter
-                      </div>
-                    </div>
-                  )}
-                  {plan.popular && !isCurrent && !isStarter && (
+                  {plan.popular && !isCurrent && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                       <div className="px-3 py-1 rounded-full bg-orange-500 text-white text-xs font-semibold shadow-lg shadow-orange-500/40">
                         Il più venduto
@@ -299,10 +267,10 @@ const Pricing = () => {
                     <Button
                       variant={isCurrent ? "outline" : plan.popular ? "neon" : "glass"}
                       className="w-full h-10 sm:h-11 text-sm"
-                      disabled={isCurrent || planKey === "free" || loadingPlan !== null}
+                      disabled={isCurrent || loadingPlan !== null}
                       onClick={() => handleCheckout(planKey)}
-                      onMouseEnter={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
-                      onFocus={() => planKey !== "free" && !isCurrent && speedupCheckoutHover("create-checkout")}
+                      onMouseEnter={() => !isCurrent && speedupCheckoutHover("create-checkout")}
+                      onFocus={() => !isCurrent && speedupCheckoutHover("create-checkout")}
                     >
                       {loadingPlan === planKey ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -312,7 +280,7 @@ const Pricing = () => {
                         plan.cta
                       )}
                     </Button>
-                    {!isCurrent && planKey !== "free" && (
+                    {!isCurrent && (
                       <ApplePayButton
                         onClick={() => handleCheckout(planKey, "apple_pay")}
                         loading={loadingPlan === planKey}
@@ -321,8 +289,6 @@ const Pricing = () => {
                     )}
                   </div>
                 </div>
-                {isStarter && <BundlePurchaseCard />}
-                </React.Fragment>
               );
             })}
             </div>

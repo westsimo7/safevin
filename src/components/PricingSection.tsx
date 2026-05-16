@@ -12,12 +12,11 @@ import OfferTimer from "@/components/OfferTimer";
 import BundlePurchaseCard from "@/components/BundlePurchaseCard";
 import ApplePayButton from "@/components/ApplePayButton";
 
-type PlanKey = "free" | "pro" | "expert";
+type PlanKey = "pro" | "expert";
 
 const planDefs = [
-  { key: "free" as PlanKey, name: "Starter", price: "0", oldPrice: null as string | null, icon: Gift, popular: false, variant: "glass" as const, hasPeriod: false },
   { key: "pro" as PlanKey, name: "Pro", price: "12,99", oldPrice: "15,99", icon: Crown, popular: true, variant: "neon" as const, hasPeriod: true },
-  { key: "expert" as PlanKey, name: "Expert", price: "34,99", oldPrice: null, icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
+  { key: "expert" as PlanKey, name: "Expert", price: "34,99", oldPrice: null as string | null, icon: Rocket, popular: false, variant: "glass" as const, hasPeriod: true },
 ];
 
 const PricingSection = () => {
@@ -31,8 +30,8 @@ const PricingSection = () => {
   const { toast } = useToast();
   const { t } = useTranslation();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // children layout: [free/starter, bundle, pro, expert] — Pro is at index 2
-  const popularIndex = 2;
+  // children layout: [bundle, pro, expert] — Pro is at index 1
+  const popularIndex = 1;
   const [loadingPlan, setLoadingPlan] = useState<PlanKey | null>(null);
 
   useEffect(() => {
@@ -48,10 +47,6 @@ const PricingSection = () => {
   }, [isMobile, popularIndex]);
 
   const handlePlanClick = async (planKey: PlanKey) => {
-    if (planKey === "free") {
-      navigate(user ? "/home" : "/auth");
-      return;
-    }
     if (!user) {
       navigate(`/auth?checkout=${planKey}`);
       return;
@@ -98,40 +93,31 @@ const PricingSection = () => {
               (gridRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
             }
           }}
-          className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
+          className="flex lg:grid lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 overflow-x-auto lg:overflow-x-visible overflow-y-visible snap-x snap-mandatory scrollbar-hide py-6 lg:py-8 -mx-5 px-5 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0"
         >
+          <BundlePurchaseCard />
           {planDefs.map((plan, index) => {
             const isExpert = plan.key === "expert";
-            const isStarter = plan.key === "free";
 
-            const accent = isStarter
-              ? { border: "border-blue-500/60", shadow: "shadow-blue-500/10", bg: "bg-blue-500/20", iconBg: "bg-blue-500/10", text: "text-blue-500" }
-              : isExpert
-                ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
-                : plan.popular
-                  ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
-                  : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
+            const accent = isExpert
+              ? { border: "border-yellow-400/60", shadow: "shadow-yellow-400/10", bg: "bg-yellow-400/20", iconBg: "bg-yellow-400/10", text: "text-yellow-400" }
+              : plan.popular
+                ? { border: "border-orange-500/60", shadow: "shadow-orange-500/10", bg: "bg-orange-500/20", iconBg: "bg-orange-500/10", text: "text-orange-500" }
+                : { border: "border-border/50", shadow: "", bg: "bg-muted", iconBg: "bg-muted", text: "text-foreground" };
 
-            const cardBorder = (isExpert || isStarter || plan.popular)
+            const cardBorder = (isExpert || plan.popular)
               ? `border-2 ${accent.border} bg-card shadow-lg ${accent.shadow}`
               : `border ${accent.border} bg-card/50 hover:border-border`;
 
             const features = t(`pricing.plans.${plan.key}.features`, { returnObjects: true }) as string[];
             const limitations = t(`pricing.plans.${plan.key}.limitations`, { returnObjects: true }) as string[];
 
-            const cardEl = (
+            return (
               <div
                 key={index}
                 data-reveal
                 className={`relative flex flex-col p-4 sm:p-5 rounded-2xl transition-all duration-300 w-[85vw] sm:w-[45vw] md:w-[42vw] lg:w-auto min-w-0 snap-center flex-shrink-0 lg:flex-shrink ${cardBorder} ${plan.popular ? "animate-pro-glow" : ""}`}
               >
-                {isStarter && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <div className="px-3 py-1 rounded-full bg-blue-500 text-white text-xs font-semibold whitespace-nowrap shadow-lg shadow-blue-500/30">
-                      Starter
-                    </div>
-                  </div>
-                )}
                 {plan.popular && (
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
                     <div className="badge-pulse px-3 py-1 rounded-full bg-accent text-accent-foreground text-xs font-bold font-heading whitespace-nowrap">
@@ -191,7 +177,7 @@ const PricingSection = () => {
                 <div className="space-y-2">
                   <Button
                     variant={plan.variant}
-                    className={`w-full h-10 sm:h-11 text-sm ${isStarter ? "bg-blue-500 hover:bg-blue-600 text-white border border-blue-500/40" : ""}`}
+                    className="w-full h-10 sm:h-11 text-sm"
                     disabled={loadingPlan !== null}
                     onClick={() => handlePlanClick(plan.key)}
                   >
@@ -201,27 +187,14 @@ const PricingSection = () => {
                       t(`pricing.plans.${plan.key}.cta`)
                     )}
                   </Button>
-                  {!isStarter && (
-                    <ApplePayButton
-                      onClick={() => handlePlanClick(plan.key)}
-                      loading={loadingPlan === plan.key}
-                      prewarmFn="create-checkout"
-                    />
-                  )}
+                  <ApplePayButton
+                    onClick={() => handlePlanClick(plan.key)}
+                    loading={loadingPlan === plan.key}
+                    prewarmFn="create-checkout"
+                  />
                 </div>
               </div>
             );
-
-            if (isStarter) {
-              return (
-                <React.Fragment key={`starter-bundle-${index}`}>
-                  {cardEl}
-                  <BundlePurchaseCard />
-                </React.Fragment>
-              );
-            }
-
-            return cardEl;
           })}
         </div>
 

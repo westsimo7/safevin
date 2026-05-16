@@ -10,7 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-const VALID_CHECKOUT_PLANS = new Set(["starter", "pro", "expert"]);
+const VALID_CHECKOUT_PLANS = new Set(["pro", "expert"]);
 
 const Auth = () => {
   const navigate = useNavigate();

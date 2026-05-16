@@ -32,7 +32,7 @@ serve(async (req) => {
     const quantity = Number(session.metadata?.quantity || 0);
     const product = session.metadata?.product;
 
-    if (product !== "single_listings_bundle" || !userId || !quantity) {
+    if (!product || !product.startsWith("single_listings_bundle") || !userId || !quantity) {
       return new Response(JSON.stringify({ success: false, error: "invalid_metadata" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
