@@ -163,7 +163,7 @@ const PricingSection = () => {
                   {plan.oldPrice && (
                     <span className="text-base sm:text-lg text-muted-foreground line-through">€{plan.oldPrice}</span>
                   )}
-                  <span className="font-display text-3xl sm:text-4xl text-foreground">€{plan.price}</span>
+                  <span className="text-3xl sm:text-4xl font-bold text-foreground">€{plan.price}</span>
                   {plan.hasPeriod && (
                     <span className="text-muted-foreground text-[13px] sm:text-sm">{t("pricing.perMonth")}</span>
                   )}
