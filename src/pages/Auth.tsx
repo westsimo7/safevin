@@ -99,6 +99,7 @@ const Auth = () => {
         if (error) throw error;
         // The useEffect on `user` will trigger proceedAfterAuth (checkout or /home)
       } else {
+        sessionStorage.setItem("safevin_post_signup_pricing", "1");
         const { data, error } = await supabase.auth.signUp({
           email: form.email,
           password: form.password,
