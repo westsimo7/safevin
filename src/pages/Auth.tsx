@@ -141,6 +141,9 @@ const Auth = () => {
       const redirectTarget = hasPendingCheckout
         ? `${window.location.origin}/auth?checkout=${checkoutPlan}`
         : `${window.location.origin}/home`;
+      if (!isLogin && !hasPendingCheckout) {
+        sessionStorage.setItem("safevin_post_signup_pricing", "1");
+      }
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: redirectTarget,
       });
