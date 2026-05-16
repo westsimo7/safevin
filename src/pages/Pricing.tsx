@@ -100,7 +100,8 @@ const Pricing = () => {
     container.scrollTo({ left, behavior: "instant" as ScrollBehavior });
   }, []);
 
-  const currentPlanKey: PlanKey = planState?.plan ?? "free";
+  const rawPlan = planState?.plan ?? "free";
+  const currentPlanKey: PlanKey = (rawPlan === "pro" || rawPlan === "expert") ? rawPlan : "free";
 
   // After Stripe redirect, refresh subscription state
   useEffect(() => {
