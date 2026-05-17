@@ -790,11 +790,13 @@ export type Database = {
         Returns: {
           analysis_count: number
           bonus_credits: number
+          bundle_purchased: number
           cd_limit: number
           cd_used: number
           cognome: string
           created_at: string
           email: string
+          free_redeemed: boolean
           nome: string
           plan: string
           role: string
