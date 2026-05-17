@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ImagePlus, X, Camera, Tag, DollarSign, Shirt, Palette, Clock, FileText, Layers, Sparkles } from "lucide-react";
+import { ensureBrowserCompatibleImages } from "@/lib/heicConvert";
 
 interface ListingData {
   images: File[];
@@ -41,8 +42,11 @@ const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addImages = useCallback((files: FileList | File[]) => {
-    const newFiles = Array.from(files).filter(f => f.type.startsWith("image/")).slice(0, MAX_IMAGES - images.length);
+  const addImages = useCallback(async (files: FileList | File[]) => {
+    const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
+    if (raw.length === 0) return;
+    const converted = await ensureBrowserCompatibleImages(raw);
+    const newFiles = converted.filter(f => f.type.startsWith("image/"));
     if (newFiles.length === 0) return;
     setImages(prev => [...prev, ...newFiles]);
     newFiles.forEach(file => {
@@ -119,7 +123,7 @@ const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+            <input ref={fileInputRef} type="file" multiple accept="image/*,.heic,.heif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <ImagePlus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">
               Trascina le foto qui o <span className="text-primary font-medium">carica dal dispositivo</span>

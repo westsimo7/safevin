@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import StudioPhotoGuide from "./StudioPhotoGuide";
+import { ensureBrowserCompatibleImages } from "@/lib/heicConvert";
 
 const MAX_IMAGES = 15;
 const MAX_SIZE_MB = 25;
@@ -52,12 +53,15 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const touchStartX = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addImages = useCallback((files: FileList | File[]) => {
-    const arr = Array.from(files).filter(f => {
+  const addImages = useCallback(async (files: FileList | File[]) => {
+    const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
+    if (raw.length === 0) return;
+    const converted = await ensureBrowserCompatibleImages(raw);
+    const arr = converted.filter(f => {
       if (!f.type.startsWith("image/")) return false;
       if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
       return true;
-    }).slice(0, MAX_IMAGES - images.length);
+    });
     if (arr.length === 0) return;
     setImages(prev => [...prev, ...arr]);
     arr.forEach(file => {
@@ -94,7 +98,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         <StudioPhotoGuide />
       </div>
 
-      <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+      <input ref={fileInputRef} type="file" multiple accept="image/*,.heic,.heif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
       <Card className="border-border/50 flex-1 min-h-0 mb-2 hidden sm:block">
         <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
