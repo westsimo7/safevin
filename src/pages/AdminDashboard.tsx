@@ -212,6 +212,8 @@ const AdminDashboard = () => {
                       <th className="text-left p-3 text-xs text-muted-foreground font-medium">Ruolo</th>
                       <th className="text-left p-3 text-xs text-muted-foreground font-medium">Piano</th>
                       <th className="text-center p-3 text-xs text-muted-foreground font-medium">Annunci</th>
+                      <th className="text-center p-3 text-xs text-muted-foreground font-medium">Free</th>
+                      <th className="text-center p-3 text-xs text-muted-foreground font-medium">Bundle</th>
                       <th className="text-left p-3 text-xs text-muted-foreground font-medium">Registrato</th>
                     </tr>
                   </thead>
@@ -251,6 +253,22 @@ const AdminDashboard = () => {
                             <span className="text-muted-foreground">/{available}</span>
                             {bonus > 0 && (
                               <span className="ml-1 text-[10px] font-bold text-orange-500">+{bonus}</span>
+                            )}
+                          </td>
+                          <td className="p-3 text-center">
+                            {u.free_redeemed ? (
+                              <span className="inline-flex items-center gap-1 text-emerald-600 text-xs font-semibold">
+                                <Gift className="w-3 h-3" /> Sì
+                              </span>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
+                            )}
+                          </td>
+                          <td className="p-3 text-center">
+                            {u.bundle_purchased > 0 ? (
+                              <span className="text-xs font-semibold text-orange-600">{u.bundle_purchased}</span>
+                            ) : (
+                              <span className="text-xs text-muted-foreground">—</span>
                             )}
                           </td>
                           <td className="p-3 text-xs text-muted-foreground">
