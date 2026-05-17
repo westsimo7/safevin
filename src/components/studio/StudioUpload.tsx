@@ -53,12 +53,15 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const touchStartX = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addImages = useCallback((files: FileList | File[]) => {
-    const arr = Array.from(files).filter(f => {
+  const addImages = useCallback(async (files: FileList | File[]) => {
+    const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
+    if (raw.length === 0) return;
+    const converted = await ensureBrowserCompatibleImages(raw);
+    const arr = converted.filter(f => {
       if (!f.type.startsWith("image/")) return false;
       if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
       return true;
-    }).slice(0, MAX_IMAGES - images.length);
+    });
     if (arr.length === 0) return;
     setImages(prev => [...prev, ...arr]);
     arr.forEach(file => {
