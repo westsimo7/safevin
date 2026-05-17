@@ -71,7 +71,7 @@ const BeforeAfterSection = () => {
                 Dopo
               </span>
             </div>
-            <div className="relative flex-1 rounded-2xl overflow-hidden border-2 border-primary/40 bg-primary/5 shadow-2xl shadow-primary/25">
+            <div className="relative aspect-[9/16] rounded-2xl overflow-hidden border-2 border-primary/40 bg-primary/5 shadow-2xl shadow-primary/25">
               <img
                 src={afterImg}
                 alt="Annuncio Vinted dopo SAFEviN"
