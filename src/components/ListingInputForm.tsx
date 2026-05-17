@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { ImagePlus, X, Camera, Tag, DollarSign, Shirt, Palette, Clock, FileText, Layers, Sparkles } from "lucide-react";
+import { ensureBrowserCompatibleImages } from "@/lib/heicConvert";
 
 interface ListingData {
   images: File[];
