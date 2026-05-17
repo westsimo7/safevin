@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import StudioPhotoGuide from "./StudioPhotoGuide";
 import { ensureBrowserCompatibleImages } from "@/lib/heicConvert";
+import { toast } from "@/hooks/use-toast";
 
 const MAX_IMAGES = 15;
 const MAX_SIZE_MB = 25;
