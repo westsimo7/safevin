@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import PlanProtectedRoute from "@/components/PlanProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import RedeemFreeListing from "./pages/RedeemFreeListing";
 import EngineStudio from "./pages/EngineStudio";
 import Storico from "./pages/Storico";
 import StudioDetailPage from "./pages/StudioDetail";
@@ -58,6 +59,9 @@ const AnimatedRoutes = () => {
           } />
           <Route path="/dashboard" element={
             <ProtectedRoute><PageTransition direction="up"><Dashboard /></PageTransition></ProtectedRoute>
+          } />
+          <Route path="/dashboard/redeem" element={
+            <ProtectedRoute><RedeemFreeListing /></ProtectedRoute>
           } />
           <Route path="/engine/studio" element={
             <ProtectedRoute><PageTransition direction="left"><EngineStudio /></PageTransition></ProtectedRoute>

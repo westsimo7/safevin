@@ -4,40 +4,49 @@ import {
   Body, Button, Container, Head, Heading, Html, Preview, Text,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
-import { SITE_NAME, SITE_URL, BundleBlock, Divider, PricingCTA } from './_blocks.tsx'
+import { SITE_URL } from './_blocks.tsx'
 
 interface WelcomeEmailProps { name?: string }
 
 const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
   <Html lang="it" dir="ltr">
     <Head />
-    <Preview>Benvenuto su {SITE_NAME} — vendi più velocemente su Vinted</Preview>
+    <Preview>🎁 Il tuo primo annuncio è gratis — riscattalo ora.</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>
-          {name ? `Benvenuto, ${name}!` : `Benvenuto su ${SITE_NAME}!`}
-        </Heading>
+        <Heading style={h1}>Ciao {name || 'venditore'},</Heading>
+
+        <Text style={text}>Benvenuto su SAFEViN.</Text>
+
         <Text style={text}>
-          Sei dentro. {SITE_NAME} ti aiuta a creare annunci Vinted ottimizzati
-          per la conversione: titolo, descrizione e prezzo strategico in pochi
-          minuti.
+          Hai appena fatto la cosa più intelligente che un venditore Vinted
+          potesse fare: smettere di perdere tempo a scrivere annunci a mano.
         </Text>
+
         <Text style={text}>
-          Inizia subito caricando le foto del tuo prodotto in Studio.
+          Per farti toccare con mano quanto è diverso, ti abbiamo riservato
+          un annuncio completamente gratuito.
         </Text>
-        <Button style={button} href={`${SITE_URL}/engine/studio`}>
-          Crea il primo annuncio
+
+        <Text style={text}>
+          Non si attiva da solo — è tuo, ma devi andartelo a prendere.
+        </Text>
+
+        <Button style={button} href={`${SITE_URL}/dashboard/redeem`}>
+          Riscatta il tuo annuncio gratuito
         </Button>
 
-        <Divider />
-        <Text style={subTitle}>Quando vorrai più annunci</Text>
-        <BundleBlock />
-        <PricingCTA />
-
-        <Text style={footer}>
-          Hai bisogno di aiuto? Rispondi a questa email o scrivici dal Centro
-          Assistenza.
+        <Text style={text}>
+          Ci vogliono 30 secondi. Carichi il tuo articolo, SAFEViN genera il
+          titolo, la descrizione e i tag ottimizzati. Copi, incolli, vendi.
         </Text>
+
+        <Text style={text}>
+          Nessuna carta di credito. Nessun impegno. Solo un annuncio fatto
+          bene — gratis.
+        </Text>
+
+        <Text style={footer}>— Il team di SAFEViN</Text>
       </Container>
     </Body>
   </Html>
@@ -45,7 +54,7 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
 
 export const template = {
   component: WelcomeEmail,
-  subject: `Benvenuto su ${SITE_NAME}`,
+  subject: '🎁 Il tuo primo annuncio è gratis — riscattalo ora.',
   displayName: 'Benvenuto',
   previewData: { name: 'Marco' },
 } satisfies TemplateEntry
@@ -53,7 +62,6 @@ export const template = {
 const main = { backgroundColor: '#ffffff', fontFamily: 'Inter, Arial, sans-serif' }
 const container = { padding: '32px 28px', maxWidth: '560px' }
 const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0f1719', fontFamily: 'Poppins, Arial, sans-serif', margin: '0 0 20px' }
-const subTitle = { fontSize: '17px', fontWeight: 'bold' as const, color: '#0f1719', fontFamily: 'Poppins, Arial, sans-serif', margin: '8px 0 16px' }
-const text = { fontSize: '15px', color: '#3f4548', lineHeight: '1.6', margin: '0 0 20px' }
-const button = { backgroundColor: '#1e9389', color: '#ffffff', fontSize: '15px', fontWeight: 'bold' as const, borderRadius: '12px', padding: '14px 24px', textDecoration: 'none' }
-const footer = { fontSize: '12px', color: '#8a9296', margin: '32px 0 0' }
+const text = { fontSize: '15px', color: '#3f4548', lineHeight: '1.6', margin: '0 0 18px' }
+const button = { backgroundColor: '#1e9389', color: '#ffffff', fontSize: '15px', fontWeight: 'bold' as const, borderRadius: '12px', padding: '14px 24px', textDecoration: 'none', margin: '8px 0 22px', display: 'inline-block' }
+const footer = { fontSize: '13px', color: '#8a9296', margin: '24px 0 0' }

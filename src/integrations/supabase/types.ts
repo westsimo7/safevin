@@ -386,6 +386,21 @@ export type Database = {
         }
         Relationships: []
       }
+      free_listing_claims: {
+        Row: {
+          claimed_at: string
+          user_id: string
+        }
+        Insert: {
+          claimed_at?: string
+          user_id: string
+        }
+        Update: {
+          claimed_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -841,6 +856,7 @@ export type Database = {
         }[]
       }
       recount_studio_used: { Args: { p_user_id: string }; Returns: undefined }
+      redeem_free_listing: { Args: never; Returns: Json }
       register_or_check_device: {
         Args: { p_fingerprint: string; p_ip?: string; p_user_agent?: string }
         Returns: Json
