@@ -7,6 +7,7 @@ import { Trans, useTranslation } from "react-i18next";
 import FloatingResults from "@/components/FloatingResults";
 import FloatingPercentages from "@/components/FloatingPercentages";
 import { ReviewsStats } from "@/components/ReviewsSection";
+import BeforeAfterSection from "@/components/BeforeAfterSection";
 import safevinLogo from "@/assets/safevin-logo.png";
 
 
@@ -94,7 +95,11 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
+        {/* Prima / Dopo SAFEViN */}
+        <BeforeAfterSection />
+
         {/* Stats numbers */}
+
         <div className="mt-6 sm:mt-10 max-w-3xl mx-auto text-center">
           <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight mb-2 sm:mb-3">
             La web app che <span className="text-primary">velocizza le tue vendite</span> e migliora i tuoi annunci
