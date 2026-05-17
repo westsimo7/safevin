@@ -1,34 +1,26 @@
+Ho trovato la causa reale: il dominio email è verificato e la coda email funziona, ma il job dei reminder trial sta fallendo perché chiama l’invio interno senza un token valido. L’errore attuale è `401 UNAUTHORIZED_INVALID_JWT_FORMAT`, quindi i reminder non entrano nemmeno in coda.
 
+Piano operativo:
 
-## Diagnosi e Fix: Errore dopo analisi immagini in Studio
+1. Correggere la funzione dei reminder trial
+   - Aggiornare `send-free-trial-reminders` per chiamare l’invio email con autorizzazione valida lato backend.
+   - Usare una chiave server interna invece del client anonimo implicito.
+   - Mantenere il limite di invii per ciclo per evitare blocchi/rate-limit.
 
-### Problema identificato
+2. Rendere il job più robusto
+   - Aggiungere log leggibili quando una chiamata fallisce.
+   - Leggere correttamente il corpo dell’errore della funzione email, così i prossimi problemi saranno visibili subito.
+   - Evitare che un singolo errore mandi in cascata tutto il ciclo.
 
-Le chiamate API `studio-analyze` restituiscono tutte 200 OK con dati validi. L'errore probabile è nel **salvataggio del draft in localStorage** dopo l'analisi: le preview delle immagini sono data URL base64 che possono facilmente superare il limite di 5MB di localStorage, causando un'eccezione non gestita che riporta alla fase upload con errore generico.
+3. Deploy delle funzioni necessarie
+   - Distribuire di nuovo `send-free-trial-reminders`.
+   - Se necessario, ridistribuire anche `send-transactional-email` e `process-email-queue` per garantire che la pipeline email sia aggiornata.
 
-### Piano
+4. Far partire subito le email
+   - Eseguire manualmente il job dei reminder dopo la correzione.
+   - Verificare che vengano creati nuovi log `pending`/`sent` per i template `free-reminder-*`.
+   - Controllare che la coda si svuoti e che almeno il primo batch risulti inviato.
 
-**1. Proteggere il salvataggio draft da errori localStorage**
-
-In `src/lib/studioDrafts.ts` (`writeStudioDrafts`):
-- Wrappare `localStorage.setItem` in try/catch
-- Se fallisce per quota superata, rimuovere i draft più vecchi e riprovare
-- Se continua a fallire, loggare warning ma non lanciare eccezione
-
-**2. Ridurre la dimensione dei dati salvati**
-
-In `src/pages/EngineStudio.tsx` (`saveDraft`):
-- NON salvare le preview base64 complete nel draft
-- Salvare solo la prima preview ridimensionata (thumbnail ~200px) per la visualizzazione nella lista incompleti
-- Le preview full-size restano solo in memoria React state
-
-**3. Gestire errori nel flusso handleAnalyze**
-
-In `src/pages/EngineStudio.tsx`:
-- Assicurarsi che `saveDraft` non possa far fallire il flusso principale
-- Wrappare la chiamata `saveDraft` in try/catch separato così il passaggio alla fase `recognition` avviene anche se il draft fallisce
-
-### File modificati
-- `src/lib/studioDrafts.ts` — aggiunta gestione errori quota localStorage
-- `src/pages/EngineStudio.tsx` — riduzione dati preview nei draft + protezione errori
-
+5. Risultato atteso
+   - I 186 utenti free idonei che non hanno ancora ricevuto `free-reminder-2h` inizieranno a ricevere i reminder.
+   - Il sistema continuerà poi automaticamente ogni 15 minuti fino a completare la sequenza, rispettando il limite per ciclo.
