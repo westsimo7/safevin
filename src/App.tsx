@@ -60,6 +60,9 @@ const AnimatedRoutes = () => {
           <Route path="/dashboard" element={
             <ProtectedRoute><PageTransition direction="up"><Dashboard /></PageTransition></ProtectedRoute>
           } />
+          <Route path="/dashboard/redeem" element={
+            <ProtectedRoute><RedeemFreeListing /></ProtectedRoute>
+          } />
           <Route path="/engine/studio" element={
             <ProtectedRoute><PageTransition direction="left"><EngineStudio /></PageTransition></ProtectedRoute>
           } />
