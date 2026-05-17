@@ -40,6 +40,7 @@ import CookieBanner from "./components/CookieBanner";
 import UpsellPopup from "./components/UpsellPopup";
 // BottomBar removed (Home/Storico/Coach mobile bar)
 import PageTransition from "./components/PageTransition";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -140,7 +141,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <PlanProvider>
-            <AnimatedRoutes />
+            <ErrorBoundary>
+              <AnimatedRoutes />
+            </ErrorBoundary>
           </PlanProvider>
         </AuthProvider>
       </BrowserRouter>

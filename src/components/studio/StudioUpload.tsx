@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import StudioPhotoGuide from "./StudioPhotoGuide";
 import { ensureBrowserCompatibleImages } from "@/lib/heicConvert";
+import { toast } from "@/hooks/use-toast";
 
 const MAX_IMAGES = 15;
 const MAX_SIZE_MB = 25;
@@ -20,25 +21,35 @@ function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
+      const dataUrl = reader.result as string;
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const maxDim = 1400;
-        let w = img.width, h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
-          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        try {
+          const canvas = document.createElement("canvas");
+          const maxDim = 1400;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { resolve(dataUrl); return; }
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.78));
+        } catch (e) {
+          console.warn("compressImage canvas error:", e);
+          resolve(dataUrl);
         }
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d")!;
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
       };
-      img.onerror = reject;
-      img.src = reader.result as string;
+      img.onerror = () => {
+        console.warn("compressImage img load failed, sending original");
+        resolve(dataUrl);
+      };
+      img.src = dataUrl;
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(reader.error || new Error("FileReader error"));
     reader.readAsDataURL(file);
   });
 }
@@ -56,19 +67,32 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const addImages = useCallback(async (files: FileList | File[]) => {
     const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
     if (raw.length === 0) return;
-    const converted = await ensureBrowserCompatibleImages(raw);
-    const arr = converted.filter(f => {
-      if (!f.type.startsWith("image/")) return false;
-      if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
-      return true;
-    });
-    if (arr.length === 0) return;
-    setImages(prev => [...prev, ...arr]);
-    arr.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => setPreviews(prev => [...prev, e.target?.result as string]);
-      reader.readAsDataURL(file);
-    });
+    try {
+      const { files: converted, failed } = await ensureBrowserCompatibleImages(raw);
+      if (failed.length > 0) {
+        toast({
+          title: "Foto non compatibili",
+          description: `${failed.length} foto in formato HEIC non leggibili. Riprova convertendole in JPEG/PNG.`,
+          variant: "destructive",
+        });
+      }
+      const arr = converted.filter(f => {
+        if (!f.type.startsWith("image/")) return false;
+        if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
+        return true;
+      });
+      if (arr.length === 0) return;
+      setImages(prev => [...prev, ...arr]);
+      arr.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => setPreviews(prev => [...prev, e.target?.result as string]);
+        reader.onerror = () => console.warn("FileReader failed for", file.name);
+        reader.readAsDataURL(file);
+      });
+    } catch (e: any) {
+      console.error("addImages failed:", e);
+      toast({ title: "Errore caricamento", description: e?.message || "Impossibile caricare le foto.", variant: "destructive" });
+    }
   }, [images.length]);
 
   const removeImage = (index: number) => {
