@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { Users, BarChart3, Shield, MessageSquare, Rocket, HelpCircle, Handshake } from "lucide-react";
+import { Users, BarChart3, Shield, MessageSquare, Rocket, HelpCircle, Handshake, Gift, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AdminUser {
@@ -26,6 +26,8 @@ interface AdminUser {
   created_at: string;
   studio_count: number;
   analysis_count: number;
+  free_redeemed: boolean;
+  bundle_purchased: number;
 }
 
 const AdminDashboard = () => {
@@ -68,6 +70,8 @@ const AdminDashboard = () => {
       .on("postgres_changes", { event: "*", schema: "public", table: "analyses" }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "user_credits" }, () => load())
       .on("postgres_changes", { event: "*", schema: "public", table: "profiles" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "bundle_purchases" }, () => load())
+      .on("postgres_changes", { event: "*", schema: "public", table: "free_listing_claims" }, () => load())
       .subscribe();
 
     return () => {
@@ -102,6 +106,8 @@ const AdminDashboard = () => {
 
   const totalUsers = users.length;
   const totalCreations = users.reduce((sum, u) => sum + u.studio_count + u.analysis_count, 0);
+  const totalFreeRedeemed = users.reduce((sum, u) => sum + (u.free_redeemed ? 1 : 0), 0);
+  const totalBundlePurchased = users.reduce((sum, u) => sum + (u.bundle_purchased || 0), 0);
 
   return (
     <div className="flex flex-col flex-1 overflow-hidden bg-background">
@@ -111,7 +117,7 @@ const AdminDashboard = () => {
           <PageTitle title="Dashboard Founder" backTo="/home" />
 
           {/* Stats */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
             <Card>
               <CardContent className="p-4 flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -119,7 +125,7 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-foreground">{totalUsers}</p>
-                  <p className="text-xs text-muted-foreground">Utenti registrati</p>
+                  <p className="text-xs text-muted-foreground">Utenti</p>
                 </div>
               </CardContent>
             </Card>
@@ -131,6 +137,28 @@ const AdminDashboard = () => {
                 <div>
                   <p className="text-2xl font-bold text-foreground">{totalCreations}</p>
                   <p className="text-xs text-muted-foreground">Annunci totali</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  <Gift className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">{totalFreeRedeemed}</p>
+                  <p className="text-xs text-muted-foreground">Free riscattati</p>
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent className="p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                  <ShoppingBag className="w-5 h-5 text-orange-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">{totalBundlePurchased}</p>
+                  <p className="text-xs text-muted-foreground">Acquistati (bundle)</p>
                 </div>
               </CardContent>
             </Card>
