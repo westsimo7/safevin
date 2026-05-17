@@ -45,7 +45,7 @@ const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
   const addImages = useCallback(async (files: FileList | File[]) => {
     const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
     if (raw.length === 0) return;
-    const converted = await ensureBrowserCompatibleImages(raw);
+    const { files: converted } = await ensureBrowserCompatibleImages(raw);
     const newFiles = converted.filter(f => f.type.startsWith("image/"));
     if (newFiles.length === 0) return;
     setImages(prev => [...prev, ...newFiles]);
