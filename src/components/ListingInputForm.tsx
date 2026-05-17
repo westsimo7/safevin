@@ -42,8 +42,11 @@ const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const addImages = useCallback((files: FileList | File[]) => {
-    const newFiles = Array.from(files).filter(f => f.type.startsWith("image/")).slice(0, MAX_IMAGES - images.length);
+  const addImages = useCallback(async (files: FileList | File[]) => {
+    const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
+    if (raw.length === 0) return;
+    const converted = await ensureBrowserCompatibleImages(raw);
+    const newFiles = converted.filter(f => f.type.startsWith("image/"));
     if (newFiles.length === 0) return;
     setImages(prev => [...prev, ...newFiles]);
     newFiles.forEach(file => {
