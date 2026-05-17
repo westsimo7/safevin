@@ -95,7 +95,11 @@ const HeroSection = () => {
         {/* Floating sold items */}
         <FloatingResults />
 
+        {/* Prima / Dopo SAFEViN */}
+        <BeforeAfterSection />
+
         {/* Stats numbers */}
+
         <div className="mt-6 sm:mt-10 max-w-3xl mx-auto text-center">
           <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-tight leading-tight mb-2 sm:mb-3">
             La web app che <span className="text-primary">velocizza le tue vendite</span> e migliora i tuoi annunci
