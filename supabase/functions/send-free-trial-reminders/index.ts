@@ -40,9 +40,15 @@ Deno.serve(async (req) => {
         .in('user_id', trialUserIds)
     : { data: [] as any[] }
 
+  // Hard cap per cron run to avoid edge-runtime invocation rate limits.
+  // Cron runs every 15 min → 25 emails/run = ~100/h, well above expected volume.
+  const MAX_SENDS_PER_RUN = 25
+  let sentThisRun = 0
+
   for (const step of TRIAL_SEQUENCE) {
     results[step.template] = { sent: 0, skipped: 0, errors: 0 }
     for (const p of trialProfiles || []) {
+      if (sentThisRun >= MAX_SENDS_PER_RUN) { results[step.template].skipped++; continue }
       if (!p.email) { results[step.template].skipped++; continue }
 
       const { data: alreadySent } = await supabase
@@ -81,12 +87,26 @@ Deno.serve(async (req) => {
             templateData: { name: p.nome || undefined },
           },
         })
-        if (error) { console.error('send err', step.template, p.email, error); results[step.template].errors++ }
-        else { results[step.template].sent++ }
+        if (error) {
+          console.error('send err', step.template, p.email, error)
+          results[step.template].errors++
+          // On rate-limit, back off and stop processing this run; resume next cron tick.
+          const retryAfterMs = (error as any)?.context?.retryAfterMs
+          if (retryAfterMs && retryAfterMs > 0) {
+            console.warn(`Rate-limited, aborting run. Retry after ${retryAfterMs}ms`)
+            return new Response(JSON.stringify({ ok: true, results, aborted: 'rate_limit', retryAfterMs }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            })
+          }
+        } else {
+          results[step.template].sent++
+          sentThisRun++
+        }
       } catch (e) {
         console.error('invoke err', e); results[step.template].errors++
       }
-      await new Promise(r => setTimeout(r, 400))
+      // 2s delay between invokes to stay under edge-runtime per-function rate limit.
+      await new Promise(r => setTimeout(r, 2000))
     }
   }
 
