@@ -77,7 +77,8 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         });
       }
       const arr = converted.filter(f => {
-        if (!f.type.startsWith("image/")) return false;
+        const looksImage = f.type.startsWith("image/") || /\.(jpe?g|png|webp|gif|heic|heif|hif)$/i.test(f.name);
+        if (!looksImage) return false;
         if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
         return true;
       });
@@ -122,7 +123,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         <StudioPhotoGuide />
       </div>
 
-      <input ref={fileInputRef} type="file" multiple accept="image/*,.heic,.heif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+      <input ref={fileInputRef} type="file" multiple accept="image/*,image/heic,image/heif,.heic,.heif,.hif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
       <Card className="border-border/50 flex-1 min-h-0 mb-2 hidden sm:block">
         <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">
