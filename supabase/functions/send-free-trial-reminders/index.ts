@@ -1,15 +1,13 @@
 // Cron: runs every 15 minutes.
-// - Trial reminders (1h, 24h, 48h, 4d, 5d, 7d): per utenti free che NON hanno ancora
-//   creato il primo annuncio (studio_used = 0).
-// Idempotency è garantita dal pre-check su email_send_log.
+// Trial reminders (1h, 24h, 48h, 4d, 5d, 7d) for free users with studio_used=0.
+// Uses the DB RPC invoke_send_transactional_email (which reads the legacy JWT
+// from vault) to bypass the new sb_secret_* key format that breaks verify_jwt.
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import { corsHeaders } from 'jsr:@supabase/supabase-js@2/cors'
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!
 const SERVICE_ROLE = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 
-// Trial sequence: chained on previous email's sent_at (not registration date).
-// 1h → 24h → 48h → 4d → 5d → 7d. Allows restart by clearing logs.
 const TRIAL_SEQUENCE = [
   { template: 'free-reminder-2h',  prev: null,                gapHours: 1  },
   { template: 'free-reminder-24h', prev: 'free-reminder-2h',  gapHours: 23 },
@@ -25,7 +23,6 @@ Deno.serve(async (req) => {
   const supabase = createClient(SUPABASE_URL, SERVICE_ROLE)
   const results: Record<string, { sent: number; skipped: number; errors: number }> = {}
 
-  // ===== Trial sequence (chained on previous email's sent_at) =====
   const { data: trialCredits } = await supabase
     .from('user_credits')
     .select('user_id')
@@ -40,9 +37,8 @@ Deno.serve(async (req) => {
         .in('user_id', trialUserIds)
     : { data: [] as any[] }
 
-  // Hard cap per cron run to avoid edge-runtime invocation rate limits.
-  // Cron runs every 15 min → 25 emails/run = ~100/h, well above expected volume.
-  const MAX_SENDS_PER_RUN = 25
+  // Cap per run to smooth load. 50/run x 15min = ~200/h.
+  const MAX_SENDS_PER_RUN = 50
   let sentThisRun = 0
 
   for (const step of TRIAL_SEQUENCE) {
@@ -79,25 +75,20 @@ Deno.serve(async (req) => {
       if (elapsedH < step.gapHours) { results[step.template].skipped++; continue }
 
       try {
-        const { error } = await supabase.functions.invoke('send-transactional-email', {
-          body: {
-            templateName: step.template,
-            recipientEmail: p.email,
-            idempotencyKey: `${step.template}-${p.user_id}-${Date.now()}`,
-            templateData: { name: p.nome || undefined },
-          },
+        // Use DB RPC which authenticates via vault legacy JWT — bypasses the
+        // sb_secret_* key format incompatibility with verify_jwt=true.
+        const { data, error } = await supabase.rpc('invoke_send_transactional_email', {
+          p_template_name: step.template,
+          p_recipient_email: p.email,
+          p_idempotency_key: `${step.template}-${p.user_id}-${Date.now()}`,
+          p_template_data: { name: p.nome || undefined },
         })
         if (error) {
-          console.error('send err', step.template, p.email, error)
+          console.error('rpc err', step.template, p.email, error.message)
           results[step.template].errors++
-          // On rate-limit, back off and stop processing this run; resume next cron tick.
-          const retryAfterMs = (error as any)?.context?.retryAfterMs
-          if (retryAfterMs && retryAfterMs > 0) {
-            console.warn(`Rate-limited, aborting run. Retry after ${retryAfterMs}ms`)
-            return new Response(JSON.stringify({ ok: true, results, aborted: 'rate_limit', retryAfterMs }), {
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            })
-          }
+        } else if (data === null) {
+          console.error('rpc returned null (vault key missing?)', step.template, p.email)
+          results[step.template].errors++
         } else {
           results[step.template].sent++
           sentThisRun++
@@ -105,12 +96,12 @@ Deno.serve(async (req) => {
       } catch (e) {
         console.error('invoke err', e); results[step.template].errors++
       }
-      // 2s delay between invokes to stay under edge-runtime per-function rate limit.
-      await new Promise(r => setTimeout(r, 2000))
+      // Light delay to avoid spike on pg_net.
+      await new Promise(r => setTimeout(r, 150))
     }
   }
 
-  return new Response(JSON.stringify({ ok: true, results }), {
+  return new Response(JSON.stringify({ ok: true, sentThisRun, results }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   })
 })
