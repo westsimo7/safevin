@@ -98,7 +98,7 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         <StudioPhotoGuide />
       </div>
 
-      <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+      <input ref={fileInputRef} type="file" multiple accept="image/*,.heic,.heif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
       <Card className="border-border/50 flex-1 min-h-0 mb-2 hidden sm:block">
         <CardContent className="p-3 h-full flex flex-col">
           <div className="flex items-center justify-between mb-2">

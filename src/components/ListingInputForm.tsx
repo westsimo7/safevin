@@ -119,7 +119,7 @@ const ListingInputForm = ({ onSubmit, isLoading }: ListingInputFormProps) => {
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
-            <input ref={fileInputRef} type="file" multiple accept="image/*" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
+            <input ref={fileInputRef} type="file" multiple accept="image/*,.heic,.heif" className="hidden" onChange={e => e.target.files && addImages(e.target.files)} />
             <ImagePlus className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
             <p className="text-sm text-muted-foreground">
               Trascina le foto qui o <span className="text-primary font-medium">carica dal dispositivo</span>
