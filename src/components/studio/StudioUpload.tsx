@@ -77,7 +77,8 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
         });
       }
       const arr = converted.filter(f => {
-        if (!f.type.startsWith("image/")) return false;
+        const looksImage = f.type.startsWith("image/") || /\.(jpe?g|png|webp|gif|heic|heif|hif)$/i.test(f.name);
+        if (!looksImage) return false;
         if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
         return true;
       });
