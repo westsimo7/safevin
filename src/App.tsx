@@ -10,6 +10,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import PlanProtectedRoute from "@/components/PlanProtectedRoute";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
+import RedeemFreeListing from "./pages/RedeemFreeListing";
 import EngineStudio from "./pages/EngineStudio";
 import Storico from "./pages/Storico";
 import StudioDetailPage from "./pages/StudioDetail";
