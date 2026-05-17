@@ -21,25 +21,35 @@ function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
+      const dataUrl = reader.result as string;
       const img = new Image();
       img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const maxDim = 1400;
-        let w = img.width, h = img.height;
-        if (w > maxDim || h > maxDim) {
-          if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
-          else { w = Math.round(w * maxDim / h); h = maxDim; }
+        try {
+          const canvas = document.createElement("canvas");
+          const maxDim = 1400;
+          let w = img.width, h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) { resolve(dataUrl); return; }
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL("image/jpeg", 0.78));
+        } catch (e) {
+          console.warn("compressImage canvas error:", e);
+          resolve(dataUrl);
         }
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d")!;
-        ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL("image/jpeg", 0.78));
       };
-      img.onerror = reject;
-      img.src = reader.result as string;
+      img.onerror = () => {
+        console.warn("compressImage img load failed, sending original");
+        resolve(dataUrl);
+      };
+      img.src = dataUrl;
     };
-    reader.onerror = reject;
+    reader.onerror = () => reject(reader.error || new Error("FileReader error"));
     reader.readAsDataURL(file);
   });
 }
