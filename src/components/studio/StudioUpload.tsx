@@ -57,19 +57,32 @@ const StudioUpload = ({ onAnalyze, isLoading }: StudioUploadProps) => {
   const addImages = useCallback(async (files: FileList | File[]) => {
     const raw = Array.from(files).slice(0, MAX_IMAGES - images.length);
     if (raw.length === 0) return;
-    const converted = await ensureBrowserCompatibleImages(raw);
-    const arr = converted.filter(f => {
-      if (!f.type.startsWith("image/")) return false;
-      if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
-      return true;
-    });
-    if (arr.length === 0) return;
-    setImages(prev => [...prev, ...arr]);
-    arr.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = e => setPreviews(prev => [...prev, e.target?.result as string]);
-      reader.readAsDataURL(file);
-    });
+    try {
+      const { files: converted, failed } = await ensureBrowserCompatibleImages(raw);
+      if (failed.length > 0) {
+        toast({
+          title: "Foto non compatibili",
+          description: `${failed.length} foto in formato HEIC non leggibili. Riprova convertendole in JPEG/PNG.`,
+          variant: "destructive",
+        });
+      }
+      const arr = converted.filter(f => {
+        if (!f.type.startsWith("image/")) return false;
+        if (f.size > MAX_SIZE_MB * 1024 * 1024) return false;
+        return true;
+      });
+      if (arr.length === 0) return;
+      setImages(prev => [...prev, ...arr]);
+      arr.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => setPreviews(prev => [...prev, e.target?.result as string]);
+        reader.onerror = () => console.warn("FileReader failed for", file.name);
+        reader.readAsDataURL(file);
+      });
+    } catch (e: any) {
+      console.error("addImages failed:", e);
+      toast({ title: "Errore caricamento", description: e?.message || "Impossibile caricare le foto.", variant: "destructive" });
+    }
   }, [images.length]);
 
   const removeImage = (index: number) => {
