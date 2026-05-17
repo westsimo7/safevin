@@ -34,14 +34,14 @@ const BeforeAfterSection = () => {
                 Prima
               </span>
             </div>
-            <div className="relative aspect-[9/16] rounded-2xl overflow-hidden border-2 border-destructive/25 bg-destructive/5 shadow-lg shadow-destructive/10">
+            <div className="relative aspect-[9/16] rounded-2xl overflow-hidden border-2 border-destructive/25 bg-[#0a0a0a] shadow-lg shadow-destructive/10">
               <img
                 src={beforeImg}
                 alt="Annuncio Vinted prima di SAFEviN"
-                className="w-full h-full object-cover grayscale-[40%] opacity-90"
+                className="absolute inset-0 w-full h-full object-contain"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-destructive/20 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-destructive/25 via-transparent to-transparent pointer-events-none" />
             </div>
             <p className="text-[11px] sm:text-xs text-muted-foreground text-center mt-2 sm:mt-3 leading-snug">
               Titolo generico, descrizione povera, prezzo basso
