@@ -141,7 +141,9 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <PlanProvider>
-            <AnimatedRoutes />
+            <ErrorBoundary>
+              <AnimatedRoutes />
+            </ErrorBoundary>
           </PlanProvider>
         </AuthProvider>
       </BrowserRouter>
