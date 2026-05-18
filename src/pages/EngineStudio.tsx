@@ -10,7 +10,7 @@ import StudioRecognition, { type ProductAnalysis } from "@/components/studio/Stu
 import StudioMissingPhotos from "@/components/studio/StudioMissingPhotos";
 import StudioInput, { type StudioUserInput } from "@/components/studio/StudioInput";
 import StudioOutput, { type StudioGeneratedOutput } from "@/components/studio/StudioOutput";
-import FirstListingPopup from "@/components/FirstListingPopup";
+
 import { usePlan } from "@/hooks/usePlan";
 import { removeStudioDraft, upsertStudioDraft, type StudioDraftPhase } from "@/lib/studioDrafts";
 import { savePreviews, loadPreviews, removePreviews } from "@/lib/studioPreviews";
@@ -81,7 +81,7 @@ const EngineStudio = () => {
   const [images, setImages] = useState<File[]>([]);
   const [generatedOutput, setGeneratedOutput] = useState<StudioGeneratedOutput | null>(null);
   const [incompleteId, setIncompleteId] = useState<string | null>(null);
-  const [showFirstPopup, setShowFirstPopup] = useState(false);
+  
 
   useEffect(() => {
     const state = location.state as ResumeState;
@@ -293,14 +293,8 @@ const EngineStudio = () => {
         setGeneratedOutput(data.output);
         setPhase("output");
         await saveStudioCreation(data.output, incompleteId);
-        // Mostra il popup "primo annuncio" agli utenti free dopo la prima creazione
-        try {
-          await refreshPlan();
-        } catch {}
-        const isFree = !planState?.isFounder && (planState?.plan === "free" || !planState?.plan);
-        if (isFree) {
-          setShowFirstPopup(true);
-        }
+        // refresh plan so dashboard reflects consumed credit
+        try { await refreshPlan(); } catch {}
       } else {
         throw new Error("Risposta non valida");
       }
@@ -402,7 +396,7 @@ const EngineStudio = () => {
           />
         )}
       </main>
-      <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
+      
     </div>
   );
 };

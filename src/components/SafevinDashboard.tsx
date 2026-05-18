@@ -9,8 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/hooks/usePlan";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import FirstListingPopup from "@/components/FirstListingPopup";
 import PurchaseGiftPopup from "@/components/PurchaseGiftPopup";
+import FreeListingEmailPopup from "@/components/FreeListingEmailPopup";
+import PurchaseOptionsPopup from "@/components/PurchaseOptionsPopup";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
@@ -19,16 +20,45 @@ const SafevinHome = () => {
   const { user } = useAuth();
   const [draftCount, setDraftCount] = useState(0);
   const [creationsCount, setCreationsCount] = useState<number | null>(null);
-  const [showFirstPopup, setShowFirstPopup] = useState(false);
+  const [showFreeEmailPopup, setShowFreeEmailPopup] = useState(false);
+  const [showPurchasePopup, setShowPurchasePopup] = useState(false);
 
+  // Popup sequencing: first the free-listing email popup (only once ever),
+  // then the purchase options popup (once per session).
   useEffect(() => {
-    if (searchParams.get("firstPopup") === "1") {
-      setShowFirstPopup(true);
-      searchParams.delete("firstPopup");
-      setSearchParams(searchParams, { replace: true });
+    if (!user?.id) return;
+    if (planState?.isFounder) return;
+    const isFree = !planState || planState.plan === "free";
+    const freeEmailKey = `freeListingEmailPopupShown:${user.id}`;
+    const purchaseKey = `purchasePopupShown:${user.id}`;
+    const freeEmailShown = !!localStorage.getItem(freeEmailKey);
+    const purchaseShownThisSession = !!sessionStorage.getItem(purchaseKey);
+
+    if (isFree && !freeEmailShown) {
+      setShowFreeEmailPopup(true);
+    } else if (!purchaseShownThisSession) {
+      setShowPurchasePopup(true);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [user?.id, planState?.isFounder, planState?.plan]);
+
+  const handleFreeEmailClose = (open: boolean) => {
+    setShowFreeEmailPopup(open);
+    if (!open && user?.id) {
+      localStorage.setItem(`freeListingEmailPopupShown:${user.id}`, "1");
+      // Chain into purchase popup once user closes the email one.
+      const purchaseKey = `purchasePopupShown:${user.id}`;
+      if (!sessionStorage.getItem(purchaseKey)) {
+        setTimeout(() => setShowPurchasePopup(true), 350);
+      }
+    }
+  };
+
+  const handlePurchaseClose = (open: boolean) => {
+    setShowPurchasePopup(open);
+    if (!open && user?.id) {
+      sessionStorage.setItem(`purchasePopupShown:${user.id}`, "1");
+    }
+  };
 
   const spring = { type: "spring" as const, stiffness: 90, damping: 18 };
 
@@ -252,7 +282,8 @@ const SafevinHome = () => {
 
         </div>
       </main>
-      <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
+      <FreeListingEmailPopup open={showFreeEmailPopup} onOpenChange={handleFreeEmailClose} />
+      <PurchaseOptionsPopup open={showPurchasePopup} onOpenChange={handlePurchaseClose} />
       <PurchaseGiftPopup />
     </div>
   );
