@@ -34,6 +34,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+
+      // Invia la mail di benvenuto una sola volta per utente, appena dopo la registrazione.
+      if (event === "SIGNED_IN" && session?.user) {
+        const u = session.user;
+        const key = `welcomeEmailSent:${u.id}`;
+        if (!localStorage.getItem(key)) {
+          const createdAt = u.created_at ? new Date(u.created_at).getTime() : 0;
+          const isNew = createdAt && Date.now() - createdAt < 5 * 60 * 1000;
+          if (isNew) {
+            localStorage.setItem(key, "1");
+            const name =
+              (u.user_metadata?.given_name as string | undefined) ||
+              (u.user_metadata?.name as string | undefined)?.split(" ")[0] ||
+              undefined;
+            setTimeout(() => {
+              supabase.functions
+                .invoke("send-transactional-email", {
+                  body: {
+                    templateName: "welcome",
+                    recipientEmail: u.email,
+                    idempotencyKey: `welcome-${u.id}`,
+                    templateData: { name },
+                  },
+                })
+                .catch((err) => console.error("welcome email failed", err));
+            }, 0);
+          }
+        }
+      }
     });
 
     return () => subscription.unsubscribe();
