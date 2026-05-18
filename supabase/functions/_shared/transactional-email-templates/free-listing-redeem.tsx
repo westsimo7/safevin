@@ -8,7 +8,7 @@ import { SITE_NAME, SITE_URL } from './_blocks.tsx'
 
 interface Props { name?: string }
 
-const STUDIO_URL = `${SITE_URL}/engine-studio`
+const STUDIO_URL = `${SITE_URL}/dashboard/redeem`
 
 const FreeListingRedeemEmail = ({ name }: Props) => (
   <Html lang="it" dir="ltr">
