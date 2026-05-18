@@ -58,7 +58,7 @@ const CookieBanner = () => {
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || dialogOpen) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-[100] animate-in fade-in slide-in-from-bottom-4 duration-300">
