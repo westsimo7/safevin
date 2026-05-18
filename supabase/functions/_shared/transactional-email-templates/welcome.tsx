@@ -1,17 +1,16 @@
 /// <reference types="npm:@types/react@18.3.1" />
 import * as React from 'npm:react@18.3.1'
 import {
-  Body, Button, Container, Head, Heading, Html, Preview, Text,
+  Body, Container, Head, Heading, Hr, Html, Preview, Section, Text,
 } from 'npm:@react-email/components@0.0.22'
 import type { TemplateEntry } from './registry.ts'
-import { SITE_URL } from './_blocks.tsx'
 
 interface WelcomeEmailProps { name?: string }
 
 const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
   <Html lang="it" dir="ltr">
     <Head />
-    <Preview>🎁 Il tuo primo annuncio è gratis — riscattalo ora.</Preview>
+    <Preview>Benvenuto su SAFEViN 👋</Preview>
     <Body style={main}>
       <Container style={container}>
         <Heading style={h1}>Ciao {name || 'venditore'},</Heading>
@@ -19,32 +18,44 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
         <Text style={text}>Benvenuto su SAFEViN.</Text>
 
         <Text style={text}>
-          Hai appena fatto la cosa più intelligente che un venditore Vinted
-          potesse fare: smettere di perdere tempo a scrivere annunci a mano.
+          Da oggi i tuoi annunci su Vinted non li scrivi più tu.
         </Text>
 
         <Text style={text}>
-          Per farti toccare con mano quanto è diverso, ti abbiamo riservato
-          un annuncio completamente gratuito.
+          Carichi il tuo articolo, SAFEViN genera titolo, descrizione, prezzo
+          strategico, tips di vendita e tag ottimizzati in pochi secondi.
+          Copi, incolli, vendi.
         </Text>
 
         <Text style={text}>
-          Non si attiva da solo — è tuo, ma devi andartelo a prendere.
+          Scopri la versione <strong>ARTIST DIRECTOR</strong>, affida al nostro
+          team la parte visiva dei tuoi annunci rendendoli più attraenti agli
+          occhi dei tuoi possibili acquirenti!
         </Text>
 
-        <Button style={button} href={`${SITE_URL}/dashboard/redeem`}>
-          Riscatta il tuo annuncio gratuito
-        </Button>
-
-        <Text style={text}>
-          Ci vogliono 30 secondi. Carichi il tuo articolo, SAFEViN genera il
-          titolo, la descrizione e i tag ottimizzati. Copi, incolli, vendi.
+        <Text style={highlight}>
+          Più professionale. Più visibilità. Più vendite.
         </Text>
 
         <Text style={text}>
-          Nessuna carta di credito. Nessun impegno. Solo un annuncio fatto
-          bene — gratis.
+          Quando sei pronto a fare sul serio, scegli la formula che fa per te:
         </Text>
+
+        <Hr style={hr} />
+
+        <Heading as="h2" style={h2}>Annunci singoli</Heading>
+        <Section style={priceBox}>
+          <Text style={priceRow}><strong>5 annunci</strong> — €2,95</Text>
+          <Text style={priceRow}><strong>10 annunci</strong> — €4,95</Text>
+          <Text style={priceRow}><strong>15 annunci</strong> — €8,95</Text>
+        </Section>
+
+        <Heading as="h2" style={h2}>Abbonamenti</Heading>
+        <Section style={priceBox}>
+          <Text style={priceRow}><strong>Pro</strong> — €12,99/mese · 25 annunci + Artist Director</Text>
+        </Section>
+
+        <Hr style={hr} />
 
         <Text style={footer}>— Il team di SAFEViN</Text>
       </Container>
@@ -54,7 +65,7 @@ const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
 
 export const template = {
   component: WelcomeEmail,
-  subject: '🎁 Il tuo primo annuncio è gratis — riscattalo ora.',
+  subject: 'Benvenuto su SAFEViN 👋',
   displayName: 'Benvenuto',
   previewData: { name: 'Marco' },
 } satisfies TemplateEntry
@@ -62,6 +73,10 @@ export const template = {
 const main = { backgroundColor: '#ffffff', fontFamily: 'Inter, Arial, sans-serif' }
 const container = { padding: '32px 28px', maxWidth: '560px' }
 const h1 = { fontSize: '24px', fontWeight: 'bold' as const, color: '#0f1719', fontFamily: 'Poppins, Arial, sans-serif', margin: '0 0 20px' }
+const h2 = { fontSize: '17px', fontWeight: 'bold' as const, color: '#0f1719', fontFamily: 'Poppins, Arial, sans-serif', margin: '20px 0 10px' }
 const text = { fontSize: '15px', color: '#3f4548', lineHeight: '1.6', margin: '0 0 18px' }
-const button = { backgroundColor: '#1e9389', color: '#ffffff', fontSize: '15px', fontWeight: 'bold' as const, borderRadius: '12px', padding: '14px 24px', textDecoration: 'none', margin: '8px 0 22px', display: 'inline-block' }
+const highlight = { fontSize: '16px', color: '#1e9389', fontWeight: 'bold' as const, lineHeight: '1.5', margin: '0 0 18px' }
+const priceBox = { backgroundColor: '#f6f8f9', borderRadius: '12px', padding: '14px 18px', margin: '0 0 12px' }
+const priceRow = { fontSize: '14px', color: '#0f1719', lineHeight: '1.6', margin: '4px 0' }
+const hr = { borderColor: '#e6e9eb', margin: '24px 0' }
 const footer = { fontSize: '13px', color: '#8a9296', margin: '24px 0 0' }
