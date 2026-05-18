@@ -11,27 +11,45 @@ serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    // Auth check — only authenticated users can use coach-chat
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const sb = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: claimsData, error: claimsErr } = await sb.auth.getClaims(authHeader.replace("Bearer ", ""));
+    if (claimsErr || !claimsData?.claims?.sub) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const userId = claimsData.claims.sub as string;
+
     const { messages, images, language } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
     const lang = language === "en" ? "en" : "it";
 
-    // Fetch recent data from DB to give the coach context
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    const sb = createClient(supabaseUrl, supabaseKey);
-
-    // Fetch last 10 analyses
+    // Fetch the current user's recent data (RLS-scoped via user JWT)
+    // Fetch last 10 analyses for THIS user only
     const { data: analyses } = await sb
       .from("analyses")
       .select("titolo, categoria, prezzo, condizioni, analysis_type, origin, created_at, analysis_result")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(10);
 
-    // Fetch last 10 studio creations
+    // Fetch last 10 studio creations for THIS user only
     const { data: creations } = await sb
       .from("studio_creations")
       .select("titolo_generato, categoria, origin, created_at, output")
+      .eq("user_id", userId)
       .order("created_at", { ascending: false })
       .limit(10);
 
