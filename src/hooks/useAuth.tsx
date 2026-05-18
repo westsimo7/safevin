@@ -35,13 +35,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       setLoading(false);
 
-      // Invia la mail di benvenuto una sola volta per utente, appena dopo la registrazione.
+      // Invia la mail di benvenuto una sola volta per utente, SOLO dopo che
+      // l'email è stata confermata (per Google OAuth è immediato, per
+      // email/password avviene dopo il click sul link di conferma).
       if (event === "SIGNED_IN" && session?.user) {
         const u = session.user;
         const key = `welcomeEmailSent:${u.id}`;
-        if (!localStorage.getItem(key)) {
+        const emailConfirmed = !!(u.email_confirmed_at || (u as any).confirmed_at);
+        if (emailConfirmed && !localStorage.getItem(key)) {
           const createdAt = u.created_at ? new Date(u.created_at).getTime() : 0;
-          const isNew = createdAt && Date.now() - createdAt < 5 * 60 * 1000;
+          const isNew = createdAt && Date.now() - createdAt < 24 * 60 * 60 * 1000;
           if (isNew) {
             localStorage.setItem(key, "1");
             const name =
