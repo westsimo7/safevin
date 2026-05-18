@@ -6,6 +6,7 @@ const STORAGE_KEY = "safevin-cookie-consent";
 
 const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     let timer: number | undefined;
@@ -34,12 +35,30 @@ const CookieBanner = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const updateDialogState = () => {
+      const anyOpen = !!document.querySelector(
+        '[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]'
+      );
+      setDialogOpen(anyOpen);
+    };
+    updateDialogState();
+    const observer = new MutationObserver(updateDialogState);
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-state"],
+    });
+    return () => observer.disconnect();
+  }, []);
+
   const setConsent = (value: "accepted" | "rejected") => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ value, ts: Date.now() }));
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || dialogOpen) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-auto sm:max-w-md z-[100] animate-in fade-in slide-in-from-bottom-4 duration-300">
