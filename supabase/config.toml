@@ -6,7 +6,7 @@ project_id = "ilnkeilltvkceohcjfjy"
   [functions.check-subscription]
     verify_jwt = false
   [functions.coach-chat]
-    verify_jwt = false
+    verify_jwt = true
   [functions.create-checkout]
     verify_jwt = false
   [functions.create-bundle-checkout]
@@ -18,9 +18,9 @@ project_id = "ilnkeilltvkceohcjfjy"
   [functions.process-email-queue]
     verify_jwt = true
   [functions.safelist-analyze]
-    verify_jwt = false
+    verify_jwt = true
   [functions.studio-analyze]
-    verify_jwt = false
+    verify_jwt = true
 
 [functions.send-transactional-email]
 verify_jwt = true
