@@ -257,6 +257,33 @@ Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto
 `;
     }
 
+    // Fire-and-forget: when a free user just consumed their last credit,
+    // immediately send the "free trial finished" email.
+    try {
+      const used = Number(cr?.used);
+      const limit = Number(cr?.limit);
+      const plan = String(cr?.plan ?? "");
+      if (plan === "free" && Number.isFinite(used) && Number.isFinite(limit) && used >= limit && limit > 0) {
+        const { data: userData } = await supabase.auth.getUser();
+        const email = userData?.user?.email;
+        const meta = (userData?.user?.user_metadata || {}) as Record<string, unknown>;
+        const fullName = (meta.full_name || meta.name || meta.first_name) as string | undefined;
+        const firstName = fullName ? String(fullName).split(" ")[0] : (email ? email.split("@")[0] : undefined);
+        if (email && userData?.user?.id) {
+          await supabase.functions.invoke("send-transactional-email", {
+            body: {
+              templateName: "free-limit-reached",
+              recipientEmail: email,
+              idempotencyKey: `free-limit-reached-${userData.user.id}`,
+              templateData: firstName ? { name: firstName } : {},
+            },
+          });
+        }
+      }
+    } catch (mailErr) {
+      console.error("free-limit-reached email failed:", mailErr);
+    }
+
     // Build garment features string
     const gf = analysis.garment_features || {};
     const featuresLines: string[] = [];
