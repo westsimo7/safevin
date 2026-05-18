@@ -31,9 +31,9 @@ const FreeListingEmailPopup = ({ open, onOpenChange }: Props) => {
 
       await supabase.functions.invoke("send-transactional-email", {
         body: {
-          templateName: "first-listing-generated",
+          templateName: "free-listing-redeem",
           recipientEmail: user.email,
-          idempotencyKey: `free-listing-available-${user.id}`,
+          idempotencyKey: `free-listing-redeem-${user.id}`,
           templateData: { name: String(name).split(" ")[0] },
         },
       });
