@@ -9,8 +9,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/hooks/usePlan";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
-import FirstListingPopup from "@/components/FirstListingPopup";
 import PurchaseGiftPopup from "@/components/PurchaseGiftPopup";
+import FreeListingEmailPopup from "@/components/FreeListingEmailPopup";
+import PurchaseOptionsPopup from "@/components/PurchaseOptionsPopup";
 
 const SafevinHome = () => {
   const navigate = useNavigate();
