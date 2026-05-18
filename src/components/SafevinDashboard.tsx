@@ -282,7 +282,8 @@ const SafevinHome = () => {
 
         </div>
       </main>
-      <FirstListingPopup open={showFirstPopup} onOpenChange={setShowFirstPopup} />
+      <FreeListingEmailPopup open={showFreeEmailPopup} onOpenChange={handleFreeEmailClose} />
+      <PurchaseOptionsPopup open={showPurchasePopup} onOpenChange={handlePurchaseClose} />
       <PurchaseGiftPopup />
     </div>
   );
