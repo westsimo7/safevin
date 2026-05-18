@@ -6,6 +6,7 @@ const STORAGE_KEY = "safevin-cookie-consent";
 
 const CookieBanner = () => {
   const [visible, setVisible] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     let timer: number | undefined;
@@ -32,6 +33,24 @@ const CookieBanner = () => {
       if (timer) window.clearTimeout(timer);
       window.removeEventListener("safevin-cookie-reset", reset);
     };
+  }, []);
+
+  useEffect(() => {
+    const updateDialogState = () => {
+      const anyOpen = !!document.querySelector(
+        '[role="dialog"][data-state="open"], [role="alertdialog"][data-state="open"]'
+      );
+      setDialogOpen(anyOpen);
+    };
+    updateDialogState();
+    const observer = new MutationObserver(updateDialogState);
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true,
+      attributes: true,
+      attributeFilter: ["data-state"],
+    });
+    return () => observer.disconnect();
   }, []);
 
   const setConsent = (value: "accepted" | "rejected") => {
