@@ -86,6 +86,7 @@ serve(async (req) => {
     await supabaseAdmin.rpc("sync_user_plan_from_payment", {
       p_user_id: user.id,
       p_new_plan: plan,
+      p_period_end: subscriptionEnd,
     });
 
     return new Response(
