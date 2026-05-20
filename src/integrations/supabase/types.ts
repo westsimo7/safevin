@@ -870,13 +870,22 @@ export type Database = {
         }
         Returns: Json
       }
-      sync_user_plan_from_payment: {
-        Args: {
-          p_new_plan: Database["public"]["Enums"]["subscription_plan"]
-          p_user_id: string
-        }
-        Returns: Json
-      }
+      sync_user_plan_from_payment:
+        | {
+            Args: {
+              p_new_plan: Database["public"]["Enums"]["subscription_plan"]
+              p_user_id: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_new_plan: Database["public"]["Enums"]["subscription_plan"]
+              p_period_end?: string
+              p_user_id: string
+            }
+            Returns: Json
+          }
       test_age_test_user: {
         Args: { p_days: number; p_user_id: string }
         Returns: undefined

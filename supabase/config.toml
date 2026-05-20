@@ -21,6 +21,8 @@ project_id = "ilnkeilltvkceohcjfjy"
     verify_jwt = true
   [functions.studio-analyze]
     verify_jwt = true
+  [functions.stripe-webhook]
+    verify_jwt = false
 
 [functions.send-transactional-email]
 verify_jwt = true
