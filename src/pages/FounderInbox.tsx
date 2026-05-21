@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Send, Paperclip, Loader2, ArrowLeft, MoreVertical, CheckCircle2, Shield } from "lucide-react";
+import { Send, Paperclip, Loader2, ArrowLeft, MoreVertical, CheckCircle2, Shield, Download, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getAttachmentSignedUrl, getAttachmentDownloadUrl } from "@/lib/chatAttachments";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,9 @@ interface ConversationWithUser {
   user_nome?: string;
   user_cognome?: string;
   user_email?: string;
+  user_plan?: string;
+  cd_used?: number;
+  cd_limit?: number;
   last_message?: string;
   last_message_at?: string;
   unread?: boolean;
@@ -38,6 +42,43 @@ interface Message {
   image_url: string | null;
   created_at: string;
 }
+
+const PLAN_CD_LIMIT: Record<string, number> = { free: 0, starter: 0, pro: 2, expert: 6 };
+
+const SignedAttachment = ({ value }: { value: string }) => {
+  const [url, setUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    getAttachmentSignedUrl(value).then((u) => { if (!cancelled) setUrl(u); });
+    return () => { cancelled = true; };
+  }, [value]);
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const dl = await getAttachmentDownloadUrl(value);
+    const a = document.createElement("a");
+    a.href = dl;
+    a.download = "";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  return (
+    <div className="relative group mb-2">
+      {url ? (
+        <img src={url} alt="Allegato" className="rounded-lg max-w-full max-h-64 object-cover" />
+      ) : (
+        <div className="rounded-lg w-48 h-32 bg-muted animate-pulse" />
+      )}
+      <button
+        onClick={handleDownload}
+        className="absolute top-2 right-2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white"
+        title="Scarica"
+      >
+        <Download className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
 
 const FounderInbox = () => {
   const { user } = useAuth();
@@ -95,6 +136,12 @@ const FounderInbox = () => {
           .eq("user_id", c.user_id)
           .single();
 
+        const { data: credits } = await supabase
+          .from("user_credits")
+          .select("plan, creative_director_used")
+          .eq("user_id", c.user_id)
+          .single();
+
         const { data: lastMsg } = await supabase
           .from("creative_director_messages")
           .select("content, created_at")
@@ -102,11 +149,15 @@ const FounderInbox = () => {
           .order("created_at", { ascending: false })
           .limit(1);
 
+        const plan = (credits?.plan as string) || "free";
         return {
           ...c,
           user_nome: profile?.nome || "",
           user_cognome: profile?.cognome || "",
           user_email: profile?.email || "",
+          user_plan: plan,
+          cd_used: credits?.creative_director_used ?? 0,
+          cd_limit: PLAN_CD_LIMIT[plan] ?? 0,
           last_message: lastMsg?.[0]?.content || "",
           last_message_at: lastMsg?.[0]?.created_at || c.created_at,
         };
