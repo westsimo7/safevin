@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Paperclip, Palette, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getAttachmentSignedUrl } from "@/lib/chatAttachments";
 
 interface Message {
   id: string;
@@ -18,6 +19,19 @@ interface Conversation {
   id: string;
   status: string;
 }
+
+const MAX_PHOTOS_PER_JOB = 8;
+
+const SignedImage = ({ value, className }: { value: string; className?: string }) => {
+  const [url, setUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    getAttachmentSignedUrl(value).then((u) => { if (!cancelled) setUrl(u); });
+    return () => { cancelled = true; };
+  }, [value]);
+  if (!url) return <div className={`${className} bg-muted animate-pulse`} />;
+  return <img src={url} alt="Allegato" className={className} />;
+};
 
 const CreativeDirectorChat = () => {
   const { user } = useAuth();
@@ -35,11 +49,15 @@ const CreativeDirectorChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Load or create conversation
+  // Photos uploaded by THIS user in current conversation
+  const userPhotoCount = messages.filter(
+    (m) => m.sender_id === user?.id && m.image_url
+  ).length;
+  const photosRemaining = Math.max(0, MAX_PHOTOS_PER_JOB - userPhotoCount);
+
   useEffect(() => {
     if (!user) return;
     const loadConversation = async () => {
-      // Find existing open conversation
       const { data: convos } = await supabase
         .from("creative_director_conversations")
         .select("*")
@@ -56,7 +74,6 @@ const CreativeDirectorChat = () => {
     loadConversation();
   }, [user]);
 
-  // Load messages when conversation exists
   useEffect(() => {
     if (!conversation) return;
     const loadMessages = async () => {
@@ -70,7 +87,6 @@ const CreativeDirectorChat = () => {
     };
     loadMessages();
 
-    // Realtime subscription
     const channel = supabase
       .channel(`cd-messages-${conversation.id}`)
       .on(
@@ -91,7 +107,6 @@ const CreativeDirectorChat = () => {
       )
       .subscribe();
 
-    // Listen for conversation status changes
     const convChannel = supabase
       .channel(`cd-conv-${conversation.id}`)
       .on(
@@ -130,15 +145,15 @@ const CreativeDirectorChat = () => {
     setConversation(data);
   };
 
-  const sendMessage = async (content?: string, imageUrl?: string) => {
+  const sendMessage = async (content?: string, imagePath?: string) => {
     if (!conversation || !user) return;
-    if (!content && !imageUrl) return;
+    if (!content && !imagePath) return;
     setSending(true);
     const { error } = await supabase.from("creative_director_messages").insert({
       conversation_id: conversation.id,
       sender_id: user.id,
       content: content || null,
-      image_url: imageUrl || null,
+      image_url: imagePath || null,
     });
     if (error) {
       toast({ title: "Errore", description: error.message, variant: "destructive" });
@@ -156,6 +171,15 @@ const CreativeDirectorChat = () => {
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
+    if (photosRemaining <= 0) {
+      toast({
+        title: "Limite raggiunto",
+        description: `Puoi inviare al massimo ${MAX_PHOTOS_PER_JOB} foto per annuncio.`,
+        variant: "destructive",
+      });
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
     setUploading(true);
     const ext = file.name.split(".").pop();
     const path = `${user.id}/${Date.now()}.${ext}`;
@@ -167,10 +191,8 @@ const CreativeDirectorChat = () => {
       setUploading(false);
       return;
     }
-    const { data: urlData } = supabase.storage
-      .from("chat-attachments")
-      .getPublicUrl(path);
-    await sendMessage(undefined, urlData.publicUrl);
+    // Store the storage PATH (not a public URL) — bucket is private, we render via signed URLs.
+    await sendMessage(undefined, path);
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
@@ -183,7 +205,6 @@ const CreativeDirectorChat = () => {
     );
   }
 
-  // No active conversation - show CTA
   if (!conversation) {
     return (
       <div className="flex flex-col items-center justify-center py-12 space-y-4 text-center">
@@ -205,7 +226,6 @@ const CreativeDirectorChat = () => {
     );
   }
 
-  // Conversation completed
   if (conversation.status === "completed") {
     return (
       <div className="flex flex-col h-full">
@@ -218,7 +238,7 @@ const CreativeDirectorChat = () => {
                   isMe ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
                 }`}>
                   {msg.image_url && (
-                    <img src={msg.image_url} alt="Allegato" className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
+                    <SignedImage value={msg.image_url} className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
                   )}
                   {msg.content && <p className="text-sm whitespace-pre-wrap">{msg.content}</p>}
                   <p className={`text-[10px] mt-1 ${isMe ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
@@ -242,9 +262,14 @@ const CreativeDirectorChat = () => {
     );
   }
 
-  // Active chat
   return (
     <div className="flex flex-col h-[400px]">
+      <div className="px-4 py-2 border-b border-border text-[11px] text-muted-foreground flex items-center justify-between">
+        <span>Foto inviate</span>
+        <span className={`font-semibold ${photosRemaining === 0 ? "text-destructive" : "text-foreground"}`}>
+          {userPhotoCount} / {MAX_PHOTOS_PER_JOB}
+        </span>
+      </div>
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
           <div className="text-center text-sm text-muted-foreground py-8">
@@ -259,7 +284,7 @@ const CreativeDirectorChat = () => {
                 isMe ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
               }`}>
                 {msg.image_url && (
-                  <img src={msg.image_url} alt="Allegato" className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
+                  <SignedImage value={msg.image_url} className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
                 )}
                 {msg.content && <p className="text-sm whitespace-pre-wrap">{msg.content}</p>}
                 <p className={`text-[10px] mt-1 ${isMe ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
@@ -285,7 +310,8 @@ const CreativeDirectorChat = () => {
           size="icon"
           className="shrink-0"
           onClick={() => fileInputRef.current?.click()}
-          disabled={uploading}
+          disabled={uploading || photosRemaining <= 0}
+          title={photosRemaining <= 0 ? `Max ${MAX_PHOTOS_PER_JOB} foto per annuncio` : "Allega foto"}
         >
           {uploading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Paperclip className="w-5 h-5" />}
         </Button>

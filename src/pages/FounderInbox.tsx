@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Send, Paperclip, Loader2, ArrowLeft, MoreVertical, CheckCircle2, Shield } from "lucide-react";
+import { Send, Paperclip, Loader2, ArrowLeft, MoreVertical, CheckCircle2, Shield, Download, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getAttachmentSignedUrl, getAttachmentDownloadUrl } from "@/lib/chatAttachments";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +27,9 @@ interface ConversationWithUser {
   user_nome?: string;
   user_cognome?: string;
   user_email?: string;
+  user_plan?: string;
+  cd_used?: number;
+  cd_limit?: number;
   last_message?: string;
   last_message_at?: string;
   unread?: boolean;
@@ -38,6 +42,43 @@ interface Message {
   image_url: string | null;
   created_at: string;
 }
+
+const PLAN_CD_LIMIT: Record<string, number> = { free: 0, starter: 0, pro: 2, expert: 6 };
+
+const SignedAttachment = ({ value }: { value: string }) => {
+  const [url, setUrl] = useState<string>("");
+  useEffect(() => {
+    let cancelled = false;
+    getAttachmentSignedUrl(value).then((u) => { if (!cancelled) setUrl(u); });
+    return () => { cancelled = true; };
+  }, [value]);
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    const dl = await getAttachmentDownloadUrl(value);
+    const a = document.createElement("a");
+    a.href = dl;
+    a.download = "";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  };
+  return (
+    <div className="relative group mb-2">
+      {url ? (
+        <img src={url} alt="Allegato" className="rounded-lg max-w-full max-h-64 object-cover" />
+      ) : (
+        <div className="rounded-lg w-48 h-32 bg-muted animate-pulse" />
+      )}
+      <button
+        onClick={handleDownload}
+        className="absolute top-2 right-2 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white"
+        title="Scarica"
+      >
+        <Download className="w-4 h-4" />
+      </button>
+    </div>
+  );
+};
 
 const FounderInbox = () => {
   const { user } = useAuth();
@@ -95,6 +136,12 @@ const FounderInbox = () => {
           .eq("user_id", c.user_id)
           .single();
 
+        const { data: credits } = await supabase
+          .from("user_credits")
+          .select("plan, creative_director_used")
+          .eq("user_id", c.user_id)
+          .single();
+
         const { data: lastMsg } = await supabase
           .from("creative_director_messages")
           .select("content, created_at")
@@ -102,11 +149,15 @@ const FounderInbox = () => {
           .order("created_at", { ascending: false })
           .limit(1);
 
+        const plan = (credits?.plan as string) || "free";
         return {
           ...c,
           user_nome: profile?.nome || "",
           user_cognome: profile?.cognome || "",
           user_email: profile?.email || "",
+          user_plan: plan,
+          cd_used: credits?.creative_director_used ?? 0,
+          cd_limit: PLAN_CD_LIMIT[plan] ?? 0,
           last_message: lastMsg?.[0]?.content || "",
           last_message_at: lastMsg?.[0]?.created_at || c.created_at,
         };
@@ -194,18 +245,18 @@ const FounderInbox = () => {
     if (!file || !user || !selectedConv) return;
     setUploading(true);
     const ext = file.name.split(".").pop();
-    const path = `founder/${Date.now()}.${ext}`;
+    // Storage RLS requires the first folder to equal auth.uid()
+    const path = `${user.id}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("chat-attachments").upload(path, file);
     if (error) {
       toast({ title: "Errore", description: error.message, variant: "destructive" });
       setUploading(false);
       return;
     }
-    const { data: urlData } = supabase.storage.from("chat-attachments").getPublicUrl(path);
     await supabase.from("creative_director_messages").insert({
       conversation_id: selectedConv.id,
       sender_id: user.id,
-      image_url: urlData.publicUrl,
+      image_url: path,
     });
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -264,6 +315,10 @@ const FounderInbox = () => {
               <div>
                 <p className="font-semibold text-foreground text-sm">{userName}</p>
                 <p className="text-xs text-muted-foreground">{selectedConv.user_email}</p>
+                <p className="text-[10px] text-amber-600 font-medium flex items-center gap-1 mt-0.5">
+                  <Palette className="w-3 h-3" />
+                  Piano {selectedConv.user_plan || "free"} · delegati {selectedConv.cd_used ?? 0}/{selectedConv.cd_limit ?? 0}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -298,7 +353,7 @@ const FounderInbox = () => {
                     isFounder ? "bg-amber-500 text-white" : "bg-muted text-foreground"
                   }`}>
                     {msg.image_url && (
-                      <img src={msg.image_url} alt="Allegato" className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
+                      <SignedAttachment value={msg.image_url} />
                     )}
                     {msg.content && <p className="text-sm whitespace-pre-wrap">{msg.content}</p>}
                     <p className={`text-[10px] mt-1 ${isFounder ? "text-white/60" : "text-muted-foreground"}`}>
@@ -369,15 +424,20 @@ const FounderInbox = () => {
                             {new Date(conv.last_message_at || conv.created_at).toLocaleDateString("it-IT")}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <p className="text-xs text-muted-foreground truncate">
                             {conv.last_message || "Nessun messaggio"}
                           </p>
-                          {conv.status === "completed" && (
-                            <Badge variant="outline" className="text-[10px] ml-2 bg-green-500/10 text-green-600 border-green-500/30 shrink-0">
-                              ✓
+                          <div className="flex items-center gap-1 shrink-0">
+                            <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/30">
+                              {conv.cd_used ?? 0}/{conv.cd_limit ?? 0}
                             </Badge>
-                          )}
+                            {conv.status === "completed" && (
+                              <Badge variant="outline" className="text-[10px] bg-green-500/10 text-green-600 border-green-500/30">
+                                ✓
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
