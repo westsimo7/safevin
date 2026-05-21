@@ -95,42 +95,35 @@ const Terms = () => {
 
         <Section title="5. Abbonamenti e pagamenti">
           <p>
-            SafeVin può offrire piani gratuiti e a pagamento. I pagamenti sono processati da{" "}
-            <strong className="text-foreground">Paddle.com Market Limited</strong>, che agisce come Merchant of Record per la vendita degli abbonamenti.
+            SafeVin offre piani gratuiti, piani in abbonamento e acquisti una tantum (es. pacchetti di annunci aggiuntivi). I pagamenti sono processati in modo sicuro tramite <strong className="text-foreground">Stripe</strong>.
           </p>
           <ul className="space-y-1.5">
-            <Bullet>I prezzi sono indicati sulla piattaforma</Bullet>
+            <Bullet>I prezzi sono indicati sulla piattaforma in Euro (€)</Bullet>
             <Bullet>Il pagamento è anticipato</Bullet>
-            <Bullet>Gli abbonamenti possono essere ricorrenti e si rinnovano automaticamente</Bullet>
-            <Bullet>Tasse e imposte sono gestite e applicate da Paddle in base alla giurisdizione dell'utente</Bullet>
+            <Bullet>Gli abbonamenti sono ricorrenti e si rinnovano automaticamente alla scadenza del periodo</Bullet>
+            <Bullet>Tasse e imposte sono applicate in base alla giurisdizione dell'utente</Bullet>
           </ul>
           <p>
-            L'utente può cancellare l'abbonamento in qualsiasi momento tramite il portale clienti Paddle (paddle.net) o contattando il supporto. Per i termini completi di acquisto consulta i{" "}
-            <a href="https://www.paddle.com/legal/checkout-buyer-terms" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              Buyer Terms di Paddle
+            L'utente può cancellare l'abbonamento in qualsiasi momento dalla sezione "Abbonamento" del proprio account o contattando il supporto all'indirizzo{" "}
+            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
+              info@safevin.com
             </a>.
           </p>
         </Section>
 
         <Section title="6. Politica di rimborso">
           <p>
-            Offriamo una <strong className="text-foreground">garanzia di rimborso di 30 giorni</strong>. Se non sei soddisfatto del tuo acquisto, puoi richiedere un rimborso completo entro 30 giorni dalla data dell'ordine.
+            <strong className="text-foreground">Abbonamenti.</strong> Offriamo una garanzia di rimborso di <strong className="text-foreground">7 giorni</strong> dalla data dell'ordine (o del rinnovo) a condizione che <strong className="text-foreground">almeno il 90% dei benefit del piano non sia stato utilizzato</strong>. Per "benefit" si intendono, a titolo esemplificativo, gli annunci generati dallo Studio, le creazioni delegate all'Artist Director e le altre risorse incluse nel piano. Se l'utilizzo supera il 10% del totale, il rimborso non potrà essere concesso.
           </p>
           <p>
-            <strong className="text-foreground">Come richiedere un rimborso:</strong> i rimborsi sono gestiti dal nostro processore di pagamento Paddle. Per richiedere un rimborso visita{" "}
-            <a href="https://paddle.net" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              paddle.net
-            </a>{" "}
-            oppure contatta il nostro supporto all'indirizzo{" "}
+            <strong className="text-foreground">Acquisti una tantum (pacchetti annunci).</strong> Il rimborso può essere richiesto entro 14 giorni dall'acquisto <strong className="text-foreground">solo se nessuno degli annunci inclusi nel pacchetto è stato utilizzato</strong>. Una volta generato anche un solo annuncio del pacchetto, il pagamento non è più rimborsabile.
+          </p>
+          <p>
+            <strong className="text-foreground">Come richiedere un rimborso:</strong> invia una richiesta a{" "}
             <a href="mailto:info@safevin.com" className="text-primary hover:underline">
               info@safevin.com
-            </a>.
-          </p>
-          <p>
-            Per maggiori informazioni puoi consultare la{" "}
-            <a href="https://www.paddle.com/legal/refund-policy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              Refund Policy di Paddle
-            </a>.
+            </a>{" "}
+            indicando l'email dell'account e il riferimento dell'ordine. Verificheremo i requisiti di utilizzo e, se idonei, processeremo il rimborso tramite Stripe entro pochi giorni lavorativi sul metodo di pagamento originale.
           </p>
         </Section>
 
