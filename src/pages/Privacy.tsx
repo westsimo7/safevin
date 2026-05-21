@@ -43,7 +43,7 @@ const Privacy = () => {
         <Section title="1. Titolare del trattamento">
           <p>Il titolare del trattamento dei dati è:</p>
           <p>
-            <strong className="text-foreground">Simone Piscitelli</strong> (operante con il nome commerciale "SafeVin")
+            <strong className="text-foreground">SafeVin</strong>
             <br />
             Email di contatto: <a href="mailto:info@safevin.com" className="text-primary hover:underline">info@safevin.com</a>
           </p>
@@ -104,7 +104,7 @@ const Privacy = () => {
           <p>Possono essere condivisi con le seguenti categorie di destinatari:</p>
           <ul className="space-y-1.5">
             <Bullet>
-              <strong className="text-foreground">Paddle.com Market Limited</strong> — agisce come Merchant of Record (rivenditore ufficiale) per la vendita degli abbonamenti, gestione pagamenti, fatturazione, conformità fiscale e gestione rimborsi. Paddle può trattare i dati come autonomo titolare per finalità di prevenzione frodi e adempimenti fiscali.
+              <strong className="text-foreground">Stripe Payments Europe, Ltd.</strong> — processore dei pagamenti per la gestione di abbonamenti, transazioni una tantum, fatturazione, conformità fiscale e gestione rimborsi. Stripe può trattare i dati come autonomo titolare per finalità di prevenzione frodi e adempimenti fiscali.
             </Bullet>
             <Bullet>Fornitori tecnici di hosting, infrastruttura cloud e servizi di intelligenza artificiale (sub-responsabili del trattamento)</Bullet>
             <Bullet>Consulenti professionali (legali, fiscali, contabili) ove necessario</Bullet>
