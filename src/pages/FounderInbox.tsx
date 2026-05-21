@@ -245,18 +245,18 @@ const FounderInbox = () => {
     if (!file || !user || !selectedConv) return;
     setUploading(true);
     const ext = file.name.split(".").pop();
-    const path = `founder/${Date.now()}.${ext}`;
+    // Storage RLS requires the first folder to equal auth.uid()
+    const path = `${user.id}/${Date.now()}.${ext}`;
     const { error } = await supabase.storage.from("chat-attachments").upload(path, file);
     if (error) {
       toast({ title: "Errore", description: error.message, variant: "destructive" });
       setUploading(false);
       return;
     }
-    const { data: urlData } = supabase.storage.from("chat-attachments").getPublicUrl(path);
     await supabase.from("creative_director_messages").insert({
       conversation_id: selectedConv.id,
       sender_id: user.id,
-      image_url: urlData.publicUrl,
+      image_url: path,
     });
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
@@ -315,6 +315,10 @@ const FounderInbox = () => {
               <div>
                 <p className="font-semibold text-foreground text-sm">{userName}</p>
                 <p className="text-xs text-muted-foreground">{selectedConv.user_email}</p>
+                <p className="text-[10px] text-amber-600 font-medium flex items-center gap-1 mt-0.5">
+                  <Palette className="w-3 h-3" />
+                  Piano {selectedConv.user_plan || "free"} · delegati {selectedConv.cd_used ?? 0}/{selectedConv.cd_limit ?? 0}
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -349,7 +353,7 @@ const FounderInbox = () => {
                     isFounder ? "bg-amber-500 text-white" : "bg-muted text-foreground"
                   }`}>
                     {msg.image_url && (
-                      <img src={msg.image_url} alt="Allegato" className="rounded-lg mb-2 max-w-full max-h-48 object-cover" />
+                      <SignedAttachment value={msg.image_url} />
                     )}
                     {msg.content && <p className="text-sm whitespace-pre-wrap">{msg.content}</p>}
                     <p className={`text-[10px] mt-1 ${isFounder ? "text-white/60" : "text-muted-foreground"}`}>
@@ -420,15 +424,20 @@ const FounderInbox = () => {
                             {new Date(conv.last_message_at || conv.created_at).toLocaleDateString("it-IT")}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <p className="text-xs text-muted-foreground truncate">
                             {conv.last_message || "Nessun messaggio"}
                           </p>
-                          {conv.status === "completed" && (
-                            <Badge variant="outline" className="text-[10px] ml-2 bg-green-500/10 text-green-600 border-green-500/30 shrink-0">
-                              ✓
+                          <div className="flex items-center gap-1 shrink-0">
+                            <Badge variant="outline" className="text-[10px] bg-amber-500/10 text-amber-600 border-amber-500/30">
+                              {conv.cd_used ?? 0}/{conv.cd_limit ?? 0}
                             </Badge>
-                          )}
+                            {conv.status === "completed" && (
+                              <Badge variant="outline" className="text-[10px] bg-green-500/10 text-green-600 border-green-500/30">
+                                ✓
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </CardContent>
