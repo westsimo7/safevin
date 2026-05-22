@@ -1,74 +1,88 @@
 ## Obiettivo
+Aggiungere un sistema notifiche unico per:
+1. Risposte ricevute nei 3 chat (Artist Director, Collaboration, Upgrade).
+2. Recap/aggiornamenti pubblicati manualmente dal founder (te lo dico io in chat e li inserisco).
+3. Push del browser sul telefono, con toggle attiva/disattiva nelle Impostazioni.
+4. Badge rosso col numero non lette sull'avatar profilo (in alto a destra).
+5. Nuova **campanella** a sinistra del menu profilo in Dashboard che apre la lista.
 
-1. Popup "Acquista annunci" (sostituisce l'attuale pop up acquista annunci che mostra ancora il piano da 5,99€)mostrato al primo accesso e ogni volta che l'utente entra in Dashboard: pacchetti singoli 5/10/15 + abbonamento Pro, con prezzi reali.
-2. Popup "Annuncio gratis inviato per email" che appare PRIMA dell'altro: spiega che l'annuncio prova è stato spedito via email, invita a controllare la casella. Quando l'utente lo chiude, parte il popup acquisti.
-3. Email "annuncio gratis disponibile" (inviata appena la persona chiude il pop up dell'annuncio gratuito)minuti dopo la registrazione.
-4. Email "annuncio gratis terminato" inviata subito quando l'annuncio gratis viene utilizzato dopo il riscatto .
+---
 
-## UI — popup
+## Database
 
-**Nuovo `FreeListingEmailPopup**` (sostituisce l'attuale `FirstListingPopup` come primo step):
+Nuova tabella `notifications`:
+- `user_id`, `type` (`chat_reply` | `announcement`), `title`, `body`, `link`, `source` (`artist_director` | `collaboration` | `upgrade` | `system`), `source_id` (uuid conversation, nullable), `read_at`, `created_at`.
+- RLS: utente legge/aggiorna le proprie. Founder può inserire `announcement` per tutti.
+- Indice su `(user_id, read_at)`.
 
-- Solo per utenti free senza ancora aver creato annunci.
-- Titolo: "Il tuo annuncio gratis è in arrivo via email".
-- Descrizione: invita a controllare la casella (anche spam) — arriva appena confermi questo messaggio .
-- CTA: "Ho capito" → chiude e attiva il popup acquisti.
-- Mostrato una volta per utente (`localStorage` flag).
+Nuova tabella `notification_preferences`:
+- `user_id` PK, `push_enabled` boolean default true, `updated_at`.
+- RLS: utente legge/scrive solo la propria.
 
-**Rifacimento `FirstListingPopup` → `PurchaseOptionsPopup**`:
+Nuova tabella `push_subscriptions`:
+- `user_id`, `endpoint` (unique), `p256dh`, `auth`, `user_agent`, `created_at`.
+- RLS: utente legge/scrive le proprie; service-role legge tutte.
 
-- Mostra i 3 bundle (5 / 10 / 15 annunci) prezzi `€2,95 / €4,95 / €8,95` con vecchi prezzi barrati, evidenziando il pacchetto da 10.
-- Mostra anche la card Pro a `€12,99/mese` (25 annunci + Artist Director).
-- Ogni card chiama l'edge function di checkout (`create-bundle-checkout` per i bundle, `create-checkout` per Pro).
-- Mostrato:
-  - Al primo accesso Dashboard dopo il popup gratis.
-  - Ogni accesso Dashboard successivo, ma con `sessionStorage` per non riapparire più volte nella stessa sessione (evitare di essere insopportabile).
-- Pulsante "Più tardi" lo chiude.
+Funzione SQL `broadcast_announcement(title, body, link)` (SECURITY DEFINER, solo founder): inserisce una notifica per ogni utente in `profiles`. La userò io via `insert` tool quando mi passi un aggiornamento.
 
-`**SafevinDashboard.tsx**`:
+---
 
-- All'avvio decide la sequenza:
-  - Se l'utente è free, non ha mai visto `freeListingEmail:<uid>` → apri prima `FreeListingEmailPopup`.
-  - Alla chiusura → apri `PurchaseOptionsPopup` (e marca sessione).
-  - Se già visto in passato → vai dritto a `PurchaseOptionsPopup` (max una volta per sessione).
-- Rimuove `UpsellPopup` per evitare doppi popup sovrapposti su /home.
+## Triggers — già esistenti da estendere
+I trigger `trg_notify_creative_director_reply`, `trg_notify_collaboration_reply`, `trg_notify_upgrade_reply` oggi inviano solo email. Aggiungo un'unica funzione `create_chat_notification(user_id, source, conversation_id, label, url)` chiamata accanto a `notify_user_on_founder_reply`, che:
+1. INSERT in `notifications`.
+2. Se `push_enabled = true` e ci sono subscriptions → chiama l'edge function `send-push` via `net.http_post` (autenticata col service-role nel vault, stesso pattern dell'email).
 
-## Email — flow
+---
 
-**Template nuovi (in `supabase/functions/_shared/transactional-email-templates/`)**:
+## Edge Functions
 
-- `free-listing-available.tsx`: "Il tuo annuncio prova è pronto" (solo pop up di notifica che appare solo se viene interagito il cta dell'email sull'annuncio gratis" appare solo in quello caso è solo una volta 
-- `free-listing-finished.tsx`: "Hai usato il tuo annuncio prova" + CTA "Compra altri annunci".
-- Registrati entrambi nel `registry.ts`.
+`send-push` (nuova): riceve `{ user_id, title, body, url }`, legge le `push_subscriptions` dell'utente, invia web-push con VAPID. Subscriptions con `410 Gone` vengono cancellate.
 
-**Email post-registrazione (solo dopo aver interagito il pop up del far vedere l'email per l'annuncio gratis )**:
+`subscribe-push` (nuova): l'utente loggato fa POST con la PushSubscription, salvataggio in `push_subscriptions`.
 
-- Migrazione: cron job `send-free-listing-available` ogni 5 minuti che seleziona utenti registrati da almeno 5 minuti, free, mai inviata, e li accoda via `enqueue_email`.(riformula no ai 5 minuti deve essere ogni qualcovolta che gli intenti interagiscono con il pop up
-- Nuova edge function `send-free-listing-available` che esegue la query e accoda.
-- Tabella di log `free_listing_email_log(user_id, sent_at)` per non duplicare.
+`unsubscribe-push` (nuova): cancella per endpoint.
 
-**Email annuncio gratis terminato**:
+Secrets necessari: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (mailto). Te li chiederò appena approvi il piano.
 
-- In `supabase/functions/studio-generate/index.ts`, dopo aver scalato il contatore studio, se l'utente era free e `studio_remaining` passa da 1→0, invoca subito `send-transactional-email` con template `free-listing-finished`.
-- Salva flag in `free_listing_email_log.finished_at` per evitare reinvii.
+---
 
-## Dettagli tecnici
+## Frontend
 
-- Le funzioni edge che inviano email chiamano `send-transactional-email` (esistente) con `{ templateName, recipient, payload }`.
-- I template seguono lo schema dei file esistenti (heading, paragrafo, CTA, link unsubscribe).
-- Cron in Postgres via `pg_cron` con `cron.schedule('send-free-listing-available', '*/5 * * * *', ...)` → chiama via `net.http_post` la edge function (pattern già usato per `send-free-trial-reminders` se presente; in caso contrario creo lo schedule).
-- Sessione popup: chiave `purchasePopupShown:<uid>` in `sessionStorage`; flag email popup `freeListingEmailPopupShown:<uid>` in `localStorage`.
+**Service worker** (`public/sw.js`): gestisce `push` (mostra notifica con icona safevin) e `notificationclick` (apre il link).
+
+**Hook `useNotifications`**: fetch lista, conteggio non lette, realtime su `notifications` filtrate per `user_id`, `markAsRead`, `markAllAsRead`.
+
+**Componente `NotificationBell`** in `DashboardHeader`:
+- Icona campanella + badge rosso col numero non lette.
+- Click → popover con lista (titolo, body, tempo, link). Click su voce → naviga e marca letta. Pulsante "Segna tutte come lette".
+- Posizionato **a sinistra** del menu profilo.
+
+**Avatar profilo**: piccolo pallino rosso quando ci sono non lette (riusa lo stesso counter).
+
+**Settings → nuova sezione "Notifiche"**:
+- Toggle "Notifiche push sul telefono". On → richiede `Notification.requestPermission()`, registra service worker, salva subscription via `subscribe-push`, segna `push_enabled = true`. Off → `unsubscribe-push` e `push_enabled = false`.
+- Spiegazione iOS: serve "Aggiungi alla schermata Home" su Safari 16.4+ perché il push web non funziona dal browser standard.
+
+---
 
 ## File toccati
 
-- `src/components/FreeListingEmailPopup.tsx` (nuovo)
-- `src/components/PurchaseOptionsPopup.tsx` (nuovo, rimpiazza visivamente `FirstListingPopup`)
-- `src/components/SafevinDashboard.tsx` (orchestrazione popup)
-- `src/App.tsx` (rimuovo `UpsellPopup`)
-- `src/pages/EngineStudio.tsx` (rimuovo trigger `FirstListingPopup` dopo prima creazione — verrà già sostituito dal popup dashboard)
-- `supabase/functions/_shared/transactional-email-templates/free-listing-available.tsx` (nuovo)
-- `supabase/functions/_shared/transactional-email-templates/free-listing-finished.tsx` (nuovo)
-- `supabase/functions/_shared/transactional-email-templates/registry.ts`
-- `supabase/functions/send-free-listing-available/index.ts` (nuovo) + `deno.json`
-- `supabase/functions/studio-generate/index.ts` (trigger immediato email finished)
-- Migrazione SQL: tabella `free_listing_email_log` + RLS + cron job `*/5 * * * *`.
+- Migrazione SQL: tabelle + RLS + funzione `broadcast_announcement` + estensione dei 3 trigger.
+- `supabase/functions/send-push/index.ts` (nuovo)
+- `supabase/functions/subscribe-push/index.ts` (nuovo)
+- `supabase/functions/unsubscribe-push/index.ts` (nuovo)
+- `supabase/config.toml` (entry per le 3 nuove funzioni)
+- `public/sw.js` (nuovo)
+- `src/main.tsx` (registra il SW)
+- `src/hooks/useNotifications.tsx` (nuovo)
+- `src/components/NotificationBell.tsx` (nuovo)
+- `src/components/DashboardHeader.tsx` (inserisce campanella + pallino su avatar)
+- `src/pages/Settings.tsx` (toggle push)
+
+---
+
+## Cose da confermare
+
+1. Procedo a creare i secrets `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` (te li genero io e te li mostro per salvarli)?
+2. Sul telefono **iOS**: il push web funziona solo se l'utente "Aggiunge alla Home" dal Safari (limite Apple). Ok mantenere così, o vuoi che in futuro passiamo a Capacitor nativo per push iOS pieni?
+3. Quando vuoi pubblicare un aggiornamento globale, mi scrivi titolo + testo (+ link opzionale) e io lo inserisco come `announcement` per tutti gli utenti — confermi questo flusso?

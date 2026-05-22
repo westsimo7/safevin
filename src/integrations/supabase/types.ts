@@ -401,6 +401,63 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          push_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          push_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          push_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read_at: string | null
+          source: string
+          source_id: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          source: string
+          source_id?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read_at?: string | null
+          source?: string
+          source_id?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -448,6 +505,36 @@ export type Database = {
         }
         Update: {
           claimed_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          user_agent?: string | null
           user_id?: string
         }
         Relationships: []
@@ -734,6 +821,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      broadcast_announcement: {
+        Args: { p_body: string; p_link?: string; p_title: string }
+        Returns: Json
+      }
       claim_purchase_gift: { Args: never; Returns: Json }
       cleanup_test_users: { Args: never; Returns: number }
       complete_creative_director_job: {
@@ -748,6 +839,16 @@ export type Database = {
         }[]
       }
       consume_feature_credit: { Args: { p_feature: string }; Returns: Json }
+      create_chat_notification: {
+        Args: {
+          p_conversation_id: string
+          p_label: string
+          p_source: string
+          p_url: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       credit_bundle_purchase: {
         Args: { p_quantity: number; p_session_id: string; p_user_id: string }
         Returns: Json
@@ -830,6 +931,8 @@ export type Database = {
         }
         Returns: number
       }
+      mark_all_notifications_read: { Args: never; Returns: undefined }
+      mark_notification_read: { Args: { p_id: string }; Returns: undefined }
       move_to_dlq: {
         Args: {
           dlq_name: string
