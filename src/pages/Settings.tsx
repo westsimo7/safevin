@@ -40,6 +40,28 @@ const Settings = () => {
     document.documentElement.classList.remove("light");
     localStorage.setItem("safevin-theme", "light");
   }, [darkMode]);
+
+  // Load notification preference
+  const { user } = useAuth();
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("notification_preferences")
+      .select("push_enabled")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) setNotifications(!!data.push_enabled);
+      });
+  }, [user]);
+
+  const handleToggleNotifications = async (value: boolean) => {
+    setNotifications(value);
+    if (!user) return;
+    await supabase
+      .from("notification_preferences")
+      .upsert({ user_id: user.id, push_enabled: value, updated_at: new Date().toISOString() }, { onConflict: "user_id" });
+  };
   const [profileOpen, setProfileOpen] = useState(false);
   const [cdOpen, setCdOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -233,11 +255,11 @@ const Settings = () => {
                 <div className="flex items-center gap-3">
                   <Bell className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <Label>Notifiche Push</Label>
-                    <p className="text-xs text-muted-foreground">Ricevi aggiornamenti sui tuoi annunci</p>
+                    <Label>Notifiche</Label>
+                    <p className="text-xs text-muted-foreground">Avvisi per risposte chat e annunci dal team</p>
                   </div>
                 </div>
-                <Switch checked={notifications} onCheckedChange={setNotifications} />
+                <Switch checked={notifications} onCheckedChange={handleToggleNotifications} />
               </div>
 
               <div className="flex items-center justify-between">
