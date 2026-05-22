@@ -9,6 +9,8 @@ import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, P
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import NotificationBell from "@/components/NotificationBell";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const navLinks = [
   { to: "/home", label: "Home", disabled: false },
@@ -36,6 +38,7 @@ const AppNavbar = () => {
   const { state: planState } = usePlan();
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
+  const { unreadCount } = useNotifications();
 
   useEffect(() => {
     if (!user) return;
@@ -205,10 +208,15 @@ const AppNavbar = () => {
               <span className="text-xs">Upgrade</span>
             </Button>
 
+            <NotificationBell />
+
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
-                <button className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
+                <button className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-muted/50 border border-border/50 flex items-center justify-center hover:bg-muted transition-colors">
                   <User className="w-4 h-4 text-muted-foreground" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-destructive border-2 border-background" />
+                  )}
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-72 p-0" align="end">
