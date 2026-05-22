@@ -9,6 +9,8 @@ import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, P
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
+import NotificationBell from "@/components/NotificationBell";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const navLinks = [
   { to: "/home", label: "Home", disabled: false },
