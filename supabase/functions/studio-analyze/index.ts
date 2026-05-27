@@ -6,162 +6,120 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Static encyclopedias passed once in the system prompt
+const SUB_STYLES = `Y2K, Old Money, Quiet Luxury, Techwear, Gorpcore, Opium Style, Blokecore, Football Casual, Preppy, Minimal, Cottagecore, Coquette, Clean Girl, E-Girl, Luxury Streetwear, Archive Fashion, Athleisure, Workwear, Military, Boho, Scandinavian Minimalism, Parisian Chic, Italian Luxury`;
+
+const TARGET_TABLE = `
+- neonato (0-3 anni): Body, tutine, taglie 0-36 mesi, motivi infantili, dimensioni mini
+- bambino (4-9 anni): Taglie XS bambino, grafiche cartoon, capi proporzioni bambino
+- preteen (10-13 anni): Taglie S junior, stile adulto in versione piccola
+- teen (14-17 anni): Taglie S/M giovani, streetwear/Y2K, brand teen
+- giovane_adulto (18-24 anni): Streetwear, oversize moderno, brand contemporanei, Gen Z aesthetics
+- adulto (25-35 anni): Mix lifestyle, brand established, fit bilanciato
+- maturo (35+ anni): Tagli classici, brand storici, vestibilità tradizionale, materiali pregiati
+`;
+
 const VISION_PROMPT = `Sei un Senior Computer Vision & Marketplace Listing Analyst con 15+ anni di esperienza in e-commerce fashion (Vinted, resale platforms).
 
 Analizza TUTTE le immagini fornite e restituisci un JSON con questa struttura esatta:
 
 {
-  "recognition_confidence": "high | low (quanto sei sicuro dell'identificazione del capo: high = identificazione chiara e sicura, low = capo ambiguo, parzialmente coperto, angolazione insolita o difficile da classificare)",
+  "recognition_confidence": "high | low",
   "gender": "uomo | donna | unisex",
-  "product_type": "sottocategoria specifica Vinted (vedi albero categorie sotto)",
-  "category": "macro-categoria Vinted (es: Jeans, Abbigliamento da esterno, Maglioni e Pullover, Top e T-Shirt, ecc.)",
-  "colors": ["colore dominante 1", "colore dominante 2 (se presente, altrimenti array con 1 solo elemento)"],
+  "product_type": "sottocategoria specifica Vinted",
+  "category": "macro-categoria Vinted",
+  "colors": ["colore dominante 1", "colore dominante 2 (opzionale)"],
   "brand": "brand se CHIARAMENTE visibile, altrimenti null",
   "brand_confidence": "high | low | null",
-  "garment_features": {
-    "logos": [
-      {
-        "type": "stampato | ricamato | patch | gommato | in rilievo | serigrafato | tessuto | nessuno",
-        "description": "NON leggere o trascrivere il testo/contenuto del logo. Indica solo 'logo' o 'logo brand' se il brand è già identificato. Es: 'logo', 'logo brand', 'doppio logo'",
-        "position": "posizione esatta (es: petto sinistro, schiena centro, manica destra, cappuccio, etichetta collo)",
-        "size": "piccolo | medio | grande"
-      }
-    ],
-    "prints": [
-      {
-        "type": "grafica | scritta | pattern | all-over | nessuno",
-        "description": "NON leggere o trascrivere il testo delle stampe. Indica solo il tipo generico. Es: 'stampa grafica', 'scritta', 'pattern a righe', 'stampa centrale'",
-        "position": "posizione (es: frontale centro, schiena, manica)",
-        "technique": "serigrafia | sublimazione | transfer | ricamo | non determinabile"
-      }
-    ],
-    "zippers": "descrizione zip (es: zip intera frontale, mezza zip, zip laterali, zip tasche, nessuna)",
-    "pockets": "descrizione tasche (es: 2 tasche laterali a filo, tasca canguro frontale, tasche cargo, nessuna)",
-    "buttons": "descrizione bottoni (es: bottoni a pressione, bottoni classici in metallo, nessuno)",
-    "hood": "cappuccio (es: cappuccio con cordino regolabile, cappuccio fisso, nessuno)",
-    "collar": "colletto (es: colletto alto, collo a V, girocollo, colletto button-down, nessuno)",
-    "cuffs": "polsini (es: polsini elastici, polsini a costine, polsini con bottone, nessuno)",
-    "hem": "orlo (es: orlo elastico, orlo dritto, orlo arrotondato, nessuno)",
-    "embossing_relief": "rilievi o goffrature (es: logo in rilievo sul petto, texture goffrata all-over, nessuno)",
-    "patches_badges": "patch o badge applicati (es: patch militare sulla manica, badge sportivo, nessuno)",
-    "drawstrings": "cordini/lacci (es: cordino in vita, lacci cappuccio, nessuno)",
-    "stitching_details": "cuciture decorative (es: cuciture a contrasto, impunture visibili, nessuno)",
-    "other_details": "qualsiasi altro dettaglio visivo rilevante non coperto sopra"
+  "style": "Vintage | Casual | Streetwear | Elegante",
+  "sub_style": "uno dei sotto-stili sotto, o null",
+  "fit": "Slim | Regular | Oversize | Boxy | Relaxed | Straight | Skinny | Tapered | Cropped | Wide",
+  "period": "Anni '70 | Anni '80 | Anni '90 | Anni 2000 | Anni 2010 | Contemporaneo | null",
+  "target_audience": {
+    "category": "neonato | bambino | preteen | teen | giovane_adulto | adulto | maturo",
+    "confidence": "high | medium | low",
+    "reasoning": "breve motivazione basata sulle foto"
   },
+  "garment_features": {
+    "logos": [{"type":"...","description":"logo o logo brand","position":"...","size":"piccolo|medio|grande"}],
+    "prints": [{"type":"...","description":"tipo generico","position":"...","technique":"..."}],
+    "zippers": "...", "pockets": "...", "buttons": "...", "hood": "...",
+    "collar": "...", "cuffs": "...", "hem": "...",
+    "embossing_relief": "...", "patches_badges": "...", "drawstrings": "...",
+    "stitching_details": "...", "other_details": "..."
+  },
+  "note_aggiuntive": "1 frase opzionale con sotto-stile o sapore extra (es. 'vibe Y2K Archive')",
   "photos_assessment": {
-    "has_front": true/false,
-    "has_back": true/false,
-    "has_detail": true/false,
-    "has_label_size": true/false,
-    "has_label_materials": true/false,
-    "has_logo_closeup": true/false
+    "has_front": true/false, "has_back": true/false, "has_detail": true/false,
+    "has_label_size": true/false, "has_label_materials": true/false, "has_logo_closeup": true/false
   },
   "photo_quality": [
     {
       "photo_index": 0,
       "summary": "buona | migliorabile | da rifare",
-      "scores": {
-        "quality": 1-5,
-        "light": 1-5,
-        "background_contrast": 1-5,
-        "completeness": 1-5
-      },
-      "issues": [
-        {
-          "type": "background | light | sharpness | framing | contrast",
-          "severity": "minor | moderate | major",
-          "problem": "descrizione breve",
-          "suggestion": "consiglio pratico",
-          "impact": "perché penalizza la vendita"
-        }
-      ]
+      "scores": { "quality": 1-5, "light": 1-5, "background_contrast": 1-5, "completeness": 1-5 },
+      "issues": [{"type":"...","severity":"minor|moderate|major","problem":"...","suggestion":"...","impact":"..."}]
     }
   ],
   "missing_photos": [
-    {
-      "type": "front | back | label_size | label_materials | logo_closeup | detail | sole | lateral",
-      "name": "nome leggibile",
-      "reason": "perché serve per vendere meglio",
-      "tips": ["consiglio 1", "consiglio 2", "consiglio 3"]
-    }
+    {"type":"front|back|label_size|label_materials|logo_closeup|detail|sole|lateral","name":"...","reason":"...","tips":["...","...","..."]}
   ]
 }
 
-=== ALBERO CATEGORIE VINTED ===
+=== STILI AMMESSI (whitelist stretta per "style") ===
+Vintage, Casual, Streetwear, Elegante
 
-UOMO:
-1. Jeans → Jeans strappati, Jeans skinny, Jeans slim fit, Jeans straight fit
-2. Abbigliamento da esterno → Cappotti, Gilet, Giacche, Poncho
-3. Camicie e T-shirt → Camicie (a quadri, in denim, semplici, a righe, altre), T-shirt (semplici, con stampe, a righe, a maniche lunghe, altre), Polo, Canottiere
-4. Completi e blazer → Giacche e blazer, Pantaloni da completo, Panciotti, Completi pantalone, Abiti da sposo, Altri completi e blazer
-5. Maglioni e Pullover → Pullover, Felpe e felpe con cappuccio, Felpe con zip, Cardigan, Pullover girocollo, Maglioni con scollo a V, Maglioni dolcevita, Maglioni lunghi, Pullover a maglia spessa, Maglioni senza maniche, Altro
-6. Pantaloni → Pantaloni chino, Pantaloni della tuta, Pantaloni skinny, Pantaloni capri, Pantaloni sartoriali, Pantaloni a gamba larga, Altro
-7. Pantaloncini → Pantaloncini cargo, Pantaloncini chino, Pantaloncini in denim, Altri pantaloncini
-8. Calzini e Intimo → Slip e boxer, Calzini, Vestaglie, Altre calze e intimo
-9. Pigiama → Pigiama intero, Pantaloni del pigiama, Completi pigiama, Maglia del pigiama
-10. Costumi da bagno
-11. Abbigliamento sportivo → Capispalla, Tute, Pantaloni, Pantaloncini, Maglie e t-shirt, Maglie di squadra, Felpe con cappuccio e pullover, Accessori sportivi, Altri indumenti sportivi
-12. Costumi e vestiti speciali
-13. Altri capi di abbigliamento
+=== SOTTO-STILI (per "sub_style" e "note_aggiuntive") ===
+${SUB_STYLES}
 
-DONNA:
-1. Abbigliamento da esterno → Cappe e poncho, Cappotti (Montgomery, Pelliccia sintetica, Soprabiti lunghi, Parka, Caban, Impermeabili, Trench), Gilet, Giacche (Motociclista/pilota, Bomber, Denim, Militari/field jacket, Pile, Piumini, Trapuntate, Giacca-camicia, Sci/snowboard, College, A vento)
-2. Maglioni e pullover → Felpe e felpe con cappuccio, Maglioni, Kimono, Cardigan, Bolero, Panciotti, Altri (Scollo a V, Dolcevita, Lunghi, A maglia, Maniche 3/4, Altri pullover)
-3. Completi e blazer → Blazer, Completi con pantaloni, Completi con gonna, Completi spezzati, Altri
-4. Abiti → Mini abiti, Longuette, Lunghi, Occasioni speciali, Estivi, Invernali, Lavoro/formali, Casual, Senza spalline, Tubini neri, In denim, Altri
-5. Gonne → Minigonne, Al ginocchio, Longuette, Maxigonne, Asimmetriche
-6. Skort
-7. Top e T-Shirt → Camicie, Bluse, Canottiere, T-shirt, Canotte, Tuniche, Top corti, Maniche corte, Manica ¾, Maniche lunghe, Body, Spalle scoperte, Dolcevita, Peplo, Allacciati al collo, Altri
-8. Jeans → Boyfriend, Corti, Svasati, Vita alta, Strappati, Skinny, Dritti, Altro
-9. Pantaloni e leggings → Chino, Gamba ampia, Skinny, Sartoriali, Dritti, Pelle, Leggings, Alla turca, Altri
-10. Pantaloncini → Vita bassa, Vita alta, Al ginocchio, Denim, Pizzo, Pelle, Cargo, Corti, Altri
-11. Tute jumpsuit e playsuit → Jumpsuit, Playsuit, Altre
-12. Costumi da bagno → Un pezzo, Bikini/tankini, Copricostume/sarong, Altri
-13. Lingerie e indumenti da notte → Reggiseni, Mutandine, Set, Guaine, Indumenti da notte, Vestaglie, Collant/calze, Calzini, Accessori, Altro
-14. Vestiti premaman → Top, Abiti, Gonne, Pantaloni, Pantaloncini, Jumpsuit/playsuit, Pullover/maglioni, Cappotti/giacche, Costumi, Intimo, Sportivi
-15. Abbigliamento sportivo → Capispalla, Tute, Pantaloni, Pantaloncini, Abiti, Gonne, Top/t-shirt, Maglie squadra, Felpe, Accessori, Reggiseni sportivi, Altri
-16. Costumi e vestiti speciali
-17. Altri capi d'abbigliamento
+=== TARGET AUDIENCE — Indicatori ===
+${TARGET_TABLE}
 
 === PALETTE COLORI VINTED ===
 Nero, Grigio, Bianco, Panna, Beige, Albicocca, Arancione, Corallo, Rosso, Borgogna, Rosa, Viola, Lilla, Azzurro, Blu, Blu marino, Turchese, Menta, Verde, Verde scuro, Cachi, Marrone, Senape, Giallo, Argento, Oro, Multi
 
 === REGOLE FONDAMENTALI ===
-- NON inventare MAI informazioni. Se non vedi qualcosa, metti null.
-- recognition_confidence: metti "high" se riesci a identificare chiaramente il tipo di indumento. Metti "low" se il capo è ambiguo, parzialmente coperto, ripiegato in modo confuso, fotografato da un'angolazione che non permette di capire cosa sia, o se potrebbe essere più di un tipo di indumento. In caso di dubbio, metti "low".
-- Il brand deve essere CHIARAMENTE leggibile. Se hai dubbi, metti null e brand_confidence null.
-- Per gender: identifica da taglio, vestibilità, etichette. Se ambiguo usa "unisex" e fornisci le categorie più probabili per entrambi i sessi.
-- Per product_type: usa SEMPRE la sottocategoria più specifica dall'albero categorie sopra.
-- Per category: usa la macro-categoria di appartenenza.
-- Per colors: restituisci un array con i 2 colori PIÙ DOMINANTI del capo dalla palette Vinted. Se il capo è monocromatico, restituisci un array con 1 solo elemento. MAI più di 2 colori.
-- Per garment_features: descrivi SOLO ciò che vedi realmente nelle foto. Sii estremamente preciso sulla posizione e tipologia di ogni elemento. Se un elemento non è presente o non è visibile, scrivi "nessuno". Per i loghi, specifica SEMPRE il tipo di applicazione (stampato, ricamato, patch, gommato, in rilievo, etc.).
+- NON inventare. Se non vedi, null.
+- recognition_confidence "low" se capo ambiguo, coperto o angolazione strana.
+- Brand: solo se CHIARAMENTE leggibile, altrimenti null + brand_confidence null.
+- colors: max 2 dalla palette Vinted; 1 se monocromatico.
+- target_audience: deduci da taglia, proporzioni capo, motivi, brand, stile. Se hai dubbi → confidence "low".
+- style: usa SOLO uno dei 4 valori whitelist. Per stile più specifico usa sub_style.
+- garment_features: descrivi SOLO ciò che vedi. Se assente, "nessuno".
+- NON leggere il testo dei loghi/stampe, indica solo "logo brand" o "stampa grafica".
 
 === REGOLE QUALITÀ FOTO ===
-- Analizza OGNI foto singolarmente (photo_index parte da 0).
-- Per ogni foto valuta con punteggio 1-5:
-  * quality: nitidezza e risoluzione complessiva
-  * light: illuminazione (uniforme, naturale, senza ombre dure)
-  * background_contrast: contrasto visivo tra indumento e sfondo. Analizza colore principale del capo e colore dominante dello sfondo. Valuta se esiste una separazione visiva NETTA in luminosità, tonalità e percezione. Un buon contrasto rende il capo subito leggibile, staccato e protagonista. Un cattivo contrasto lo confonde con lo sfondo (es. nero su blu scuro, beige su bianco). Verdetto: 5=contrasto efficace, 3=parzialmente efficace, 1=inefficace
-  * completeness: quanto la foto mostra bene il soggetto (inquadratura, angolazione)
-- Usa come RIFERIMENTO IDEALE: foto su sfondo a tinta unita contrastante, luce naturale diffusa, prodotto steso/appeso centrato.
-- Segnala issues SOLO se reali. Se una foto è buona, "issues" vuoto.
-- severity: "minor" = migliorabile, "moderate" = penalizza, "major" = da rifare.
-- Tono informativo e utile, MAI aggressivo.
+Valuta ogni foto 1-5 su quality, light, background_contrast, completeness. Issues SOLO se reali. Tono utile, mai aggressivo.
 
 === REGOLE FOTO MANCANTI ===
-- PRIMA di segnalare una foto mancante, VERIFICA ATTENTAMENTE tutte le immagini fornite. Se un dettaglio (polsini, orlo, zip, etichetta, ecc.) è VISIBILE anche parzialmente in una qualsiasi delle foto caricate, NON segnalarlo come mancante. Segnala come mancante SOLO ciò che NON è assolutamente visibile in NESSUNA delle foto.
-- NON segnalare MAI foto di difetti, imperfezioni o usure come mancanti.
-- Suggerisci SOLO shot utili per la vendita. NON suggerire MAI foto da indossato ("worn").
-- Per abbigliamento: front, back, label_size, label_materials, logo_closeup (se brandizzato).
-- Per scarpe: aggiungere suola, interno, laterale.
-- Ogni suggerimento deve avere 3 tips pratici.
+Solo se davvero non visibile in NESSUNA foto. Mai foto di difetti o indossato. Per scarpe aggiungi suola/interno/laterale.
 
-- Rispondi SOLO con il JSON, senza markdown o testo aggiuntivo.`;
+Rispondi SOLO con il JSON puro, senza markdown.`;
+
+const PRIMARY_MODEL = "openai/gpt-5.2";
+const FALLBACK_MODEL = "google/gemini-2.5-pro";
+
+async function callAIWithFallback(apiKey: string, body: Record<string, unknown>): Promise<Response> {
+  const url = "https://ai.gateway.lovable.dev/v1/chat/completions";
+  let resp = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, model: PRIMARY_MODEL }),
+  });
+  if (resp.ok || resp.status === 429 || resp.status === 402) return resp;
+  const errText = await resp.text().catch(() => "");
+  console.warn(`[studio-analyze] primary model ${PRIMARY_MODEL} failed ${resp.status}: ${errText.slice(0, 200)}. Falling back to ${FALLBACK_MODEL}`);
+  resp = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, model: FALLBACK_MODEL }),
+  });
+  return resp;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  // Auth check
   const authHeader = req.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -188,8 +146,7 @@ serve(async (req) => {
 
     if (!images || !Array.isArray(images) || images.length === 0) {
       return new Response(JSON.stringify({ error: "Nessuna immagine fornita" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -198,26 +155,18 @@ serve(async (req) => {
       image_url: { url: dataUrl },
     }));
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: VISION_PROMPT },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: `Analizza queste ${images.length} immagini di un prodotto in vendita. Identifica: tipo prodotto, categoria, colore, brand. Valuta anche la qualità di ciascuna foto per la vendita online.` },
-              ...imageContent,
-            ],
-          },
-        ],
-        response_format: { type: "json_object" },
-      }),
+    const response = await callAIWithFallback(LOVABLE_API_KEY, {
+      messages: [
+        { role: "system", content: VISION_PROMPT },
+        {
+          role: "user",
+          content: [
+            { type: "text", text: `Analizza queste ${images.length} immagini. Identifica tipo, categoria, colori, brand, stile, sotto-stile, fit, periodo e target audience. Valuta la qualità di ogni foto.` },
+            ...imageContent,
+          ],
+        },
+      ],
+      response_format: { type: "json_object" },
     });
 
     if (!response.ok) {
@@ -241,7 +190,7 @@ serve(async (req) => {
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
-    
+
     try {
       const analysis = JSON.parse(content);
       return new Response(JSON.stringify({ analysis }), {
