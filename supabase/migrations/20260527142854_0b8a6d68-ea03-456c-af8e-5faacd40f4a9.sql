@@ -1,0 +1,1 @@
+ALTER TABLE public.studio_creations ADD COLUMN IF NOT EXISTS target_audience jsonb;

@@ -145,11 +145,18 @@ const EngineStudio = () => {
 
       if (data?.analysis) {
         setAnalysis(data.analysis);
-        saveDraft("recognition", data.analysis, filePreviews, null);
-        setPhase("recognition");
+        // Skip recognition step unless low confidence; brand pop-up handled inline in Input.
+        if (data.analysis.recognition_confidence === "low") {
+          saveDraft("recognition", data.analysis, filePreviews, null);
+          setPhase("recognition");
+        } else {
+          saveDraft("input", data.analysis, filePreviews, null);
+          setPhase("input");
+        }
       } else {
         throw new Error("Risposta non valida");
       }
+
     } catch (err: any) {
       console.error("Studio analyze error:", err);
       toast({ title: "Errore", description: err.message || "Errore durante l'analisi.", variant: "destructive" });

@@ -51,8 +51,17 @@ export interface ProductAnalysis {
   brand: string | null;
   brand_confidence: string | null;
   style?: string;
+  sub_style?: string | null;
+  fit?: string;
+  period?: string | null;
   condition?: string;
   materials?: string | null;
+  note_aggiuntive?: string;
+  target_audience?: {
+    category: string;
+    confidence: string;
+    reasoning?: string;
+  };
   garment_features?: {
     logos?: Array<{ type: string; description: string; position: string; size: string }>;
     prints?: Array<{ type: string; description: string; position: string; technique: string }>;
@@ -75,21 +84,11 @@ export interface ProductAnalysis {
   photo_quality?: Array<{
     photo_index: number;
     summary: string;
-    scores?: {
-      quality: number;
-      light: number;
-      background_contrast: number;
-      completeness: number;
-    };
-    issues: Array<{
-      type: string;
-      severity: string;
-      problem: string;
-      suggestion: string;
-      impact: string;
-    }>;
+    scores?: { quality: number; light: number; background_contrast: number; completeness: number; };
+    issues: Array<{ type: string; severity: string; problem: string; suggestion: string; impact: string; }>;
   }>;
 }
+
 
 export interface MissingPhoto {
   type: string;

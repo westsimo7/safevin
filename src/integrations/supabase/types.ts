@@ -556,6 +556,7 @@ export type Database = {
           status: string
           structural_blocks: Json | null
           studio_version: string
+          target_audience: Json | null
           titolo_generato: string | null
           user_id: string | null
           vision_report: string | null
@@ -576,6 +577,7 @@ export type Database = {
           status?: string
           structural_blocks?: Json | null
           studio_version?: string
+          target_audience?: Json | null
           titolo_generato?: string | null
           user_id?: string | null
           vision_report?: string | null
@@ -596,6 +598,7 @@ export type Database = {
           status?: string
           structural_blocks?: Json | null
           studio_version?: string
+          target_audience?: Json | null
           titolo_generato?: string | null
           user_id?: string | null
           vision_report?: string | null
