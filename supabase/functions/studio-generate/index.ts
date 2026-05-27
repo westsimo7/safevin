@@ -194,24 +194,40 @@ function sanitizeOutput(output: any): any {
 }
 
 const PRIMARY_MODEL = "openai/gpt-5.2";
-const FALLBACK_MODEL = "google/gemini-2.5-pro";
+const FALLBACK_MODEL = "google/gemini-2.5-flash";
+const CALL_TIMEOUT_MS = 55_000;
+
+async function callModel(apiKey: string, body: Record<string, unknown>, model: string): Promise<Response> {
+  const url = "https://ai.gateway.lovable.dev/v1/chat/completions";
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), CALL_TIMEOUT_MS);
+  try {
+    return await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ ...body, model }),
+      signal: ctl.signal,
+    });
+  } finally {
+    clearTimeout(t);
+  }
+}
 
 async function callAIWithFallback(apiKey: string, body: Record<string, unknown>): Promise<Response> {
-  const url = "https://ai.gateway.lovable.dev/v1/chat/completions";
-  let resp = await fetch(url, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ ...body, model: PRIMARY_MODEL }),
-  });
-  if (resp.ok || resp.status === 429 || resp.status === 402) return resp;
-  const errText = await resp.text().catch(() => "");
-  console.warn(`[studio-generate] primary ${PRIMARY_MODEL} failed ${resp.status}: ${errText.slice(0, 200)}. Fallback to ${FALLBACK_MODEL}`);
-  resp = await fetch(url, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ ...body, model: FALLBACK_MODEL }),
-  });
-  return resp;
+  try {
+    const resp = await callModel(apiKey, body, PRIMARY_MODEL);
+    if (resp.ok || resp.status === 429 || resp.status === 402) return resp;
+    const errText = await resp.text().catch(() => "");
+    console.warn(`[studio-generate] primary ${PRIMARY_MODEL} failed ${resp.status}: ${errText.slice(0, 200)}. Fallback to ${FALLBACK_MODEL}`);
+  } catch (err) {
+    console.warn(`[studio-generate] primary ${PRIMARY_MODEL} threw (likely timeout): ${(err as Error).message}. Fallback to ${FALLBACK_MODEL}`);
+  }
+  try {
+    return await callModel(apiKey, body, FALLBACK_MODEL);
+  } catch (err) {
+    console.error(`[studio-generate] fallback ${FALLBACK_MODEL} threw: ${(err as Error).message}`);
+    return new Response(JSON.stringify({ error: "AI timeout" }), { status: 504, headers: { "Content-Type": "application/json" } });
+  }
 }
 
 serve(async (req) => {
