@@ -7,177 +7,176 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const SYSTEM_PROMPT = `Sei un Top-Tier Senior Vinted Listing Strategist, Product Interpreter & Conversion Copy Assistant.
+const ALLOWED_STYLES = ["Vintage", "Casual", "Streetwear", "Elegante"];
+const ALLOWED_TARGETS = ["neonato", "bambino", "preteen", "teen", "giovane_adulto", "adulto", "maturo"];
 
-Ricevi dati dell'annuncio e generi un listing professionale, ottimizzato per conversione e SEO su Vinted.
+const SYSTEM_PROMPT = `Sei un Senior Copywriter specializzato in marketplace Vinted con expertise in moda secondhand e psicologia del compratore per fasce d'età.
 
-═══════════════════════════════════════
-1) TITOLO SEO
-═══════════════════════════════════════
+Il tuo compito: generare un annuncio Vinted ottimizzato per conversione, ADATTANDO tono, lessico e struttura al target audience rilevato.
 
-Formula OBBLIGATORIA:
-[Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Decade se fornita: "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" / "Anni 2010" / periodo custom (es. "Fine anni '60", "primi anni 2020")] + [Sesso] + ([Taglia]) + [Condizione]
-
-Dove [Sesso] = "Uomo" o "Donna" (in inglese: "Men" o "Women") posizionato SUBITO PRIMA della taglia tra parentesi. Se il sesso non è disponibile, omettilo.
-
-Se la decade è fornita, inseriscila SUBITO DOPO lo stile. Se decade non fornita, omettila completamente. NON aggiungere mai "Y2K" come parola separata: per gli anni 2000 usa esclusivamente "Anni 2000".
-
-IMPORTANTE: NON usare MAI il trattino "–" o "-" prima della condizione. La condizione segue direttamente dopo la taglia, separata solo da uno spazio.
-
-Esempio: "Nike Felpa con cappuccio Nera Streetwear Uomo (L) Come nuovo"
-Esempio con stile Vintage e decade: "Nike Felpa con cappuccio Nera Vintage Anni '90 Donna (S) Come nuovo"
-
-- Massimo 80 caratteri
-- Ogni elemento presente se disponibile
-- Se il brand non è noto, omettilo e inizia dal tipo prodotto
-
-═══════════════════════════════════════
-2) DESCRIZIONE
-═══════════════════════════════════════
-
-La descrizione è un blocco unico, professionale, copiabile. MASSIMO 60 PAROLE totali per la parte descrittiva (esclusi i bullet points).
-
-Struttura (5 righe con spaziatura specifica):
-RIGA 1: [Tipo prodotto] + [Brand] + [Stile] + (se decade fornita: + decade es. "Anni '90" / "Anni 2010" / "Fine anni '60") + [Colore] + [Taglia].
-(riga vuota)
-RIGA 2: [Condizione] + con [Dettaglio distintivo] [posizione]
-   REGOLA TONO VINTAGE: Se style === "Vintage" e la condizione NON è "Nuovo con cartellino" né "Nuovo senza cartellino", sostituisci la formula standard con un tono che valorizza l'autenticità del capo:
-   - "Ottime condizioni" → "Condizioni eccellenti per un pezzo d'epoca, conservato alla perfezione"
-   - "Buone condizioni" → "Vissuto autentico, patina coerente con l'età del capo"
-   - "Condizioni soddisfacenti" / "Condizioni discrete" → "Segni del tempo che ne certificano l'autenticità vintage"
-   Per tutti gli altri stili (Casual, Streetwear, Elegante, ecc.) e per i due "Nuovo" anche se Vintage, usa il tono neutro standard.
-(riga vuota)
-RIGA 3: Modello con [elementi strutturali distintivi] e [extra]. Tessuto [materiale] [qualità]. Vestibilità [fit].
-   REGOLA CHIUSURA: Menziona il tipo di chiusura SOLO se è effettivamente presente e rilevante (es. "Modello con zip frontale…", "Modello con bottoni a pressione…"). Se l'indumento NON ha chiusura (es. t-shirt, felpa pullover, maglia), NON scrivere mai "senza chiusura" né formule negative: apri la frase valorizzando un dettaglio reale del capo (es. "Modello con cappuccio fisso e tasca a marsupio…", "Modello con scollo a girocollo e polsini a costine…", "Modello con stampa grafica frontale e orlo dritto…"). Usa i dettagli rilevati dalle foto (loghi, stampe, tasche, cappuccio, collo, polsini, orlo, cuciture, patch).
-(riga vuota)
-RIGA 4: Disponibile per foto extra e spedizione.
-
-REGOLA MATERIALE: Se l'utente ha indicato UN SOLO materiale, scrivi "Tessuto [materiale] 100%". Se sono più materiali, elencali senza percentuale.
-
-NON aggiungere mai un blocco "📋 DETTAGLI TECNICI" o un elenco riepilogativo di Brand/Taglia/Colore/Condizione/Materiale nella descrizione. Quei dati appaiono già nella scheda prodotto separata.
-
-MISURE (UNICA ECCEZIONE): Se — e SOLO se — l'utente ha fornito misure di spalle e/o lunghezza, aggiungi una riga vuota dopo la RIGA 4 e poi un elenco con SOLO quelle misure, una per riga, ciascuna preceduta dal pallino "• ". Esempio:
-
-• Spalle: 49 cm
-• Lunghezza: 60 cm
-
-Nessun titolo, nessun'altra voce. Se non ci sono misure, non aggiungere nulla dopo la RIGA 4.
-
-REGOLE FONDAMENTALI:
-- MASSIMO 60 PAROLE nella descrizione (esclusi bullet points). Conta le parole.
-- Scrivi SOLO informazioni essenziali e visibili. Niente riempitivi.
-- Una frase = un'informazione. Niente elenchi lunghi di dettagli.
-- ESEMPIO SBAGLIATO: "Modello senza chiusura con cuciture raglan sulle spalle, maniche raglan in tessuto giallo con righe scure, polsini ad orlo a costine"
-- ESEMPIO GIUSTO: "Modello con maniche gialle a righe scure e polsini a costine"
-- VIETATO usare "senza chiusura" o altre formule negative: se la chiusura manca, valorizza un dettaglio presente (cappuccio, tasche, stampa, collo, polsini, orlo…).
-- Gli UNICI stili ammessi sono: Vintage, Casual, Streetwear, Elegante
-- Non inventare informazioni non fornite
-- Se un dato non è disponibile, omettilo
-
-═══════════════════════════════════════
-3) PREZZO STRATEGICO
-═══════════════════════════════════════
-
-STEP 1 — POSIZIONAMENTO:
-In base a brand, condizione, materiali e qualità percepita, stima la fascia:
-- fascia bassa: no brand, usato, basic
-- fascia media: brand medio, buone condizioni, stile attuale
-- fascia medio-alta: brand forte, come nuovo, stile ricercato
-
-STEP 2 — PREZZO CONSIGLIATO:
-- Deve essere sopra il minimo accettato
-- Abbastanza alto da lasciare margine di trattativa reale
-- Non così alto da sembrare scollegato dalla realtà
-
-STEP 3 — STRATEGIA DI CONTRATTAZIONE:
-Genera una sequenza concreta di comportamento basata sul prezzo minimo e il prezzo consigliato.
-
-═══════════════════════════════════════
-4) SCHEDA DETTAGLI STRUTTURATI
-═══════════════════════════════════════
-
-Restituisci i dettagli in questo ordine esatto:
-categoria → tipo_prodotto → brand → taglia → condizione → colore → materiale → sesso → misure (se parte superiore)
-
-═══════════════════════════════════════
-
-Rispondi SOLO con un JSON valido (senza markdown) con questa struttura:
+## OUTPUT — JSON puro, no markdown, no backtick:
 
 {
-  "title": "titolo SEO con formula [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + [Sesso] + ([Taglia]) + [Condizione] (NESSUN trattino)",
-  "description": "Blocco descrizione professionale (RIGA 1-4). NIENTE blocco DETTAGLI TECNICI. Solo se ci sono misure spalle/lunghezza, aggiungi alla fine i bullet '• Spalle: X cm' e/o '• Lunghezza: Y cm'.",
+  "title": "string ≤ 80 char",
+  "description": "blocco multi-modulo con bullet • e righe vuote tra moduli",
   "details": {
-    "categoria": "categoria prodotto (es. Abbigliamento)",
-    "tipo_prodotto": "tipo specifico (es. Felpa con cappuccio)",
-    "brand": "brand o 'Non specificato'",
-    "taglia": "taglia indicata",
-    "condizione": "condizione indicata",
-    "colore": "colore principale",
-    "materiale": "materiale indicato",
-    "sesso": "Uomo o Donna",
-    "misure": "misure se disponibili o null"
+    "categoria": "...", "tipo_prodotto": "...", "brand": "...",
+    "taglia": "...", "condizione": "...", "colore": "...",
+    "materiale": "...", "sesso": "...", "target": "...", "misure": "... o null"
   },
+  "hashtags": ["max 5 hashtag senza #"],
   "pricing": {
-    "min_accepted": numero_minimo,
-    "suggested_low": prezzo_basso_consigliato,
-    "suggested_high": prezzo_alto_consigliato,
-    "positioning": "fascia stimata: bassa, media o medio-alta",
-    "positioning_reason": "breve spiegazione della fascia",
-    "motivation": "perché questo prezzo è sensato",
-    "negotiation": [
-      "Se ti offrono X€ → controproponi Y€",
-      "Se salgono a Z€ → puoi scendere a W€",
-      "Se arrivano a V€ → puoi accettare",
-      "Se scendono sotto il minimo di pochi euro → valuta tu se accettare, altrimenti aspetta offerte migliori"
-    ]
+    "min_accepted": number, "suggested_low": number, "suggested_high": number,
+    "positioning": "bassa | media | medio-alta",
+    "positioning_reason": "...",
+    "motivation": "...",
+    "negotiation": ["...","...","...","..."]
   },
-  "tips": [
-    "consiglio vendita pratico 1",
-    "consiglio vendita pratico 2",
-    "consiglio vendita pratico 3",
-    "consiglio vendita pratico 4"
-  ],
-  "hashtags": [
-    "4-5 hashtag ottimizzati per Vinted/Instagram, lowercase, senza spazi, senza simboli speciali oltre al # iniziale. In italiano se language=it, in inglese se language=en. Esempio: ['#vintage90s', '#y2k', '#ralphlauren', '#fleece', '#streetwearuomo']"
-  ]
-}`;
-
-function decadeLabel(d?: string): string {
-  if (!d) return "";
-  switch (d) {
-    case "70s": return "Anni '70";
-    case "80s": return "Anni '80";
-    case "90s": return "Anni '90";
-    case "y2k": return "Anni 2000";
-    case "2010s": return "Anni 2010";
-    default: return d;
+  "photo_report": {
+    "luce": "Ottima | Buona | Migliorabile",
+    "contrasto": "Ottimo | Buono | Migliorabile",
+    "completezza": "Completa | Parziale | Da integrare",
+    "nitidezza": "Alta | Media | Bassa",
+    "advice": "1 frase di consiglio se almeno un pilastro è Migliorabile o inferiore, altrimenti stringa vuota"
   }
+}
+
+## REGOLE TITOLO
+
+Formula: [Brand] + [Tipo prodotto] + [Dettaglio] + [Colore] + [Stile] + [Sesso] + [Taglia] + [Condizione]
+- Max 80 caratteri
+- Mai trattini "-" o "–", solo spazi
+- Sesso prima della taglia: "Uomo (L)"
+- Se style=Vintage aggiungi "Y2K" subito dopo lo stile SOLO se sub_style/note indicano y2k
+- Per target neonato/bambino/preteen aggiungi fascia età (es. "6-9 Mesi", "4-5 Anni")
+- Se brand assente → parti dal tipo prodotto
+
+## REGOLE DESCRIZIONE — STRUTTURA MODULARE (max 80 parole totali)
+
+Componi 5 moduli con UNA RIGA VUOTA tra ognuno. Se un modulo non ha contenuto reale, omettilo (no placeholder vuoti).
+
+[MODULO 1 — Hook di apertura]
+Una riga, max 12 parole. Tono adattato al target.
+
+[MODULO 2 — Dettagli capo]
+3-4 bullet con "• ", ognuno una caratteristica concreta da garment_features.
+
+[MODULO 3 — Vestibilità / Materiale]
+Una riga. Integra fit + materiale (se disponibile, altrimenti solo fit).
+
+[MODULO 4 — Misure] (CONDIZIONALE: solo se misure fornite)
+📏 Misure:
+• Spalle: X cm
+• Lunghezza: Y cm
+
+[MODULO 5 — Closing / CTA]
+Una riga finale adattata al target.
+
+## TONO PER TARGET
+
+- neonato/bambino: rassicurante, tecnico-pratico. Lessico: cotone, biologico, lavabile, sicuro, ipoallergenico.
+- preteen/teen: diretto, fresh, daily. Lessico: vibe, taglio, perfetto per, daily look.
+- giovane_adulto: streetwear-aware, asciutto. Lessico: vibe, taglio, oversize, archive, vintage, anni 2000.
+- adulto: bilanciato lifestyle. Lessico: versatile, qualità, classico, contemporaneo, premium.
+- maturo: classico, elegante. Lessico: sartoriale, pregiato, raffinato, intramontabile, pura lana, fattura.
+
+## VINCOLI DESCRIZIONE
+
+- Max 80 parole totali (esclusi i bullet • delle misure)
+- Bullet "•" per dettagli, mai prosa attaccata
+- Emoji funzionali ammesse SOLO: 📏 misure (opz.), 📦 spedizione (opz.). MAI 🔥✨💯 o decorative.
+- Una frase = una informazione. Mai inventare.
+- Materiale: se 1 solo → "Tessuto X 100%". Se più → elenco senza %. Se non disponibile → omettere.
+
+## HASHTAG
+Max 5, SENZA "#", lowercase, senza spazi. Composizione: tipo_prodotto + brand (se noto) + stile + sotto-stile + target.
+
+## PREZZO
+STEP 1 — Posizionamento (bassa/media/medio-alta) in base a brand, condizione, materiali.
+STEP 2 — Prezzo consigliato sopra il minimo con margine reale.
+STEP 3 — Strategia: 4 step concreti basati su min_accepted e suggested_low/high.
+
+## PHOTO REPORT
+Valuta 4 pilastri da analysis.photo_quality (media dei punteggi):
+- luce: 4-5=Ottima, 3=Buona, ≤2=Migliorabile
+- contrasto: 4-5=Ottimo, 3=Buono, ≤2=Migliorabile
+- completezza: in base a photos_assessment, "Completa" se ≥4 voci true, "Parziale" se 2-3, "Da integrare" se ≤1
+- nitidezza: deriva da quality medio: 4-5=Alta, 3=Media, ≤2=Bassa
+Aggiungi 1 frase di "advice" se almeno un pilastro è Migliorabile/inferiore.`;
+
+function sanitizeTitle(t: string): string {
+  let v = (t || "").replace(/\s+[–-]\s+/g, " ").replace(/\s{2,}/g, " ").trim();
+  if (v.length <= 80) return v;
+  // Guided truncation: remove condition → sesso → style markers iteratively
+  const conditionWords = ["Nuovo con cartellino", "Nuovo senza cartellino", "Come nuovo", "Ottime condizioni", "Buone condizioni", "Condizioni discrete", "Discreto", "Buono", "Ottimo"];
+  for (const c of conditionWords) {
+    if (v.length > 80 && v.endsWith(c)) v = v.slice(0, v.length - c.length).trim();
+  }
+  v = v.replace(/\s+(Uomo|Donna|Men|Women)\s*\([^)]+\)\s*/g, " ").replace(/\s{2,}/g, " ").trim();
+  if (v.length > 80) {
+    for (const s of ALLOWED_STYLES) {
+      v = v.replace(new RegExp(`\\s+${s}\\b`, "g"), "");
+    }
+    v = v.replace(/\s{2,}/g, " ").trim();
+  }
+  if (v.length > 80) {
+    const cut = v.slice(0, 80);
+    const lastSpace = cut.lastIndexOf(" ");
+    v = (lastSpace > 40 ? cut.slice(0, lastSpace) : cut).trim();
+  }
+  return v;
+}
+
+function wordCount(s: string): number {
+  return (s || "").trim().split(/\s+/).filter(Boolean).length;
 }
 
 function sanitizeOutput(output: any): any {
   if (!output || typeof output !== "object") return output;
-  // Sanitize title: remove dashes between size and condition, clamp to 80 chars
-  if (typeof output.title === "string") {
-    let t = output.title.replace(/\s+[–-]\s+/g, " ").replace(/\s{2,}/g, " ").trim();
-    if (t.length > 80) {
-      const truncated = t.slice(0, 80);
-      const lastSpace = truncated.lastIndexOf(" ");
-      t = (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trim();
-    }
-    output.title = t;
-  }
-  // Normalize hashtags: ensure array of lowercase strings starting with #
+  if (typeof output.title === "string") output.title = sanitizeTitle(output.title);
+
+  // Hashtags: strip #, lowercase, max 5
   if (Array.isArray(output.hashtags)) {
     output.hashtags = output.hashtags
       .filter((h: any) => typeof h === "string" && h.trim().length > 0)
-      .map((h: string) => {
-        let v = h.trim().toLowerCase().replace(/\s+/g, "");
-        if (!v.startsWith("#")) v = "#" + v;
-        return v;
-      })
+      .map((h: string) => h.trim().toLowerCase().replace(/^#+/, "").replace(/\s+/g, ""))
+      .filter((h: string) => h.length > 0)
       .slice(0, 5);
   }
+
+  // Whitelist style in details
+  if (output.details && typeof output.details === "object") {
+    const st = output.details.stile || output.details.style;
+    if (st && !ALLOWED_STYLES.includes(st)) {
+      // Try close match
+      const found = ALLOWED_STYLES.find(a => st.toLowerCase().includes(a.toLowerCase()));
+      if (output.details.stile) output.details.stile = found || "Casual";
+    }
+    const tgt = output.details.target;
+    if (tgt && !ALLOWED_TARGETS.includes(tgt)) output.details.target = "adulto";
+  }
   return output;
+}
+
+const PRIMARY_MODEL = "openai/gpt-5.2";
+const FALLBACK_MODEL = "google/gemini-2.5-pro";
+
+async function callAIWithFallback(apiKey: string, body: Record<string, unknown>): Promise<Response> {
+  const url = "https://ai.gateway.lovable.dev/v1/chat/completions";
+  let resp = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, model: PRIMARY_MODEL }),
+  });
+  if (resp.ok || resp.status === 429 || resp.status === 402) return resp;
+  const errText = await resp.text().catch(() => "");
+  console.warn(`[studio-generate] primary ${PRIMARY_MODEL} failed ${resp.status}: ${errText.slice(0, 200)}. Fallback to ${FALLBACK_MODEL}`);
+  resp = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ ...body, model: FALLBACK_MODEL }),
+  });
+  return resp;
 }
 
 serve(async (req) => {
@@ -195,7 +194,6 @@ serve(async (req) => {
       });
     }
 
-    // Server-side enforcement of plan limits (founder bypassed in RPC)
     const authHeader = req.headers.get("Authorization") || "";
     if (!authHeader) {
       return new Response(JSON.stringify({ error: "Non autenticato" }), {
@@ -234,31 +232,18 @@ serve(async (req) => {
     }
     const lang = language === "en" ? "en" : "it";
     const langInstruction = lang === "en"
-      ? "\n\n═══════════════════════════════════════\nLANGUAGE OVERRIDE\n═══════════════════════════════════════\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, tips) in ENGLISH. Keep the JSON keys and the structure unchanged. For measurements bullets use English labels: '• Shoulders: ... cm', '• Length: ... cm'. Do NOT add any technical details summary block."
+      ? "\n\n## LANGUAGE OVERRIDE\nGenerate ALL output content (title, description, details values, motivation, negotiation steps, hashtags) in ENGLISH. JSON keys unchanged. Measurements bullets: '• Shoulders: X cm', '• Length: Y cm'."
       : "";
 
-    const measurementsStr = Object.entries(userInput.measurements || {})
-      .filter(([, v]) => v)
-      .map(([k, v]) => `${k}: ${v} cm`)
-      .join(", ");
+    const measurementsStr = (() => {
+      if (typeof userInput.measurements === "string") return userInput.measurements.trim();
+      return Object.entries(userInput.measurements || {})
+        .filter(([, v]) => v)
+        .map(([k, v]) => `${k}: ${v} cm`)
+        .join(", ");
+    })();
 
-    let auditSection = "";
-    if (auditContext) {
-      auditSection = `
-CONTESTO MIGLIORAMENTO (da Audit con score ${auditContext.safeScore}/100):
-Il titolo originale era: "${auditContext.originalTitle}"
-La descrizione originale era: "${auditContext.originalDescription}"
-
-PROBLEMATICHE IDENTIFICATE DALL'AUDIT:
-${(auditContext.deepIssues || []).map((issue: string, i: number) => `${i + 1}. ${issue}`).join("\n")}
-
-OBIETTIVO: Genera un annuncio che RISOLVE TUTTE queste problematiche e raggiunge un punteggio 80+.
-Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto.
-`;
-    }
-
-    // Fire-and-forget: when a free user just consumed their last credit,
-    // immediately send the "free trial finished" email.
+    // free-limit email (unchanged)
     try {
       const used = Number(cr?.used);
       const limit = Number(cr?.limit);
@@ -284,81 +269,73 @@ Il nuovo annuncio deve essere NETTAMENTE superiore all'originale in ogni aspetto
       console.error("free-limit-reached email failed:", mailErr);
     }
 
-    // Build garment features string
+    // Build garment features summary
     const gf = analysis.garment_features || {};
     const featuresLines: string[] = [];
     const logosArr = Array.isArray(gf.logos) ? gf.logos : (gf.logos && typeof gf.logos === "object" ? [gf.logos] : []);
     logosArr.forEach((l: any) => {
-      if (l && typeof l === "object") {
-        featuresLines.push(`Logo: ${l.description ?? ""} (${l.type ?? ""}, ${l.position ?? ""}, ${l.size ?? ""})`);
-      }
+      if (l && typeof l === "object") featuresLines.push(`Logo: ${l.description ?? ""} (${l.type ?? ""}, ${l.position ?? ""}, ${l.size ?? ""})`);
     });
     const printsArr = Array.isArray(gf.prints) ? gf.prints : (gf.prints && typeof gf.prints === "object" ? [gf.prints] : []);
     printsArr.forEach((p: any) => {
-      if (p && typeof p === "object") {
-        featuresLines.push(`Stampa: ${p.description ?? ""} (${p.type ?? ""}, ${p.position ?? ""}, ${p.technique ?? ""})`);
-      }
+      if (p && typeof p === "object") featuresLines.push(`Stampa: ${p.description ?? ""} (${p.type ?? ""}, ${p.position ?? ""}, ${p.technique ?? ""})`);
     });
     const simpleFeatures = ["zippers", "pockets", "buttons", "hood", "collar", "cuffs", "hem", "embossing_relief", "patches_badges", "drawstrings", "stitching_details", "other_details"];
     for (const key of simpleFeatures) {
-      if (gf[key] && gf[key] !== "nessuno" && gf[key] !== "nessuna") {
-        featuresLines.push(`${key}: ${gf[key]}`);
-      }
+      if (gf[key] && gf[key] !== "nessuno" && gf[key] !== "nessuna") featuresLines.push(`${key}: ${gf[key]}`);
     }
     const featuresStr = featuresLines.length > 0 ? featuresLines.join("\n") : "nessun dettaglio rilevato";
-
     const colorsStr = Array.isArray(analysis.colors) ? analysis.colors.join(", ") : (analysis.color || "non specificato");
 
-    const userPrompt = `Genera l'annuncio completo e la strategia di prezzo per questo prodotto:
+    const target = analysis.target_audience?.category || "adulto";
+
+    let auditSection = "";
+    if (auditContext) {
+      auditSection = `\nCONTESTO AUDIT (score ${auditContext.safeScore}/100):\nTitolo orig: "${auditContext.originalTitle}"\nDesc orig: "${auditContext.originalDescription}"\nProblemi:\n${(auditContext.deepIssues || []).map((i: string, idx: number) => `${idx+1}. ${i}`).join("\n")}\nObiettivo: superare 80.`;
+    }
+
+    const userPrompt = `Genera l'annuncio completo per questo prodotto:
 
 DATI RILEVATI DALLE FOTO:
 - Tipo prodotto: ${analysis.product_type || "non specificato"}
 - Categoria: ${analysis.category || "non specificata"}
 - Colori dominanti: ${colorsStr}
-- Brand: ${analysis.brand || "nessun brand"}
+- Brand: ${analysis.brand || userInput.manualBrand || "nessun brand"}
+- Stile: ${analysis.style || "Casual"}
+- Sotto-stile: ${analysis.sub_style || "—"}
+- Fit: ${analysis.fit || "Regular"}
+- Periodo: ${analysis.period || "Contemporaneo"}
+- Target audience: ${target} (confidence ${analysis.target_audience?.confidence || "medium"})
+- Note aggiuntive: ${analysis.note_aggiuntive || "—"}
 
-DETTAGLI INDUMENTO RILEVATI DALLE FOTO:
+DETTAGLI INDUMENTO:
 ${featuresStr}
 
-DATI FORNITI DALL'UTENTE:
+DATI UTENTE:
 - Sesso: ${userInput.gender || "non specificato"}
-- Taglia: ${userInput.size}
-- Tipologia prodotto: ${userInput.productType || "non specificata"}
-- Fit: ${userInput.fit || "non specificato"}
-- Stile: ${userInput.style || "non specificato"}
+- Taglia: ${userInput.size || "non specificata"}
 - Condizione: ${userInput.condition}
-- Materiali: ${userInput.materials || "non specificati"}
+- Materiali: ${userInput.materials || "non specificati (omettere se assente)"}
 - Prezzo minimo accettato: ${userInput.minPrice}€
-${userInput.decade ? `- Decade / Periodo: ${decadeLabel(userInput.decade)}` : ""}
-${measurementsStr ? `- Misure: ${measurementsStr}` : ""}
+${measurementsStr ? `- Misure: ${measurementsStr}` : "- Misure: nessuna (omettere modulo 4)"}
 ${userInput.extras ? `- Note extra: ${userInput.extras}` : ""}
 ${auditSection}
+
 ISTRUZIONI:
-1. Crea un titolo SEO con formula ESATTA in quest'ordine: [Brand] + [Tipo prodotto] + [Dettaglio capo] + [Colore] + [Stile] + (se decade fornita aggiungi "Anni '70" / "Anni '80" / "Anni '90" / "Anni 2000" / "Anni 2010" o il periodo custom SUBITO DOPO lo stile) + [Sesso: Uomo/Donna] + ([Taglia]) [Condizione] — NON inserire mai un trattino "–" o "-" tra taglia e condizione, e NON usare mai "Y2K" come parola nel titolo (per gli anni 2000 usa solo "Anni 2000")
-   IMPORTANTE: La decade va SEMPRE collocata tra lo Stile e il Sesso, MAI dopo la taglia o la condizione. Usa i dettagli dell'indumento (loghi, stampe, zip, tasche, cappuccio ecc.) come [Dettaglio capo] nel titolo. Inserisci sempre "Uomo" o "Donna" subito prima della taglia se il sesso è fornito.
-2. Crea la descrizione professionale con la struttura indicata nel system prompt
-   IMPORTANTE: Integra TUTTI i dettagli rilevati (loghi, stampe, zip, tasche, rilievi, patch, ecc.) nella descrizione in modo naturale e professionale
-3. Analizza la fascia di posizionamento in base a brand, condizione, materiali
-4. Calcola un prezzo consigliato che lasci margine reale di trattativa rispetto al minimo di ${userInput.minPrice}€
-5. Costruisci una strategia di contrattazione con numeri concreti
-6. Compila i dettagli strutturati nell'ordine: categoria, tipo_prodotto, brand, taglia, condizione, colore, materiale, sesso, misure
+1. Costruisci titolo con la formula richiesta, adattato al target.
+2. Descrizione modulare a 5 moduli, tono per target ${target}, max 80 parole.
+3. Hashtag (5, no #, lowercase).
+4. Strategia prezzo con minimo ${userInput.minPrice}€.
+5. Photo report 4 pilastri da analysis.photo_quality.
 
-Genera l'annuncio ottimizzato per Vinted.`;
+Output JSON puro.`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "openai/gpt-5.2",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT + langInstruction },
-          { role: "user", content: userPrompt },
-        ],
-        response_format: { type: "json_object" },
-      }),
+    let response = await callAIWithFallback(LOVABLE_API_KEY, {
+      messages: [
+        { role: "system", content: SYSTEM_PROMPT + langInstruction },
+        { role: "user", content: userPrompt },
+      ],
+      response_format: { type: "json_object" },
     });
 
     if (!response.ok) {
@@ -379,22 +356,47 @@ Genera l'annuncio ottimizzato per Vinted.`;
       });
     }
 
-    const data = await response.json();
+    let data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
     content = content.replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
 
+    let parsed: any;
     try {
-      const parsed = JSON.parse(content);
-      const output = sanitizeOutput(parsed);
-      return new Response(JSON.stringify({ output }), {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      parsed = JSON.parse(content);
     } catch {
       console.error("Failed to parse AI response:", content);
       return new Response(JSON.stringify({ error: "Risposta AI non valida" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    // Server-side validation: word count retry once if description too long
+    const wc = wordCount(parsed.description || "");
+    if (wc > 95) {
+      try {
+        const retry = await callAIWithFallback(LOVABLE_API_KEY, {
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT + langInstruction },
+            { role: "user", content: userPrompt },
+            { role: "assistant", content },
+            { role: "user", content: `La descrizione ha ${wc} parole, supera il limite di 80. Riscrivi SOLO il JSON mantenendo identica struttura modulare ma riducendo il description a massimo 80 parole. Rispondi con il JSON completo.` },
+          ],
+          response_format: { type: "json_object" },
+        });
+        if (retry.ok) {
+          const retryData = await retry.json();
+          const retryContent = (retryData.choices?.[0]?.message?.content || "").replace(/```json\s*/g, "").replace(/```\s*/g, "").trim();
+          try { parsed = JSON.parse(retryContent); } catch { /* keep original */ }
+        }
+      } catch (e) {
+        console.warn("description shorten retry failed:", e);
+      }
+    }
+
+    const output = sanitizeOutput(parsed);
+    return new Response(JSON.stringify({ output, target_audience: analysis.target_audience || null }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   } catch (e) {
     console.error("studio-generate error:", e);
     return new Response(JSON.stringify({ error: e instanceof Error ? e.message : "Errore sconosciuto" }), {
