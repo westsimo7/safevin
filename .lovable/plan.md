@@ -1,88 +1,99 @@
-## Obiettivo
-Aggiungere un sistema notifiche unico per:
-1. Risposte ricevute nei 3 chat (Artist Director, Collaboration, Upgrade).
-2. Recap/aggiornamenti pubblicati manualmente dal founder (te lo dico io in chat e li inserisco).
-3. Push del browser sul telefono, con toggle attiva/disattiva nelle Impostazioni.
-4. Badge rosso col numero non lette sull'avatar profilo (in alto a destra).
-5. Nuova **campanella** a sinistra del menu profilo in Dashboard che apre la lista.
+
+## Piano implementazione SAFEViN Studio v2.0
+
+Trasformo il flusso Studio in 2 schermate, con AI target-aware, nuova formula titolo/descrizione modulare e validazioni server-side. Tutto in linea col documento allegato.
 
 ---
 
-## Database
+### ⚠️ Nota critica sui modelli AI (da confermare)
 
-Nuova tabella `notifications`:
-- `user_id`, `type` (`chat_reply` | `announcement`), `title`, `body`, `link`, `source` (`artist_director` | `collaboration` | `upgrade` | `system`), `source_id` (uuid conversation, nullable), `read_at`, `created_at`.
-- RLS: utente legge/aggiorna le proprie. Founder può inserire `announcement` per tutti.
-- Indice su `(user_id, read_at)`.
+Il Lovable AI Gateway supporta ufficialmente solo modelli `google/*` e `openai/*`. I modelli `anthropic/claude-opus-4-6` e `anthropic/claude-sonnet-4-6` indicati nel doc **non sono nella lista supportata**. Procedo così:
 
-Nuova tabella `notification_preferences`:
-- `user_id` PK, `push_enabled` boolean default true, `updated_at`.
-- RLS: utente legge/scrive solo la propria.
+- **Tento prima** `anthropic/claude-opus-4-6` (vision) e `anthropic/claude-sonnet-4-6` (generate). Se il gateway risponde 4xx "model not supported", **fallback automatico** a:
+  - Vision → `google/gemini-2.5-pro` (top vision + reasoning)
+  - Generate → `openai/gpt-5.2` (attuale, copywriting solido)
+- Log dell'errore in console edge per poter switchare manualmente.
 
-Nuova tabella `push_subscriptions`:
-- `user_id`, `endpoint` (unique), `p256dh`, `auth`, `user_agent`, `created_at`.
-- RLS: utente legge/scrive le proprie; service-role legge tutte.
-
-Funzione SQL `broadcast_announcement(title, body, link)` (SECURITY DEFINER, solo founder): inserisce una notifica per ogni utente in `profiles`. La userò io via `insert` tool quando mi passi un aggiornamento.
+Se vuoi forzare subito gli equivalenti supportati senza tentare Claude, dimmelo prima del lancio.
 
 ---
 
-## Triggers — già esistenti da estendere
-I trigger `trg_notify_creative_director_reply`, `trg_notify_collaboration_reply`, `trg_notify_upgrade_reply` oggi inviano solo email. Aggiungo un'unica funzione `create_chat_notification(user_id, source, conversation_id, label, url)` chiamata accanto a `notify_user_on_founder_reply`, che:
-1. INSERT in `notifications`.
-2. Se `push_enabled = true` e ci sono subscriptions → chiama l'edge function `send-push` via `net.http_post` (autenticata col service-role nel vault, stesso pattern dell'email).
+### MODIFICA 1+2 — Flusso a 2 schermate, campi ridotti
+
+**`src/components/studio/StudioInput.tsx`** (riduzione campi):
+- Mantenere: Genere, Taglia (sblocca dopo genere), Condizione, Misure (testo libero), Prezzo minimo.
+- Spostare **Materiale** in sezione "Info aggiuntive" come opzionale.
+- Rimuovere dai campi manuali: tipologia prodotto, fit, stile, periodo, colore, dettagli grafici, target audience.
+
+**`src/pages/EngineStudio.tsx`** + **`StudioRecognition.tsx`**:
+- Saltare lo step "Conferma Dettagli" quando `recognition_confidence !== "low"`: dopo l'analisi vai direttamente a generate → output.
+- Mantenere `StudioRecognition` SOLO come fallback low-confidence (e per il pop-up brand non rilevato).
+- Aggiungere mini pop-up inline "Aggiungi brand? (opzionale)" se `brand_visibile === null`, con tasto "Salta".
 
 ---
 
-## Edge Functions
+### MODIFICA 3 — Switch modelli (con fallback)
 
-`send-push` (nuova): riceve `{ user_id, title, body, url }`, legge le `push_subscriptions` dell'utente, invia web-push con VAPID. Subscriptions con `410 Gone` vengono cancellate.
-
-`subscribe-push` (nuova): l'utente loggato fa POST con la PushSubscription, salvataggio in `push_subscriptions`.
-
-`unsubscribe-push` (nuova): cancella per endpoint.
-
-Secrets necessari: `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (mailto). Te li chiederò appena approvi il piano.
+Aggiungere helper `callAIWithFallback(primary, fallback, body)` in entrambe le edge function. Timeout: 45s edge / 180s client invariati.
 
 ---
 
-## Frontend
+### MODIFICA 4 — `supabase/functions/studio-analyze/index.ts`
 
-**Service worker** (`public/sw.js`): gestisce `push` (mostra notifica con icona safevin) e `notificationclick` (apre il link).
-
-**Hook `useNotifications`**: fetch lista, conteggio non lette, realtime su `notifications` filtrate per `user_id`, `markAsRead`, `markAllAsRead`.
-
-**Componente `NotificationBell`** in `DashboardHeader`:
-- Icona campanella + badge rosso col numero non lette.
-- Click → popover con lista (titolo, body, tempo, link). Click su voce → naviga e marca letta. Pulsante "Segna tutte come lette".
-- Posizionato **a sinistra** del menu profilo.
-
-**Avatar profilo**: piccolo pallino rosso quando ci sono non lette (riusa lo stesso counter).
-
-**Settings → nuova sezione "Notifiche"**:
-- Toggle "Notifiche push sul telefono". On → richiede `Notification.requestPermission()`, registra service worker, salva subscription via `subscribe-push`, segna `push_enabled = true`. Off → `unsubscribe-push` e `push_enabled = false`.
-- Spiegazione iOS: serve "Aggiungi alla schermata Home" su Safari 16.4+ perché il push web non funziona dal browser standard.
+Estendere `VISION_PROMPT`:
+1. Aggiungere campo `target_audience: { category, confidence, reasoning }` (7 valori: neonato/bambino/preteen/teen/giovane_adulto/adulto/maturo) con la tabella indicatori del doc.
+2. Mantenere whitelist stili stretta (`Vintage, Casual, Streetwear, Elegante`) ma chiedere sotto-stile in `note_aggiuntive` (lista Y2K, Old Money, Quiet Luxury, Techwear, …).
+3. Mantenere logica `brand_visibile = null` invariata (handling lato client).
+4. Caricare enciclopedie stili/fit come **costanti statiche** nel file edge, non in ogni chiamata.
 
 ---
 
-## File toccati
+### MODIFICA 5+6+7 — `supabase/functions/studio-generate/index.ts`
 
-- Migrazione SQL: tabelle + RLS + funzione `broadcast_announcement` + estensione dei 3 trigger.
-- `supabase/functions/send-push/index.ts` (nuovo)
-- `supabase/functions/subscribe-push/index.ts` (nuovo)
-- `supabase/functions/unsubscribe-push/index.ts` (nuovo)
-- `supabase/config.toml` (entry per le 3 nuove funzioni)
-- `public/sw.js` (nuovo)
-- `src/main.tsx` (registra il SW)
-- `src/hooks/useNotifications.tsx` (nuovo)
-- `src/components/NotificationBell.tsx` (nuovo)
-- `src/components/DashboardHeader.tsx` (inserisce campanella + pallino su avatar)
-- `src/pages/Settings.tsx` (toggle push)
+- `userInput.materials` diventa opzionale.
+- Sostituire `SYSTEM_PROMPT` con quello del doc (sezione 7.2): regole titolo, descrizione modulare 5 moduli (Hook / Bullet dettagli / Vestibilità+Materiale / Misure 📏 condizionale / Closing), tono adattivo per target, hashtag (5), prezzo invariato, **photo_report 4 pilastri** (luce/contrasto/completezza/nitidezza).
+- Output JSON include `photo_report`, rimossi `tips_di_vendita` e scheda recap dettagli.
 
 ---
 
-## Cose da confermare
+### MODIFICA 8 — Validazione server-side post-generate
 
-1. Procedo a creare i secrets `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` (te li genero io e te li mostro per salvarli)?
-2. Sul telefono **iOS**: il push web funziona solo se l'utente "Aggiunge alla Home" dal Safari (limite Apple). Ok mantenere così, o vuoi che in futuro passiamo a Capacitor nativo per push iOS pieni?
-3. Quando vuoi pubblicare un aggiornamento globale, mi scrivi titolo + testo (+ link opzionale) e io lo inserisco come `announcement` per tutti gli utenti — confermi questo flusso?
+Dopo il parse JSON in `studio-generate`:
+1. Conteggio parole `description`: se > 80 → re-prompt automatico con "accorcia mantenendo struttura modulare" (max 1 retry).
+2. Lunghezza `title` > 80 char → truncation guidata: rimuovi condizione → poi sesso → poi stile finché ≤ 80.
+3. Sanitizer: rimuovi `-`/`–` tra elementi del titolo.
+4. Whitelist `style` ∈ {Vintage, Casual, Streetwear, Elegante}: se off, normalizza alla più vicina.
+5. Whitelist `target_audience.category` ∈ 7 valori: se off, default `adulto`.
+
+---
+
+### Persistenza & UI Output
+
+- **Migrazione DB**: aggiungere `target_audience jsonb` a `public.studio_creations` (nullable).
+- **`StudioOutput.tsx`**: nuovo ordine — Titolo → Descrizione (rendering che preserva i moduli e i bullet `•`) → Hashtag → Prezzo+Strategia (4 step) → **Resoconto foto 4 Pilastri** in coda. Rimuovere scheda recap e tips finali.
+
+---
+
+### File toccati
+
+```
+src/components/studio/StudioInput.tsx         (riduzione campi + materiale opzionale)
+src/components/studio/StudioRecognition.tsx   (solo low-confidence + brand pop-up)
+src/components/studio/StudioOutput.tsx        (nuovo ordine, photo report, no recap/tips)
+src/pages/EngineStudio.tsx                    (skip conferma, brand pop-up inline)
+supabase/functions/studio-analyze/index.ts    (target_audience, sotto-stili, modello)
+supabase/functions/studio-generate/index.ts   (nuovo system prompt, validazioni, modello)
+supabase/migrations/*_studio_target_audience.sql  (colonna target_audience)
+mem://features/studio/*                       (aggiorno listing-output, vision-logic, wizard-structure)
+```
+
+---
+
+### Verifica finale prima del lancio
+
+1. Build TypeScript pulita.
+2. Test edge functions via `supabase--curl_edge_functions` con 1 immagine fake per validare schema JSON.
+3. Smoke test in preview: upload 2 foto → verifica skip conferma → output con 5 moduli, hashtag, prezzo, 4 pilastri.
+4. Se Claude non risponde, fallback OpenAI/Gemini attivo e loggato.
+
+Fuori scope (priorità bassa del doc): scarpe/oggetti/gioielli, A/B test, few-shot examples estesi, structured outputs JSON-schema, streaming.
