@@ -166,8 +166,8 @@ const EngineStudio = () => {
 
   const handleConfirm = useCallback((confirmed: ProductAnalysis) => {
     setAnalysis(confirmed);
-    saveDraft("missing_photos", confirmed, previews, incompleteId);
-    setPhase("missing_photos");
+    saveDraft("input", confirmed, previews, incompleteId);
+    setPhase("input");
   }, [previews, incompleteId, saveDraft]);
 
   const handleAskCoach = useCallback((photoName: string) => {
@@ -183,11 +183,6 @@ const EngineStudio = () => {
       state: { studioReport: reportSummary, images: coachImages },
     });
   }, [navigate]);
-
-  const handleMissingPhotosContinue = useCallback(() => {
-    saveDraft("input", analysis, previews, incompleteId);
-    setPhase("input");
-  }, [analysis, previews, incompleteId, saveDraft]);
 
   const saveStudioCreation = async (output: StudioGeneratedOutput, draftIdToRemove: string | null) => {
     try {
@@ -358,23 +353,11 @@ const EngineStudio = () => {
           />
         )}
 
-        {phase === "missing_photos" && analysis && (
-          <StudioMissingPhotos
-            missingPhotos={analysis.missing_photos || []}
-            photoQuality={analysis.photo_quality || []}
-            previews={previews}
-            onContinue={handleMissingPhotosContinue}
-            onBack={() => setPhase("recognition")}
-            onAskCoach={handleAskCoach}
-            onSaveIncompleteAndGoCoach={handleSaveIncompleteAndGoCoach}
-          />
-        )}
-
         {phase === "input" && analysis && (
           <StudioInput
             analysis={analysis}
             onContinue={handleGenerateOutput}
-            onBack={() => setPhase("missing_photos")}
+            onBack={() => setPhase("upload")}
           />
         )}
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2, Hash } from "lucide-react";
+import { Copy, Check, ArrowRight, RotateCcw, TrendingUp, Sparkles, CheckCircle2, Hash, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +17,7 @@ export interface StudioGeneratedOutput {
     colore: string;
     materiale: string;
     sesso?: string;
+    target?: string;
     misure?: string | null;
   };
   pricing: {
@@ -28,8 +29,15 @@ export interface StudioGeneratedOutput {
     motivation: string;
     negotiation: string[];
   };
-  tips: string[];
+  tips?: string[];
   hashtags?: string[];
+  photo_report?: {
+    luce?: string;
+    contrasto?: string;
+    completezza?: string;
+    nitidezza?: string;
+    advice?: string;
+  };
 }
 
 interface StudioOutputProps {
@@ -39,14 +47,19 @@ interface StudioOutputProps {
   onFinish?: () => void;
 }
 
-const DETAIL_ORDER: { key: string; label: string }[] = [
-  { key: "brand", label: "Brand" },
-  { key: "taglia", label: "Taglia" },
-  { key: "colore", label: "Colore" },
-  { key: "condizione", label: "Condizione" },
-  { key: "materiale", label: "Materiale" },
-  { key: "misure", label: "Misure" },
-];
+const PILLAR_TONE: Record<string, string> = {
+  Ottima: "text-green-500",
+  Ottimo: "text-green-500",
+  Alta: "text-green-500",
+  Completa: "text-green-500",
+  Buona: "text-foreground/80",
+  Buono: "text-foreground/80",
+  Media: "text-foreground/80",
+  Parziale: "text-amber-500",
+  Migliorabile: "text-amber-500",
+  Bassa: "text-amber-500",
+  "Da integrare": "text-amber-500",
+};
 
 const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputProps) => {
   const { toast } = useToast();
@@ -54,27 +67,18 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
   const [copiedDesc, setCopiedDesc] = useState(false);
   const [copiedTags, setCopiedTags] = useState(false);
 
-  const handleCopyTitle = async () => {
+  const handleCopy = async (text: string, setter: (v: boolean) => void, label: string) => {
     try {
-      await navigator.clipboard.writeText(output.title);
-      setCopiedTitle(true);
-      toast({ title: "Titolo copiato!", description: "Incollalo nel campo titolo su Vinted" });
-      setTimeout(() => setCopiedTitle(false), 2000);
+      await navigator.clipboard.writeText(text);
+      setter(true);
+      toast({ title: `${label} copiato!` });
+      setTimeout(() => setter(false), 2000);
     } catch {
       toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
     }
   };
 
-  const handleCopyDesc = async () => {
-    try {
-      await navigator.clipboard.writeText(output.description);
-      setCopiedDesc(true);
-      toast({ title: "Descrizione copiata!", description: "Incollala nel campo descrizione su Vinted" });
-      setTimeout(() => setCopiedDesc(false), 2000);
-    } catch {
-      toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
-    }
-  };
+  const report = output.photo_report;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -89,12 +93,12 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
         </p>
       </div>
 
-      {/* TITLE BLOCK */}
+      {/* 1. TITLE */}
       <Card className="border-primary/30 bg-primary/5">
         <CardContent className="p-5 space-y-3">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold text-primary uppercase tracking-wider">Titolo SEO</p>
-            <Button variant="ghost" size="sm" onClick={handleCopyTitle} className="text-xs gap-1.5">
+            <Button variant="ghost" size="sm" onClick={() => handleCopy(output.title, setCopiedTitle, "Titolo")} className="text-xs gap-1.5">
               {copiedTitle ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copiedTitle ? "Copiato!" : "Copia titolo"}
             </Button>
@@ -105,12 +109,12 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
         </CardContent>
       </Card>
 
-      {/* DESCRIPTION BLOCK */}
+      {/* 2. DESCRIPTION */}
       <Card className="border-primary/30 bg-primary/5">
         <CardContent className="p-5 space-y-3">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Descrizione completa</p>
-            <Button variant="ghost" size="sm" onClick={handleCopyDesc} className="text-xs gap-1.5">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">Descrizione</p>
+            <Button variant="ghost" size="sm" onClick={() => handleCopy(output.description, setCopiedDesc, "Descrizione")} className="text-xs gap-1.5">
               {copiedDesc ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
               {copiedDesc ? "Copiato!" : "Copia descrizione"}
             </Button>
@@ -121,44 +125,28 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
         </CardContent>
       </Card>
 
-      {/* HASHTAGS */}
+      {/* 3. HASHTAGS */}
       {output.hashtags && output.hashtags.length > 0 && (
         <Card className="border-primary/30 bg-primary/5">
           <CardContent className="p-4 space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Hash className="w-4 h-4 text-primary" />
-                <p className="text-xs font-semibold text-primary uppercase tracking-wider">Hashtag consigliati</p>
+                <p className="text-xs font-semibold text-primary uppercase tracking-wider">Hashtag</p>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(output.hashtags!.join(" "));
-                    setCopiedTags(true);
-                    toast({ title: "Hashtag copiati!", description: "Incollali sotto la descrizione" });
-                    setTimeout(() => setCopiedTags(false), 2000);
-                  } catch {
-                    toast({ title: "Errore", description: "Non riesco a copiare", variant: "destructive" });
-                  }
-                }}
-                className="text-xs gap-1.5"
-              >
+              <Button variant="ghost" size="sm" onClick={() => handleCopy(output.hashtags!.join(" "), setCopiedTags, "Hashtag")} className="text-xs gap-1.5">
                 {copiedTags ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                 {copiedTags ? "Copiati!" : "Copia"}
               </Button>
             </div>
             <div className="p-3 rounded-xl bg-background/80 border border-border/30">
-              <p className="text-sm text-foreground/80 break-words">
-                {output.hashtags.join(" ")}
-              </p>
+              <p className="text-sm text-foreground/80 break-words">{output.hashtags.join(" ")}</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {/* PRICING */}
+      {/* 4. PRICING */}
       <Card className="border-border/50">
         <CardContent className="p-4 space-y-4">
           <div className="flex items-center gap-2">
@@ -207,41 +195,36 @@ const StudioOutput = ({ output, onNewAnalysis, onBack, onFinish }: StudioOutputP
         </CardContent>
       </Card>
 
-      {/* DETAILS - ordered: categoria, tipo_prodotto, brand, taglia, condizione, colore, materiale, sesso, misure */}
-      <Card className="border-border/50">
-        <CardContent className="p-0">
-          <div className="px-4 py-3 border-b border-border/30">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Scheda prodotto</p>
-          </div>
-          <div className="divide-y divide-border/30">
-            {DETAIL_ORDER.map(({ key, label }) => {
-              const value = (output.details as Record<string, any>)[key];
-              if (!value || value === "—" || value === "null") return null;
-              return (
-                <div key={key} className="flex items-center justify-between px-4 py-2.5">
-                  <span className="text-xs text-muted-foreground">{label}</span>
-                  <span className="text-sm font-medium text-right max-w-[60%]">{value}</span>
+      {/* 5. PHOTO REPORT — 4 PILASTRI */}
+      {report && (
+        <Card className="border-border/50">
+          <CardContent className="p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Camera className="w-4 h-4 text-primary" />
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Photo report</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { label: "Luce", value: report.luce },
+                { label: "Contrasto", value: report.contrasto },
+                { label: "Completezza", value: report.completezza },
+                { label: "Nitidezza", value: report.nitidezza },
+              ].map(({ label, value }) => (
+                <div key={label} className="p-3 rounded-xl bg-muted/20 border border-border/30">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{label}</p>
+                  <p className={`text-sm font-semibold ${PILLAR_TONE[value || ""] || "text-foreground"}`}>
+                    {value || "—"}
+                  </p>
                 </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+            {report.advice && report.advice.trim() && (
+              <p className="text-xs text-amber-500 mt-2 px-1">💡 {report.advice}</p>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
-      {/* TIPS */}
-      <Card className="border-border/50">
-        <CardContent className="p-4 space-y-3">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            Micro strategie di vendita
-          </p>
-          {output.tips.map((tip, i) => (
-            <p key={i} className="text-xs text-foreground/70 flex items-start gap-2">
-              <span className="text-primary mt-0.5">•</span>
-              <span>{tip}</span>
-            </p>
-          ))}
-        </CardContent>
-      </Card>
       {/* Actions */}
       <div className="flex flex-col gap-3">
         {onFinish && (

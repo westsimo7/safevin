@@ -102,7 +102,42 @@ Valuta 4 pilastri da analysis.photo_quality (media dei punteggi):
 - contrasto: 4-5=Ottimo, 3=Buono, ≤2=Migliorabile
 - completezza: in base a photos_assessment, "Completa" se ≥4 voci true, "Parziale" se 2-3, "Da integrare" se ≤1
 - nitidezza: deriva da quality medio: 4-5=Alta, 3=Media, ≤2=Bassa
-Aggiungi 1 frase di "advice" se almeno un pilastro è Migliorabile/inferiore.`;
+Aggiungi 1 frase di "advice" se almeno un pilastro è Migliorabile/inferiore.
+
+## ESEMPI DI OUTPUT IDEALE
+Studia attentamente questi 5 esempi che coprono i target principali. Replica ESATTAMENTE questo livello di adattamento del tono al target.
+
+### ESEMPIO 1 — Target: neonato
+INPUT analysis: product_type "Body manica lunga", brand "Petit Bateau", colors ["Bianco"], target neonato, garment_features { bottoni a pressione cavallo, girocollo a costine, etichetta no-irritazione }.
+INPUT userInput: unisex, 6-9 mesi, "Nuovo con cartellino", minPrice 8, materiale "Cotone biologico 100%", no misure.
+OUTPUT:
+{"title":"Petit Bateau Body Manica Lunga Bianco Unisex 6-9 Mesi Nuovo con cartellino","description":"Body Petit Bateau in puro cotone biologico, ideale per i primi mesi del bebè.\\n\\n• 100% cotone biologico certificato\\n• Bottoni a pressione sul cavallo per cambio facile\\n• Girocollo a costine elastico\\n• Etichetta esterna anti-irritazione\\n\\nVestibilità morbida, perfetta per la pelle sensibile del neonato.\\n\\nDisponibile per foto aggiuntive. Spedizione veloce e sicura.","hashtags":["body","petitbateau","neonato","cotonebio","newborn"],"pricing":{"min_accepted":8,"suggested_low":12,"suggested_high":15,"positioning":"media","positioning_reason":"Brand premium per neonati, nuovo con cartellino, cotone bio","motivation":"Petit Bateau è ricercato per qualità del cotone. Nuovo con cartellino giustifica posizionamento sopra media.","negotiation":["Se offrono 8€ → controproponi 12€ valorizzando brand e cotone bio","Se salgono a 10€ → scendi a 11€","Se arrivano a 11€ → accetta","Sotto 8€ non scendere"]}}
+
+### ESEMPIO 2 — Target: teen
+INPUT analysis: "Felpa con cappuccio", brand "Nike", colore "Nero", target teen, garment_features { cappuccio con coulisse, marsupio frontale, logo ricamato petto, polsini/orlo costine }, note "streetwear Y2K".
+INPUT userInput: uomo, M, "Come nuovo", minPrice 25, misure { spalle 52, lunghezza 68 }.
+OUTPUT:
+{"title":"Nike Felpa Cappuccio Nera Streetwear Y2K Uomo (M) Come nuovo","description":"Felpa Nike vibe streetwear, taglio anni 2000 perfetto per il daily look.\\n\\n• Cappuccio fisso con coulisse\\n• Tasca a marsupio frontale\\n• Logo Nike ricamato sul petto\\n• Polsini e orlo a costine\\n\\nVestibilità regular, taglio archive anni 2000.\\n\\n📏 Misure:\\n• Spalle: 52 cm\\n• Lunghezza: 68 cm\\n\\nScrivimi per più foto. Spedizione 24/48h.","hashtags":["felpa","nike","streetwear","y2k","vintage"],"pricing":{"min_accepted":25,"suggested_low":32,"suggested_high":38,"positioning":"medio-alta","positioning_reason":"Brand iconico streetwear, come nuovo, taglio Y2K richiesto","motivation":"Felpe Nike vintage/Y2K nere con logo ricamato sono ad alta richiesta.","negotiation":["Se offrono 25€ → controproponi 32€","Se salgono a 28€ → scendi a 30€","Se arrivano a 30€ → accetta","Sotto 25€ aspetta"]}}
+
+### ESEMPIO 3 — Target: giovane_adulto
+INPUT analysis: "Pantaloni cargo", no brand, colore "Cachi", target giovane_adulto, garment_features { tasche cargo con patta, coulisse vita, orlo elastico, anelli portachiavi }, note "techwear/utility".
+INPUT userInput: uomo, L, "Ottime condizioni", minPrice 18, materiale "Cotone 100%".
+OUTPUT:
+{"title":"Pantaloni Cargo Cachi Streetwear Uomo (L) Ottime condizioni","description":"Pantaloni cargo vibe utility, taglio rilassato perfetto per outfit techwear.\\n\\n• Tasche cargo laterali con patta\\n• Coulisse in vita regolabile\\n• Orlo con elastico\\n• Anelli portachiavi laterali\\n\\nVestibilità regular, tessuto cotone 100%.\\n\\nScrivimi per più foto. Spedizione 24/48h.","hashtags":["cargo","pantaloni","streetwear","techwear","utility"],"pricing":{"min_accepted":18,"suggested_low":24,"suggested_high":30,"positioning":"media","positioning_reason":"No brand ma stile techwear ricercato, ottime condizioni","motivation":"Cargo cachi molto richiesti nel segmento Gen Z streetwear.","negotiation":["Se offrono 18€ → controproponi 24€","Se salgono a 20€ → scendi a 22€","Se arrivano a 22€ → accetta","Sotto 18€ valuta"]}}
+
+### ESEMPIO 4 — Target: adulto
+INPUT analysis: "Polo manica corta", brand "Ralph Lauren", colore "Blu marino", target adulto, garment_features { colletto polo, tre bottoni madreperla, pony ricamato petto, spacchetti orlo }, note "Old Money / Preppy".
+INPUT userInput: uomo, M, "Ottime condizioni", minPrice 22, materiale "Cotone piqué 100%", misure { spalle 48, lunghezza 71 }.
+OUTPUT:
+{"title":"Ralph Lauren Polo Cotone Blu Marino Casual Uomo (M) Ottime condizioni","description":"Polo Ralph Lauren in cotone piqué, classico senza tempo per outfit smart casual.\\n\\n• Cotone piqué 100%\\n• Colletto a polo strutturato\\n• Tre bottoni in madreperla\\n• Pony ricamato sul petto\\n\\nVestibilità regular, qualità premium intramontabile.\\n\\n📏 Misure:\\n• Spalle: 48 cm\\n• Lunghezza: 71 cm\\n\\nResto a disposizione. Spedizione tracciata.","hashtags":["polo","ralphlauren","oldmoney","preppy","cotone"],"pricing":{"min_accepted":22,"suggested_low":28,"suggested_high":35,"positioning":"medio-alta","positioning_reason":"Brand iconico Old Money, cotone piqué, ottime condizioni","motivation":"Ralph Lauren mantiene valore di rivendita stabile. Piqué + navy sono i più richiesti.","negotiation":["Se offrono 22€ → controproponi 30€","Se salgono a 25€ → scendi a 28€","Se arrivano a 27€ → accetta","Sotto 22€ non scendere"]}}
+
+### ESEMPIO 5 — Target: maturo
+INPUT analysis: "Cappotto monopetto", brand "Max Mara", colore "Cammello", target maturo, garment_features { tre bottoni in corno, tasche a filetto, revers a lancia, fodera viscosa }, note "Quiet Luxury sartoriale".
+INPUT userInput: donna, 42, "Ottime condizioni", minPrice 95, materiale "Lana vergine 80%, Cashmere 20%", misure { spalle 42, lunghezza 108 }.
+OUTPUT:
+{"title":"Max Mara Cappotto Monopetto Cammello Elegante Donna (42) Ottime condizioni","description":"Cappotto Max Mara in pura lana vergine e cashmere, taglio sartoriale italiano intramontabile.\\n\\n• Lana vergine 80% e cashmere 20%\\n• Tre bottoni in corno autentici\\n• Revers a lancia strutturato\\n• Fodera interna in viscosa\\n\\nVestibilità regular, fattura italiana di alta qualità.\\n\\n📏 Misure:\\n• Spalle: 42 cm\\n• Lunghezza: 108 cm\\n\\nResto a disposizione. Spedizione tracciata e assicurata.","hashtags":["cappotto","maxmara","quietluxury","cashmere","italianluxury"],"pricing":{"min_accepted":95,"suggested_low":140,"suggested_high":180,"positioning":"medio-alta","positioning_reason":"Brand luxury italiano, lana+cashmere, taglio sartoriale, ottime condizioni","motivation":"Max Mara mantiene valore di rivendita alto. Cammello è il colore più ricercato della maison.","negotiation":["Se offrono 95€ → controproponi 150€","Se salgono a 120€ → scendi a 135€","Se arrivano a 130€ → accetta","Sotto 95€ non scendere"]}}
+
+FINE ESEMPI. Mantieni lo stesso identico livello di adattamento del tono al target per l'input che riceverai.`;
 
 function sanitizeTitle(t: string): string {
   let v = (t || "").replace(/\s+[–-]\s+/g, " ").replace(/\s{2,}/g, " ").trim();
