@@ -59,6 +59,23 @@ const DEFAULT_STATE: PlanState = {
 
 const PlanContext = createContext<PlanContextValue | null>(null);
 
+const PLAN_TIMEOUT_MS = 7_000;
+
+const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error("plan_timeout")), ms);
+    promise.then(
+      (value) => {
+        window.clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+
 export const PlanProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
   const [state, setState] = useState<PlanState | null>(null);
@@ -71,7 +88,7 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
     try {
-      const { data, error } = await supabase.rpc("get_user_plan");
+      const { data, error } = await withTimeout(supabase.rpc("get_user_plan"), PLAN_TIMEOUT_MS);
       if (error) throw error;
       const d = data as any;
       if (!d || d.error) {
@@ -97,7 +114,7 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch (err) {
       console.error("usePlan: failed to load plan", err);
-      setState(null);
+      setState(DEFAULT_STATE);
     } finally {
       setLoading(false);
     }
