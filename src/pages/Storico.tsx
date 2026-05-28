@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
