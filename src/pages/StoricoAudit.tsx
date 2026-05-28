@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import AppNavbar from "@/components/AppNavbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ const StoricoAudit = () => {
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -70,16 +72,19 @@ const StoricoAudit = () => {
   };
 
   useEffect(() => {
+    if (!user?.id) return;
     const fetchAnalyses = async () => {
       const { data, error } = await supabase
         .from("analyses")
         .select("id, titolo, first_image_url, analysis_result, created_at")
-        .order("created_at", { ascending: false });
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
       if (!error && data) setAnalyses(data);
       setLoading(false);
     };
     fetchAnalyses();
-  }, []);
+  }, [user?.id]);
 
   const filtered = useMemo(() => {
     let list = [...analyses];

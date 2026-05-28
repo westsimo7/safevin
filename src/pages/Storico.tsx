@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import AppNavbar from "@/components/AppNavbar";
 import PageTitle from "@/components/PageTitle";
 import { useSwipeBack } from "@/hooks/useSwipeBack";
@@ -32,15 +33,28 @@ const Storico = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [deleteTarget, setDeleteTarget] = useState<{ id: string } | null>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
+    if (!user?.id) return;
+    let cancelled = false;
     const fetch = async () => {
-      const { data } = await supabase.from("studio_creations").select("id, titolo_generato, first_image_url, categoria, created_at").eq("status", "complete").order("created_at", { ascending: false });
-      if (data) setCreations(data);
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("studio_creations")
+        .select("id, titolo_generato, first_image_url, categoria, created_at")
+        .eq("user_id", user.id)
+        .eq("status", "complete")
+        .order("created_at", { ascending: false })
+        .limit(200);
+      if (cancelled) return;
+      if (error) console.error("Storico fetch error", error);
+      setCreations(data || []);
       setLoading(false);
     };
     fetch();
-  }, []);
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
