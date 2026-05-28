@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import AppNavbar from "@/components/AppNavbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ const StoricoStudio = () => {
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
 
   const handleDelete = async () => {
     if (!deleteId) return;
@@ -53,16 +55,19 @@ const StoricoStudio = () => {
   };
 
   useEffect(() => {
+    if (!user?.id) return;
     const fetchData = async () => {
       const { data, error } = await supabase
         .from("studio_creations")
         .select("id, titolo_generato, first_image_url, categoria, created_at")
-        .order("created_at", { ascending: false });
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(200);
       if (!error && data) setCreations(data);
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [user?.id]);
 
   const filtered = useMemo(() => {
     let list = [...creations];
