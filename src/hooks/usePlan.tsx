@@ -61,7 +61,7 @@ const PlanContext = createContext<PlanContextValue | null>(null);
 
 const PLAN_TIMEOUT_MS = 7_000;
 
-const withTimeout = <T,>(promise: Promise<T>, ms: number): Promise<T> =>
+const withTimeout = <T,>(promise: PromiseLike<T>, ms: number): Promise<T> =>
   new Promise((resolve, reject) => {
     const timer = window.setTimeout(() => reject(new Error("plan_timeout")), ms);
     promise.then(
