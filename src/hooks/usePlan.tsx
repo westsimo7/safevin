@@ -60,6 +60,7 @@ const DEFAULT_STATE: PlanState = {
 const PlanContext = createContext<PlanContextValue | null>(null);
 
 const PLAN_TIMEOUT_MS = 7_000;
+const FOUNDER_EMAIL = "simonu2003@gmail.com";
 
 const withTimeout = <T,>(promise: PromiseLike<T>, ms: number): Promise<T> =>
   new Promise((resolve, reject) => {
@@ -87,12 +88,13 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       return;
     }
+    const isFounderEmail = user.email?.toLowerCase() === FOUNDER_EMAIL;
     try {
       const { data, error } = await withTimeout(supabase.rpc("get_user_plan"), PLAN_TIMEOUT_MS);
       if (error) throw error;
       const d = data as any;
       if (!d || d.error) {
-        setState(null);
+        setState(isFounderEmail ? { ...DEFAULT_STATE, isFounder: true } : DEFAULT_STATE);
       } else {
         const planId = (d.plan as PlanId) || "free";
         const plan = PLANS[planId] || PLANS.free;
@@ -109,12 +111,12 @@ export const PlanProvider = ({ children }: { children: ReactNode }) => {
           cdRemaining: d.creative_director_remaining ?? plan.limits.creative_director_limit,
           periodStart: d.current_period_start ?? null,
           periodEnd: d.current_period_end ?? null,
-          isFounder: !!d.is_founder,
+          isFounder: !!d.is_founder || isFounderEmail,
         });
       }
     } catch (err) {
       console.error("usePlan: failed to load plan", err);
-      setState(DEFAULT_STATE);
+      setState(isFounderEmail ? { ...DEFAULT_STATE, isFounder: true } : DEFAULT_STATE);
     } finally {
       setLoading(false);
     }
