@@ -2,6 +2,23 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 
+const AUTH_INIT_TIMEOUT_MS = 7_000;
+
+const withTimeout = <T,>(promise: Promise<T>, ms: number, label: string): Promise<T> =>
+  new Promise((resolve, reject) => {
+    const timer = window.setTimeout(() => reject(new Error(`${label}_timeout`)), ms);
+    promise.then(
+      (value) => {
+        window.clearTimeout(timer);
+        resolve(value);
+      },
+      (error) => {
+        window.clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -24,16 +41,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    let active = true;
+
+    const applySession = (nextSession: Session | null) => {
+      if (!active) return;
+      setSession(nextSession);
+      setUser(nextSession?.user ?? null);
       setLoading(false);
-    });
+    };
+
+    const fallbackTimer = window.setTimeout(() => {
+      if (!active) return;
+      console.warn("Auth init timed out; releasing app shell");
+      setLoading(false);
+    }, AUTH_INIT_TIMEOUT_MS);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+      window.clearTimeout(fallbackTimer);
+      applySession(session);
 
       // Invia la mail di benvenuto una sola volta per utente, SOLO dopo che
       // l'email è stata confermata (per Google OAuth è immediato, per
@@ -68,7 +93,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    withTimeout(supabase.auth.getSession(), AUTH_INIT_TIMEOUT_MS, "auth_session")
+      .then(({ data: { session } }) => {
+        window.clearTimeout(fallbackTimer);
+        applySession(session);
+      })
+      .catch((err) => {
+        console.warn("Auth session bootstrap failed", err);
+        window.clearTimeout(fallbackTimer);
+        if (!active) return;
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+      });
+
+    return () => {
+      active = false;
+      window.clearTimeout(fallbackTimer);
+      subscription.unsubscribe();
+    };
   }, []);
 
   const signOut = async () => {
