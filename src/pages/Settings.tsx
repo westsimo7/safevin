@@ -9,16 +9,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Bell, Moon, Shield, User, LogOut, ChevronDown, ChevronUp, Palette, CreditCard, Receipt, Camera, Mail, Lock, KeyRound, Eye, AlertTriangle } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -66,7 +56,7 @@ const Settings = () => {
   const [cdOpen, setCdOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [topSecretOpen, setTopSecretOpen] = useState(false);
-  const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  
   const [saving, setSaving] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
   const [userPlan, setUserPlan] = useState<string | null>(null);
@@ -226,7 +216,7 @@ const Settings = () => {
       const { data, error } = await supabase.functions.invoke("customer-portal");
       if (error) throw error;
       if (data?.url) {
-        window.open(data.url, "_blank");
+        window.location.href = data.url;
       } else {
         throw new Error("Nessun URL ricevuto");
       }
@@ -443,8 +433,9 @@ const Settings = () => {
                 <div className="animate-fade-in pt-2">
                   <button
                     type="button"
-                    onClick={() => setCancelDialogOpen(true)}
-                    className="w-full flex items-center gap-3 text-left text-destructive hover:opacity-80 transition-opacity"
+                    onClick={handleOpenBillingPortal}
+                    disabled={portalLoading}
+                    className="w-full flex items-center gap-3 text-left text-destructive hover:opacity-80 transition-opacity disabled:opacity-60 disabled:cursor-wait"
                   >
                     <AlertTriangle className="w-5 h-5" />
                     <span className="font-medium">Disdici il tuo abbonamento</span>
@@ -465,27 +456,6 @@ const Settings = () => {
         </div>
       </main>
 
-      <AlertDialog open={cancelDialogOpen} onOpenChange={setCancelDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Disdici abbonamento</AlertDialogTitle>
-            <AlertDialogDescription>
-              Se cancelli ora il tuo abbonamento, avrai accesso alle feature dell'abbonamento solamente entro la fine del ciclo di fatturazione corrente.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Annulla</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                setCancelDialogOpen(false);
-                handleOpenBillingPortal();
-              }}
-            >
-              Conferma disdetta
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
