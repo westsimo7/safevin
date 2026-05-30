@@ -255,7 +255,7 @@ const SupportChat = () => {
           <Bot className="w-8 h-8 text-primary" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-foreground">Tommy Scendi</h3>
+          <h3 className="text-lg font-bold text-foreground">Assistenza</h3>
           <p className="text-sm text-muted-foreground mt-1">Il tuo assistente SafeViN. Chiedimi qualsiasi cosa!</p>
         </div>
         <Button onClick={startConversation} className="gap-2">
@@ -273,7 +273,7 @@ const SupportChat = () => {
           <Bot className="w-4 h-4 text-primary" />
         </div>
         <div className="flex-1">
-          <p className="text-sm font-semibold text-foreground">Tommy Scendi</p>
+          <p className="text-sm font-semibold text-foreground">Assistenza</p>
           <p className="text-[10px] text-muted-foreground">
             {convStatus === "escalated" ? "Connesso con operatore" : convStatus === "closed" ? "Conversazione chiusa" : "Assistente AI"}
           </p>
@@ -352,7 +352,7 @@ const SupportChat = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
-            placeholder={convStatus === "escalated" ? "Scrivi all'operatore..." : "Scrivi a Tommy..."}
+            placeholder={convStatus === "escalated" ? "Scrivi all'operatore..." : "Scrivi all'assistenza..."}
             className="flex-1 text-sm"
             disabled={streaming}
           />

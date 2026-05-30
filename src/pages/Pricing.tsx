@@ -30,7 +30,7 @@ const plans = [
       "Prezzo strategico avanzato",
       "Accesso alla SAFEViN Artist Direction",
       "2 annunci delegabili al team SAFEViN Artist Direction",
-      "Assistente Tommy Scendi",
+      "Assistenza",
     ],
     limitations: [
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
@@ -52,7 +52,7 @@ const plans = [
       "Prezzo strategico avanzato",
       "Accesso alla SAFEViN Artist Direction prioritaria",
       "6 annunci delegabili al team SAFEViN Artist Direction",
-      "Assistente Tommy Scendi",
+      "Assistenza",
       "Sezione Upgrade per lasciare consigli e migliorare la piattaforma con commissioni",
       "Collaborazioni con il team di SAFEViN",
       "Coupon sconto personali",
