@@ -150,7 +150,7 @@ const AppNavbar = () => {
     {
       title: "Assistente",
       items: [
-        { label: "Tommy Scendi", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
+        { label: "Assistenza", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
       ],
     },
   ];
