@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, UserRound, Loader2 } from "lucide-react";
+import { Send, Bot, UserRound, Loader2, LifeBuoy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/support-chat`;
