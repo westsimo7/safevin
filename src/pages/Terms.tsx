@@ -49,8 +49,8 @@ const Terms = () => {
             <strong className="text-foreground">Contatti</strong>
             <br />
             Email:{" "}
-            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
-              info@safevin.com
+            <a href="mailto:safevinengine@gmail.com" className="text-primary hover:underline">
+              safevinengine@gmail.com
             </a>
           </p>
           <p className="mt-2 p-3 rounded-lg bg-muted/40 border border-border/50 text-foreground">
@@ -105,8 +105,8 @@ const Terms = () => {
           </ul>
           <p>
             L'utente può cancellare l'abbonamento in qualsiasi momento dalla sezione "Abbonamento" del proprio account o contattando il supporto all'indirizzo{" "}
-            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
-              info@safevin.com
+            <a href="mailto:safevinengine@gmail.com" className="text-primary hover:underline">
+              safevinengine@gmail.com
             </a>.
           </p>
         </Section>
@@ -120,8 +120,8 @@ const Terms = () => {
           </p>
           <p>
             <strong className="text-foreground">Come richiedere un rimborso:</strong> invia una richiesta a{" "}
-            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
-              info@safevin.com
+            <a href="mailto:safevinengine@gmail.com" className="text-primary hover:underline">
+              safevinengine@gmail.com
             </a>{" "}
             indicando l'email dell'account e il riferimento dell'ordine. Verificheremo i requisiti di utilizzo e, se idonei, processeremo il rimborso tramite Stripe entro pochi giorni lavorativi sul metodo di pagamento originale.
           </p>
