@@ -98,7 +98,9 @@ const SupportChat = () => {
         filter: `id=eq.${conversationId}`,
       }, (payload) => {
         setConvStatus((payload.new as any).status);
+        window.dispatchEvent(new Event("support-escalation-changed"));
       })
+
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
