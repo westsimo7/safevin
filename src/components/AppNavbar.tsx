@@ -182,9 +182,17 @@ const AppNavbar = () => {
       title: "Assistente",
       items: [
         { label: "Assistenza", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
+        ...(hasEscalation ? [{
+          label: "Escalation",
+          icon: LifeBuoy,
+          action: () => { setOpen(false); navigate("/support"); },
+          badge: "Founder",
+          badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        }] : []),
       ],
     },
   ];
+
 
   return (
     <>
