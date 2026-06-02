@@ -119,6 +119,25 @@ const SupportChat = () => {
     }
   };
 
+  const escalateToFounder = async () => {
+    if (!user || !conversationId || convStatus === "escalated" || convStatus === "closed") return;
+    await supabase
+      .from("support_conversations")
+      .update({ status: "escalated" })
+      .eq("id", conversationId);
+    setConvStatus("escalated");
+    const escalateMsg = "Ho inoltrato la tua richiesta direttamente al founder. Riceverai una risposta il prima possibile. 🙏";
+    setMessages((prev) => [...prev, { role: "assistant", content: escalateMsg }]);
+    await supabase.from("support_messages").insert({
+      conversation_id: conversationId,
+      sender_type: "bot",
+      content: escalateMsg,
+    });
+    scrollToBottom();
+    window.dispatchEvent(new Event("support-escalation-changed"));
+  };
+
+
   const sendMessage = async () => {
     if (!input.trim() || !user || streaming) return;
     const userText = input.trim();
