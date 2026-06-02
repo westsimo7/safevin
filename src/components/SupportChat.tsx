@@ -302,6 +302,16 @@ const SupportChat = () => {
             {convStatus === "escalated" ? "Connesso con operatore" : convStatus === "closed" ? "Conversazione chiusa" : "Assistente AI"}
           </p>
         </div>
+        {convStatus === "bot" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-[10px] h-7 gap-1 border-amber-500/40 text-amber-600 hover:bg-amber-500/10"
+            onClick={escalateToFounder}
+          >
+            <LifeBuoy className="w-3 h-3" /> Parla con il founder
+          </Button>
+        )}
         {convStatus !== "closed" && (
           <Button
             variant="ghost"
@@ -318,6 +328,7 @@ const SupportChat = () => {
           </Button>
         )}
       </div>
+
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-3">
