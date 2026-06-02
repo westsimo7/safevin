@@ -5,7 +5,7 @@ import { usePlan } from "@/hooks/usePlan";
 import { PLANS, REQUIRED_PLAN, isPlanAtLeast } from "@/lib/plans";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake, Lock } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake, Lock, LifeBuoy } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +39,7 @@ const AppNavbar = () => {
   const [open, setOpen] = useState(false);
   const [profileData, setProfileData] = useState<{ nome: string; cognome: string; email: string } | null>(null);
   const { unreadCount } = useNotifications();
+  const [hasEscalation, setHasEscalation] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -51,6 +52,36 @@ const AppNavbar = () => {
         if (data) setProfileData(data);
       });
   }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    const refresh = async () => {
+      const { data } = await supabase
+        .from("support_conversations")
+        .select("id,status")
+        .eq("user_id", user.id)
+        .eq("status", "escalated")
+        .limit(1);
+      setHasEscalation(!!(data && data.length > 0));
+    };
+    refresh();
+    const onChange = () => refresh();
+    window.addEventListener("support-escalation-changed", onChange);
+    const channel = supabase
+      .channel(`navbar-support-${user.id}`)
+      .on("postgres_changes", {
+        event: "*",
+        schema: "public",
+        table: "support_conversations",
+        filter: `user_id=eq.${user.id}`,
+      }, refresh)
+      .subscribe();
+    return () => {
+      window.removeEventListener("support-escalation-changed", onChange);
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
 
   const isFounder = planState?.isFounder ?? false;
   const currentPlanId = planState?.plan ?? "free";
@@ -151,9 +182,17 @@ const AppNavbar = () => {
       title: "Assistente",
       items: [
         { label: "Assistenza", icon: HelpCircle, action: () => { setOpen(false); navigate("/support"); } },
+        ...(hasEscalation ? [{
+          label: "Escalation",
+          icon: LifeBuoy,
+          action: () => { setOpen(false); navigate("/support"); },
+          badge: "Founder",
+          badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30",
+        }] : []),
       ],
     },
   ];
+
 
   return (
     <>

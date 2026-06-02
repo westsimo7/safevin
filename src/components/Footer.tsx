@@ -17,14 +17,16 @@ const Footer = () => {
             </span>
           </div>
 
-          <nav className="flex items-center gap-4 sm:gap-6 text-[13px] sm:text-sm text-muted-foreground">
+          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 sm:gap-x-6 text-[13px] sm:text-sm text-muted-foreground">
             <a href="/pricing" className="hover:text-foreground transition-colors py-1">{t("footer.plans")}</a>
             <a href="/privacy" className="hover:text-foreground transition-colors py-1">{t("footer.privacy")}</a>
             <a href="/cookies" className="hover:text-foreground transition-colors py-1">{t("footer.cookies")}</a>
             <a href="/terms" className="hover:text-foreground transition-colors py-1">{t("footer.terms")}</a>
+            <a href="mailto:safevinengine@gmail.com" className="hover:text-foreground transition-colors py-1">safevinengine@gmail.com</a>
           </nav>
 
           <p className="text-[13px] sm:text-sm text-muted-foreground">{t("footer.rights")}</p>
+
         </div>
 
         <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-border/50">

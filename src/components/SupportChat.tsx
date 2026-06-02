@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, UserRound, Loader2 } from "lucide-react";
+import { Send, Bot, UserRound, Loader2, LifeBuoy } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/support-chat`;
@@ -98,7 +98,9 @@ const SupportChat = () => {
         filter: `id=eq.${conversationId}`,
       }, (payload) => {
         setConvStatus((payload.new as any).status);
+        window.dispatchEvent(new Event("support-escalation-changed"));
       })
+
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
@@ -118,6 +120,25 @@ const SupportChat = () => {
       setDbMessages([]);
     }
   };
+
+  const escalateToFounder = async () => {
+    if (!user || !conversationId || convStatus === "escalated" || convStatus === "closed") return;
+    await supabase
+      .from("support_conversations")
+      .update({ status: "escalated" })
+      .eq("id", conversationId);
+    setConvStatus("escalated");
+    const escalateMsg = "Ho inoltrato la tua richiesta direttamente al founder. Riceverai una risposta il prima possibile. 🙏";
+    setMessages((prev) => [...prev, { role: "assistant", content: escalateMsg }]);
+    await supabase.from("support_messages").insert({
+      conversation_id: conversationId,
+      sender_type: "bot",
+      content: escalateMsg,
+    });
+    scrollToBottom();
+    window.dispatchEvent(new Event("support-escalation-changed"));
+  };
+
 
   const sendMessage = async () => {
     if (!input.trim() || !user || streaming) return;
@@ -283,6 +304,16 @@ const SupportChat = () => {
             {convStatus === "escalated" ? "Connesso con operatore" : convStatus === "closed" ? "Conversazione chiusa" : "Assistente AI"}
           </p>
         </div>
+        {convStatus === "bot" && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-[10px] h-7 gap-1 border-amber-500/40 text-amber-600 hover:bg-amber-500/10"
+            onClick={escalateToFounder}
+          >
+            <LifeBuoy className="w-3 h-3" /> Parla con il founder
+          </Button>
+        )}
         {convStatus !== "closed" && (
           <Button
             variant="ghost"
@@ -299,6 +330,7 @@ const SupportChat = () => {
           </Button>
         )}
       </div>
+
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-3">

@@ -45,7 +45,7 @@ const Privacy = () => {
           <p>
             <strong className="text-foreground">SafeVin</strong>
             <br />
-            Email di contatto: <a href="mailto:info@safevin.com" className="text-primary hover:underline">info@safevin.com</a>
+            Email di contatto: <a href="mailto:safevinengine@gmail.com" className="text-primary hover:underline">safevinengine@gmail.com</a>
           </p>
         </Section>
 
@@ -129,8 +129,8 @@ const Privacy = () => {
           </ul>
           <p>
             Per esercitare i diritti:{" "}
-            <a href="mailto:info@safevin.com" className="text-primary hover:underline">
-              info@safevin.com
+            <a href="mailto:safevinengine@gmail.com" className="text-primary hover:underline">
+              safevinengine@gmail.com
             </a>
           </p>
         </Section>
