@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -137,33 +136,24 @@ const Auth = () => {
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      // Preserve checkout intent across OAuth redirect by returning to /auth with the same query.
-      const redirectTarget = hasPendingCheckout
+      const redirectTo = hasPendingCheckout
         ? `${window.location.origin}/auth?checkout=${checkoutPlan}`
         : `${window.location.origin}/home`;
       if (!isLogin && !hasPendingCheckout) {
         sessionStorage.setItem("safevin_post_signup_pricing", "1");
       }
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: redirectTarget,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo },
       });
-
-      if (result.error) {
-        throw result.error;
-      }
-
-      if (result.redirected) {
-        return;
-      }
-
-      // If no redirect happened, useEffect on user will handle proceedAfterAuth.
+      if (error) throw error;
+      // Supabase redirects the browser automatically — no further action needed.
     } catch (err: any) {
       toast({
         title: "Errore",
         description: err.message || "Errore con Google Sign In.",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };
