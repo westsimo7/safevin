@@ -96,12 +96,12 @@ Solo se davvero non visibile in NESSUNA foto. Mai foto di difetti o indossato. P
 
 Rispondi SOLO con il JSON puro, senza markdown.`;
 
-const PRIMARY_MODEL = "google/gemini-2.5-flash";
-const FALLBACK_MODEL = "openai/gpt-5-mini";
+const PRIMARY_MODEL = "gpt-4o-mini";
+const FALLBACK_MODEL = "gpt-4o-mini";
 const CALL_TIMEOUT_MS = 55_000;
 
 async function callModel(apiKey: string, body: Record<string, unknown>, model: string): Promise<Response> {
-  const url = "https://ai.gateway.lovable.dev/v1/chat/completions";
+  const url = "https://api.openai.com/v1/chat/completions";
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), CALL_TIMEOUT_MS);
   try {
@@ -157,8 +157,8 @@ serve(async (req) => {
     }
 
     const { images } = await req.json();
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+    if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY is not configured");
 
     if (!images || !Array.isArray(images) || images.length === 0) {
       return new Response(JSON.stringify({ error: "Nessuna immagine fornita" }), {
@@ -171,7 +171,7 @@ serve(async (req) => {
       image_url: { url: dataUrl },
     }));
 
-    const response = await callAIWithFallback(LOVABLE_API_KEY, {
+    const response = await callAIWithFallback(OPENAI_API_KEY, {
       messages: [
         { role: "system", content: VISION_PROMPT },
         {

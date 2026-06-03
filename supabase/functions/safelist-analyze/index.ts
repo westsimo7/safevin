@@ -185,19 +185,19 @@ serve(async (req) => {
     const body = await req.json();
     const { images: imageDataUrls, imageOnly, auditData, similarContext } = body;
 
-    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
 
-    if (!LOVABLE_API_KEY) {
-      console.error("LOVABLE_API_KEY is not configured");
+    if (!OPENAI_API_KEY) {
+      console.error("OPENAI_API_KEY is not configured");
       return new Response(
         JSON.stringify({ error: "AI service not configured." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const apiUrl = "https://ai.gateway.lovable.dev/v1/chat/completions";
+    const apiUrl = "https://api.openai.com/v1/chat/completions";
     const apiHeaders = {
-      "Authorization": `Bearer ${LOVABLE_API_KEY}`,
+      "Authorization": `Bearer ${OPENAI_API_KEY}`,
       "Content-Type": "application/json",
     };
 
@@ -242,7 +242,7 @@ REGOLE:
         method: "POST",
         headers: apiHeaders,
         body: JSON.stringify({
-          model: "openai/gpt-5.2",
+          model: "gpt-4o-mini",
           messages: [
             { role: "system", content: photoAnalysisPrompt },
             { role: "user", content: [
@@ -325,7 +325,7 @@ Risultato precedente: ${JSON.stringify(similarContext.previousResult)}`;
         method: "POST",
         headers: apiHeaders,
         body: JSON.stringify({
-          model: "openai/gpt-5.2",
+          model: "gpt-4o-mini",
           temperature: 0,
           messages: [
             { role: "system", content: AUDIT_PROMPT },
