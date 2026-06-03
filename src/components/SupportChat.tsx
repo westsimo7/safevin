@@ -96,9 +96,32 @@ const SupportChat = () => {
         schema: "public",
         table: "support_conversations",
         filter: `id=eq.${conversationId}`,
-      }, (payload) => {
-        setConvStatus((payload.new as any).status);
+      }, async (payload) => {
+        const newStatus = (payload.new as any).status;
         window.dispatchEvent(new Event("support-escalation-changed"));
+        if (newStatus === "closed") {
+          const closeMsg = "Il founder ha chiuso la conversazione diretta. Sei tornato a parlare con l'assistente AI. Scrivi pure se hai bisogno di altro!";
+          setMessages((prev) => [...prev, { role: "assistant", content: closeMsg }]);
+          if (user) {
+            const { data: newConv } = await supabase
+              .from("support_conversations")
+              .insert({ user_id: user.id })
+              .select()
+              .single();
+            if (newConv) {
+              await supabase.from("support_messages").insert({
+                conversation_id: newConv.id,
+                sender_type: "bot",
+                content: closeMsg,
+              });
+              setConversationId(newConv.id);
+              setConvStatus("bot");
+              scrollToBottom();
+              return;
+            }
+          }
+        }
+        setConvStatus(newStatus);
       })
 
       .subscribe();
