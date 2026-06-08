@@ -889,6 +889,23 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      get_all_studio_creations_admin: {
+        Args: { p_limit?: number; p_offset?: number; p_search?: string }
+        Returns: {
+          categoria: string
+          cognome: string
+          created_at: string
+          email: string
+          first_image_url: string
+          id: string
+          nome: string
+          origin: string
+          plan: string
+          status: string
+          titolo_generato: string
+          user_id: string
+        }[]
+      }
       get_all_users_admin: {
         Args: never
         Returns: {
