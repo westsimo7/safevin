@@ -97,6 +97,9 @@ const AnimatedRoutes = () => {
           <Route path="/admin" element={
             <ProtectedRoute><PageTransition direction="up"><AdminDashboard /></PageTransition></ProtectedRoute>
           } />
+          <Route path="/admin/listings" element={
+            <ProtectedRoute><PageTransition direction="left"><AdminListings /></PageTransition></ProtectedRoute>
+          } />
           <Route path="/admin/inbox" element={
             <ProtectedRoute><PageTransition direction="left"><FounderInbox /></PageTransition></ProtectedRoute>
           } />
