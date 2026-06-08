@@ -5,7 +5,7 @@ import { usePlan } from "@/hooks/usePlan";
 import { PLANS, REQUIRED_PLAN, isPlanAtLeast } from "@/lib/plans";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake, Lock, LifeBuoy } from "lucide-react";
+import { User, Crown, Settings, CreditCard, Receipt, Shield, Bell, HelpCircle, Palette, LogOut, ChevronRight, Sparkles, LayoutDashboard, Rocket, Handshake, Lock, LifeBuoy, ShoppingBag } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
@@ -119,6 +119,7 @@ const AppNavbar = () => {
       title: "Founder",
       items: [
         { label: "Dashboard Admin", icon: LayoutDashboard, action: () => { setOpen(false); navigate("/admin"); }, badge: "Founder", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
+        { label: "Annunci utenti", icon: ShoppingBag, action: () => { setOpen(false); navigate("/admin/listings"); }, badge: "Founder", badgeColor: "bg-amber-500/10 text-amber-600 border-amber-500/30" },
       ],
     }] : []),
     {
