@@ -24,6 +24,7 @@ import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import IncompleteCreations from "./pages/IncompletCreations";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminListings from "./pages/AdminListings";
 import FounderInbox from "./pages/FounderInbox";
 import Upgrade from "./pages/Upgrade";
 import UpgradeInbox from "./pages/UpgradeInbox";
