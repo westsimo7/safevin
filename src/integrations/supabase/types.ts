@@ -842,6 +842,10 @@ export type Database = {
         }[]
       }
       consume_feature_credit: { Args: { p_feature: string }; Returns: Json }
+      count_all_studio_creations_admin: {
+        Args: { p_search: string }
+        Returns: number
+      }
       create_chat_notification: {
         Args: {
           p_conversation_id: string
